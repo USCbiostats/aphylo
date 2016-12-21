@@ -49,27 +49,41 @@ void Initialize()
 
 }
 
-void InputData()
-{	dag = fopen("PTHR11848.dag","r");
-	dat = fopen("PTHR11848 sorted.txt","r");
+void InputData() {	
+  dag = fopen("../data/pthr11848.dag.txt","r");
+	dat = fopen("../data/pthr11848_sorted.txt","r");
 	itr = fopen("phylogene.itr","w");
 
-	for (n=0; n<N; n++)	fscanf (dag,"%d %d %d",&NodeId[n],&NodeType[n],&ParentId[n]);;
+	for (n=0; n<N; n++) 
+	  fscanf (dag,"%d %d %d",&NodeId[n],&NodeType[n],&ParentId[n]);
 
 	// store experimental data for leaf nodes
 	//		note: this file includes some IDs that do not appear in the .dag file
 	//				so these is simply skipped
 
+	
 	n=0; int LeafId,ZZ[F];
-	while (n<L)
-	{	for (f=0; f<F; f++) fscanf (dat,"%d",&ZZ[f]);	
+	while (n<L) {
+	  for (f=0; f<F; f++)
+	    fscanf (dat,"%d",&ZZ[f]);	
+	  
 		fscanf (dat,"%d",&LeafId);
-		while (NodeId[n]<LeafId) 
-		{	for (f=0; f<F; f++) Z[n][f] = 8;	// no experimental data for internal nodes
+		
+		while (NodeId[n]<LeafId) {
+		  
+		  // printf("n  :%04d NodeId[n]:%04d LeadId: %04d\n", n, NodeId[n], LeafId);
+		  for (f=0; f<F; f++)
+		    Z[n][f] = 8;	// no experimental data for internal nodes
+		  
 			n++;
+			// In case it doesn't find the id
+			if (n > N) {
+			  printf("Warning: No node for LeadId:%d\n", LeafId);
+			  break;
+			}
 		}
-		if (NodeId[n]==LeafId)
-		{	for (f=0; f<F; f++) Z[n][f] = ZZ[f];
+		if (NodeId[n]==LeafId) {
+		  for (f=0; f<F; f++) Z[n][f] = ZZ[f];
 			n ++;
 		}
 	}
@@ -180,26 +194,29 @@ double LogLike(double parm[P])
 	//		Hence, the peeling must start at the bottom of the file and work upwards towards the root
 	
 	for (n=N-1; n>=0; n--) 
-		if (Noff[n])
-		{	for (int xxpar=0; xxpar<FF; xxpar++)
-			{	prX[n][xxpar] = 1;
-				int xpar[F]; GetX(xxpar); for (f=0; f<F; f++) xpar[f] = x[f];
-				for (o=0; o<Noff[n]; o++)
-				{	int offid = OffId[n][o];
-					MutationProbabilities(NodeType[n],BranchLength[offid]);
+		if (Noff[n]) { // Use only if parent node
+		  for (int xxpar=0; xxpar<FF; xxpar++) {
+		    prX[n][xxpar] = 1;
+				int xpar[F]; GetX(xxpar);
+				
+				for (f=0; f<F; f++) // Parent indices
+				  xpar[f] = x[f];
+				
+				for (o=0; o<Noff[n]; o++) { // Looping through offsprings
+				  int offid = OffId[n][o]; // Get the offspring pos
+					MutationProbabilities(NodeType[n],BranchLength[offid]); // Nothing right now
 					double sumprob=0;
-					for (int xxoff=0; xxoff<FF; xxoff++)
-					{	int xoff[F]; GetX(xxoff); 
+					for (int xxoff=0; xxoff<FF; xxoff++) {
+					  int xoff[F]; GetX(xxoff); 
 						double prmut=1;
-						for (f=0; f<F; f++) 
-						{	xoff[f] = x[f];
-							if (xpar[f]==0)					// parent node doesn't have function
-							{	if (xoff[f]==1)	prmut *=   mu[0];	// gain of function mutation
-										else	prmut *= 1-mu[0];	// no gain
-							}
-									else						// parent node does have function
-							{	if (xoff[f]==0) prmut *=   mu[1];	// loss of function mutation
-										else	prmut *= 1-mu[1];  // no loss
+						for (f=0; f<F; f++) {
+						  xoff[f] = x[f];
+							if (xpar[f]==0) {				// parent node doesn't have function
+							  if (xoff[f]==1) prmut *=   mu[0];	// gain of function mutation
+							  else	prmut *= 1-mu[0];	// no gain
+							}	else {						// parent node does have function
+								if (xoff[f]==0) prmut *=   mu[1];	// loss of function mutation
+								else	prmut *= 1-mu[1];  // no loss
 							}
 						}
 						sumprob += prmut * prX[offid][xxoff];
@@ -316,11 +333,17 @@ void Summarize()
 	fprintf (sum,"\n\nSIMULATION SUMMARY\nstat  mean   (SD)");
 }
 
-void main()
-{	sum = fopen("Peeling phylogenies.sum","w");
+int main()
+{	
+  
+  sum = fopen("peeling_phylogenies.sum","w");
+   
 	Initialize();
 	InputData();
+	
 	Analyze();
 	Summarize();
 	fclose(sum);
+	
+	return 0;
 }
