@@ -229,12 +229,21 @@ double LogLike(double parm[P])
 	// root node probabilities
 
 	double like=1;
-	for (int xxroot=0; xxroot<FF; xxroot++)
-	{	GetX(xxroot); 
-		double prFF0=1; for (f=0; f<F; f++) prFF0 *= pi[x[f]];
+	for (int xxroot=0; xxroot<FF; xxroot++)	{
+	  
+	  GetX(xxroot); 
+		
+		double prFF0=1;
+		
+		for (f=0; f<F; f++) 
+		  prFF0 *= pi[x[f]];
+		
 		like += prFF0 * prX[0][xxroot];
+		
 	}
+	
 	double loglike = log(like);
+	
 	return (loglike);
 }
 

@@ -2,8 +2,14 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
-// This function generates a matrix of size 2^P by P with all the possible
-// (0,1) combinations of functions.
+//' Matrix of states
+//' 
+//' @param P Integer scalar. Number of functions.
+//' @return A matrix of size 2^P by P with all the possible
+//' (0,1) combinations of functions.
+//' @examples
+//' states(3)
+//' @export
 // [[Rcpp::export]]
 arma::imat states(
     int P
@@ -27,11 +33,20 @@ arma::imat states(
   return ans;
 }
 
+//' Leaf probabilities
+//' 
+//' @param Z A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.
+//' @param S A matrix of size \eqn{2^P*P} as returned by \code{\link{states}}.
+//' @param psi A numeric vector of length 2.
+//' @param noffsprings A numeric vector of length \eqn{N}. Number of offsprings
+//' per node.
+//' 
+//' @export
 // [[Rcpp::export]]
 arma::mat leaf_prob(
     const arma::imat & Z,
     const arma::imat & S,
-    const arma::vec & psi,
+    const arma::vec  & psi,
     const arma::ivec & noffsprings
   ) {
   
@@ -65,45 +80,73 @@ arma::mat leaf_prob(
           
         }
       
-  
   return ans;
 }
 
+//' Gain/Loss probabilities
+//' 
+//' Generates a 2x2 matrix with gain loss probabilities, with rows and columns
+//' corresponding to states (0,1) of parent and offspring respectively.
+//' 
+//' @param mu A numeric vector of length 2. Gain and Loss probailities.
+//' 
+//' @return a 2x2 matrix with gain loss probabilities, with rows and columns
+//' corresponding to states (0,1) of parent and offspring respectively.
+//' @export
 // [[Rcpp::export]]
-List list_offsprings(
-    const IntegerVector & id,
-    const IntegerVector & parent
+arma::mat gain_loss_prob(
+    const arma::vec & mu
   ) {
+  arma::mat ans(2,2);
   
-  int N = id.length();
-  std::vector< IntegerVector > ans_tmp(N);
+  for (int i=0; i<2; i++)
+    for (int j=0; j<2; j++) 
+      ans.at(i,j) = !i ? ( j? mu.at(0) : (1-mu.at(0)) ) :
+      ( !j? mu.at(1) : (1-mu.at(1)) );
+    
+  return ans;
+}
+
+//' Root node probabilities
+//' 
+//' Generates a vector of length 2^P with the root node probabilities
+//' per state
+//' @export
+// [[Rcpp::export]]
+arma::vec root_node_prob(
+    const arma::vec  & pi,
+    const arma::imat & S
+) {
+  // Obtaining relevant constants
+  int P       = S.n_cols;
+  int nstates = S.n_rows;
   
-  // Listing offsprings by parent
-  for (int i=0; i<N; i++) {
-    if (parent.at(i) == NA_INTEGER) continue;
-    ans_tmp.at(parent.at(i)).push_back(i);
-  }
+  arma::vec ans(nstates);
+  ans.ones();
   
-  // Coercing into a List
-  List ans(N);
-  for (int i=0; i<N; i++)
-    ans.at(i) = ans_tmp.at(i);
+  for (int s=0; s<nstates; s++)
+    for (int p=0; p<P; p++)
+      ans.at(s) *= pi.at(S.at(s,p));
   
   return ans;
 }
 
+//' Internal node probabilities
+//' 
 //' @param Pr Probabilities (already with leaf probs).
+//' @param M Gain/Loss probabilities (see equation 4 of math.pdf)
 //' @param S States
-//' @param mu Gain/Loss probabilities
+//' @param pi Root node state probabilities (as returned by root_node_prob)
 //' @param noffsprings Number of offsprings
 //' @param offsprings List of offsprings
+//' @export
 // [[Rcpp::export]]
 arma::mat internal_prob(
-  arma::mat & Pr,
+  arma::mat          Pr,
+  const arma::mat  & M,
   const arma::imat & S,
-  const arma::vec & mu,
   const arma::ivec & noffsprings,
-  const List & offsprings
+  const List       & offsprings
 ) {
   
   // Obtaining relevant constants
@@ -111,81 +154,86 @@ arma::mat internal_prob(
   int N       = Pr.n_rows;
   int nstates = S.n_rows;
   
-  for (int i=0; i<N; i++) {
-    if (!noffsprings.at(i))
+  for (int n=(N-1); n>=0; n--) {
+    
+    // Only for root nodes
+    if (!noffsprings.at(n))
       continue;
     
-    // Loop through the columns of Pr
+    // Parent node states integration
     for (int s=0; s<nstates; s++) {
     
       // Obtaining list of offsprings
-      Rprintf("In\n");
-      Rprintf("i:%d\n", i);
-      IntegerVector O(offsprings.at(i));
-      Rprintf("Out\n");
+      IntegerVector O(offsprings.at(n));
       
       // Loop through offsprings
-      for (int o=0; o<noffsprings.at(i) ; o++) {
-        double mutatepr = 0;
+      double offsprings_joint_likelihood = 1.0;
+      for (int o_n=0; o_n<noffsprings.at(n) ; o_n++) {
 
-        // Integrating
-        for (int subs=0; subs<nstates; subs++) {
+        // Offspring states integration
+        double offspring_likelihood = 0.0;
+        for (int s_n=0; s_n<nstates; s_n++) {
+          double s_n_sum = 1.0;
           
           // Loop through functions
-          double pi = 1;
-          for (int p=0; p<P; p++) {
-            // The parent doesn't have the function
-            if (!S.at(s, p)) {
-              pi *=  S.at(subs, p) ? mu.at(0) : (1-mu.at(0));
-            } else {
-              pi *= !S.at(subs, p) ? mu.at(1) : (1-mu.at(1));
-            }
-          }
+          for (int p=0; p<P; p++) 
+            s_n_sum *= M.at(s, s_n);
           
-          // Multiplying by misspecification prob of offspring
-          mutatepr += Pr.at(O.at(o), subs)*pi;
+          // Multiplying by prob of offspring
+          offspring_likelihood += (s_n_sum *Pr.at(O.at(o_n), s_n));
+          
         }
         
-        // Adding it up
-        Pr.at(i, s) *= mutatepr; 
+        // Multiplying with other offsprings
+        offsprings_joint_likelihood *= offspring_likelihood;
+        
       }
+      
+      // Adding state probability
+      Pr.at(n, s) = offsprings_joint_likelihood;
+      
     }
   }
+  
   return Pr;
-
 }
 
-/***R
+//' Log likelihood
+//' 
+//' @export
+// [[Rcpp::export]]
+List LogLike(
+    const arma::imat & Z,
+    const List       & offsprings,
+    const arma::ivec & noffsprings,
+    const arma::vec  & psi,
+    const arma::vec  & mu,
+    const arma::vec  & Pi
+) {
 
+  // Obtaining States, PSI, Gain/Loss probs, and root node probs
+  arma::imat S  = states(Z.n_cols);
+  int nstates   = (int) S.n_cols;
+  arma::mat PSI = leaf_prob(Z, S, psi, noffsprings);
+  arma::mat M   = gain_loss_prob(mu);
+  arma::vec PiP = root_node_prob(Pi, S);
+  
+  // Computing likelihood
+  arma::mat Pr  = internal_prob(PSI, M, S, noffsprings, offsprings);
+  
+  // We only use the root node
+  double ll = 0.0;
+  for (int s = 0; s<nstates; s++)
+    ll += log(PiP.at(s)*Pr.at(0, s));
+  
+  // return ll;
+  return List::create(
+    _["S"]   = S,
+    _["PI"]  = PiP,
+    _["PSI"] = PSI,
+    _["Pr"]   = Pr,
+    _["ll"]  = ll
+  );
+  
+}
 
-# Reading data
-dag <- read.table("../data/pthr11848.dag.txt", sep="\t", header = FALSE,
-                  col.names = c("NodeId", "TypeId", "ParentId"))
-
-dat <- read.table("../data/pthr11848_sorted.txt", sep = "\t", header = FALSE)
-colnames(dat) <- c(sprintf("f%02d",1:(ncol(dat)-1)), "LeafId")
-
-# Listing offsprings
-offsprings <- lapply(dat$LeafId, function(x) {
-  y <- which(dag$ParentId == x)
-})
-
-# Substracting one so we canuse it in C++
-offsprings <- lapply(offsprings, function(x) {
-  if (length(x)) x-1
-  else x
-})
-
-# Checking who is parent
-noffsprings <- sapply(offsprings, length)
-
-# Parameters
-psi <- c(0.020,0.010)
-mu  <- c(0.004,.001)
-S   <- states(ncol(dat)-1)
-
-# Computing leaf probabilities
-ans0 <- leaf_prob(as.matrix(dat[,-4]), S, psi, noffsprings)
-ans1 <- internal_prob(ans0, S, mu, noffsprings, offsprings)
-
-*/

@@ -1,0 +1,30 @@
+.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^man-roxygen$
+^playground$
+.*\.old
+^doc$
+.*\.Rhistory$
+
+# Binary files
+.*\.tar\.gz
+.*\.zip
+.*\.xls
+.*\.doc
+.*\.pdf
+# Misc
+README[.]Rmd
+README[.]md
+^README\_files$
+[.]travis[.]yml
+^appveyor\.yml$
+
+# Not-ready vignettes
+^vignettes/simulating.+\.Rmd$
+^vignettes/structural.+\.Rmd$
+
+# CRAN
+^NEWS\.md$
+^cran-comments\.md$
+^next_release\.md$
