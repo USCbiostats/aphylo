@@ -1,2 +1,8 @@
+2017-01-03  George G. Vega Yon <g.vegayon@gmail.com>
+	* data/*: Adding data more neatly.
+	* R/*.r: Adding new methods for printing and preparing data.
+	* vignettes/*: Using html_vignette output.
+
+
 2016-12-20  George G. Vega Yon <g.vegayon@gmail.com>
 	* Initial commit.

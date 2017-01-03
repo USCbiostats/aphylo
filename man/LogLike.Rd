@@ -2,11 +2,27 @@
 % Please edit documentation in R/RcppExports.R
 \name{LogLike}
 \alias{LogLike}
-\title{Log likelihood}
+\title{Computes Log-likelihood}
 \usage{
 LogLike(Z, offsprings, noffsprings, psi, mu, Pi)
 }
+\arguments{
+\item{Z}{A numeric matrix of size \eqn{N\times P}{N*P} with the function
+states of each leaf.}
+
+\item{offsprings}{A List of length \eqn{N} with the set of offsprings of
+each node.}
+
+\item{noffsprings}{An integer vector of length \eqn{N} with the number of
+offsprings per node.}
+
+\item{psi}{A numeric vector of length 2.}
+
+\item{mu}{A numeric vector of length 2.}
+
+\item{Pi}{A numeric vector of length 2.}
+}
 \description{
-Log likelihood
+Computes Log-likelihood
 }
 

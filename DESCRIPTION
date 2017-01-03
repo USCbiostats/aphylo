@@ -1,5 +1,6 @@
 Package: phylogenetic
 Title: An R package
+Authors@R: person("FirsName", "LastName", role=c("aut","cre"), email="hisemail@usc.edu")
 Version: 0.1.99
 Date: 2016-12-23
 Description: Phylogenetic trees
@@ -8,7 +9,8 @@ LazyData: true
 Imports:
     Rcpp (>= 0.12.1),
     Matrix,
-    methods
+    methods,
+    igraph
 Suggests:
     covr,
     testthat,
@@ -17,6 +19,7 @@ VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 5.0.1
 Encoding: UTF-8
-URL: https://github.com/USCCANA/netdiffuseR
-BugReports: https://github.com/USCCANA/netdiffuseR/issues
+URL: https://github.com/gvegayon/phylogenetic
+BugReports: https://github.com/gvegayon/phylogenetic/issues
 Classification/MSC: 90C35, 90B18, 91D30
+License: MIT + file LICENSE

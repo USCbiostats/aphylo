@@ -16,8 +16,6 @@ internal_prob(Pr, M, S, noffsprings, offsprings)
 \item{noffsprings}{Number of offsprings}
 
 \item{offsprings}{List of offsprings}
-
-\item{pi}{Root node state probabilities (as returned by root_node_prob)}
 }
 \description{
 Internal node probabilities

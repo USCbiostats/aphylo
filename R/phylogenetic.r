@@ -1,4 +1,6 @@
 #' @importFrom Rcpp evalCpp
+#' @importFrom igraph plot.igraph layout_with_sugiyama graph_from_edgelist
+#' @importFrom graphics plot
 NULL
 
 #' @useDynLib phylogenetic
