@@ -10,7 +10,7 @@ output:
 \renewcommand{\Pr}[1]{{\mbox{Pr}\left\{#1\right\} }}
 \newcommand{\Prcond}[2]{{\mbox{Pr}\left\{#1\;|\;#2\right\} }}
 
-### Definitions
+## Definitions
 
 A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offsprings such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
 
@@ -64,3 +64,23 @@ Finally, let $\pi\equiv\{\pi_s\}_{s=1}^{2^P}$ to be the root node state probabil
 $$
 L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}
 $$
+
+# Data
+
+The model uses two different datasets: (1) experimental data, which holds functions indicators, and (2) phylogenetic tree data, which contains the parent/offspring relations.
+
+Given how the algorithm for computing the likelihood has been programmed, it is necessary that the experimental dataset must have as many rows as nodes (parents and offsprings) there are. To fulfill such requirement, the package `phylogenetic`, throught the function `prepare_data`, ``completes'' the experimental dataset as follows:
+
+1.  List all nodes in the tree that are not in the experimental dataset.
+
+2.  Once identified, if any, add those nodes to the experimental dataset. The
+    function indicator columns will have value '9' (unknown). Furthermore, the
+    added nodes are tagged so that the user can identify them later.
+    
+3.  The new experimental dataset is sorted increasingly according to the node
+    id number. The idea is that the root, node 0, should appear in the
+    first row.
+    
+Once the experimental data has been processed, 
+    
+4.  We identify

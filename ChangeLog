@@ -1,4 +1,9 @@
 2017-01-03  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Now experimental data is filled. and
+	  adding new set of functions.
+	* vignettes/phylogemetic_trees.rmd: Working on doc.
+
+2017-01-03  George G. Vega Yon <g.vegayon@gmail.com>
 	* data/*: Adding data more neatly.
 	* R/*.r: Adding new methods for printing and preparing data.
 	* vignettes/*: Using html_vignette output.

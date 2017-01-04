@@ -6,14 +6,14 @@ library(phylogenetic)
 data("experiment")
 data("tree")
 
-# Input data
-Z <- as.matrix(experiment[,-4])
-
 # Listing offsprings -----------------------------------------------------------
 O <- get_offsprings(
   experiment, "LeafId", 
   tree, "NodeId", "ParentId"
 )
+
+# Input data
+Z <- as.matrix(O$experiment[,-4])
 
 # Parameters -------------------------------------------------------------------
 psi     <- c(0.020,0.010)
