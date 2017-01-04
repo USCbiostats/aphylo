@@ -1,0 +1,66 @@
+---
+title: "Phylogenic Trees"
+date: "`r paste('This version', Sys.Date())`"
+output:
+  pdf_document:
+    md_extensions: +latex_macros
+---
+
+\newcommand{\isone}[1]{{\boldsymbol{1}\left\{ #1 \right\}}}
+\renewcommand{\Pr}[1]{{\mbox{Pr}\left\{#1\right\} }}
+\newcommand{\Prcond}[2]{{\mbox{Pr}\left\{#1\;|\;#2\right\} }}
+
+### Definitions
+
+A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offsprings such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
+
+### Leaf Probabilities
+
+Given $P=\{1,2,\dots, P\}$ functions, each node has $2^P$ different possible states. For any given node $n$, its state $s_n$ is a vector of length $P$ in $\{0,1\}^P$, _e.g._ $s_n = \{0,0,0\}$.
+
+In the experimental data, for each leaf $l$, we have the observed state defined by the vector $s_l\equiv\{s_{lp}\}_{p=1}^P$ with 
+
+$$
+z_{lp} = \left\{
+\begin{array}{ll}
+1 & \mbox{if the function }p\mbox{ is active}\\
+0 & \mbox{if the function }p\mbox{ is not active}\\
+9 & \mbox{if we don't have information }
+\end{array}\right.
+$$
+
+This way, given that we observe $s\equiv\{s_p\}_{p=1}^P$, the probability that the true state is $s'$ is:
+
+$$ 
+\Psi_{ss'} = \left\{
+\begin{array}{ll}
+\prod_p\{\psi_p^\isone{s_{lp}'=s_{lp}}(1-\psi_p)^\isone{s_{lp}'\neq s_{lp}}\} & \mbox{if }s_{lp}'\neq 9 \\
+1 & \mbox{otherwise}
+\end{array}
+\right.
+$$ 
+Where $\psi\equiv\left\{ \psi_p \right\}_{p=1}^P$ are misclassification probabilities.
+
+### Internal Nodes Probabilities
+
+For any internal node $n$, the likelihood is defined in terms of gain and loss functions (also stored as a $N\times 2^P$ array). Furthermore, it is conditional on $n$'s offsprings $o_n\subset\{m\in N:m<n\}$, which has cardinality $|o_n|=O_n$, and the true state $s$. Then, the probability that the internal node $n$ has state $s$ is
+
+ 
+$$
+P_{n,s} = \prod_{o_n} \sum_{s^*} P_{o_n,s^*}
+\prod_p \left(\left[\underbrace{\mu_0^\isone{s_p^*}}_{\mbox{Gain}}\underbrace{(1-\mu_0)^\isone{\neg s_p^*}}_{\mbox{No gain}}\right]^\isone{\neg s_p}\times
+  \left[\underbrace{\mu_1^\isone{\neg s_p^*}}_{\mbox{Loss}}\underbrace{(1-\mu_1)^\isone{s_p^*}}_{\mbox{No Loss}}\right]^\isone{s_p}\right)
+$$
+
+Where $P_{o_n,s^*}=\Psi_{s^*s'}$ if the offspring is a leaf. Computationally, observe that the larger parenthesis can be computed only once and then retrieved depending on the values of $\{s_p^*,s_p\}$. Let $M\equiv\{m_{s_p^*,s_p}\}$ to be an array of size $2\times 2$ holding the Gain/Loss probabilities, then, the previous equation reduces to:
+
+$$
+P_{n,s}  = \prod_{o_n} \sum_{s^*} P_{o_n,s^*}
+\prod_p m_{s_p^*,s_p}
+$$
+
+Finally, let $\pi\equiv\{\pi_s\}_{s=1}^{2^P}$ to be the root node state probabilities, then, the likelihood for $n=0$ can be computed as
+
+$$
+L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}
+$$

@@ -159,7 +159,7 @@ arma::mat internal_prob(
   
   for (int n=(N-1); n>=0; n--) {
     
-    // Only for root nodes
+    // Only for internal nodes
     if (!noffsprings.at(n))
       continue;
     
