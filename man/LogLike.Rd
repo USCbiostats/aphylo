@@ -4,17 +4,17 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(Z, offsprings, noffsprings, psi, mu, Pi)
+LogLike(Z, offspring, noffspring, psi, mu, Pi)
 }
 \arguments{
 \item{Z}{A numeric matrix of size \eqn{N\times P}{N*P} with the function
 states of each leaf.}
 
-\item{offsprings}{A List of length \eqn{N} with the set of offsprings of
+\item{offspring}{A List of length \eqn{N} with the set of offspring of
 each node.}
 
-\item{noffsprings}{An integer vector of length \eqn{N} with the number of
-offsprings per node.}
+\item{noffspring}{An integer vector of length \eqn{N} with the number of
+offspring per node.}
 
 \item{psi}{A numeric vector of length 2.}
 

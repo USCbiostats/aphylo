@@ -1,3 +1,14 @@
+2017-01-10  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Changing offsprings to offspring
+	* R/methods.r: Idem.
+	* R/phylogenetic.r: Adding new imports.
+	* playground/example.r: Fixing N-R optim.
+	* vignettes/phylogenetic_trees.rmd: Working on doc.
+	* src/peeling_rcpp.cpp: Adding beta dist prior for psi, and,
+	  fixing bug on leaf probabilities.
+	* R/plot_loglike.r: New function to visualize LogLike.
+
+
 2017-01-03  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Now experimental data is filled. and
 	  adding new set of functions.

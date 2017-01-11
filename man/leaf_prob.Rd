@@ -4,7 +4,7 @@
 \alias{leaf_prob}
 \title{Leaf probabilities}
 \usage{
-leaf_prob(Z, S, psi, noffsprings)
+leaf_prob(Z, S, psi, noffspring)
 }
 \arguments{
 \item{Z}{A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.}
@@ -13,7 +13,7 @@ leaf_prob(Z, S, psi, noffsprings)
 
 \item{psi}{A numeric vector of length 2.}
 
-\item{noffsprings}{A numeric vector of length \eqn{N}. Number of offsprings
+\item{noffspring}{A numeric vector of length \eqn{N}. Number of offspring
 per node.}
 }
 \description{

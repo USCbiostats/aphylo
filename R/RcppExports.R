@@ -18,12 +18,12 @@ states <- function(P) {
 #' @param Z A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.
 #' @param S A matrix of size \eqn{2^P*P} as returned by \code{\link{states}}.
 #' @param psi A numeric vector of length 2.
-#' @param noffsprings A numeric vector of length \eqn{N}. Number of offsprings
+#' @param noffspring A numeric vector of length \eqn{N}. Number of offspring
 #' per node.
 #' 
 #' @export
-leaf_prob <- function(Z, S, psi, noffsprings) {
-    .Call('phylogenetic_leaf_prob', PACKAGE = 'phylogenetic', Z, S, psi, noffsprings)
+leaf_prob <- function(Z, S, psi, noffspring) {
+    .Call('phylogenetic_leaf_prob', PACKAGE = 'phylogenetic', Z, S, psi, noffspring)
 }
 
 #' Gain/Loss probabilities
@@ -58,27 +58,27 @@ root_node_prob <- function(pi, S) {
 #' @param Pr Probabilities (already with leaf probs).
 #' @param M Gain/Loss probabilities (see equation 4 of math.pdf)
 #' @param S States
-#' @param noffsprings Number of offsprings
-#' @param offsprings List of offsprings
+#' @param noffspring Number of offspring
+#' @param offspring List of offspring
 #' @export
-internal_prob <- function(Pr, M, S, noffsprings, offsprings) {
-    .Call('phylogenetic_internal_prob', PACKAGE = 'phylogenetic', Pr, M, S, noffsprings, offsprings)
+internal_prob <- function(Pr, M, S, noffspring, offspring) {
+    .Call('phylogenetic_internal_prob', PACKAGE = 'phylogenetic', Pr, M, S, noffspring, offspring)
 }
 
 #' Computes Log-likelihood
 #' 
 #' @param Z A numeric matrix of size \eqn{N\times P}{N*P} with the function
 #' states of each leaf.
-#' @param offsprings A List of length \eqn{N} with the set of offsprings of
+#' @param offspring A List of length \eqn{N} with the set of offspring of
 #' each node.
-#' @param noffsprings An integer vector of length \eqn{N} with the number of
-#' offsprings per node.
+#' @param noffspring An integer vector of length \eqn{N} with the number of
+#' offspring per node.
 #' @param psi A numeric vector of length 2.
 #' @param mu A numeric vector of length 2.
 #' @param Pi A numeric vector of length 2.
 #' 
 #' @export
-LogLike <- function(Z, offsprings, noffsprings, psi, mu, Pi) {
-    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offsprings, noffsprings, psi, mu, Pi)
+LogLike <- function(Z, offspring, noffspring, psi, mu, Pi) {
+    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi)
 }
 

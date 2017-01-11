@@ -4,7 +4,7 @@
 \alias{internal_prob}
 \title{Internal node probabilities}
 \usage{
-internal_prob(Pr, M, S, noffsprings, offsprings)
+internal_prob(Pr, M, S, noffspring, offspring)
 }
 \arguments{
 \item{Pr}{Probabilities (already with leaf probs).}
@@ -13,9 +13,9 @@ internal_prob(Pr, M, S, noffsprings, offsprings)
 
 \item{S}{States}
 
-\item{noffsprings}{Number of offsprings}
+\item{noffspring}{Number of offspring}
 
-\item{offsprings}{List of offsprings}
+\item{offspring}{List of offspring}
 }
 \description{
 Internal node probabilities

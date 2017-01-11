@@ -1,6 +1,6 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom igraph plot.igraph layout_with_sugiyama graph_from_edgelist
-#' @importFrom graphics plot
+#' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 NULL
 
 #' @useDynLib phylogenetic

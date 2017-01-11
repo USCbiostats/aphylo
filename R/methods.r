@@ -1,11 +1,11 @@
-#' Plot and print methods for \code{phylo_offsprings} objects
-#' @param x An object of class \code{phylo_offsprings}.
+#' Plot and print methods for \code{phylo_offspring} objects
+#' @param x An object of class \code{phylo_offspring}.
 #' @param y Ignored.
 #' @param layout Passed to \code{\link[igraph:plot.igraph]{igraph:plot.igraph}}
 #' @param ... Further arguments passed to the method.
-#' @rdname get_offsprings
+#' @rdname get_offspring
 #' @export
-plot.phylo_offsprings <- function(
+plot.phylo_offspring <- function(
   x, y=NULL, layout=NULL, ...) {
   
   # Retrieving the edgelist

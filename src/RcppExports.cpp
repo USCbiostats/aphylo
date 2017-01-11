@@ -18,16 +18,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // leaf_prob
-arma::mat leaf_prob(const arma::imat& Z, const arma::imat& S, const arma::vec& psi, const arma::ivec& noffsprings);
-RcppExport SEXP phylogenetic_leaf_prob(SEXP ZSEXP, SEXP SSEXP, SEXP psiSEXP, SEXP noffspringsSEXP) {
+arma::mat leaf_prob(const arma::imat& Z, const arma::imat& S, const arma::vec& psi, const arma::ivec& noffspring);
+RcppExport SEXP phylogenetic_leaf_prob(SEXP ZSEXP, SEXP SSEXP, SEXP psiSEXP, SEXP noffspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type Z(ZSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type noffsprings(noffspringsSEXP);
-    rcpp_result_gen = Rcpp::wrap(leaf_prob(Z, S, psi, noffsprings));
+    Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
+    rcpp_result_gen = Rcpp::wrap(leaf_prob(Z, S, psi, noffspring));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -55,33 +55,33 @@ BEGIN_RCPP
 END_RCPP
 }
 // internal_prob
-arma::mat internal_prob(arma::mat Pr, const arma::mat& M, const arma::imat& S, const arma::ivec& noffsprings, const List& offsprings);
-RcppExport SEXP phylogenetic_internal_prob(SEXP PrSEXP, SEXP MSEXP, SEXP SSEXP, SEXP noffspringsSEXP, SEXP offspringsSEXP) {
+arma::mat internal_prob(arma::mat Pr, const arma::mat& M, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
+RcppExport SEXP phylogenetic_internal_prob(SEXP PrSEXP, SEXP MSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type Pr(PrSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type M(MSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type noffsprings(noffspringsSEXP);
-    Rcpp::traits::input_parameter< const List& >::type offsprings(offspringsSEXP);
-    rcpp_result_gen = Rcpp::wrap(internal_prob(Pr, M, S, noffsprings, offsprings));
+    Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    rcpp_result_gen = Rcpp::wrap(internal_prob(Pr, M, S, noffspring, offspring));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& Z, const List& offsprings, const arma::ivec& noffsprings, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
-RcppExport SEXP phylogenetic_LogLike(SEXP ZSEXP, SEXP offspringsSEXP, SEXP noffspringsSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+List LogLike(const arma::imat& Z, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
+RcppExport SEXP phylogenetic_LogLike(SEXP ZSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const List& >::type offsprings(offspringsSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type noffsprings(noffspringsSEXP);
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike(Z, offsprings, noffsprings, psi, mu, Pi));
+    rcpp_result_gen = Rcpp::wrap(LogLike(Z, offspring, noffspring, psi, mu, Pi));
     return rcpp_result_gen;
 END_RCPP
 }

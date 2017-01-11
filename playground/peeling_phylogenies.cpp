@@ -202,7 +202,7 @@ double LogLike(double parm[P])
 				for (f=0; f<F; f++) // Parent indices
 				  xpar[f] = x[f];
 				
-				for (o=0; o<Noff[n]; o++) { // Looping through offsprings
+				for (o=0; o<Noff[n]; o++) { // Looping through offspring
 				  int offid = OffId[n][o]; // Get the offspring pos
 					MutationProbabilities(NodeType[n],BranchLength[offid]); // Nothing right now
 					double sumprob=0;

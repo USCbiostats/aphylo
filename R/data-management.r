@@ -1,4 +1,4 @@
-#' Find the offsprings of each node.
+#' Find the offspring of each node.
 #' 
 #' @param data_exper A data.frame with the experimental data
 #' @param leafidvar A character scalar with the name of the leaf id variable
@@ -16,14 +16,14 @@
 #' be \code{\link[igraph:layout_with_sugiyama]{layout_with_sugiyama}}
 #' with parameter \code{maxiter=200}.
 #' 
-#' @return A list of length \eqn{n} with relative position of offsprings
+#' @return A list of length \eqn{n} with relative position of offspring
 #' of each node, with respect to \code{data_exper}, starting from 0.
 #' @examples 
 #' # Loading data
 #' data(experiment)
 #' data(tree)
 #' 
-#' ans <- get_offsprings(
+#' ans <- get_offspring(
 #'     experiment, "LeafId", 
 #'     tree, "NodeId", "ParentId"
 #' )
@@ -33,7 +33,7 @@
 #' # We can visualize it
 #' plot(ans, vertex.size=5, vertex.label=NA)
 #' @export
-get_offsprings <- function(
+get_offspring <- function(
   data_exper,
   leafidvar,
   data_tree,
@@ -88,22 +88,22 @@ get_offsprings <- function(
   structure(
     list(
       experiment  = data_exper,
-      offsprings  = ans,
-      noffsprings = sapply(ans, length),
+      offspring  = ans,
+      noffspring = sapply(ans, length),
       edgelist    = as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE])
     ),
-    class = "phylo_offsprings"
+    class = "phylo_offspring"
   )
 }
 
-#' Convert \code{phylo_offsprings} to \code{igraph} objects.
-#' @param x An object of class \code{phylo_offsprings}
+#' Convert \code{phylo_offspring} to \code{igraph} objects.
+#' @param x An object of class \code{phylo_offspring}
 #' @export
-phylo_offsprings_to_igraph <- function(x) {
+phylo_offspring_to_igraph <- function(x) {
   
   # Checking class
-  if (!inherits(x, "phylo_offsprings"))
-    stop("-x- must be of class -phylo_offsprings-.")
+  if (!inherits(x, "phylo_offspring"))
+    stop("-x- must be of class -phylo_offspring-.")
   
   # Retrieving the edgelist
   edgelist   <- x[["edgelist"]]
@@ -113,16 +113,16 @@ phylo_offsprings_to_igraph <- function(x) {
   igraph::graph_from_edgelist(edgelist)
 }
 
-#' @rdname phylo_offsprings_to_igraph
+#' @rdname phylo_offspring_to_igraph
 #' @export
 phylo_o_to_phylo <- function(x) {
   
   # Checking class
-  if (!inherits(x, "phylo_offsprings"))
-    stop("-x- must be of class -phylo_offsprings-.")
+  if (!inherits(x, "phylo_offspring"))
+    stop("-x- must be of class -phylo_offspring-.")
   
   # Recoding edgelist
-  graph <- phylo_offsprings_to_igraph(x)
+  graph <- phylo_offspring_to_igraph(x)
   graph <- data.frame(igraph::as_edgelist(graph), stringsAsFactors=TRUE)
   
   

@@ -38,7 +38,7 @@ arma::imat states(
 //' @param Z A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.
 //' @param S A matrix of size \eqn{2^P*P} as returned by \code{\link{states}}.
 //' @param psi A numeric vector of length 2.
-//' @param noffsprings A numeric vector of length \eqn{N}. Number of offsprings
+//' @param noffspring A numeric vector of length \eqn{N}. Number of offspring
 //' per node.
 //' 
 //' @export
@@ -47,7 +47,7 @@ arma::mat leaf_prob(
     const arma::imat & Z,
     const arma::imat & S,
     const arma::vec  & psi,
-    const arma::ivec & noffsprings
+    const arma::ivec & noffspring
   ) {
   
   // Obtaining relevant constants
@@ -67,8 +67,8 @@ arma::mat leaf_prob(
   ans.ones();
 
   for (int i=0; i<N; i++)
-    // Only compute for offsprings (and nodes with no NA)
-    if (!noffsprings.at(i)) 
+    // Only compute for offspring (and nodes with no NA)
+    if (!noffspring.at(i)) 
       for (int s=0; s<nstates; s++)
         for (int p=0; p<P; p++) {
           
@@ -76,7 +76,7 @@ arma::mat leaf_prob(
           if (Z.at(i,p) == 9)
             continue;
           
-          ans.at(i, s) *= (Z.at(i, p) == S.at(s, p))? (1 - psi.at(0)): psi.at(1);
+          ans.at(i, s) *= (Z.at(i, p) == S.at(s, p))? (1 - psi.at(S.at(s, p))): psi.at(S.at(s, p));
           
         }
       
@@ -140,16 +140,16 @@ arma::vec root_node_prob(
 //' @param Pr Probabilities (already with leaf probs).
 //' @param M Gain/Loss probabilities (see equation 4 of math.pdf)
 //' @param S States
-//' @param noffsprings Number of offsprings
-//' @param offsprings List of offsprings
+//' @param noffspring Number of offspring
+//' @param offspring List of offspring
 //' @export
 // [[Rcpp::export]]
 arma::mat internal_prob(
   arma::mat          Pr,
   const arma::mat  & M,
   const arma::imat & S,
-  const arma::ivec & noffsprings,
-  const List       & offsprings
+  const arma::ivec & noffspring,
+  const List       & offspring
 ) {
   
   // Obtaining relevant constants
@@ -160,18 +160,18 @@ arma::mat internal_prob(
   for (int n=(N-1); n>=0; n--) {
     
     // Only for internal nodes
-    if (!noffsprings.at(n))
+    if (!noffspring.at(n))
       continue;
     
     // Parent node states integration
     for (int s=0; s<nstates; s++) {
     
-      // Obtaining list of offsprings
-      IntegerVector O(offsprings.at(n));
+      // Obtaining list of offspring
+      IntegerVector O(offspring.at(n));
       
-      // Loop through offsprings
-      double offsprings_joint_likelihood = 1.0;
-      for (int o_n=0; o_n<noffsprings.at(n) ; o_n++) {
+      // Loop through offspring
+      double offspring_joint_likelihood = 1.0;
+      for (int o_n=0; o_n<noffspring.at(n) ; o_n++) {
 
         // Offspring states integration
         double offspring_likelihood = 0.0;
@@ -187,13 +187,13 @@ arma::mat internal_prob(
           
         }
         
-        // Multiplying with other offsprings
-        offsprings_joint_likelihood *= offspring_likelihood;
+        // Multiplying with other offspring
+        offspring_joint_likelihood *= offspring_likelihood;
         
       }
       
       // Adding state probability
-      Pr.at(n, s) = offsprings_joint_likelihood;
+      Pr.at(n, s) = offspring_joint_likelihood;
       
     }
   }
@@ -205,10 +205,10 @@ arma::mat internal_prob(
 //' 
 //' @param Z A numeric matrix of size \eqn{N\times P}{N*P} with the function
 //' states of each leaf.
-//' @param offsprings A List of length \eqn{N} with the set of offsprings of
+//' @param offspring A List of length \eqn{N} with the set of offspring of
 //' each node.
-//' @param noffsprings An integer vector of length \eqn{N} with the number of
-//' offsprings per node.
+//' @param noffspring An integer vector of length \eqn{N} with the number of
+//' offspring per node.
 //' @param psi A numeric vector of length 2.
 //' @param mu A numeric vector of length 2.
 //' @param Pi A numeric vector of length 2.
@@ -217,8 +217,8 @@ arma::mat internal_prob(
 // [[Rcpp::export]]
 List LogLike(
     const arma::imat & Z,
-    const List       & offsprings,
-    const arma::ivec & noffsprings,
+    const List       & offspring,
+    const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi
@@ -227,12 +227,12 @@ List LogLike(
   // Obtaining States, PSI, Gain/Loss probs, and root node probs
   arma::imat S  = states(Z.n_cols);
   int nstates   = (int) S.n_rows;
-  arma::mat PSI = leaf_prob(Z, S, psi, noffsprings);
+  arma::mat PSI = leaf_prob(Z, S, psi, noffspring);
   arma::mat M   = gain_loss_prob(mu);
   arma::vec PiP = root_node_prob(Pi, S);
   
   // Computing likelihood
-  arma::mat Pr  = internal_prob(PSI, M, S, noffsprings, offsprings);
+  arma::mat Pr  = internal_prob(PSI, M, S, noffspring, offspring);
   
   // We only use the root node
   double ll = 0.0;
@@ -240,14 +240,21 @@ List LogLike(
   for (int s = 0; s<nstates; s++)
     ll += log(PiP.at(s)*Pr.at(0, s));
   
+  ll += log(psi.at(0)) + 9.0*log(1.0 - psi.at(0)) +
+    log(psi.at(1)) + 9.0*log(1.0 - psi.at(1));
+  
   // return ll;
-  return List::create(
+  List ans = List::create(
     _["S"]   = S,
     _["PI"]  = PiP,
     _["PSI"] = PSI,
     _["Pr"]   = Pr,
     _["ll"]  = ll
   );
+  
+  ans.attr("class") = "phylo_LogLik";
+  
+  return(ans);
   
 }
 

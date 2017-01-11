@@ -12,11 +12,11 @@ output:
 
 ## Definitions
 
-A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offsprings such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
+A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offspring such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
 
 ### Leaf Probabilities
 
-Given $P=\{1,2,\dots, P\}$ functions, each node has $2^P$ different possible states. For any given node $n$, its state $s_n$ is a vector of length $P$ in $\{0,1\}^P$, _e.g._ $s_n = \{0,0,0\}$.
+Given $1,\dots, P$ functions, each node has $2^P$ different possible states. For any given node $n$, its state $s_n$ is a vector of length $P$ in $\{0,1\}^P$, _e.g._ $s_n = \{0,0,0\}$.
 
 In the experimental data, for each leaf $l$, we have the observed state defined by the vector $s_l\equiv\{s_{lp}\}_{p=1}^P$ with 
 
@@ -29,21 +29,22 @@ z_{lp} = \left\{
 \end{array}\right.
 $$
 
-This way, given that we observe $s\equiv\{s_p\}_{p=1}^P$, the probability that the true state is $s'$ is:
+This way, given that we observe $s'\equiv\{s_p'\}_{p=1}^P$, the probability that the true state is $s$ is:
 
 $$ 
 \Psi_{ss'} = \left\{
 \begin{array}{ll}
-\prod_p\{\psi_p^\isone{s_{lp}'=s_{lp}}(1-\psi_p)^\isone{s_{lp}'\neq s_{lp}}\} & \mbox{if }s_{lp}'\neq 9 \\
+\prod_p\left\{\left[\psi_0^{s_{lp}'}(1-\psi_0)^{\neg s_{lp}'}\right]^\isone{\neg s_{lp}} \left[\psi_1^{\neg s_{lp}'}(1-\psi_1)^{s_{lp}'}\right]^\isone{s_{lp}} \right\} & \mbox{if }s_{lp}'\neq 9 \\ \\
 1 & \mbox{otherwise}
 \end{array}
 \right.
 $$ 
-Where $\psi\equiv\left\{ \psi_p \right\}_{p=1}^P$ are misclassification probabilities.
+
+Where $\psi\equiv\{\psi_0, \psi_1\}$ is a vector of missclassification probabilities for un-activated and activated functions.
 
 ### Internal Nodes Probabilities
 
-For any internal node $n$, the likelihood is defined in terms of gain and loss functions (also stored as a $N\times 2^P$ array). Furthermore, it is conditional on $n$'s offsprings $o_n\subset\{m\in N:m<n\}$, which has cardinality $|o_n|=O_n$, and the true state $s$. Then, the probability that the internal node $n$ has state $s$ is
+For any internal node $n$, the likelihood is defined in terms of gain and loss functions (also stored as a $N\times 2^P$ array). Furthermore, it is conditional on $n$'s offspring $o_n\subset\{m\in N:m<n\}$, which has cardinality $|o_n|=O_n$, and the true state $s$. Then, the probability that the internal node $n$ has state $s$ is
 
  
 $$
@@ -69,7 +70,7 @@ $$
 
 The model uses two different datasets: (1) experimental data, which holds functions indicators, and (2) phylogenetic tree data, which contains the parent/offspring relations.
 
-Given how the algorithm for computing the likelihood has been programmed, it is necessary that the experimental dataset must have as many rows as nodes (parents and offsprings) there are. To fulfill such requirement, the package `phylogenetic`, throught the function `prepare_data`, ``completes'' the experimental dataset as follows:
+Given how the algorithm for computing the likelihood has been programmed, it is necessary that the experimental dataset must have as many rows as nodes (parents and offspring) there are. To fulfill such requirement, the package `phylogenetic`, throught the function `prepare_data`, ``completes'' the experimental dataset as follows:
 
 1.  List all nodes in the tree that are not in the experimental dataset.
 
