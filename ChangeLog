@@ -1,3 +1,11 @@
+2017-01-11  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: get_offspring now returns neat experiment
+	* R/plot_loglike.r: Fixed bug
+	* playground/example.r: Accomodating script to changes in
+	get_offspring
+	* playground/root_node_prob.rmd: Notes on root node.
+
+
 2017-01-10  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Changing offsprings to offspring
 	* R/methods.r: Idem.

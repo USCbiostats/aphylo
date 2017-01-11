@@ -1,0 +1,30 @@
+---
+title: ""
+output: pdf_document
+---
+
+The likelihood function is $L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}$, where $\pi_s = \prod_p \pi^{s_p}(1-\pi)^{\neg s_p}$, hence, we can write
+
+$$\tag{1}
+\sum_s \left(\prod_p \pi^{s_p}(1-\pi)^{\neg s_p}\right) P_{0,s}
+$$
+
+To illustrate the problem, let $P=2$, then (1) is
+
+$$
+\pi^2P_{0,1} + \pi(1-\pi)P_{0,2} + (1-\pi)^2P_{0,3} + (1-\pi)\pi Pr_{0,4}
+$$
+
+For now, lets forget about the constraints. The First Order Condition for $\pi$ is, 
+
+$$\tag{FOC}
+\frac{\partial L_0}{\partial \pi}: \quad 2\pi Pr_{0,1} + (1-2\pi) Pr_{0,2} - 2(1-\pi) Pr_{0,3} + (1-2\pi) Pr_{0,4} = 0
+$$
+
+Which can be reordered to get
+
+$$
+\pi^* = \frac{1}{2}\left(\frac{Pr_{0,3} - Pr_{0,2} + Pr_{0,3} - Pr_{0,4}}{Pr_{0,1} - Pr_{0,2} + Pr_{0,3} - Pr_{0,4}}\right)
+$$
+
+This way, as $|Pr_{0,3} - Pr_{0,1}|\to0$ $\pi^*\to 1/2$, which is the result I observe in the MLE estimation.

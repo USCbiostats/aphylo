@@ -41,9 +41,6 @@ plot_LogLike <- function(
   ...
   ) {
   
-  # Relevant data
-  Z <- as.matrix(x$experiment[,1:3])
-  
   # Creating space
   PSI <- seq(psi_range[1], psi_range[2], length.out = nlevels)
   MU  <- seq(mu_range[1], mu_range[2], length.out = nlevels)
@@ -56,24 +53,25 @@ plot_LogLike <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       psi_z[i,j] <- LogLike(
-        Z, x$offspring, x$noffspring,
+        x$experiment, x$offspring, x$noffspring,
         c(PSI[i],PSI[j]),
         c(mu,mu), c(Pi,1-Pi))$ll
   
   psi  <- mean(PSI)
-  pi_z <- matrix(nrow=nlevels, ncol=nlevels)
-  for (i in 1:nlevels)
-    for (j in 1:nlevels)
-      pi_z[i,j] <- LogLike(
-        Z, x$offspring, x$noffspring,
+  pi_z <- matrix(nrow=nlevels, ncol=nlevels) # vector("numeric", nlevels)
+  for (i in 1:nlevels) 
+    for (j in 1:nlevels) {
+      pi_z[i, j] <- LogLike(
+        x$experiment, x$offspring, x$noffspring,
         c(psi, psi),
-        c(mu, mu), c(PI[i],1-PI[i]))$ll
+        c(MU[j], mu), c(PI[i],1-PI[i]))$ll
+    }
   
   mu_z <- matrix(nrow=nlevels, ncol=nlevels)
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       mu_z[i,j] <- LogLike(
-        Z, x$offspring, x$noffspring,
+        x$experiment, x$offspring, x$noffspring,
         c(psi, psi),
         c(MU[i],MU[j]), c(Pi,1-Pi))$ll
   
@@ -98,11 +96,17 @@ plot_LogLike <- function(
           xlab=expression(mu[0]), ylab=expression(mu[1]), 
           main = bquote(psi == .(psi)~and~pi==.(Pi)), ...)
   
-  plotfun(PI, PI, pi_z,
-          xlab=expression(pi), ylab=expression(1-pi), 
-          main = bquote(mu == .(mu)~and~psi==.(psi)), ...)
+  # oldmar<- par()$mar
+  # par(mar=oldpar$mar)
+  # plot(PI, pi_z,
+  #         xlab=expression(pi), ylab="", 
+  #         main = bquote(mu == .(mu)~and~psi==.(psi)), type="l")
+  plotfun(PI, MU, pi_z,
+          xlab=expression(pi), ylab=expression(mu[0]), 
+          main = bquote(psi == .(psi)~and~mu[1]==.(mu)), ...)
   
   # Adding legend
+  # par(mar = oldmar)
   plot.new()
   plot.window(c(0,1), c(0,1))
   legend(

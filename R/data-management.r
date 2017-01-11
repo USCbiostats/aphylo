@@ -87,10 +87,12 @@ get_offspring <- function(
   # Checking who is parent
   structure(
     list(
-      experiment  = data_exper,
+      experiment = unname(as.matrix(data_exper[,funvars])),
+      fun_names  = funvars, 
+      added      = data_exper[["added"]],
       offspring  = ans,
       noffspring = sapply(ans, length),
-      edgelist    = as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE])
+      edgelist   = as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE])
     ),
     class = "phylo_offspring"
   )
