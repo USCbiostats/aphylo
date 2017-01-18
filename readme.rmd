@@ -3,6 +3,10 @@ title: "Phylogenetic tree"
 output: github_document
 ---
 
+[![Travis-CI Build Status](https://travis-ci.org/gvegayon/phylogenetic.svg?branch=master)](https://travis-ci.org/gvegayon/phylogenetic)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/phylogenetic?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/phylogenetic)
+[![Coverage Status](https://img.shields.io/codecov/c/github/gvegayon/phylogenetic/master.svg)](https://codecov.io/github/gvegayon/phylogenetic?branch=master)
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -32,8 +36,8 @@ head(experiment)
 head(tree)
 ```
 
-```{r Get offsprings}
-O <- get_offsprings(
+```{r Get offspring}
+O <- get_offspring(
     experiment, "LeafId", 
     tree, "NodeId", "ParentId"
 )
@@ -42,23 +46,33 @@ O <- get_offsprings(
 lapply(O, head)
 
 # We can visualize it
-plot(O, vertex.size=5, vertex.label=NA)
+plot(O, vertex.size = 5, vertex.label = NA)
+plot_LogLike(O)
 ```
 
 ## Likelihood
 
 
 ```{r Computing likelihood}
-
 # Parameters and data
-Z <- as.matrix(experiment[,-4])
 
 psi     <- c(0.020,0.010)
 mu      <- c(0.004,.001)
 pi_root <- c(1-0.1,.1)
 
 # Computing likelihood
-ll1   <- LogLike(Z, O$offsprings, O$noffsprings, psi, mu, pi_root)
+ll1   <- LogLike(O$experiment, O$offspring, O$noffspring, psi, mu, pi_root)
 lapply(ll1, head)
+```
+
+# MLE estimation
+
+```{r MLE}
+ans0 <- mle(rep(.5,5), O)
+
+# Plotting the path
+ans0$par
+ans0$value
+plot(ans0)
 ```
 

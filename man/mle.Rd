@@ -3,20 +3,32 @@
 \name{mle}
 \alias{mle}
 \alias{plot.phylo_mle}
-\title{Maximum Likelihood Estimation of the Phylogenetic Tree.}
+\title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
 mle(params, dat, maxiter = 20L, criter = 1e-05, useABC = FALSE,
   priors = list(psi = NULL, mu = NULL, Pi = NULL), abcoptim.args = list(ub =
   0.9999, lb = 1e-04, maxCycle = 500L, criter = 50L))
 
-\method{plot}{phylo_mle}(x, y = NULL, main = "Prior for Psi ~ beta(1,9)",
-  xlab = "Step", ylab = "Log-Likelihood", type = "l", ...)
+\method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
+  ylab = "Log-Likelihood", type = "l", ...)
 }
 \arguments{
 \item{params}{A vector of length 5 with initial parameters. In particular
 \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.}
 
-\item{dat}{An object of class \code{phylo_offspring}.}
+\item{dat}{An object of class \code{phylo_offspring} as returned by
+\code{\link{get_offspring}}.}
+
+\item{maxiter}{Integer scalar. Maximum number of steps in the Newton-Raphson
+algorithm.}
+
+\item{criter}{Numeric scalar. Stoping criteria for the Newton-Raphson algorithm.}
+
+\item{useABC}{Logical scalar. When \code{TRUE}, uses Artificial Bee Colony
+optimization algorithm instead.}
+
+\item{priors}{A list of length 3 with functions named \code{psi}, \code{mu},
+\code{Pi}}
 
 \item{abcoptim.args}{A list of arguments to be passed to
 \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package.}
@@ -34,12 +46,19 @@ mle(params, dat, maxiter = 20L, criter = 1e-05, useABC = FALSE,
 \item{type}{Passed to plot.}
 
 \item{...}{Further arguments passed to plot}
-
-\item{prior}{A list of length 3 with functions named \code{psi}, \code{mu},
-\code{Pi}}
+}
+\value{
+A list of class \code{phylo_mle} with the following elements:
+\item{par}{A numeric vector of length 5 with the solution.}
+\item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
+\item{value}{A numeric scalar with the value of \code{fun(par)}}
+\item{priormult}{A function which, if priors were provided, includes the log-sum of
+\code{par} evaluated in \code{priors}. This is used in \code{fun}.}
+\item{fun}{A function (the objective function).}
+\item{dat}{The data \code{dat} provided to the function.}
 }
 \description{
-Maximum Likelihood Estimation of the Phylogenetic Tree.
+The optimization is done either via \code{abc_cpp} or Newton-Raphson.
 }
 \examples{
 # Loading data
@@ -57,7 +76,7 @@ ans0 <- mle(rep(.5,5), O)
 
 # Plotting the path
 with(ans0, plot(
-  - apply(abc$hist, 1, fun),
+  - apply(hist, 1, fun),
   type = "l",
   xlab = "Step",
   ylab = "Log-Likelihood"

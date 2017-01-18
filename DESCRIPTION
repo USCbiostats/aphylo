@@ -2,8 +2,8 @@ Package: phylogenetic
 Title: An R package
 Authors@R: person("FirsName", "LastName", role=c("aut","cre"), email="hisemail@usc.edu")
 Version: 0.1.99
-Date: 2016-12-23
-Description: Phylogenetic trees
+Date: 2017-01-18
+Description: Maximum Likelihood Estimation on Phylogenetic trees.
 Depends: R (>= 3.1.1)
 LazyData: true
 Imports:
@@ -21,7 +21,7 @@ VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 5.0.1
 Encoding: UTF-8
-URL: https://github.com/gvegayon/phylogenetic
-BugReports: https://github.com/gvegayon/phylogenetic/issues
+URL: https://github.com/USCbiostats/phylogenetic
+BugReports: https://github.com/USCbiostats/phylogenetic/issues
 Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE

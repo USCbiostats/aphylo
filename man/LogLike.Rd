@@ -8,7 +8,7 @@ LogLike(Z, offspring, noffspring, psi, mu, Pi)
 }
 \arguments{
 \item{Z}{A numeric matrix of size \eqn{N\times P}{N*P} with the function
-states of each leaf.}
+states of each leaf (experimental data).}
 
 \item{offspring}{A List of length \eqn{N} with the set of offspring of
 each node.}
@@ -16,13 +16,43 @@ each node.}
 \item{noffspring}{An integer vector of length \eqn{N} with the number of
 offspring per node.}
 
-\item{psi}{A numeric vector of length 2.}
+\item{psi}{A numeric vector of length 2 (see details).}
 
-\item{mu}{A numeric vector of length 2.}
+\item{mu}{A numeric vector of length 2 (see details).}
 
-\item{Pi}{A numeric vector of length 2.}
+\item{Pi}{A numeric vector of length 2 (see details).}
+}
+\value{
+A list of class \code{phylo_LogLik} with the following elements:
+\item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned
+by \code{\link{states}}.}
+\item{PI}{A numeric vector of size \eqn{2^p} with each given state's root
+node probabilities.}
+\item{PSI}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
+probabilities only including leaf node probabilities (this is for debugging).}
+\item{Pr}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
+probabilities.}
+\item{ll}{A numeric scalar with the log-likelihood value given the chosen
+parameters.}
 }
 \description{
-Computes Log-likelihood
+This function computes the log-likelihood of the chosen parameters given
+a particular dataset. The arguments \code{Z}, \code{offspring}, and
+\code{noffspring} should be as those returned by \code{\link{get_offspring}}.
+For complete Maximum Likelihood Estimation see \code{\link{mle}}.
+}
+\details{
+The parameters to estimate are described as follows:
+\enumerate{
+\item{\code{psi}: A vector of length 2 with \eqn{\psi_0}{psi[0]} and
+\eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
+\eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
+respectively.}
+\item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
+\eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+\item{\code{Pi}: A vector of length 2 with \eqn{\pi_0}{pi[0]}} and
+\eqn{\pi_1}{pi[1]}, which for now is specified as \eqn{(1 - \pi_1)}{(1 - pi[0]),
+which holds the root node probabilities.}
+}
 }
 

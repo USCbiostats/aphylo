@@ -1,11 +1,31 @@
-#' Maximum Likelihood Estimation of the Phylogenetic Tree.
+#' Maximum Likelihood Estimation of the Phylogenetic Tree
+#'
+#' The optimization is done either via \code{abc_cpp} or Newton-Raphson.
+#'
 #' @param params A vector of length 5 with initial parameters. In particular
 #' \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.
-#' @param dat An object of class \code{phylo_offspring}.
-#' @param prior A list of length 3 with functions named \code{psi}, \code{mu},
+#' @param dat An object of class \code{phylo_offspring} as returned by
+#' \code{\link{get_offspring}}.
+#' @param maxiter Integer scalar. Maximum number of steps in the Newton-Raphson
+#' algorithm.
+#' @param criter Numeric scalar. Stoping criteria for the Newton-Raphson algorithm.
+#' @param useABC Logical scalar. When \code{TRUE}, uses Artificial Bee Colony
+#' optimization algorithm instead. 
+#' @param priors A list of length 3 with functions named \code{psi}, \code{mu},
 #' \code{Pi}
 #' @param abcoptim.args A list of arguments to be passed to
 #' \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package.
+#' 
+#' @return 
+#' A list of class \code{phylo_mle} with the following elements:
+#' \item{par}{A numeric vector of length 5 with the solution.}
+#' \item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
+#' \item{value}{A numeric scalar with the value of \code{fun(par)}}
+#' \item{priormult}{A function which, if priors were provided, includes the log-sum of
+#' \code{par} evaluated in \code{priors}. This is used in \code{fun}.}
+#' \item{fun}{A function (the objective function).}
+#' \item{dat}{The data \code{dat} provided to the function.}
+#' 
 #' @examples 
 #' # Loading data
 #' data(experiment)
@@ -22,7 +42,7 @@
 #' 
 #' # Plotting the path
 #' with(ans0, plot(
-#'   - apply(abc$hist, 1, fun),
+#'   - apply(hist, 1, fun),
 #'   type = "l",
 #'   xlab = "Step",
 #'   ylab = "Log-Likelihood"
@@ -146,7 +166,7 @@ mle <- function(
     # Wrapping value
     ans <- list(
       hist  = expit(PARAMS[1:i,,drop = FALSE]),
-      par   = expit(params),
+      par   = expit(as.vector(params)),
       value = -fun(expit(params))
     )
   }
@@ -157,13 +177,21 @@ mle <- function(
   environment(priormult) <- env
   environment(dat)       <- env
   
+  # Naming the parameter estimates
+  names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
+  
   # Returning
-  structure(list(
-    abc = ans,
-    priormult = priormult,
-    fun = fun,
-    dat = dat
-  ), class = "phylo_mle")
+  structure(
+    list(
+      par = ans$par,
+      hist = ans$hist,
+      value = ans$value,
+      priormult = priormult,
+      fun = fun,
+      dat = dat
+    ),
+    class = "phylo_mle"
+  )
 }
 
 #' @param x An object of class \code{phylo_mle}.
@@ -178,7 +206,7 @@ mle <- function(
 plot.phylo_mle <- function(
   x,
   y = NULL,
-  main = "Prior for Psi ~ beta(1,9)",
+  main = "",
   xlab = "Step",
   ylab = "Log-Likelihood",
   type = "l",
@@ -187,7 +215,7 @@ plot.phylo_mle <- function(
   
     with(x,
          plot(
-           -apply(abc$hist, 1, fun),
+           -apply(hist, 1, fun),
            type = type,
            main = main,
            xlab = xlab,
