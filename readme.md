@@ -1,7 +1,7 @@
 Phylogenetic tree
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/gvegayon/phylogenetic.svg?branch=master)](https://travis-ci.org/gvegayon/phylogenetic) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/phylogenetic?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/phylogenetic) [![Coverage Status](https://img.shields.io/codecov/c/github/gvegayon/phylogenetic/master.svg)](https://codecov.io/github/gvegayon/phylogenetic?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/phylogenetic.svg?branch=master)](https://travis-ci.org/USCbiostats/phylogenetic) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/phylogenetic?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/phylogenetic) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/phylogenetic/master.svg)](https://codecov.io/github/USCbiostats/phylogenetic?branch=master)
 
 Install
 -------
@@ -9,7 +9,7 @@ Install
 Using devtools
 
 ``` r
-devtools::install_github("gvegayon/phylogenetic")
+devtools::install_github("USCbiostats/phylogenetic")
 ```
 
 Example
