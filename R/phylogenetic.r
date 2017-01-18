@@ -1,4 +1,6 @@
 #' @importFrom Rcpp evalCpp
+#' @importFrom ABCoptim abc_cpp
+#' @importFrom numDeriv jacobian hessian
 #' @importFrom igraph plot.igraph layout_with_sugiyama graph_from_edgelist
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 NULL

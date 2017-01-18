@@ -1,4 +1,8 @@
 2017-01-11  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: Maximum Likelihood estimation function and methods.
+	* R/phylogenetic.r: Adding package requirements for MLE.
+
+2017-01-11  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: get_offspring now returns neat experiment
 	* R/plot_loglike.r: Fixed bug
 	* playground/example.r: Accomodating script to changes in
