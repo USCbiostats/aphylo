@@ -24,12 +24,11 @@ set.seed(1231)
 
 S   <- states(ncol(O$experiment))
 PSI <- leaf_prob(O$experiment, S, psi, O$noffspring)
-M   <- gain_loss_prob(mu)
 PI  <- root_node_prob(pi_root, S)
-Pr  <- internal_prob(PSI, M, S, O$noffspring, O$offspring)
+Pr  <- internal_prob(PSI, mu, S, O$noffspring, O$offspring)
 
 # Doing the same in a single step ---------------------------------------------
-ll1   <- LogLike(O$experiment, O$offspring, O$noffspring, psi, mu, pi_root)
+ll1   <- LogLike(O$experiment, O$offspring, O$noffspring, psi, mu, pi_root, TRUE)
 
 all(ll1$S == S)
 all(ll1$PSI == PSI)

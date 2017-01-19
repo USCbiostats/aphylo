@@ -6,8 +6,8 @@
 \title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
 mle(params, dat, maxiter = 20L, criter = 1e-05, useABC = FALSE,
-  priors = list(psi = NULL, mu = NULL, Pi = NULL), abcoptim.args = list(ub =
-  0.9999, lb = 1e-04, maxCycle = 500L, criter = 50L))
+  priors = NULL, abcoptim.args = list(ub = 1, lb = 0, maxCycle = 500L,
+  criter = 50L))
 
 \method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
   ylab = "Log-Likelihood", type = "l", ...)
@@ -52,8 +52,6 @@ A list of class \code{phylo_mle} with the following elements:
 \item{par}{A numeric vector of length 5 with the solution.}
 \item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
 \item{value}{A numeric scalar with the value of \code{fun(par)}}
-\item{priormult}{A function which, if priors were provided, includes the log-sum of
-\code{par} evaluated in \code{priors}. This is used in \code{fun}.}
 \item{fun}{A function (the objective function).}
 \item{dat}{The data \code{dat} provided to the function.}
 }
@@ -61,6 +59,8 @@ A list of class \code{phylo_mle} with the following elements:
 The optimization is done either via \code{abc_cpp} or Newton-Raphson.
 }
 \examples{
+
+\dontrun{
 # Loading data
 data(experiment)
 data(tree)
@@ -72,10 +72,11 @@ O <- get_offspring(
 )
 
 # Computing Estimating the parameters ---------------------------------------
-ans0 <- mle(rep(.5,5), O)
+ans_nr  <- mle(rep(.5,5), O)
+ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
 
 # Plotting the path
-with(ans0, plot(
+with(ans_nr, plot(
   - apply(hist, 1, fun),
   type = "l",
   xlab = "Step",
@@ -83,16 +84,20 @@ with(ans0, plot(
 ))
 
 # Computing Estimating the parameters Using Priors for PSI ------------------
-ans1 <- mle(rep(.5,5), O,
-    priors        = list(psi = function(x) dbeta(x, 1, 9)))
+mypriors <- function(params) {
+    dbeta(params[1:2], 1, 9)
+}
+ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
 
 # Plotting the path
 oldpar <- par(no.readonly = TRUE)
-par(mfrow = c(1, 2))
+par(mfrow = c(2, 2))
 
-plot(ans0, main = "No priors")
-plot(ans0, main = "Prior for Psi ~ beta(1,9)")
+plot(ans_nr, main = "No priors NR")
+plot(ans_abc, main = "No priors ABC")
+plot(ans_nr_dbeta, main = "Prior for Psi ~ beta(1,9)")
 
 par(oldpar)
+}
 }
 

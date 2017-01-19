@@ -13,6 +13,20 @@ states <- function(P) {
     .Call('phylogenetic_states', PACKAGE = 'phylogenetic', P)
 }
 
+#' Probability Matrix
+#' 
+#' Generates a 2x2 matrix with probabilities for states 0/1, with rows and columns
+#' corresponding to states (0,1) of parent and offspring respectively.
+#' 
+#' @param pr A numeric vector of length 2.
+#' 
+#' @return a 2x2 matrix with 0/1 probabilities, with rows and columns
+#' corresponding to states (0,1) of parent and offspring respectively.
+#' @export
+prob_mat <- function(pr) {
+    .Call('phylogenetic_prob_mat', PACKAGE = 'phylogenetic', pr)
+}
+
 #' Leaf probabilities
 #' 
 #' @param Z A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.
@@ -24,20 +38,6 @@ states <- function(P) {
 #' @export
 leaf_prob <- function(Z, S, psi, noffspring) {
     .Call('phylogenetic_leaf_prob', PACKAGE = 'phylogenetic', Z, S, psi, noffspring)
-}
-
-#' Gain/Loss probabilities
-#' 
-#' Generates a 2x2 matrix with gain loss probabilities, with rows and columns
-#' corresponding to states (0,1) of parent and offspring respectively.
-#' 
-#' @param mu A numeric vector of length 2. Gain and Loss probailities.
-#' 
-#' @return a 2x2 matrix with gain loss probabilities, with rows and columns
-#' corresponding to states (0,1) of parent and offspring respectively.
-#' @export
-gain_loss_prob <- function(mu) {
-    .Call('phylogenetic_gain_loss_prob', PACKAGE = 'phylogenetic', mu)
 }
 
 #' Root node probabilities
@@ -56,13 +56,16 @@ root_node_prob <- function(pi, S) {
 #' Internal node probabilities
 #' 
 #' @param Pr Probabilities (already with leaf probs).
-#' @param M Gain/Loss probabilities (see equation 4 of math.pdf)
-#' @param S States
-#' @param noffspring Number of offspring
-#' @param offspring List of offspring
+#' @param mu Numeric vector of length 2 with gain/Loss probabilities.
+#' @param S Integer matrix of size \eqn{2^p\times p}{2^p * p}. Possible 
+#' functional states.
+#' @param noffspring Integer vector of length \eqn{G} with number of offspring
+#' per node.
+#' @param offspring List of length \eqn{G} with vectors listing each nodes'
+#' offspring.
 #' @export
-internal_prob <- function(Pr, M, S, noffspring, offspring) {
-    .Call('phylogenetic_internal_prob', PACKAGE = 'phylogenetic', Pr, M, S, noffspring, offspring)
+internal_prob <- function(Pr, mu, S, noffspring, offspring) {
+    .Call('phylogenetic_internal_prob', PACKAGE = 'phylogenetic', Pr, mu, S, noffspring, offspring)
 }
 
 #' Computes Log-likelihood
@@ -107,7 +110,7 @@ internal_prob <- function(Pr, M, S, noffspring, offspring) {
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(Z, offspring, noffspring, psi, mu, Pi) {
-    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi)
+LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
+    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi, verb_ans)
 }
 

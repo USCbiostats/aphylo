@@ -49,74 +49,103 @@ plot_LogLike <- function(
   # Check PSI
   mu    <- mean(MU)
   Pi    <- mean(PI)
-  psi_z <- matrix(nrow=nlevels, ncol=nlevels)
+  psi_z <- matrix(nrow = nlevels, ncol = nlevels)
   for (i in 1:nlevels)
     for (j in 1:nlevels)
-      psi_z[i,j] <- LogLike(
-        x$experiment, x$offspring, x$noffspring,
-        c(PSI[i],PSI[j]),
-        c(mu,mu), c(Pi,1-Pi))$ll
+      psi_z[i, j] <- LogLike(
+        x$experiment,
+        x$offspring,
+        x$noffspring,
+        c(PSI[i], PSI[j]),
+        c(mu, mu),
+        c(Pi, 1 - Pi),
+        verb_ans = FALSE
+      )$ll
   
   psi  <- mean(PSI)
-  pi_z <- matrix(nrow=nlevels, ncol=nlevels) # vector("numeric", nlevels)
-  for (i in 1:nlevels) 
+  pi_z <-
+    matrix(nrow = nlevels, ncol = nlevels) # vector("numeric", nlevels)
+  for (i in 1:nlevels)
     for (j in 1:nlevels) {
       pi_z[i, j] <- LogLike(
-        x$experiment, x$offspring, x$noffspring,
+        x$experiment,
+        x$offspring,
+        x$noffspring,
         c(psi, psi),
-        c(MU[j], mu), c(PI[i],1-PI[i]))$ll
+        c(MU[j], mu),
+        c(PI[i], 1 - PI[i]),
+        verb_ans = FALSE
+      )$ll
     }
   
-  mu_z <- matrix(nrow=nlevels, ncol=nlevels)
+  mu_z <- matrix(nrow = nlevels, ncol = nlevels)
   for (i in 1:nlevels)
     for (j in 1:nlevels)
-      mu_z[i,j] <- LogLike(
-        x$experiment, x$offspring, x$noffspring,
+      mu_z[i, j] <- LogLike(
+        x$experiment,
+        x$offspring,
+        x$noffspring,
         c(psi, psi),
-        c(MU[i],MU[j]), c(Pi,1-Pi))$ll
+        c(MU[i], MU[j]),
+        c(Pi, 1 - Pi),
+        verb_ans = FALSE
+      )$ll
   
   # Plotting
   oldpar <- par(no.readonly = TRUE)
   if (!("mar" %in% names(par.args)))
-    par.args$mar <- oldpar$mar*c(1, 1, 0.25, 0.25)
+    par.args$mar <- oldpar$mar * c(1, 1, 0.25, 0.25)
   
   # Calling plot parameters
-  do.call(par,c(par.args, list(mfrow=c(2,2))))
+  do.call(par, c(par.args, list(mfrow = c(2, 2))))
   
   # Actual plotting
   mu <- sprintf("%0.4f", mu)
   psi <- sprintf("%0.4f", psi)
   Pi <- sprintf("%0.4f", Pi)
   
-  plotfun(PSI, PSI, psi_z,
-          xlab = expression(psi[0]), ylab=expression(psi[1]), 
-          main = bquote(mu == .(mu)~and~pi==.(Pi)), ...)
+  plotfun(
+    PSI,
+    PSI,
+    psi_z,
+    xlab = expression(psi[0]),
+    ylab = expression(psi[1]),
+    main = bquote(mu == .(mu) ~ and ~ pi == .(Pi)),
+    ...
+  )
   
-  plotfun(MU, MU, mu_z,
-          xlab=expression(mu[0]), ylab=expression(mu[1]), 
-          main = bquote(psi == .(psi)~and~pi==.(Pi)), ...)
+  plotfun(
+    MU,
+    MU,
+    mu_z,
+    xlab = expression(mu[0]),
+    ylab = expression(mu[1]),
+    main = bquote(psi == .(psi) ~ and ~ pi == .(Pi)),
+    ...
+  )
   
-  # oldmar<- par()$mar
-  # par(mar=oldpar$mar)
-  # plot(PI, pi_z,
-  #         xlab=expression(pi), ylab="", 
-  #         main = bquote(mu == .(mu)~and~psi==.(psi)), type="l")
-  plotfun(PI, MU, pi_z,
-          xlab=expression(pi), ylab=expression(mu[0]), 
-          main = bquote(psi == .(psi)~and~mu[1]==.(mu)), ...)
+  plotfun(
+    PI,
+    MU,
+    pi_z,
+    xlab = expression(pi),
+    ylab = expression(mu[0]),
+    main = bquote(psi == .(psi) ~ and ~ mu[1] == .(mu)),
+    ...
+  )
   
   # Adding legend
-  # par(mar = oldmar)
   plot.new()
-  plot.window(c(0,1), c(0,1))
+  plot.window(c(0, 1), c(0, 1))
   legend(
     "center",
     legend = expression(
-      pi~Root~node~probabilities,
-      psi~Misclassification~probabilities,
-      mu~Loss/Gain~probabilities),
-    bty="n"
-    )
+      pi ~ Root ~ node ~ probabilities,
+      psi ~ Misclassification ~ probabilities,
+      mu ~ Loss / Gain ~ probabilities
+    ),
+    bty = "n"
+  )
   
   # Restoring parameters
   par(oldpar)
@@ -129,24 +158,4 @@ plot_LogLike <- function(
     )
   )
 }
-# 
-# # Loading data
-# data(experiment)
-# data(tree)
-# 
-# O <- get_offspring(
-#   experiment, "LeafId", 
-#   tree, "NodeId", "ParentId"
-# )
-# 
-# # Nice personalized plot
-# plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 
-#              # col = adjustcolor("blue", alpha.f = .9),
-#              shade=.7, border="darkblue", phi=30, scale=TRUE, 
-#              par.args = list(mar=c(1, 1, 1, 1), oma=c(0,0,4,0)),
-#              ticktype = "detailed")
-# 
-# # Adding title
-# mtext(
-#   "LogLikelihood",
-#   side=3, outer=FALSE, line = 2, cex=1.25)
+

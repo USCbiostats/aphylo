@@ -17,6 +17,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// prob_mat
+arma::mat prob_mat(const arma::vec& pr);
+RcppExport SEXP phylogenetic_prob_mat(SEXP prSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type pr(prSEXP);
+    rcpp_result_gen = Rcpp::wrap(prob_mat(pr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // leaf_prob
 arma::mat leaf_prob(const arma::imat& Z, const arma::imat& S, const arma::vec& psi, const arma::ivec& noffspring);
 RcppExport SEXP phylogenetic_leaf_prob(SEXP ZSEXP, SEXP SSEXP, SEXP psiSEXP, SEXP noffspringSEXP) {
@@ -28,17 +39,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     rcpp_result_gen = Rcpp::wrap(leaf_prob(Z, S, psi, noffspring));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gain_loss_prob
-arma::mat gain_loss_prob(const arma::vec& mu);
-RcppExport SEXP phylogenetic_gain_loss_prob(SEXP muSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
-    rcpp_result_gen = Rcpp::wrap(gain_loss_prob(mu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -55,23 +55,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // internal_prob
-arma::mat internal_prob(arma::mat Pr, const arma::mat& M, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
-RcppExport SEXP phylogenetic_internal_prob(SEXP PrSEXP, SEXP MSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
+arma::mat internal_prob(arma::mat Pr, const arma::vec& mu, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
+RcppExport SEXP phylogenetic_internal_prob(SEXP PrSEXP, SEXP muSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type Pr(PrSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
-    rcpp_result_gen = Rcpp::wrap(internal_prob(Pr, M, S, noffspring, offspring));
+    rcpp_result_gen = Rcpp::wrap(internal_prob(Pr, mu, S, noffspring, offspring));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& Z, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
-RcppExport SEXP phylogenetic_LogLike(SEXP ZSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+List LogLike(const arma::imat& Z, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, bool verb_ans);
+RcppExport SEXP phylogenetic_LogLike(SEXP ZSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -81,7 +81,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike(Z, offspring, noffspring, psi, mu, Pi));
+    Rcpp::traits::input_parameter< bool >::type verb_ans(verb_ansSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLike(Z, offspring, noffspring, psi, mu, Pi, verb_ans));
     return rcpp_result_gen;
 END_RCPP
 }

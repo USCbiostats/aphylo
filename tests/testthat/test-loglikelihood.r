@@ -13,7 +13,6 @@ O <- get_offspring(fakeexperiment, "LeafId", faketree, "NodeId", "ParentId")
 
 S  <- states(2)
 Pr <- leaf_prob(O$experiment, S, psi, O$noffspring)
-M  <- gain_loss_prob(mu)
 
 # Checking Leaf Probabilities --------------------------------------------------
 
@@ -53,8 +52,8 @@ test_that("Leaf Probabilities", {
 
 # Checking Internal Probabilities ----------------------------------------------
 test_that("Internal Probabilities", {
-  Pr <- internal_prob(Pr, M, S, O$noffspring, O$offspring)
-  
+  Pr <- internal_prob(Pr, mu, S, O$noffspring, O$offspring)
+  M  <- prob_mat(mu)
   # Checking cases compared to the states (0,0) (1,0) (0,1) (1,1)
   
   PrRaw <- Pr
@@ -177,7 +176,7 @@ test_that("Log-Likelihood", {
   ll0 <- LogLike(O$experiment, O$offspring, O$noffspring, psi, mu, Pi)$ll
   
   PI  <- root_node_prob(Pi, S)
-  Pr  <- internal_prob(Pr, M, S, O$noffspring, O$offspring)
+  Pr  <- internal_prob(Pr, mu, S, O$noffspring, O$offspring)
   ll1 <- sum(log(Pr[1, , drop = TRUE] * PI))
   
   abs(ll1 - ll0) < errtol

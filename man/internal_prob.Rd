@@ -4,18 +4,21 @@
 \alias{internal_prob}
 \title{Internal node probabilities}
 \usage{
-internal_prob(Pr, M, S, noffspring, offspring)
+internal_prob(Pr, mu, S, noffspring, offspring)
 }
 \arguments{
 \item{Pr}{Probabilities (already with leaf probs).}
 
-\item{M}{Gain/Loss probabilities (see equation 4 of math.pdf)}
+\item{mu}{Numeric vector of length 2 with gain/Loss probabilities.}
 
-\item{S}{States}
+\item{S}{Integer matrix of size \eqn{2^p\times p}{2^p * p}. Possible 
+functional states.}
 
-\item{noffspring}{Number of offspring}
+\item{noffspring}{Integer vector of length \eqn{G} with number of offspring
+per node.}
 
-\item{offspring}{List of offspring}
+\item{offspring}{List of length \eqn{G} with vectors listing each nodes'
+offspring.}
 }
 \description{
 Internal node probabilities

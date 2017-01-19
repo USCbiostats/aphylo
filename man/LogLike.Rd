@@ -4,7 +4,7 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(Z, offspring, noffspring, psi, mu, Pi)
+LogLike(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE)
 }
 \arguments{
 \item{Z}{A numeric matrix of size \eqn{N\times P}{N*P} with the function

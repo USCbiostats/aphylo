@@ -62,7 +62,7 @@ pi_root <- c(1-0.1,.1)
 
 # Computing likelihood
 ll1   <- LogLike(O$experiment, O$offspring, O$noffspring, psi, mu, pi_root)
-lapply(ll1, head)
+ll1
 ```
 
 # MLE estimation

@@ -1,4 +1,13 @@
 2017-01-18  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r, R/plot_loglike.r: Changing coding style.
+	* R/mle.r: Working on NR (now gives more reasonable ans
+	  and identical to ABCoptim).
+	* src/phylo.cpp: leaf_prob can be computed faster now,
+	  and gain_loss_prob changed to prob_mat.
+	* src/phylo.h: Adding header.
+	* tests/testthat/*.r: leaf_prob now uses mu instead of M.
+
+2017-01-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Improving doc + output (class) structure.
 	* R/phylogenetic.r: Adding more imports + doc data.
 	* test/testthat/*: Adding tests (making sure the ll works).

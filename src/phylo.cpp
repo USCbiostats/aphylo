@@ -33,6 +33,30 @@ arma::imat states(
   return ans;
 }
 
+//' Probability Matrix
+//' 
+//' Generates a 2x2 matrix with probabilities for states 0/1, with rows and columns
+//' corresponding to states (0,1) of parent and offspring respectively.
+//' 
+//' @param pr A numeric vector of length 2.
+//' 
+//' @return a 2x2 matrix with 0/1 probabilities, with rows and columns
+//' corresponding to states (0,1) of parent and offspring respectively.
+//' @export
+// [[Rcpp::export]]
+arma::mat prob_mat(
+    const arma::vec & pr
+) {
+  arma::mat ans(2,2);
+  
+  for (int i=0; i<2; i++)
+    for (int j=0; j<2; j++) 
+      ans.at(i,j) = !i ? ( j? pr.at(0) : (1-pr.at(0)) ) :
+      ( !j? pr.at(1) : (1-pr.at(1)) );
+  
+  return ans;
+}
+
 //' Leaf probabilities
 //' 
 //' @param Z A matrix of size \eqn{N\times P}{N*P} with values \code{(0,1,9)}.
@@ -51,17 +75,15 @@ arma::mat leaf_prob(
   ) {
   
   // Obtaining relevant constants
-  int P       = S.n_cols;
-  int N       = Z.n_rows;
-  int nstates = S.n_rows;
+  int P         = S.n_cols;
+  int N         = Z.n_rows;
+  int nstates   = S.n_rows;
+  arma::mat PSI = prob_mat(psi);
   
   // Checking dimmensions
   if (P != (int) Z.n_cols)
     stop("Z must have the same number of columns than S.");
-  
-  if (2u != psi.n_elem)
-    stop("psi must be of length 2.");
-  
+
   // Creating the output matrix (probabilities)
   arma::mat ans(N,nstates);
   ans.ones();
@@ -76,37 +98,13 @@ arma::mat leaf_prob(
           if (Z.at(i,p) == 9)
             continue;
           
-          ans.at(i, s) *=
-            (Z.at(i, p) == S.at(s, p))? // Are these equal?
-            (1 - psi.at(S.at(s, p))):   // TRUE
-            psi.at(S.at(s, p));         // FALSE (misclasified)
+          ans.at(i, s) *= PSI.at(S.at(s, p), Z.at(i, p));
+            // (Z.at(i, p) == S.at(s, p))? // Are these equal?
+            // (1 - psi.at(S.at(s, p))):   // TRUE
+            // psi.at(S.at(s, p));         // FALSE (misclasified)
           
         }
       
-  return ans;
-}
-
-//' Gain/Loss probabilities
-//' 
-//' Generates a 2x2 matrix with gain loss probabilities, with rows and columns
-//' corresponding to states (0,1) of parent and offspring respectively.
-//' 
-//' @param mu A numeric vector of length 2. Gain and Loss probailities.
-//' 
-//' @return a 2x2 matrix with gain loss probabilities, with rows and columns
-//' corresponding to states (0,1) of parent and offspring respectively.
-//' @export
-// [[Rcpp::export]]
-arma::mat gain_loss_prob(
-    const arma::vec & mu
-  ) {
-  arma::mat ans(2,2);
-  
-  for (int i=0; i<2; i++)
-    for (int j=0; j<2; j++) 
-      ans.at(i,j) = !i ? ( j? mu.at(0) : (1-mu.at(0)) ) :
-      ( !j? mu.at(1) : (1-mu.at(1)) );
-    
   return ans;
 }
 
@@ -141,15 +139,18 @@ arma::vec root_node_prob(
 //' Internal node probabilities
 //' 
 //' @param Pr Probabilities (already with leaf probs).
-//' @param M Gain/Loss probabilities (see equation 4 of math.pdf)
-//' @param S States
-//' @param noffspring Number of offspring
-//' @param offspring List of offspring
+//' @param mu Numeric vector of length 2 with gain/Loss probabilities.
+//' @param S Integer matrix of size \eqn{2^p\times p}{2^p * p}. Possible 
+//' functional states.
+//' @param noffspring Integer vector of length \eqn{G} with number of offspring
+//' per node.
+//' @param offspring List of length \eqn{G} with vectors listing each nodes'
+//' offspring.
 //' @export
 // [[Rcpp::export]]
 arma::mat internal_prob(
   arma::mat          Pr,
-  const arma::mat  & M,
+  const arma::vec  & mu,
   const arma::imat & S,
   const arma::ivec & noffspring,
   const List       & offspring
@@ -159,6 +160,7 @@ arma::mat internal_prob(
   int P       = S.n_cols;
   int N       = Pr.n_rows;
   int nstates = S.n_rows;
+  arma::mat M = prob_mat(mu);
   
   for (int n=(N-1); n>=0; n--) {
     
@@ -253,18 +255,18 @@ List LogLike(
     const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
-    const arma::vec  & Pi
+    const arma::vec  & Pi,
+    bool verb_ans = false
 ) {
 
   // Obtaining States, PSI, Gain/Loss probs, and root node probs
   arma::imat S  = states(Z.n_cols);
   int nstates   = (int) S.n_rows;
   arma::mat PSI = leaf_prob(Z, S, psi, noffspring);
-  arma::mat M   = gain_loss_prob(mu);
   arma::vec PiP = root_node_prob(Pi, S);
   
   // Computing likelihood
-  arma::mat Pr  = internal_prob(PSI, M, S, noffspring, offspring);
+  arma::mat Pr  = internal_prob(PSI, mu, S, noffspring, offspring);
   
   // We only use the root node
   double ll = 0.0;
@@ -273,17 +275,25 @@ List LogLike(
     ll += log(PiP.at(s)*Pr.at(0, s));
   
   // return ll;
-  List ans = List::create(
-    _["S"]   = S,
-    _["PI"]  = PiP,
-    _["PSI"] = PSI,
-    _["Pr"]   = Pr,
-    _["ll"]  = ll
-  );
-  
-  ans.attr("class") = "phylo_LogLik";
-  
-  return(ans);
+  if (verb_ans) {
+    
+    List ans = List::create(
+      _["S"]   = S,
+      _["PI"]  = PiP,
+      _["PSI"] = PSI,
+      _["Pr"]   = Pr,
+      _["ll"]  = ll
+    );
+    ans.attr("class") = "phylo_LogLik";
+    return(ans);
+    
+  } else {
+    
+    List ans = List::create(_["ll"] = ll);
+    ans.attr("class") = "phylo_LogLik";
+    return(ans);
+    
+  }
   
 }
 

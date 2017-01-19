@@ -21,12 +21,12 @@
 #' \item{par}{A numeric vector of length 5 with the solution.}
 #' \item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
 #' \item{value}{A numeric scalar with the value of \code{fun(par)}}
-#' \item{priormult}{A function which, if priors were provided, includes the log-sum of
-#' \code{par} evaluated in \code{priors}. This is used in \code{fun}.}
 #' \item{fun}{A function (the objective function).}
 #' \item{dat}{The data \code{dat} provided to the function.}
 #' 
 #' @examples 
+#' 
+#' \dontrun{
 #' # Loading data
 #' data(experiment)
 #' data(tree)
@@ -38,10 +38,11 @@
 #' )
 #' 
 #' # Computing Estimating the parameters ---------------------------------------
-#' ans0 <- mle(rep(.5,5), O)
+#' ans_nr  <- mle(rep(.5,5), O)
+#' ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
 #' 
 #' # Plotting the path
-#' with(ans0, plot(
+#' with(ans_nr, plot(
 #'   - apply(hist, 1, fun),
 #'   type = "l",
 #'   xlab = "Step",
@@ -49,17 +50,25 @@
 #' ))
 #' 
 #' # Computing Estimating the parameters Using Priors for PSI ------------------
-#' ans1 <- mle(rep(.5,5), O,
-#'     priors        = list(psi = function(x) dbeta(x, 1, 9)))
+#' mypriors <- function(params) {
+#'     dbeta(params[1:2], 1, 9)
+#' }
+#' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
 #' 
 #' # Plotting the path
 #' oldpar <- par(no.readonly = TRUE)
-#' par(mfrow = c(1, 2))
+#' par(mfrow = c(2, 2))
 #' 
-#' plot(ans0, main = "No priors")
-#' plot(ans0, main = "Prior for Psi ~ beta(1,9)")
+#' plot(ans_nr, main = "No priors NR")
+#' plot(ans_abc, main = "No priors ABC")
+#' plot(ans_nr_dbeta, main = "Prior for Psi ~ beta(1,9)")
 #' 
 #' par(oldpar)
+#' }
+#' @name mle
+NULL
+
+#' @rdname mle
 #' @export
 mle <- function(
   params,
@@ -67,8 +76,8 @@ mle <- function(
   maxiter       = 20L,
   criter        = 1e-5,
   useABC        = FALSE,
-  priors        = list(psi = NULL, mu = NULL, Pi = NULL), 
-  abcoptim.args = list(ub = .9999, lb = .0001, maxCycle = 500L, criter = 50L)
+  priors        = NULL, 
+  abcoptim.args = list(ub = 1, lb = 0, maxCycle = 500L, criter = 50L)
 ) {
   
   # Checking params
@@ -78,86 +87,62 @@ mle <- function(
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
   
-  # Checking priors
-  priormult <- "function(psi, mu, Pi) { 0"
-  for (p in c("psi", "mu", "Pi")) {
-    # If there is no prior
-    if (length(priors[[p]]) == 0) {
-      priors[[p]] <- function(x) x
-      
-    } else {
-      # If there's any prior
-      priormult <- paste(
-        priormult,
-        " + log(priors[['",p,"']](", p, "[1]))",
-        " + log(priors[['",p,"']](", p, "[2]))",
-        sep = "")
-    }
-  }
-  
-  # Coercing into a function
-  priormult <- paste(priormult, "}")
-  priormult <- eval(parse(text = priormult))
-  
   # Auxiliary functions for 
   expit <- function(x) exp(x)/(1 + exp(x))
   logit <- function(x) log(x/(1 - x))
   
+  # Creating the objective function
+  fun <- if (length(priors)) {
+    function(params) {
+      psi <- params[1:2] 
+      mu  <- params[3:4] 
+      Pi  <- params[5]
+      Pi  <- c(1 - Pi, Pi)
+      
+      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll - 
+        sum(log(priors(params)))
+    }
+  } else {
+    function(params) {
+      psi <- params[1:2] 
+      mu  <- params[3:4] 
+      Pi  <- params[5]
+      Pi  <- c(1 - Pi, Pi)
+      
+      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+    }
+  }
+  
   # Optimizing
   if (useABC) {
-    fun <- function(params) {
-      psi <- params[1:2] # c(0.020,0.010)
-      mu  <- params[3:4] # c(0.004,.001)
-      Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi) # c(1-0.1,.1) 
-      
-      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi)$ll - 
-        priormult(psi, mu, Pi)
-    }
-    
-    ans <- do.call(ABCoptim::abc_cpp,
-                   c(list(par = params, fn = fun), abcoptim.args))
+    ans <-
+      do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), abcoptim.args))
   } else {
-    
-    # Objective function
-    fun <- function(params) {
-      params <- expit(params)
-      
-      psi <- params[1:2] # c(0.020,0.010)
-      mu  <- params[3:4] # c(0.004,.001)
-      Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi) # c(1-0.1,.1) 
-      
-      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi)$ll - 
-        priormult(psi, mu, Pi)
-    }
     
     # Creating space
     PARAMS <- matrix(ncol = 5, nrow = maxiter)
-    params <- logit(params)
     
-    # Looping
+    # Newton-Raphson. Observe that in each evaluation of -fun- we apply the
+    # -expit- function to the parameters so that those are transformed to [0,1]
     for (i in 1:maxiter) {
       
       PARAMS[i,] <- params
-      params0    <- params
       
       # Computing jacobian and hessian
-      fun_jacb   <- numDeriv::jacobian(fun, params, method.args = list(d = .025))
-      fun_hess   <- numDeriv::hessian(fun, params, method.args = list(d = .025))
+      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = list(d = .025))
+      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = list(d = .025))
       
       # Updating step
       params <- params - fun_jacb %*% solve(fun_hess, tol = 1e-40)
       
       # Error
-      if (is.na(fun(params))) {
+      if (is.na(fun(expit(params)))) {
         message("Undefined value of fun(params).")
         break
       }
         
-      
       # Stopping criteria
-      val <- abs(fun(params) - fun(PARAMS[i, ]))
+      val <- abs(fun(expit(params)) - fun(expit(PARAMS[i, ])))
       if (val < criter) {
         break
       }
@@ -167,15 +152,16 @@ mle <- function(
     ans <- list(
       hist  = expit(PARAMS[1:i,,drop = FALSE]),
       par   = expit(as.vector(params)),
-      value = -fun(expit(params))
+      value = fun(expit(params))
     )
   }
   
   # Working on answer
   env <- new.env()
-  environment(fun)       <- env
-  environment(priormult) <- env
-  environment(dat)       <- env
+  environment(fun)    <- env
+  environment(dat)    <- env
+  if (length(priors)) 
+    environment(priors) <- env
   
   # Naming the parameter estimates
   names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
@@ -186,8 +172,9 @@ mle <- function(
       par = ans$par,
       hist = ans$hist,
       value = ans$value,
-      priormult = priormult,
+      ll    = -ans$value,
       fun = fun,
+      priors = priors,
       dat = dat
     ),
     class = "phylo_mle"
@@ -210,6 +197,7 @@ plot.phylo_mle <- function(
   xlab = "Step",
   ylab = "Log-Likelihood",
   type = "l",
+  addlegend = TRUE,
   ...
   ) {
   
@@ -222,4 +210,21 @@ plot.phylo_mle <- function(
            ylab = ylab,
            ...
          ))
+  
+  if (addlegend) {
+    
+    numbers <- sprintf("%.4f", with(x, c(ll, par)))
+    numbers <- c(
+      bquote(L(theta || X) == .(numbers[1])),
+      bquote(psi[0] == .(numbers[2])),
+      bquote(psi[1] == .(numbers[3])),
+      bquote(mu[0] == .(numbers[4])),
+      bquote(mu[1] == .(numbers[5])),
+      bquote(pi == .(numbers[6]))
+    )
+    
+    legend("bottomright",legend = sapply(numbers, as.expression),bty = "n")
+  }
+  
+  
   }
