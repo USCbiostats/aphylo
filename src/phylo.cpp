@@ -222,6 +222,8 @@ arma::mat internal_prob(
 //' @param psi A numeric vector of length 2 (see details).
 //' @param mu A numeric vector of length 2 (see details).
 //' @param Pi A numeric vector of length 2 (see details).
+//' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
+//' returns a list with a single scalar (the log-likelihood).
 //' 
 //' @details
 //' The parameters to estimate are described as follows:

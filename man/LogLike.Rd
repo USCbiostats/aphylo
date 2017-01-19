@@ -21,6 +21,9 @@ offspring per node.}
 \item{mu}{A numeric vector of length 2 (see details).}
 
 \item{Pi}{A numeric vector of length 2 (see details).}
+
+\item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
+returns a list with a single scalar (the log-likelihood).}
 }
 \value{
 A list of class \code{phylo_LogLik} with the following elements:

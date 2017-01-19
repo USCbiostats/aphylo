@@ -10,7 +10,7 @@ mle(params, dat, maxiter = 20L, criter = 1e-05, useABC = FALSE,
   criter = 50L))
 
 \method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
-  ylab = "Log-Likelihood", type = "l", ...)
+  ylab = "Log-Likelihood", type = "l", addlegend = TRUE, ...)
 }
 \arguments{
 \item{params}{A vector of length 5 with initial parameters. In particular
@@ -44,6 +44,9 @@ optimization algorithm instead.}
 \item{ylab}{Passed to plot.}
 
 \item{type}{Passed to plot.}
+
+\item{addlegend}{Logical scalar. When \code{TRUE} adds extra info to the
+plot as a legend including ll at the optimum and parameter values.}
 
 \item{...}{Further arguments passed to plot}
 }

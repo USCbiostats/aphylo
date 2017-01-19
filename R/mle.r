@@ -188,6 +188,8 @@ mle <- function(
 #' @param ylab Passed to plot.
 #' @param type Passed to plot.
 #' @param ... Further arguments passed to plot
+#' @param addlegend Logical scalar. When \code{TRUE} adds extra info to the
+#' plot as a legend including ll at the optimum and parameter values.
 #' @rdname mle
 #' @export
 plot.phylo_mle <- function(
