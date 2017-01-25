@@ -91,6 +91,7 @@ mypriors <- function(params) {
     dbeta(params[1:2], 1, 9)
 }
 ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
+ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
 
 # Plotting the path
 oldpar <- par(no.readonly = TRUE)
@@ -98,7 +99,8 @@ par(mfrow = c(2, 2))
 
 plot(ans_nr, main = "No priors NR")
 plot(ans_abc, main = "No priors ABC")
-plot(ans_nr_dbeta, main = "Prior for Psi ~ beta(1,9)")
+plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(1,9)")
+plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(1,9)")
 
 par(oldpar)
 }

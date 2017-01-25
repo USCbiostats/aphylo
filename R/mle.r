@@ -54,6 +54,7 @@
 #'     dbeta(params[1:2], 1, 9)
 #' }
 #' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
+#' ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
 #' 
 #' # Plotting the path
 #' oldpar <- par(no.readonly = TRUE)
@@ -61,7 +62,8 @@
 #' 
 #' plot(ans_nr, main = "No priors NR")
 #' plot(ans_abc, main = "No priors ABC")
-#' plot(ans_nr_dbeta, main = "Prior for Psi ~ beta(1,9)")
+#' plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(1,9)")
+#' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(1,9)")
 #' 
 #' par(oldpar)
 #' }
@@ -91,7 +93,7 @@ mle <- function(
   expit <- function(x) exp(x)/(1 + exp(x))
   logit <- function(x) log(x/(1 - x))
   
-  # Creating the objective function
+# Creating the objective function
   fun <- if (length(priors)) {
     function(params) {
       psi <- params[1:2] 
@@ -133,7 +135,7 @@ mle <- function(
       fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = list(d = .025))
       
       # Updating step
-      params <- params - fun_jacb %*% solve(fun_hess, tol = 1e-40)
+      params <- params - fun_jacb %*% solve(fun_hess, tol = 1e-40) 
       
       # Error
       if (is.na(fun(expit(params)))) {
@@ -215,9 +217,9 @@ plot.phylo_mle <- function(
   
   if (addlegend) {
     
-    numbers <- sprintf("%.4f", with(x, c(ll, par)))
+    numbers <- sprintf("%.5f", with(x, c(ll, par)))
     numbers <- c(
-      bquote(L(theta || X) == .(numbers[1])),
+      bquote(L(theta~"|"~X) == .(numbers[1])),
       bquote(psi[0] == .(numbers[2])),
       bquote(psi[1] == .(numbers[3])),
       bquote(mu[0] == .(numbers[4])),
