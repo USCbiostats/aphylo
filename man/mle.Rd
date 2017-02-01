@@ -6,8 +6,9 @@
 \title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
 mle(params, dat, maxiter = 20L, criter = 1e-05, useABC = FALSE,
-  priors = NULL, abcoptim.args = list(ub = 1, lb = 0, maxCycle = 500L,
-  criter = 50L))
+  priors = NULL, abcoptim.args = list(maxCycle = 500L, criter = 50L),
+  fix.params = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi =
+  FALSE), method.args = list(d = 1e-04), solve.tol = 1e-40)
 
 \method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
   ylab = "Log-Likelihood", type = "l", addlegend = TRUE, ...)
@@ -32,6 +33,14 @@ optimization algorithm instead.}
 
 \item{abcoptim.args}{A list of arguments to be passed to
 \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package.}
+
+\item{fix.params}{A Logical vector of length 5. Whether or not to fix
+a particular parameter to that of what was specified in \code{params}.}
+
+\item{method.args}{A list of arguments passed to \code{\link[numDeriv:jacobian]{hessian,jacobian}}
+from the \CRANpkg{numDeriv} package.}
+
+\item{solve.tol}{Numeric scalar passed to \code{\link{solve}}.}
 
 \item{x}{An object of class \code{phylo_mle}.}
 
@@ -64,6 +73,7 @@ The optimization is done either via \code{abc_cpp} or Newton-Raphson.
 \examples{
 
 \dontrun{
+# Using the package data ----------------------------------------------------
 # Loading data
 data(experiment)
 data(tree)
@@ -74,7 +84,7 @@ O <- get_offspring(
   tree, "NodeId", "ParentId"
 )
 
-# Computing Estimating the parameters ---------------------------------------
+# Computing Estimating the parameters 
 ans_nr  <- mle(rep(.5,5), O)
 ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
 
@@ -86,9 +96,9 @@ with(ans_nr, plot(
   ylab = "Log-Likelihood"
 ))
 
-# Computing Estimating the parameters Using Priors for PSI ------------------
+# Computing Estimating the parameters Using Priors for PSI 
 mypriors <- function(params) {
-    dbeta(params[1:2], 1, 9)
+    dbeta(params[1:2], 2, 10)
 }
 ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
 ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
@@ -99,10 +109,43 @@ par(mfrow = c(2, 2))
 
 plot(ans_nr, main = "No priors NR")
 plot(ans_abc, main = "No priors ABC")
-plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(1,9)")
-plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(1,9)")
+plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
+plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
 
 par(oldpar)
 }
+# Adding some zeros to the data ---------------------------------------------
+set.seed(1231)
+mysample <- which(rowSums(experiment[,1:3]) == 27)
+mysample <- sample(mysample, 20)
+experiment[mysample,1:3] <- 0
+
+O <- get_offspring(
+  experiment, "LeafId", 
+  tree, "NodeId", "ParentId"
+)
+
+ans_nr  <- mle(rep(.5,5), O)
+ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
+
+
+# Computing Estimating the parameters Using Priors for PSI ------------------
+mypriors <- function(params) {
+  dbeta(params[1:2], 2, 10)
+}
+ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
+ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+
+# Plotting the path
+oldpar <- par(no.readonly = TRUE)
+par(mfrow = c(2, 2))
+
+plot(ans_nr, main = "No priors NR")
+plot(ans_abc, main = "No priors ABC")
+plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
+plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
+
+par(oldpar)
+
 }
 

@@ -15,6 +15,11 @@
 #' \code{Pi}
 #' @param abcoptim.args A list of arguments to be passed to
 #' \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package.
+#' @param fix.params A Logical vector of length 5. Whether or not to fix
+#' a particular parameter to that of what was specified in \code{params}.
+#' @param method.args A list of arguments passed to \code{\link[numDeriv:jacobian]{hessian,jacobian}}
+#' from the \CRANpkg{numDeriv} package.
+#' @param solve.tol Numeric scalar passed to \code{\link{solve}}.
 #' 
 #' @return 
 #' A list of class \code{phylo_mle} with the following elements:
@@ -27,6 +32,7 @@
 #' @examples 
 #' 
 #' \dontrun{
+#' # Using the package data ----------------------------------------------------
 #' # Loading data
 #' data(experiment)
 #' data(tree)
@@ -37,7 +43,7 @@
 #'   tree, "NodeId", "ParentId"
 #' )
 #' 
-#' # Computing Estimating the parameters ---------------------------------------
+#' # Computing Estimating the parameters 
 #' ans_nr  <- mle(rep(.5,5), O)
 #' ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
 #' 
@@ -49,9 +55,9 @@
 #'   ylab = "Log-Likelihood"
 #' ))
 #' 
-#' # Computing Estimating the parameters Using Priors for PSI ------------------
+#' # Computing Estimating the parameters Using Priors for PSI 
 #' mypriors <- function(params) {
-#'     dbeta(params[1:2], 1, 9)
+#'     dbeta(params[1:2], 2, 10)
 #' }
 #' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
 #' ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
@@ -62,11 +68,44 @@
 #' 
 #' plot(ans_nr, main = "No priors NR")
 #' plot(ans_abc, main = "No priors ABC")
-#' plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(1,9)")
-#' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(1,9)")
+#' plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
+#' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
 #' 
 #' par(oldpar)
 #' }
+#' # Adding some zeros to the data ---------------------------------------------
+#' set.seed(1231)
+#' mysample <- which(rowSums(experiment[,1:3]) == 27)
+#' mysample <- sample(mysample, 20)
+#' experiment[mysample,1:3] <- 0
+#' 
+#' O <- get_offspring(
+#'   experiment, "LeafId", 
+#'   tree, "NodeId", "ParentId"
+#' )
+#' 
+#' ans_nr  <- mle(rep(.5,5), O)
+#' ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
+#' 
+#' 
+#' # Computing Estimating the parameters Using Priors for PSI ------------------
+#' mypriors <- function(params) {
+#'   dbeta(params[1:2], 2, 10)
+#' }
+#' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
+#' ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+#'
+#' # Plotting the path
+#' oldpar <- par(no.readonly = TRUE)
+#' par(mfrow = c(2, 2))
+#' 
+#' plot(ans_nr, main = "No priors NR")
+#' plot(ans_abc, main = "No priors ABC")
+#' plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
+#' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
+#' 
+#' par(oldpar)
+#' 
 #' @name mle
 NULL
 
@@ -79,7 +118,10 @@ mle <- function(
   criter        = 1e-5,
   useABC        = FALSE,
   priors        = NULL, 
-  abcoptim.args = list(ub = 1, lb = 0, maxCycle = 500L, criter = 50L)
+  abcoptim.args = list(maxCycle = 500L, criter = 50L),
+  fix.params    = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE),
+  method.args   = list(d = .0001),
+  solve.tol     = 1e-40
 ) {
   
   # Checking params
@@ -93,19 +135,30 @@ mle <- function(
   expit <- function(x) exp(x)/(1 + exp(x))
   logit <- function(x) log(x/(1 - x))
   
-# Creating the objective function
+  # In case of fixing parameters
+  par0 <- params
+  
+  # Creating the objective function
   fun <- if (length(priors)) {
     function(params) {
+      
+      # Checking whether params are fixed or not
+      params <- ifelse(fix.params, par0, params)
+      
       psi <- params[1:2] 
       mu  <- params[3:4] 
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll - 
-        sum(log(priors(params)))
+      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll -
+         sum(log(priors(params)))
+
     }
   } else {
     function(params) {
+      # Checking whether params are fixed or not
+      params <- ifelse(fix.params, par0, params)
+      
       psi <- params[1:2] 
       mu  <- params[3:4] 
       Pi  <- params[5]
@@ -117,6 +170,12 @@ mle <- function(
   
   # Optimizing
   if (useABC) {
+    # Checking ABC args
+    if (!length(abcoptim.args$lb))       abcoptim.args$lb       <- 1e-20
+    if (!length(abcoptim.args$ub))       abcoptim.args$ub       <- 1 - 1e-20
+    if (!length(abcoptim.args$maxCycle)) abcoptim.args$maxCycle <- 500L
+    if (!length(abcoptim.args$criter))   abcoptim.args$criter   <- 50L
+    
     ans <-
       do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), abcoptim.args))
   } else {
@@ -131,11 +190,11 @@ mle <- function(
       PARAMS[i,] <- params
       
       # Computing jacobian and hessian
-      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = list(d = .025))
-      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = list(d = .025))
+      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = method.args)
+      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = method.args)
       
       # Updating step
-      params <- params - fun_jacb %*% solve(fun_hess, tol = 1e-40) 
+      params <- params - fun_jacb %*% solve(fun_hess, tol = solve.tol) 
       
       # Error
       if (is.na(fun(expit(params)))) {
@@ -162,6 +221,8 @@ mle <- function(
   env <- new.env()
   environment(fun)    <- env
   environment(dat)    <- env
+  environment(par0)   <- env
+  environment(fix.params) <- env
   if (length(priors)) 
     environment(priors) <- env
   
@@ -177,7 +238,9 @@ mle <- function(
       ll    = -ans$value,
       fun = fun,
       priors = priors,
-      dat = dat
+      dat = dat,
+      par0 = par0,
+      fix.params = fix.params
     ),
     class = "phylo_mle"
   )

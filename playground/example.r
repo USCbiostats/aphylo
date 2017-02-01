@@ -1,7 +1,7 @@
 rm(list = ls())
 
 library(phylogenetic)
-
+  
 # Reading data -----------------------------------------------------------------
 data("experiment")
 data("tree")

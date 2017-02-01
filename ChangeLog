@@ -1,3 +1,8 @@
+2017-02-01  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: Adding more examples (filling zeros), plus more tunning
+	  options for the NR method.
+
+
 2017-01-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r, R/plot_loglike.r: Changing coding style.
 	* R/mle.r: Working on NR (now gives more reasonable ans
@@ -7,6 +12,7 @@
 	* src/phylo.h: Adding header.
 	* tests/testthat/*.r: leaf_prob now uses mu instead of M.
 
+
 2017-01-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Improving doc + output (class) structure.
 	* R/phylogenetic.r: Adding more imports + doc data.
@@ -14,9 +20,11 @@
 	* readme.rmd: Adding code coverage, travis and appveyor.
 	* src/peeling_cpp.cpp: Improving documentation.
 
+
 2017-01-11  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Maximum Likelihood estimation function and methods.
 	* R/phylogenetic.r: Adding package requirements for MLE.
+
 
 2017-01-11  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: get_offspring now returns neat experiment
@@ -41,6 +49,7 @@
 	* R/data-management.r: Now experimental data is filled. and
 	  adding new set of functions.
 	* vignettes/phylogemetic_trees.rmd: Working on doc.
+
 
 2017-01-03  George G. Vega Yon <g.vegayon@gmail.com>
 	* data/*: Adding data more neatly.

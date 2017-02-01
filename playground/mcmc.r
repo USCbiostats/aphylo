@@ -19,8 +19,9 @@ expit <- function(x)
   exp(x) / (1 + exp(x))
 
 fun <- function(params) {
-  if (any(params > 1 | params < 0))
-    return(-Inf)
+  # if (any(params > 1 | params < 0))
+  #   return(-Inf)
+  param <- expit(params)
   
   psi <- params[1:2]
   mu  <- params[3:4]
@@ -41,7 +42,7 @@ fun <- function(params) {
 
 # Running the algorithm
 set.seed(1231)
-ans <- metrop(fun, rep(.5, 5), nbatch = 2e3, scale = 0.25)
+ans <- metrop(fun, rep(.5, 5), nbatch = 2e3, scale = .0005)
 
 # Checking answer
 sprintf("%.5f" , ans$initial)
@@ -55,7 +56,7 @@ boxplot(ans$batch)
 tail(ans$batch)
 
 
-plot(ts(ans$batch))
+plot(ts(ans$batch[-c(1:500),]))
 acf(ans$batch)
 
 # Tempering algorithm ----------------------------------------------------------
