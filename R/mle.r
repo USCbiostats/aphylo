@@ -6,20 +6,41 @@
 #' \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.
 #' @param dat An object of class \code{phylo_offspring} as returned by
 #' \code{\link{get_offspring}}.
-#' @param maxiter Integer scalar. Maximum number of steps in the Newton-Raphson
-#' algorithm.
-#' @param criter Numeric scalar. Stoping criteria for the Newton-Raphson algorithm.
 #' @param useABC Logical scalar. When \code{TRUE}, uses Artificial Bee Colony
 #' optimization algorithm instead. 
 #' @param priors A list of length 3 with functions named \code{psi}, \code{mu},
 #' \code{Pi}
-#' @param abcoptim.args A list of arguments to be passed to
-#' \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package.
 #' @param fix.params A Logical vector of length 5. Whether or not to fix
 #' a particular parameter to that of what was specified in \code{params}.
-#' @param method.args A list of arguments passed to \code{\link[numDeriv:jacobian]{hessian,jacobian}}
-#' from the \CRANpkg{numDeriv} package.
-#' @param solve.tol Numeric scalar passed to \code{\link{solve}}.
+#' @param control A list with parameters for the optimization method (see
+#' details).
+#' 
+#' @details When \code{useABC = TRUE}, the optimization is done via 
+#' \bold{Artificial Bee Colony method}. The default \code{control} parameters, which
+#' are passed to \code{\link[ABCoptim:abc_cpp]{abc_cpp}} in the \pkg{ABCoptim} package,
+#' are the following:
+#' 
+#' \tabular{ll}{
+#' \code{criter} \tab Integer scalar. Default \code{50L}. \cr
+#' \code{maxCycle} \tab Integer scalar. Default \code{500L}. \cr
+#' \code{lb} \tab Numeric scalar. Default \code{1e-20}. \cr
+#' \code{ub} \tab Numeric scalar. Default \code{1 - 1e-20}.
+#' }
+#' 
+#' The default \code{control} parameters for \bold{Newton-Raphson method} are
+#' the following:
+#' 
+#' \tabular{ll}{
+#' \code{maxiter} \tab item Integer scalar. Maximum number of steps in the Newton-Raphson
+#' algorithm. Default \code{20L}.\cr
+#' \code{criter} \tab Numeric scalar. Stoping criteria for the Newton-Raphson
+#' algorithm. Default \code{1e-15}.\cr
+#' \code{method.args} \tab A list of arguments passed to
+#' \code{\link[numDeriv:jacobian]{hessian,jacobian}} from the \CRANpkg{numDeriv}
+#' package. Default \code{list(d = .0001)}\cr
+#' \code{solve.tol} \tab Numeric scalar passed to \code{\link{solve}}. Default
+#' \code{1e-40}.
+#' }
 #' 
 #' @return 
 #' A list of class \code{phylo_mle} with the following elements:
@@ -44,8 +65,8 @@
 #' )
 #' 
 #' # Computing Estimating the parameters 
-#' ans_nr  <- mle(rep(.5,5), O)
-#' ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
+#' ans_nr  <- phylo_mle(rep(.5,5), O)
+#' ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
 #' 
 #' # Plotting the path
 #' with(ans_nr, plot(
@@ -59,8 +80,8 @@
 #' mypriors <- function(params) {
 #'     dbeta(params[1:2], 2, 10)
 #' }
-#' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
-#' ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+#' ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
+#' ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
 #' 
 #' # Plotting the path
 #' oldpar <- par(no.readonly = TRUE)
@@ -84,16 +105,16 @@
 #'   tree, "NodeId", "ParentId"
 #' )
 #' 
-#' ans_nr  <- mle(rep(.5,5), O)
-#' ans_abc <- mle(rep(.5,5), O, useABC = TRUE)
+#' ans_nr  <- phylo_mle(rep(.5,5), O)
+#' ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
 #' 
 #' 
 #' # Computing Estimating the parameters Using Priors for PSI ------------------
 #' mypriors <- function(params) {
 #'   dbeta(params[1:2], 2, 10)
 #' }
-#' ans_nr_dbeta <- mle(rep(.5,5), O, priors = mypriors)
-#' ans_abc_dbeta <- mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+#' ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
+#' ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
 #'
 #' # Plotting the path
 #' oldpar <- par(no.readonly = TRUE)
@@ -111,18 +132,15 @@ NULL
 
 #' @rdname mle
 #' @export
-mle <- function(
+phylo_mle <- function(
   params,
   dat,
-  maxiter       = 20L,
-  criter        = 1e-5,
   useABC        = FALSE,
   priors        = NULL, 
-  abcoptim.args = list(maxCycle = 500L, criter = 50L),
-  fix.params    = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE),
-  method.args   = list(d = .0001),
-  solve.tol     = 1e-40
+  control       = list(),
+  fix.params    = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE)
 ) {
+  
   
   # Checking params
   if (length(params) != 5)
@@ -133,7 +151,6 @@ mle <- function(
   
   # Auxiliary functions for 
   expit <- function(x) exp(x)/(1 + exp(x))
-  logit <- function(x) log(x/(1 - x))
   
   # In case of fixing parameters
   par0 <- params
@@ -171,30 +188,35 @@ mle <- function(
   # Optimizing
   if (useABC) {
     # Checking ABC args
-    if (!length(abcoptim.args$lb))       abcoptim.args$lb       <- 1e-20
-    if (!length(abcoptim.args$ub))       abcoptim.args$ub       <- 1 - 1e-20
-    if (!length(abcoptim.args$maxCycle)) abcoptim.args$maxCycle <- 500L
-    if (!length(abcoptim.args$criter))   abcoptim.args$criter   <- 50L
-    
+    if (!length(control$lb))       control$lb       <- 1e-20
+    if (!length(control$ub))       control$ub       <- 1 - 1e-20
+    if (!length(control$maxCycle)) control$maxCycle <- 500L
+    if (!length(control$criter))   control$criter   <- 50L
+
     ans <-
-      do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), abcoptim.args))
+      do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), control))
   } else {
     
+    if (!length(control$maxiter))     control$maxiter    <- 20L
+    if (!length(control$criter))      control$criter     <- 1e-15
+    if (!length(control$solve.tol))   control$solve.tol  <- 1e-40
+    if (!length(control$method.args)) control$method.args  <- list(d = .0001)
+    
     # Creating space
-    PARAMS <- matrix(ncol = 5, nrow = maxiter)
+    PARAMS <- matrix(ncol = 5, nrow = control$maxiter)
     
     # Newton-Raphson. Observe that in each evaluation of -fun- we apply the
     # -expit- function to the parameters so that those are transformed to [0,1]
-    for (i in 1:maxiter) {
+    for (i in 1:control$maxiter) {
       
       PARAMS[i,] <- params
       
       # Computing jacobian and hessian
-      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = method.args)
-      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = method.args)
+      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = control$method.args)
+      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = control$method.args)
       
       # Updating step
-      params <- params - fun_jacb %*% solve(fun_hess, tol = solve.tol) 
+      params <- params - fun_jacb %*% solve(fun_hess, tol = control$solve.tol) 
       
       # Error
       if (is.na(fun(expit(params)))) {
@@ -204,7 +226,7 @@ mle <- function(
         
       # Stopping criteria
       val <- abs(fun(expit(params)) - fun(expit(PARAMS[i, ])))
-      if (val < criter) {
+      if (val < control$criter) {
         break
       }
     }
@@ -240,7 +262,8 @@ mle <- function(
       priors = priors,
       dat = dat,
       par0 = par0,
-      fix.params = fix.params
+      fix.params = fix.params,
+      method = ifelse(useABC, "ABC", "NR")
     ),
     class = "phylo_mle"
   )
@@ -268,16 +291,19 @@ plot.phylo_mle <- function(
   ...
   ) {
   
-    with(x,
-         plot(
-           -apply(hist, 1, fun),
-           type = type,
-           main = main,
-           xlab = xlab,
-           ylab = ylab,
-           ...
-         ))
+  # Filtering complete cases
+  x$hist <- x$hist[apply(x$hist, 1, function(x) !any(is.na(x))),]
   
+  with(x,
+       plot(
+         ifelse(method == "mcmc", 1, -1)*apply(hist, 1, fun),
+         type = type,
+         main = main,
+         xlab = xlab,
+         ylab = ylab,
+         ...
+       ))
+
   if (addlegend) {
     
     numbers <- sprintf("%.5f", with(x, c(ll, par)))

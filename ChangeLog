@@ -1,3 +1,10 @@
+2017-02-02  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: Improving doc. Now optim pars are passed via `control`.
+	  mcmc using own method.
+	* src/mcmc_misc.cpp, R/mcmc.r: New function for implemting MCMC
+	  with hastings ratio.
+	  
+
 2017-02-01  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Adding more examples (filling zeros), plus more tunning
 	  options for the NR method.
