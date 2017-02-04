@@ -5,6 +5,8 @@
 #' @param scale Numeric scalar. Step size, \eqn{z\times scale}{z*scale}, where
 #' \eqn{z\sim N(0,1)}{z~N(0,1)}.
 #' @param burnin Integer scalar. Number of burn-in samples.
+#' @param lb Numeric vector of length \code{length(initial)}. Lower bounds
+#' @param ub Numeric vector of length \code{length(initial)}. Upper bounds
 #' 
 #' @details This function implements MCMC using the Hastings ratio with
 #' scaled standard normal propositions for each parameter. For each parameter
@@ -16,6 +18,12 @@
 #' 
 #' Where \eqn{z} has standard normal distribution.
 #' 
+#' Lower and upper bounds are treated using reflecting boundaries, this is, 
+#' if the proposed \eqn{\theta'} is greater than the \code{ub}, then \eqn{\theta' - ub}
+#' is substracted from \eqn{ub}. At the same time, if it is less than \code{lb}, then
+#' \eqn{lb - \theta'} is added to \code{lb} iterating until \eqn{\theta} is within
+#' \code{[lb, ub]}.
+#' 
 #' @return 
 #' \item{batch}{Numeric matrix of size \code{length(initial) x nbatch}.}
 #' \item{final}{Numeric vector of length \code{length(initial)}. Final state of the parameters.}
@@ -24,7 +32,36 @@
 #' \item{fun}{Objective function.}
 #' 
 #' @export
+#' @examples 
+#' # Parameters
+#' set.seed(1231)
+#' n <- 1e3
+#' pars <- c(mean = 2.6, sd = 3)
 #' 
+#' # Generating data and writing the log likelihood function
+#' D <- rnorm(n, pars[1], pars[2])
+#' fun <- function(x) {
+#'   x <- log(dnorm(D, x[1], x[2]))
+#'   if (any(is.infinite(x)))
+#'     return(-Inf)
+#'   sum(x)
+#' }
+#' ans <- mcmc(fun, rep(1,2), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
+#' oldpar <- par(no.readonly = TRUE)
+#' par(mfrow = c(1,2))
+#' boxplot(ans$batch, 
+#'         main = expression("Posterior distribution of"~mu~and~sigma),
+#'         names =  expression(mu, sigma), horizontal = TRUE,
+#'         col  = blues9[c(4,9)],
+#'         sub = bquote(mu == .(pars[1])~", and"~sigma == .(pars[2]))
+#' )
+#' abline(v = pars, col  = blues9[c(4,9)], lwd = 2, lty = 2)
+#' 
+#' plot(apply(ans$batch, 1, fun), type = "l",
+#'      main = "LogLikelihood",
+#'      ylab = expression(L("{"~mu,sigma~"}"~"|"~D)) 
+#' )
+#' par(oldpar)
 mcmc <- function(
   fun,
   initial, 
@@ -43,6 +80,17 @@ mcmc <- function(
   f <- function(z) suppressWarnings(fun(z))
   
   # Checking boundaries
+  if (length(ub) > 1 && (length(initial) != length(ub)))
+    stop("Incorrect length of -ub-")
+  
+  if (length(lb) > 1 && (length(initial) != length(lb)))
+    stop("Incorrect length of -lb-")
+  
+  if (length(ub) == 1 && (length(initial) != length(ub)))
+    ub <- rep(ub, length(initial))
+  
+  if (length(lb) == 1 && (length(initial) != length(lb)))
+    lb <- rep(lb, length(initial))
 
   
   theta0 <- initial
@@ -68,7 +116,8 @@ mcmc <- function(
     if (length(r) > 1 | is.nan(r) | is.infinite(r)) {
       cat(sprintf("theta0: %f theta1: %f r: %f\n", theta0, theta1, r))
       print(ans[1:i,])
-      stop("Ups! Huston, we have a problem.")
+      warning("Ups! Huston, we have a problem.")
+      next
       
     }
     
@@ -93,20 +142,7 @@ mcmc <- function(
 }
 
 
-# # Parameters
-# set.seed(1231)
-# n <- 1e3
-# pars <- c(mean = 2.6, sd = 3)
-# 
-# # Generating data and writing the log likelihood function
-# D <- rnorm(n, pars[1], pars[2])
-# fun <- function(x) {
-#   x <- log(dnorm(D, x[1], x[2]))
-#   if (any(is.infinite(x)))
-#     return(-Inf)
-#   sum(x)
-# }
-# ans <- mcmc(fun, rep(1,2), nbatch = 2e3)
+
 
 #' @rdname mle
 #' @export

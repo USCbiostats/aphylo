@@ -1,4 +1,5 @@
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats runif
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom numDeriv jacobian hessian
 #' @importFrom igraph plot.igraph layout_with_sugiyama graph_from_edgelist
