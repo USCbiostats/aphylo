@@ -88,9 +88,16 @@ mcmc <- function(
   
   if (length(ub) == 1 && (length(initial) != length(ub)))
     ub <- rep(ub, length(initial))
-  
+
   if (length(lb) == 1 && (length(initial) != length(lb)))
     lb <- rep(lb, length(initial))
+  
+  if (any(ub <= lb))
+    stop("-ub- cannot be <= than -lb-.")
+  
+  # Checkihg burnins
+  if (burnin >= nbatch)
+    stop("burnin >= nbatch. Check parameters")
 
   
   theta0 <- initial

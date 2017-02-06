@@ -1,5 +1,7 @@
 2017-02-03  George G. Vega Yon <g.vegayon@gmail.com>
-	* R/mcmc.r: Adding example and fixing travis (doc missing).
+	* R/mcmc.r: Adding example and fixing travis (doc missing). Also
+	  including check of -ub- and -lb- parameters.
+	* tests/testthat/test-mcmc.r: New test for MCMC.
 
 
 2017-02-02  George G. Vega Yon <g.vegayon@gmail.com>
