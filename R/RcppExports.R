@@ -5,6 +5,10 @@ normal_prop <- function(x, ub, lb, scale) {
     .Call('phylogenetic_normal_prop', PACKAGE = 'phylogenetic', x, ub, lb, scale)
 }
 
+gibbs_sampler <- function(fun, x, lb, ub, scale) {
+    .Call('phylogenetic_gibbs_sampler', PACKAGE = 'phylogenetic', fun, x, lb, ub, scale)
+}
+
 #' Matrix of states
 #' 
 #' @param P Integer scalar. Number of functions.
