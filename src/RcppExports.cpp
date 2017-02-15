@@ -20,6 +20,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gibbs_sampler
+NumericVector gibbs_sampler(const Function& fun, const NumericVector& x, const NumericVector& lb, const NumericVector& ub, double scale);
+RcppExport SEXP phylogenetic_gibbs_sampler(SEXP funSEXP, SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Function& >::type fun(funSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
+    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(gibbs_sampler(fun, x, lb, ub, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
 // states
 arma::imat states(int P);
 RcppExport SEXP phylogenetic_states(SEXP PSEXP) {

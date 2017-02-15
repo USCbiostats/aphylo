@@ -4,6 +4,9 @@
 	  'thinning' the samples to reduce autocorrelation between
 	  draws. Also, working on aperiodicity of MCMC.
 
+2017-02-09  George G. Vega Yon <g.vegayon@gmail.com>
+	* src/mcmc_misc.cpp: Started to write Gibbs Sampler.
+
 
 2017-02-03  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: Adding example and fixing travis (doc missing). Also
