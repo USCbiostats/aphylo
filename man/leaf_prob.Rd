@@ -19,4 +19,3 @@ per node.}
 \description{
 Leaf probabilities
 }
-

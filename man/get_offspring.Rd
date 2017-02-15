@@ -65,4 +65,3 @@ str(ans)
 # We can visualize it
 plot(ans, vertex.size=5, vertex.label=NA)
 }
-

@@ -19,4 +19,3 @@ Matrix of states
 \examples{
 states(3)
 }
-

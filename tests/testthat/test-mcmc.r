@@ -16,6 +16,8 @@ test_that("Reasonable values", {
   }
   
   # Running the algorithm and checking expectation
-  ans <- mcmc(fun, 1, 1e4, burnin = 1000, ub = 3, lb = -3, scale = 1)
-  expect_equal(mean(ans$batch), 0, tolerance = 0.1, scale = 1)
+  ans <- suppressWarnings(
+    MCMC(fun, 1, 1e4, burnin = 1000, ub = 3, lb = -3, scale = 1)
+  )
+  expect_equal(mean(ans), 0, tolerance = 0.1, scale = 1)
 })

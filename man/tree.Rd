@@ -15,4 +15,3 @@ BiostatsUSC
 \description{
 A dataset containing the parent-offspring relations between genes.
 }
-

@@ -23,4 +23,3 @@ offspring.}
 \description{
 Internal node probabilities
 }
-

@@ -2,13 +2,16 @@
 #' @param fun A function. Returns the log-likelihood
 #' @param initial A numeric vector. Initial values of the parameters.
 #' @param nbatch Integer scalar. Number of MCMC runs.
+#' @param thin Integer scalar. Passed to \code{\link[coda:mcmc]{coda::mcmc}}.
 #' @param scale Numeric scalar. Step size, \eqn{z\times scale}{z*scale}, where
 #' \eqn{z\sim N(0,1)}{z~N(0,1)}.
-#' @param burnin Integer scalar. Number of burn-in samples.
+#' @param burnin Integer scalar. Number of burn-in samples. Passed to 
+#' \code{\link[coda:mcmc]{coda::mcmc}} as \code{init}.
 #' @param lb Numeric vector of length \code{length(initial)}. Lower bounds
 #' @param ub Numeric vector of length \code{length(initial)}. Upper bounds
+#' @param inf.eps Numeric scalar. See details.
 #' 
-#' @details This function implements MCMC using the Hastings ratio with
+#' @details This function implements MCMC using the Metropolis-Hastings ratio with
 #' scaled standard normal propositions for each parameter. For each parameter
 #' the transition function is 
 #' 
@@ -16,7 +19,9 @@
 #' \theta' = \theta + scale*z
 #' }
 #' 
-#' Where \eqn{z} has standard normal distribution.
+#' Where \eqn{z} has standard normal distribution. The MCMC follows a block
+#' sampling scheme, i.e. proposed states are either accepted or rejected
+#' altogether.
 #' 
 #' Lower and upper bounds are treated using reflecting boundaries, this is, 
 #' if the proposed \eqn{\theta'} is greater than the \code{ub}, then \eqn{\theta' - ub}
@@ -24,12 +29,18 @@
 #' \eqn{lb - \theta'} is added to \code{lb} iterating until \eqn{\theta} is within
 #' \code{[lb, ub]}.
 #' 
-#' @return 
-#' \item{batch}{Numeric matrix of size \code{length(initial) x nbatch}.}
-#' \item{final}{Numeric vector of length \code{length(initial)}. Final state of the parameters.}
-#' \item{initial}{Numeric vector of length \code{length(initial)}. 
-#' Initial state of the parameters.}
-#' \item{fun}{Objective function.}
+#' If \code{name(initial) == NULL}, then a names in the form of \code{par1, par2, ...}
+#' will be assigned to the variables.
+#' 
+#' If \code{fun} returns \code{-Inf} or \code{Inf}, instead of discarding such parameters
+#' or accept/reject with certainty, the function replaces the values to
+#' \code{-.Machine$double.xmax*inf.eps} and \code{.Machine$double.xmax*inf.eps}
+#' respectively so that the algorithm is aperiodic.
+#' 
+#' @return An object of class \code{\link[coda:mcmc]{mcmc}} from the \CRANpkg{coda}
+#' package. The \code{mcmc} object is a matrix with one column per parameter,
+#' and \code{nbatch} rows.
+#' 
 #' 
 #' @export
 #' @examples 
@@ -46,10 +57,10 @@
 #'     return(-Inf)
 #'   sum(x)
 #' }
-#' ans <- mcmc(fun, rep(1,2), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
+#' ans <- MCMC(fun, c(mu=1, sigma=1), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
 #' oldpar <- par(no.readonly = TRUE)
 #' par(mfrow = c(1,2))
-#' boxplot(ans$batch, 
+#' boxplot(as.matrix(ans), 
 #'         main = expression("Posterior distribution of"~mu~and~sigma),
 #'         names =  expression(mu, sigma), horizontal = TRUE,
 #'         col  = blues9[c(4,9)],
@@ -57,25 +68,34 @@
 #' )
 #' abline(v = pars, col  = blues9[c(4,9)], lwd = 2, lty = 2)
 #' 
-#' plot(apply(ans$batch, 1, fun), type = "l",
+#' plot(apply(as.matrix(ans), 1, fun), type = "l",
 #'      main = "LogLikelihood",
 #'      ylab = expression(L("{"~mu,sigma~"}"~"|"~D)) 
 #' )
 #' par(oldpar)
-mcmc <- function(
+#' @aliases Metropolis-Hastings
+MCMC <- function(
   fun,
   initial, 
   nbatch = 2e4L,
-  scale = 1,
+  thin   = 1L,
+  scale  = 1,
   burnin = 1e3L,
-  ub = rep(1 - 1e-20, length(initial)),
-  lb = rep(1e-20, length(initial))
+  ub = rep(.Machine$double.xmax, length(initial)),
+  lb = rep(-.Machine$double.xmax, length(initial)),
+  inf.eps = 1e-100
   ) {
   
-  # Containers
-  R   <- runif(nbatch)
-  ans <- matrix(ncol = length(initial), nrow = nbatch)
+  # Adding names
+  cnames <- names(initial)
+  if (!length(cnames))
+    cnames <- paste0("par",1:length(initial))
   
+  # Containers
+  R            <- runif(nbatch)
+  ans          <- matrix(ncol = length(initial), nrow = nbatch,
+                         dimnames = list(1:nbatch, cnames))
+
   # Wrapping function
   f <- function(z) suppressWarnings(fun(z))
   
@@ -97,35 +117,55 @@ mcmc <- function(
   
   # Checkihg burnins
   if (burnin >= nbatch)
-    stop("burnin >= nbatch. Check parameters")
+    stop("-burnin- (",burnin,") cannot be >= than -nbatch- (",nbatch,").")
 
+  # Checking thin
+  if (thin > nbatch)
+    stop("-thin- (",thin,") cannot be > than -nbatch- (",nbatch,").")
   
   theta0 <- initial
   f0     <- f(theta0)
+  nskip  <- 0L
   for (i in 1:nbatch) {
     # Step 1. Propose
     theta1 <- normal_prop(theta0, ub, lb, scale)
     f1     <- f(theta1)
     
-    # Check proposition
-    if (is.nan(f1) | is.infinite(f1))
+    # Checking f(theta1) (it must be a number, can be Inf)
+    if (is.nan(f1) | is.na(f1)) {
+      warning("The output of fun(par) is either -NaN- or -NA-. ",
+              "We will skip this iteration for now. ",
+              "Check either -fun- or the -lb- and -ub- parameters.")
+      
+      ans   <- ans[-i,,drop=FALSE]
+      nskip <- nskip + 1L
+      
       next
+    }
+
+    # Minus infinite is interpreted as highly implausible (since proposal was done)
+    # within boundaries; hence, we replace f1 with a value -.Machine$double.xmax*inf_eps
+    if (f1 == -Inf) {
+      f1 <- -.Machine$double.xmax*inf.eps
+    } else if (f1 == Inf) {
+      f1 <- .Machine$double.xmax*inf.eps
+    }
+    
     
     # Step 2. Hastings ratio
     r <-
       tryCatch(
-        exp(f1 - f0),
+        min(1, exp(f1 - f0)),
         error = function(e)
           list(t0 = theta0, t1 = theta1, err = e)
       )
     
-    # Checking if there's an error
-    if (length(r) > 1 | is.nan(r) | is.infinite(r)) {
-      cat(sprintf("theta0: %f theta1: %f r: %f\n", theta0, theta1, r))
-      print(ans[1:i,])
-      warning("Ups! Huston, we have a problem.")
-      next
+    # Checking if there's an error: This should be an error
+    if (length(r) > 1 | is.nan(r)) {
+      stop("Huston, we have a problem. The value of the Metropolist-Hastings ",
+           "ratio is either -NaN- or it returned error.\n", r)
       
+      next
     }
     
     # Updating the value
@@ -135,19 +175,28 @@ mcmc <- function(
     }
     
     # Storing
-    ans[i,] <- theta0
+    ans[i - nskip,] <- theta0
     
   }
   
-  return(list(
-    batch = ans[-c(1:burnin), ],
-    final = theta0,
-    initial = initial,
-    fun   = fun)
-    )
+  # Thinning the data
+  ans <- ans[-c(1:burnin),]
+  ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
   
+  # Returning an mcmc object from the coda package
+  # if the coda package hasn't been loaded, then return a warning
+  if (!("package:coda" %in% search()))
+    warning("The -coda- package has not been loaded.")
+  
+  return(
+    coda::mcmc(
+      ans,
+      start = as.integer(rownames(ans)[1]),
+      end   = as.integer(rownames(ans)[nrow(ans)]),
+      thin = thin
+      )
+    )
 }
-
 
 
 
@@ -164,6 +213,8 @@ phylo_mcmc <- function(
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .0005
+  if (!length(control$ub))     control$ub     <- rep(1 - 1e-20, 5)
+  if (!length(control$lb))     control$lb     <- rep(1e-20, 5)
   
   # Checking params
   if (length(params) != 5)
@@ -182,13 +233,15 @@ phylo_mcmc <- function(
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
-      psi <- params[1:2] 
-      mu  <- params[3:4] 
-      Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi)
-      
-      res <- LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll +
-        sum(log(priors(params)))
+      res <- LogLike(
+        Z          = dat$experiment,
+        offspring  = dat$offspring,
+        noffspring = dat$noffspring,
+        psi        = params[1:2] ,
+        mu         = params[3:4] ,
+        Pi         = c(1 - params[5], params[5]),
+        verb_ans   = FALSE
+      )$ll + sum(log(priors(params)))
       
       if (is.nan(res) | is.infinite(res)) return(-Inf)
       res
@@ -204,20 +257,26 @@ phylo_mcmc <- function(
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
-      psi <- params[1:2] 
-      mu  <- params[3:4] 
-      Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi)
-      
-      res <- LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+      res <- LogLike(
+        Z          = dat$experiment,
+        offspring  = dat$offspring,
+        noffspring = dat$noffspring,
+        psi        = params[1:2] ,
+        mu         = params[3:4] ,
+        Pi         = c(1 - params[5], params[5]),
+        verb_ans   = FALSE
+      )$ll
       
       if (is.nan(res) | is.infinite(res)) return(-Inf)
       res
     }
   }
   
-  # ans <- do.call(mcmc::metrop, c(list(obj = fun, initial = params), control))
-  ans <- do.call(mcmc, c(list(fun = fun, initial = params), control))
+  # Naming the parameter estimates
+  names(params) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
+  
+  # Running the MCMC
+  ans <- do.call(MCMC, c(list(fun = fun, initial = params), control))
   
   # Working on answer
   env <- new.env()
@@ -228,25 +287,22 @@ phylo_mcmc <- function(
   if (length(priors)) 
     environment(priors) <- env
   
-  # Naming the parameter estimates
-  names(ans$final) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
-  
   # Returning
   structure(
     list(
-      par = ans$final,
-      hist = ans$batch,
-      value = fun(ans$final),
-      ll    = fun(ans$final),
+      par = ans[nrow(ans),],
+      hist = ans,
+      value = fun(ans[nrow(ans),]),
+      ll    = fun(ans[nrow(ans),]),
       fun = fun,
       priors = priors,
       dat = dat,
       par0 = par0,
       fix.params = fix.params,
-      method = "mcmc",
-      time = ans$time,
-      accept = ans$accept
+      method = "mcmc"
     ),
     class = "phylo_mle"
   )
 }
+
+

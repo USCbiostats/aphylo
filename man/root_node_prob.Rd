@@ -18,4 +18,3 @@ per state}
 \description{
 Root node probabilities
 }
-

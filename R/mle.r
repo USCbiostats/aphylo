@@ -296,7 +296,7 @@ plot.phylo_mle <- function(
   
   with(x,
        plot(
-         ifelse(method == "mcmc", 1, -1)*apply(hist, 1, fun),
+         ifelse(method == "mcmc", 1, -1)*apply(as.matrix(hist), 1, fun),
          type = type,
          main = main,
          xlab = xlab,

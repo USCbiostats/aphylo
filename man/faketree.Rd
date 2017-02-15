@@ -15,4 +15,3 @@ BiostatsUSC
 A fake dataset containing the parent-offspring relations between genes.
 This dataset is inteded for testing only.
 }
-

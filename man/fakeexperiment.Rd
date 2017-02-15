@@ -17,4 +17,3 @@ A fake dataset containing 2 functional state of the leaf nodes. Each
 function can have either 0 (unactive), 1 (active) or 9 (n/a).
 This dataset is inteded for testing only.
 }
-

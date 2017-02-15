@@ -51,4 +51,3 @@ mtext(
   "LogLikelihood",
   side=3, outer=FALSE, line = 2, cex=1.25)
 }
-

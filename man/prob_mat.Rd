@@ -17,4 +17,3 @@ corresponding to states (0,1) of parent and offspring respectively.
 Generates a 2x2 matrix with probabilities for states 0/1, with rows and columns
 corresponding to states (0,1) of parent and offspring respectively.
 }
-
