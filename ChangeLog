@@ -1,3 +1,14 @@
+2017-02-15  George G. Vega Yon <g.vegayon@gmail.com>
+	* src/mcmc_misc.cpp -> src/mcmc.cpp: New version of the mcmc
+	  algorithm implemented using Rcpp.
+	* R/mcmc.r: New option -useCpp- allows using a C++ version
+	  of the algorithm. Speed improvement of ~ 50%.
+	* R/mle.r: Working on documentation for the phylo_mcmc
+	  function.
+	* playground/mcmc_benchmark...: Measuring speed gains
+	  of new MCMC implementation.
+
+
 2017-02-14  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: mcmc now is MCMC and returns an object of class mcmc
 	  from the coda R package. Also, new argument -thin- allows

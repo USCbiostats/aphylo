@@ -9,7 +9,7 @@
 #' \code{\link[coda:mcmc]{coda::mcmc}} as \code{init}.
 #' @param lb Numeric vector of length \code{length(initial)}. Lower bounds
 #' @param ub Numeric vector of length \code{length(initial)}. Upper bounds
-#' @param inf.eps Numeric scalar. See details.
+#' @param useCpp Logical scalar. When \code{TRUE}, loops using a Rcpp implementation.
 #' 
 #' @details This function implements MCMC using the Metropolis-Hastings ratio with
 #' scaled standard normal propositions for each parameter. For each parameter
@@ -32,10 +32,6 @@
 #' If \code{name(initial) == NULL}, then a names in the form of \code{par1, par2, ...}
 #' will be assigned to the variables.
 #' 
-#' If \code{fun} returns \code{-Inf} or \code{Inf}, instead of discarding such parameters
-#' or accept/reject with certainty, the function replaces the values to
-#' \code{-.Machine$double.xmax*inf.eps} and \code{.Machine$double.xmax*inf.eps}
-#' respectively so that the algorithm is aperiodic.
 #' 
 #' @return An object of class \code{\link[coda:mcmc]{mcmc}} from the \CRANpkg{coda}
 #' package. The \code{mcmc} object is a matrix with one column per parameter,
@@ -83,7 +79,7 @@ MCMC <- function(
   burnin = 1e3L,
   ub = rep(.Machine$double.xmax, length(initial)),
   lb = rep(-.Machine$double.xmax, length(initial)),
-  inf.eps = 1e-100
+  useCpp = FALSE
   ) {
   
   # Adding names
@@ -91,13 +87,8 @@ MCMC <- function(
   if (!length(cnames))
     cnames <- paste0("par",1:length(initial))
   
-  # Containers
-  R            <- runif(nbatch)
-  ans          <- matrix(ncol = length(initial), nrow = nbatch,
-                         dimnames = list(1:nbatch, cnames))
-
   # Wrapping function
-  f <- function(z) suppressWarnings(fun(z))
+  f <- function(z) fun(z)
   
   # Checking boundaries
   if (length(ub) > 1 && (length(initial) != length(ub)))
@@ -106,10 +97,11 @@ MCMC <- function(
   if (length(lb) > 1 && (length(initial) != length(lb)))
     stop("Incorrect length of -lb-")
   
-  if (length(ub) == 1 && (length(initial) != length(ub)))
+  # Repeating boundaries
+  if (length(ub) == 1)
     ub <- rep(ub, length(initial))
 
-  if (length(lb) == 1 && (length(initial) != length(lb)))
+  if (length(lb) == 1)
     lb <- rep(lb, length(initial))
   
   if (any(ub <= lb))
@@ -123,64 +115,62 @@ MCMC <- function(
   if (thin > nbatch)
     stop("-thin- (",thin,") cannot be > than -nbatch- (",nbatch,").")
   
-  theta0 <- initial
-  f0     <- f(theta0)
-  nskip  <- 0L
-  for (i in 1:nbatch) {
-    # Step 1. Propose
-    theta1 <- normal_prop(theta0, ub, lb, scale)
-    f1     <- f(theta1)
+  if (useCpp) {
+    ans <- MCMCcpp(f, initial, nbatch, lb, ub, scale)
+    dimnames(ans) <- list(1:nbatch, cnames)
     
-    # Checking f(theta1) (it must be a number, can be Inf)
-    if (is.nan(f1) | is.na(f1)) {
-      warning("The output of fun(par) is either -NaN- or -NA-. ",
-              "We will skip this iteration for now. ",
-              "Check either -fun- or the -lb- and -ub- parameters.")
+  } else {
+    R <- runif(nbatch)
+    ans <- matrix(ncol = length(initial), nrow = nbatch,
+                  dimnames = list(1:nbatch, cnames))
+    
+    
+    theta0 <- initial
+    f0     <- f(theta0)
+    for (i in 1:nbatch) {
+      # Step 1. Propose
+      theta1 <- normal_prop(theta0, ub, lb, scale)
+      f1     <- f(theta1)
       
-      ans   <- ans[-i,,drop=FALSE]
-      nskip <- nskip + 1L
+      # Checking f(theta1) (it must be a number, can be Inf)
+      if (is.nan(f1) | is.na(f1) | is.null(f1)) 
+        stop(
+          "fun(par) is undefined (", f1, ")",
+          "Check either -fun- or the -lb- and -ub- parameters."
+        )
       
-      next
-    }
-
-    # Minus infinite is interpreted as highly implausible (since proposal was done)
-    # within boundaries; hence, we replace f1 with a value -.Machine$double.xmax*inf_eps
-    if (f1 == -Inf) {
-      f1 <- -.Machine$double.xmax*inf.eps
-    } else if (f1 == Inf) {
-      f1 <- .Machine$double.xmax*inf.eps
-    }
-    
-    
-    # Step 2. Hastings ratio
-    r <-
-      tryCatch(
-        min(1, exp(f1 - f0)),
-        error = function(e)
-          list(t0 = theta0, t1 = theta1, err = e)
-      )
-    
-    # Checking if there's an error: This should be an error
-    if (length(r) > 1 | is.nan(r)) {
-      stop("Huston, we have a problem. The value of the Metropolist-Hastings ",
-           "ratio is either -NaN- or it returned error.\n", r)
+      # Step 2. Hastings ratio
+      # r <- tryCatch(
+      #   expr  = min(1, exp(f1 - f0)),
+      #   error = function(e) {
+      #     list(t0 = theta0, t1 = theta1, err = e)
+      #   }
+      # )
+      # 
+      # # Checking if there's an error: This should be an error
+      # if (length(r) > 1 | is.nan(r)) {
+      #   stop("The value of the Metropolist-Hastings ",
+      #        "ratio is either -NaN- or it returned error.\n", r)
+      #   
+      #   next
+      # }
+      r <- min(1, exp(f1 - f0))
       
-      next
+      # Updating the value
+      if (R[i] < r) {
+        theta0 <- theta1
+        f0     <- f(theta0)
+      }
+      
+      # Storing
+      ans[i,] <- theta0
+      
     }
-    
-    # Updating the value
-    if (R[i] < r) {
-      theta0 <- theta1
-      f0     <- f(theta0)
-    }
-    
-    # Storing
-    ans[i - nskip,] <- theta0
-    
   }
   
+  
   # Thinning the data
-  ans <- ans[-c(1:burnin),]
+  ans <- ans[-c(1:burnin), , drop=FALSE]
   ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
   
   # Returning an mcmc object from the coda package
@@ -212,7 +202,7 @@ phylo_mcmc <- function(
   
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
-  if (!length(control$scale))  control$scale  <- .0005
+  if (!length(control$scale))  control$scale  <- .01
   if (!length(control$ub))     control$ub     <- rep(1 - 1e-20, 5)
   if (!length(control$lb))     control$lb     <- rep(1e-20, 5)
   

@@ -35,6 +35,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MCMCcpp
+NumericMatrix MCMCcpp(Function& fun, NumericVector theta0, int nbatch, const NumericVector& lb, const NumericVector& ub, double scale);
+RcppExport SEXP phylogenetic_MCMCcpp(SEXP funSEXP, SEXP theta0SEXP, SEXP nbatchSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Function& >::type fun(funSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type theta0(theta0SEXP);
+    Rcpp::traits::input_parameter< int >::type nbatch(nbatchSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
+    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(MCMCcpp(fun, theta0, nbatch, lb, ub, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
 // states
 arma::imat states(int P);
 RcppExport SEXP phylogenetic_states(SEXP PSEXP) {

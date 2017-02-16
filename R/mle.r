@@ -31,7 +31,7 @@
 #' the following:
 #' 
 #' \tabular{ll}{
-#' \code{maxiter} \tab item Integer scalar. Maximum number of steps in the Newton-Raphson
+#' \code{maxiter} \tab Integer scalar. Maximum number of steps in the Newton-Raphson
 #' algorithm. Default \code{20L}.\cr
 #' \code{criter} \tab Numeric scalar. Stoping criteria for the Newton-Raphson
 #' algorithm. Default \code{1e-15}.\cr
@@ -40,6 +40,15 @@
 #' package. Default \code{list(d = .0001)}\cr
 #' \code{solve.tol} \tab Numeric scalar passed to \code{\link{solve}}. Default
 #' \code{1e-40}.
+#' }
+#' 
+#' For \code{phylo_mcmc}, the default values of \code{control} are
+#' 
+#' \tabular{ll}{
+#' \code{nbatch} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
+#' \code{scale} \tab Numeric scalar. Default \code{0.01}. \cr
+#' \code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
+#' \code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
 #' }
 #' 
 #' @return 

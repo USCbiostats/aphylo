@@ -9,6 +9,10 @@ gibbs_sampler <- function(fun, x, lb, ub, scale) {
     .Call('phylogenetic_gibbs_sampler', PACKAGE = 'phylogenetic', fun, x, lb, ub, scale)
 }
 
+MCMCcpp <- function(fun, theta0, nbatch, lb, ub, scale) {
+    .Call('phylogenetic_MCMCcpp', PACKAGE = 'phylogenetic', fun, theta0, nbatch, lb, ub, scale)
+}
+
 #' Matrix of states
 #' 
 #' @param P Integer scalar. Number of functions.
