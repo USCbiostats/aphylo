@@ -7,16 +7,16 @@
 using namespace Rcpp;
 
 // normal_prop
-NumericVector normal_prop(const NumericVector& x, const NumericVector& ub, const NumericVector& lb, double scale);
-RcppExport SEXP phylogenetic_normal_prop(SEXP xSEXP, SEXP ubSEXP, SEXP lbSEXP, SEXP scaleSEXP) {
+NumericVector normal_prop(const NumericVector& x, const NumericVector& lb, const NumericVector& ub, double scale);
+RcppExport SEXP phylogenetic_normal_prop(SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
     Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(normal_prop(x, ub, lb, scale));
+    rcpp_result_gen = Rcpp::wrap(normal_prop(x, lb, ub, scale));
     return rcpp_result_gen;
 END_RCPP
 }

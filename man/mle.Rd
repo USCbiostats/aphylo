@@ -92,7 +92,9 @@ package. Default \code{list(d = .0001)}\cr
 \code{1e-40}.
 }
 
-For \code{phylo_mcmc}, the default values of \code{control} are
+\code{phylo_mcmc} is a wrapper of \code{\link{MCMC}}, so, instead of treating the
+problem as a maximization problem, \code{phylo_mcmc} generates a \bold{Markov Chain}.
+The default values of \code{control} are:
 
 \tabular{ll}{
 \code{nbatch} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
@@ -177,5 +179,26 @@ plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
 plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
 
 par(oldpar)
+
+# Using the MCMC ------------------------------------------------------------
+
+\dontrun{
+rm(experiment)
+load(experiment)
+
+# Preparing the data
+O <- get_offspring(
+  experiment, "LeafId", 
+  tree, "NodeId", "ParentId"
+)
+
+# Running the MCMC
+set.seed(1231)
+
+ans_mcmc <- phylo_mcmc(
+  rep(.5, 5), O,
+  control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
+)
+}
 
 }

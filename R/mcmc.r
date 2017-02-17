@@ -115,6 +115,9 @@ MCMC <- function(
   if (thin > nbatch)
     stop("-thin- (",thin,") cannot be > than -nbatch- (",nbatch,").")
   
+  if (thin < 1L)
+    stop("-thin- should be >= 1.")
+  
   if (useCpp) {
     ans <- MCMCcpp(f, initial, nbatch, lb, ub, scale)
     dimnames(ans) <- list(1:nbatch, cnames)
@@ -129,7 +132,7 @@ MCMC <- function(
     f0     <- f(theta0)
     for (i in 1:nbatch) {
       # Step 1. Propose
-      theta1 <- normal_prop(theta0, ub, lb, scale)
+      theta1 <- normal_prop(theta0, lb, ub, scale)
       f1     <- f(theta1)
       
       # Checking f(theta1) (it must be a number, can be Inf)
@@ -170,8 +173,8 @@ MCMC <- function(
   
   
   # Thinning the data
-  ans <- ans[-c(1:burnin), , drop=FALSE]
-  ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
+  if (burnin) ans <- ans[-c(1:burnin), , drop=FALSE]
+  if (thin)   ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
   
   # Returning an mcmc object from the coda package
   # if the coda package hasn't been loaded, then return a warning

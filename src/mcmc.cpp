@@ -5,8 +5,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector normal_prop(
     const NumericVector & x,
-    const NumericVector & ub,
     const NumericVector & lb,
+    const NumericVector & ub,
     double scale
 ) {
   
@@ -97,9 +97,9 @@ NumericMatrix MCMCcpp(
   for (int i = 0; i < nbatch; i++) {
   
     // Generating proposal
-    theta1 = normal_prop(theta0, ub, lb, scale);
+    theta1 = normal_prop(theta0, lb, ub, scale);
     f1     = fun(theta1);
-    
+  
     // Checking values
     if (is_na(f1)[0] || is_nan(f1)[0])
       stop("fun(par) is undefined. Check either -fun- or the -lb- and -ub- parameters.");
