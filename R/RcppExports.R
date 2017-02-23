@@ -128,3 +128,43 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
     .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi, verb_ans)
 }
 
+#' Simulate functions
+#' 
+#' @param offspring A List of length \eqn{N} with the set of offspring of
+#' each node.
+#' @param noffspring An integer vector of length \eqn{N} with the number of
+#' offspring per node.
+#' @param psi A numeric vector of length 2 (see details).
+#' @param mu A numeric vector of length 2 (see details).
+#' @param Pi A numeric vector of length 2 (see details).
+#' 
+#' @return An integer matrix with values 9, 0 and 1.
+#' 
+#' @export
+#' @examples
+#' # Example 1 ----------------------------------------------------------------
+#' # Loading the data
+#' data(experiment)
+#' data(tree)
+#'   
+#' # Preprocessing the data
+#' O <- get_offspring(experiment, "LeafId", tree, "NodeId", "ParentId")
+#'     
+#' # Simulating
+#' ans <-
+#'   with(O, sim_phylo(
+#'       offspring,
+#'       noffspring,
+#'       psi = c(.001, .05) * 0,
+#'       mu = c(.01, .05),
+#'       Pi = c(.5, .5)
+#'   ))
+#'       
+#' # Tabulating results
+#' table(ans)
+#' 
+#' 
+sim_phylo <- function(offspring, noffspring, psi, mu, Pi) {
+    .Call('phylogenetic_sim_phylo', PACKAGE = 'phylogenetic', offspring, noffspring, psi, mu, Pi)
+}
+

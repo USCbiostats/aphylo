@@ -1,3 +1,11 @@
+2017-02-22  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: -as.phylo- method for -phylo_offspring-,
+	  and removed igraph links (replaced by -ape-).
+	* playground/FormatTreeR_24Oct2012.pdf: Formally describes
+	  the phylo objects.
+	* src/sim_phylo.cpp: Function to simulate phylo trees.
+
+
 2017-02-16  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: Fixing small bug in output.
 	* R/mle.r: Adding an example with MCMC and improving doc.

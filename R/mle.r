@@ -142,7 +142,7 @@
 #' 
 #' \dontrun{
 #' rm(experiment)
-#' load(experiment)
+#' data(experiment)
 #' 
 #' # Preparing the data
 #' O <- get_offspring(
