@@ -131,3 +131,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sim_phylo
+arma::umat sim_phylo(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
+RcppExport SEXP phylogenetic_sim_phylo(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_phylo(offspring, noffspring, psi, mu, Pi));
+    return rcpp_result_gen;
+END_RCPP
+}

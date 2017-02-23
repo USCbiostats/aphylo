@@ -2,13 +2,16 @@
 % Please edit documentation in R/data-management.r, R/methods.r
 \name{get_offspring}
 \alias{get_offspring}
+\alias{as.phylo.phylo_offspring}
 \alias{plot.phylo_offspring}
 \title{Find the offspring of each node.}
 \usage{
 get_offspring(data_exper, leafidvar, data_tree, nodeidvar, parentidvar,
   funvars = NULL)
 
-\method{plot}{phylo_offspring}(x, y = NULL, layout = NULL, ...)
+\method{as.phylo}{phylo_offspring}(x, ...)
+
+\method{plot}{phylo_offspring}(x, y = NULL, tip.color = NULL, ...)
 }
 \arguments{
 \item{data_exper}{A data.frame with the experimental data}
@@ -30,11 +33,11 @@ all but \code{leafidvar} are function variables.}
 
 \item{x}{An object of class \code{phylo_offspring}.}
 
+\item{...}{Further arguments passed to the method.}
+
 \item{y}{Ignored.}
 
-\item{layout}{Passed to \code{\link[igraph:plot.igraph]{igraph:plot.igraph}}}
-
-\item{...}{Further arguments passed to the method.}
+\item{tip.color}{See \code{\link[ape:plot.phylo]{plot.phylo}}}
 }
 \value{
 A list of length \eqn{n} with relative position of offspring
@@ -46,11 +49,13 @@ Find the offspring of each node.
 Plot and print methods for \code{phylo_offspring} objects
 }
 \details{
-In the case of the plot method, by defult layout is set to
-be \code{\link[igraph:layout_with_sugiyama]{layout_with_sugiyama}}
-with parameter \code{maxiter=200}.
+Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
+from the \CRANpkg{ape} package.
+
+\code{as.phylo} requires loading the \code{ape} package.
 }
 \examples{
+# Example with lots of data -------------------------------------------------
 # Loading data
 data(experiment)
 data(tree)
@@ -60,8 +65,16 @@ ans <- get_offspring(
     tree, "NodeId", "ParentId"
 )
 
-str(ans)
-
 # We can visualize it
-plot(ans, vertex.size=5, vertex.label=NA)
+plot(ans)
+
+# Example with less data ----------------------------------------------------
+
+ans <- get_offspring(
+    fakeexperiment, "LeafId", 
+    faketree, "NodeId", "ParentId"
+)
+ 
+# We can visualize it
+plot(ans)
 }

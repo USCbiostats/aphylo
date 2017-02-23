@@ -10,10 +10,9 @@ Imports:
     Rcpp (>= 0.12.1),
     Matrix,
     methods,
-    igraph,
     numDeriv,
     ABCoptim (>= 0.14.0),
-    coda
+    coda, ape
 Suggests:
     covr,
     testthat,

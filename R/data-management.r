@@ -12,13 +12,15 @@
 #' (0-1) variables in \code{data_exper}. If not provided, it is assumed that
 #' all but \code{leafidvar} are function variables.
 #' 
-#' @details In the case of the plot method, by defult layout is set to
-#' be \code{\link[igraph:layout_with_sugiyama]{layout_with_sugiyama}}
-#' with parameter \code{maxiter=200}.
+#' @details Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
+#' from the \CRANpkg{ape} package.
+#' 
+#' \code{as.phylo} requires loading the \code{ape} package.
 #' 
 #' @return A list of length \eqn{n} with relative position of offspring
 #' of each node, with respect to \code{data_exper}, starting from 0.
 #' @examples 
+#' # Example with lots of data -------------------------------------------------
 #' # Loading data
 #' data(experiment)
 #' data(tree)
@@ -28,10 +30,18 @@
 #'     tree, "NodeId", "ParentId"
 #' )
 #' 
-#' str(ans)
-#' 
 #' # We can visualize it
-#' plot(ans, vertex.size=5, vertex.label=NA)
+#' plot(ans)
+#' 
+#' # Example with less data ----------------------------------------------------
+#' 
+#' ans <- get_offspring(
+#'     fakeexperiment, "LeafId", 
+#'     faketree, "NodeId", "ParentId"
+#' )
+#'  
+#' # We can visualize it
+#' plot(ans)
 #' @export
 get_offspring <- function(
   data_exper,
@@ -65,7 +75,6 @@ get_offspring <- function(
     rownames(data_exper) <- NULL
   }
   
-  
   # Checking Data sorting
   data_exper <- data_exper[
     order(data_exper[[leafidvar]], decreasing = FALSE),,drop=FALSE
@@ -84,6 +93,22 @@ get_offspring <- function(
     else return(x)
   })
   
+  # Tagging leaf (tip) nodes. These have degree 1
+  edges  <- unname(as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE]))
+  isleaf <- table(edges) == 1
+  
+  nodes        <- sort(unique(as.vector(edges)))
+  names(nodes) <- nodes
+  isleaf       <- isleaf[match(names(isleaf), names(nodes))]
+  
+  # Leaf nodes must have ids 1:sum(isleaf), rootnode must have id sum(isleaf) + 1
+  nodes[isleaf]                      <- 1:sum(isleaf)
+  nodes["0"]                         <- sum(isleaf) + 1
+  nodes[names(nodes) != 0 & !isleaf] <- (sum(isleaf) + 2):(length(isleaf))
+  
+  # Replacing elements in edges
+  edges[] <- as.integer(nodes[match(edges[], names(nodes))])
+  
   # Checking who is parent
   structure(
     list(
@@ -92,44 +117,42 @@ get_offspring <- function(
       added      = data_exper[["added"]],
       offspring  = ans,
       noffspring = sapply(ans, length),
-      edgelist   = as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE])
+      edgelist   = edges,
+      nodes      = nodes,
+      leaf_node  = isleaf
     ),
     class = "phylo_offspring"
   )
 }
 
-#' Convert \code{phylo_offspring} to \code{igraph} objects.
-#' @param x An object of class \code{phylo_offspring}
+#' @rdname get_offspring
+#' @method as.phylo phylo_offspring
 #' @export
-phylo_offspring_to_igraph <- function(x) {
-  
-  # Checking class
-  if (!inherits(x, "phylo_offspring"))
-    stop("-x- must be of class -phylo_offspring-.")
-  
-  # Retrieving the edgelist
-  edgelist   <- x[["edgelist"]]
-  edgelist[] <- as.character(edgelist)
-  
-  # Converting into igraph object
-  igraph::graph_from_edgelist(edgelist)
-}
-
-#' @rdname phylo_offspring_to_igraph
-#' @export
-phylo_o_to_phylo <- function(x) {
+as.phylo.phylo_offspring <- function(x, ...) {
   
   # Checking class
   if (!inherits(x, "phylo_offspring"))
     stop("-x- must be of class -phylo_offspring-.")
   
   # Recoding edgelist
-  graph <- phylo_offspring_to_igraph(x)
-  graph <- data.frame(igraph::as_edgelist(graph), stringsAsFactors=TRUE)
+  edges <- x$edgelist[,2:1]
   
-  
-  
-  graph
+  structure(list(
+    edge        = unname(edges),
+    edge.length = rep(1, nrow(edges)),
+    tip.label   = sprintf("leaf%03i", 1:sum(x$leaf_node)),
+    Nnode       = sum(!x$leaf_node)
+  ), class = "phylo")
   
 }
 
+#' #' @export
+#' #' @rdname get_offspring
+#' as.phylo <- ape::as.phylo
+
+# setGeneric("as.phylo")
+# 
+# O2 <- get_offspring(fakeexperiment, "LeafId", faketree, "NodeId", "ParentId")
+# ans <- phylo_o_to_phylo(O2)
+# collapse.singles(ans)
+# plot(ans)
