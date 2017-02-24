@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 // normal_prop
-NumericVector normal_prop(const NumericVector& x, const NumericVector& lb, const NumericVector& ub, double scale);
+NumericVector normal_prop(const NumericVector& x, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
 RcppExport SEXP phylogenetic_normal_prop(SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -15,7 +15,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
-    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
     rcpp_result_gen = Rcpp::wrap(normal_prop(x, lb, ub, scale));
     return rcpp_result_gen;
 END_RCPP
@@ -36,7 +36,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // MCMCcpp
-NumericMatrix MCMCcpp(Function& fun, NumericVector theta0, int nbatch, const NumericVector& lb, const NumericVector& ub, double scale);
+NumericMatrix MCMCcpp(Function& fun, NumericVector theta0, int nbatch, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
 RcppExport SEXP phylogenetic_MCMCcpp(SEXP funSEXP, SEXP theta0SEXP, SEXP nbatchSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -46,7 +46,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nbatch(nbatchSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
-    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
     rcpp_result_gen = Rcpp::wrap(MCMCcpp(fun, theta0, nbatch, lb, ub, scale));
     return rcpp_result_gen;
 END_RCPP
@@ -131,9 +131,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sim_phylo
-arma::umat sim_phylo(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
-RcppExport SEXP phylogenetic_sim_phylo(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+// sim_fun_on_tree
+arma::umat sim_fun_on_tree(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
+RcppExport SEXP phylogenetic_sim_fun_on_tree(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -142,7 +142,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
-    rcpp_result_gen = Rcpp::wrap(sim_phylo(offspring, noffspring, psi, mu, Pi));
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_fun_on_tree(offspring, noffspring, psi, mu, Pi, P));
     return rcpp_result_gen;
 END_RCPP
 }

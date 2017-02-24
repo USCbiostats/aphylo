@@ -5,9 +5,10 @@
 \alias{Metropolis-Hastings}
 \title{Markov Chain Monte Carlo}
 \usage{
-MCMC(fun, initial, nbatch = 20000L, thin = 1L, scale = 1,
-  burnin = 1000L, ub = rep(.Machine$double.xmax, length(initial)),
-  lb = rep(-.Machine$double.xmax, length(initial)), useCpp = FALSE)
+MCMC(fun, initial, nbatch = 20000L, thin = 1L, scale = rep(1,
+  length(initial)), burnin = 1000L, ub = rep(.Machine$double.xmax,
+  length(initial)), lb = rep(-.Machine$double.xmax, length(initial)),
+  useCpp = FALSE)
 }
 \arguments{
 \item{fun}{A function. Returns the log-likelihood}
@@ -18,8 +19,8 @@ MCMC(fun, initial, nbatch = 20000L, thin = 1L, scale = 1,
 
 \item{thin}{Integer scalar. Passed to \code{\link[coda:mcmc]{coda::mcmc}}.}
 
-\item{scale}{Numeric scalar. Step size, \eqn{z\times scale}{z*scale}, where
-\eqn{z\sim N(0,1)}{z~N(0,1)}.}
+\item{scale}{Either a numeric vector of length \code{length(initial)} or a
+scalar. Step size for the transition kernel (see details).}
 
 \item{burnin}{Integer scalar. Number of burn-in samples. Passed to 
 \code{\link[coda:mcmc]{coda::mcmc}} as \code{init}.}
@@ -36,7 +37,7 @@ package. The \code{mcmc} object is a matrix with one column per parameter,
 and \code{nbatch} rows.
 }
 \description{
-Markov Chain Monte Carlo
+Metropolis-Hastings algorithm using a random walk kernel with reflecting boundaries.
 }
 \details{
 This function implements MCMC using the Metropolis-Hastings ratio with
@@ -49,7 +50,8 @@ the transition function is
 
 Where \eqn{z} has standard normal distribution. The MCMC follows a block
 sampling scheme, i.e. proposed states are either accepted or rejected
-altogether.
+altogether. If \code{length(initial) > 1} and \code{length(scale) == 1},
+the value will be recycled so that \code{length(initial) == length(scale)}.
 
 Lower and upper bounds are treated using reflecting boundaries, this is, 
 if the proposed \eqn{\theta'} is greater than the \code{ub}, then \eqn{\theta' - ub}
@@ -61,6 +63,7 @@ If \code{name(initial) == NULL}, then a names in the form of \code{par1, par2, .
 will be assigned to the variables.
 }
 \examples{
+# Univariate distributed data with multiple parameters ----------------------
 # Parameters
 set.seed(1231)
 n <- 1e3
@@ -70,8 +73,6 @@ pars <- c(mean = 2.6, sd = 3)
 D <- rnorm(n, pars[1], pars[2])
 fun <- function(x) {
   x <- log(dnorm(D, x[1], x[2]))
-  if (any(is.infinite(x)))
-    return(-Inf)
   sum(x)
 }
 ans <- MCMC(fun, c(mu=1, sigma=1), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
@@ -90,4 +91,48 @@ plot(apply(as.matrix(ans), 1, fun), type = "l",
      ylab = expression(L("{"~mu,sigma~"}"~"|"~D)) 
 )
 par(oldpar)
+
+\dontrun{
+# In this example we estimate the parameter for a dataset with ----------------
+# With 5,000 draws from a MVN() with parameters M and S.
+
+# Loading the required packages
+library(mvtnorm)
+library(coda)
+
+# Parameters and data simulation
+S <- cbind(c(.8, .2), c(.2, 1))
+M <- c(0, 1)
+
+set.seed(123)
+D <- rmvnorm(5e3, mean = M, sigma = S)
+
+# Function to pass to MCMC
+fun <- function(pars) {
+  # Putting the parameters in a sensible way
+  m <- pars[1:2]
+  s <- cbind( c(pars[3], pars[4]), c(pars[4], pars[5]) )
+  
+  # Computing the unnormalized log likelihood
+  sum(log(dmvnorm(D, m, s)))
+}
+
+# Calling MCMC
+ans <- MCMC(
+  fun,
+  initial = c(mu0=5, mu1=5, s0=5, s01=0, s2=5), 
+  lb      = c(-10, -10, .01, -5, .01),
+  ub      = 5,
+  nbatch  = 1e5,
+  thin    = 20,
+  scale   = .01,
+  burnin  = 5e3,
+  useCpp  = TRUE
+)
+
+# Checking out the outcomes
+plot(ans)
+summary(ans)
+}
+
 }

@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
-//' Simulate functions
+//' Simulate functions on a ginven tree
 //' 
 //' @param offspring A List of length \eqn{N} with the set of offspring of
 //' each node.
@@ -10,8 +10,15 @@ using namespace Rcpp;
 //' @param psi A numeric vector of length 2 (see details).
 //' @param mu A numeric vector of length 2 (see details).
 //' @param Pi A numeric vector of length 2 (see details).
+//' @param P Integer scalar. Number of functions to simulate.
 //' 
-//' @return An integer matrix with values 9, 0 and 1.
+//' @details
+//' 
+//' Using the model described in the vignette
+//' \link{../doc/peeling_phylo.html}
+//' 
+//' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
+//' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 //' 
 //' @export
 //' @examples
@@ -25,7 +32,7 @@ using namespace Rcpp;
 //'     
 //' # Simulating
 //' ans <-
-//'   with(O, sim_phylo(
+//'   with(O, sim_fun_on_tree(
 //'       offspring,
 //'       noffspring,
 //'       psi = c(.001, .05) * 0,
@@ -38,21 +45,22 @@ using namespace Rcpp;
 //' 
 //' 
 // [[Rcpp::export]]
-arma::umat sim_phylo(
+arma::umat sim_fun_on_tree(
     const List       & offspring,
     const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
-    const arma::vec  & Pi
+    const arma::vec  & Pi,
+    int P = 1
 ) {
   
   
   // Vessels
   int N = offspring.size(), N_o;
-  arma::umat ans(N,1);
+  arma::umat ans(N,P);
   ans.fill(9u);
   
-  for (int p=0; p<1; p++) {
+  for (int p=0; p<P; p++) {
     // Root node function
     ans.at(0,p) = (Pi.at(0) > unif_rand())? 1u : 0u;
     

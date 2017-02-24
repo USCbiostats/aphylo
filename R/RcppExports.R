@@ -128,7 +128,7 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
     .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi, verb_ans)
 }
 
-#' Simulate functions
+#' Simulate functions on a ginven tree
 #' 
 #' @param offspring A List of length \eqn{N} with the set of offspring of
 #' each node.
@@ -137,8 +137,15 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #' @param psi A numeric vector of length 2 (see details).
 #' @param mu A numeric vector of length 2 (see details).
 #' @param Pi A numeric vector of length 2 (see details).
+#' @param P Integer scalar. Number of functions to simulate.
 #' 
-#' @return An integer matrix with values 9, 0 and 1.
+#' @details
+#' 
+#' Using the model described in the vignette
+#' \link{../doc/peeling_phylo.html}
+#' 
+#' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
+#' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 #' 
 #' @export
 #' @examples
@@ -152,7 +159,7 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #'     
 #' # Simulating
 #' ans <-
-#'   with(O, sim_phylo(
+#'   with(O, sim_fun_on_tree(
 #'       offspring,
 #'       noffspring,
 #'       psi = c(.001, .05) * 0,
@@ -164,7 +171,7 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #' table(ans)
 #' 
 #' 
-sim_phylo <- function(offspring, noffspring, psi, mu, Pi) {
-    .Call('phylogenetic_sim_phylo', PACKAGE = 'phylogenetic', offspring, noffspring, psi, mu, Pi)
+sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
+    .Call('phylogenetic_sim_fun_on_tree', PACKAGE = 'phylogenetic', offspring, noffspring, psi, mu, Pi, P)
 }
 

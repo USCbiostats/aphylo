@@ -7,7 +7,7 @@ NumericVector normal_prop(
     const NumericVector & x,
     const NumericVector & lb,
     const NumericVector & ub,
-    double scale
+    const NumericVector & scale
 ) {
   
   int K = x.size();
@@ -78,7 +78,7 @@ NumericMatrix MCMCcpp(
     int nbatch,
     const NumericVector & lb,
     const NumericVector & ub,
-    double scale
+    const NumericVector & scale
 ) {
   
   int K = lb.size();

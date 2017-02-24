@@ -1,9 +1,9 @@
 ---
-title: "Phylogenic Trees"
+title: "Peeling Algorithm in Phylogenic Trees"
 date: "`r paste('This version', Sys.Date())`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Phylogenic Trees}
+  %\VignetteIndexEntry{Peeling Algorithm in Phylogenic Trees}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

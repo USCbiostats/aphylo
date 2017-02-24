@@ -1,5 +1,7 @@
 ---
-title: "Untitled"
+title: "Current Status of the Implementation:\\newline Phylogenetic Peeling Algorithm (Project 2)"
+author: Cores D+C
+date: February 23, 2017
 fig_width: 8
 fig_height: 6
 fontsize: 10pt
@@ -13,6 +15,8 @@ header-includes:
 
 \tableofcontents
 
+# Phylogenetics R package
+
 ## Phylogenetics R package
 
 *   Implements phylogenetic peeling algorithm.
@@ -23,7 +27,7 @@ header-includes:
     *   $\psi$ Misclassification probabilities.
     *   $\mu$ Gain/Loss probabilities.
     
-    The log-likelihood function is writen completely in C++ (RcppArmadillo)
+    The log-likelihood function is written completely in C++ (RcppArmadillo)
 
 *   Currently 3 different methods for estimating the model: Newton-Raphson
     and Artificial Bee Colony Optimization (ABC) in the side of MLE, and MCMC. **(all three allow using priors)**
@@ -136,13 +140,25 @@ plot(ans_w_prior, main = "MLE using Newton-Raphson\n With Beta(2,10) priors")
 
 \normalsize
 
+## R Package to-do list
+
+*   Change the name
+
+*   Stare at the Newton-Raphson implementation (still returns funny numbers...)
+
+*   Implement (or grab) a phylogenetic tree simulation routine (`ape` and `igraph` have some candidates)
+
+*   Run more test
+
+
+
 # MCMC function
 
 ## MCMC
 
 *   The `MCMC` function implements the Metropolis-Hastings algorithm
 
-*   It uses a symetric transition kernel: A normal random-walk with scale
+*   It uses a symmetric transition kernel: A normal random-walk with scale
     parameter $s$:
     
     $$
@@ -165,7 +181,7 @@ plot(ans_w_prior, main = "MLE using Newton-Raphson\n With Beta(2,10) priors")
 
 *   Here we are simulating 1,000 data points $x_i\sim N(2.6, 3)$
 
-*   We are also defining the log unormalized density function, `fun`.
+*   We are also defining the log unnormalized density function, `fun`.
     Notice that the only parameter required in `fun` is the vector of
     parameters itself (data `D` is passed by R's scoping rules).
 
@@ -236,9 +252,11 @@ autocorr.plot(ans)
 
 ## MCMC to-do list
 
-*   Tempering version
+*   Tempering MCMC.
 
-*   Parallel MCMC (multiple chains)
+*   Adaptative MCMC (global and local).
+
+*   Parallel MCMC (multiple chains)... although this is easy to do with the `parallel` package
 
 *   (another) Just Another Gibbs Sampler? Maybe RcppJAGS? (take a look at
     rcppbugs [here](https://github.com/armstrtw/rcppbugs) and [here](http://past.rinfinance.com/agenda/2012/talk/WhitArmstrong.pdf))
