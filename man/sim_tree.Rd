@@ -64,6 +64,7 @@ O <- get_offspring(
   )
 
 # Now we plot it as a phylo object
+library(ape)
 plot(as.phylo(O))
 
 # This is what you would do in igraph --------------------------------------

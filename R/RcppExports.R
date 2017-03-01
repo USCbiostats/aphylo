@@ -231,6 +231,7 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #'   )
 #' 
 #' # Now we plot it as a phylo object
+#' library(ape)
 #' plot(as.phylo(O))
 #' 
 #' # This is what you would do in igraph --------------------------------------
