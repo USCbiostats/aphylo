@@ -142,7 +142,7 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #' @details
 #' 
 #' Using the model described in the vignette
-#' \link{../doc/peeling_phylo.html}
+#' \link[=../doc/peeling_phylo.html]{peeling_phylo.html}
 #' 
 #' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
 #' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.

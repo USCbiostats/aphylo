@@ -3,6 +3,7 @@
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom numDeriv jacobian hessian
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
+#' @importFrom grDevices colors
 #' @importFrom coda mcmc
 #' @importFrom ape as.phylo plot.phylo
 NULL

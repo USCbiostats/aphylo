@@ -30,7 +30,7 @@ Simulate functions on a ginven tree
 }
 \details{
 Using the model described in the vignette
-\link{../doc/peeling_phylo.html}
+\link[=../doc/peeling_phylo.html]{peeling_phylo.html}
 }
 \examples{
 # Example 1 ----------------------------------------------------------------
