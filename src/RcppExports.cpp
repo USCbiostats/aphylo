@@ -147,3 +147,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sim_tree
+IntegerMatrix sim_tree(int n);
+RcppExport SEXP phylogenetic_sim_tree(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_tree(n));
+    return rcpp_result_gen;
+END_RCPP
+}

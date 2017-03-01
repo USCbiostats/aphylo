@@ -1,9 +1,14 @@
+2017-02-28  George G. Vega Yon <g.vegayon@gmail.com>
+	* src/sim_tree.cpp: A function to simulate Directed Acyclic Graphs
+	  is faster than ape::rtree and more convenient since it creates
+	  the labelling that we require.
+
+
 2017-02-23  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: -scale- now a vector. New example using MVN dist.
 	* src/mcmc.cpp: idem.
 	* src/sim_phylo.cpp: Multiple functions can be generated at the time.
 	* vignettes/*: Just doing some cleaning.
-
 
 2017-02-22  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: -as.phylo- method for -phylo_offspring-,
