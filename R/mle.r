@@ -58,8 +58,14 @@
 #' \item{par}{A numeric vector of length 5 with the solution.}
 #' \item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
 #' \item{value}{A numeric scalar with the value of \code{fun(par)}}
+#' \item{ll}{A numeric scalar with the value of \code{-fun(par)}}
 #' \item{fun}{A function (the objective function).}
+#' \item{priors}{If specified, the function \code{priors} passed to the method.}
 #' \item{dat}{The data \code{dat} provided to the function.}
+#' \item{par0}{A numeric vector of length 5 with the initial parameters.}
+#' \item{fix.params}{Logical vector of length 5, as passed to the method.}
+#' \item{method}{Character scalar with the name of the method used.}
+#' \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
 #' 
 #' @examples 
 #' 
@@ -283,22 +289,66 @@ phylo_mle <- function(
   # Naming the parameter estimates
   names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
+  # Hessian for observed information matrix
+  hessian <- numDeriv::hessian(function(p) -fun(p), ans$par, method.args = control$method.args)
+  dimnames(hessian) <- list(
+    names(ans$par),
+    names(ans$par)
+  )
+  
   # Returning
   structure(
     list(
-      par = ans$par,
-      hist = ans$hist,
-      value = ans$value,
-      ll    = -ans$value,
-      fun = fun,
-      priors = priors,
-      dat = dat,
-      par0 = par0,
+      par        = ans$par,
+      hist       = ans$hist,
+      value      = ans$value,
+      ll         = -ans$value,
+      fun        = fun,
+      priors     = priors,
+      dat        = dat,
+      par0       = par0,
       fix.params = fix.params,
-      method = ifelse(useABC, "ABC", "NR")
+      method     = ifelse(useABC, "ABC", "NR"),
+      varcovar   = -solve(hessian)
     ),
     class = "phylo_mle"
   )
+}
+
+#' @export
+#' @rdname mle
+print.phylo_mle <- function(x, ...) {
+  # Function to print a bar with variable width
+  catbar <- function() paste0(rep("-",options()$width), collapse="")
+  
+  sderrors   <- diag(x$varcovar)
+  props      <- table(x$dat$experiment)
+  propspcent <- prop.table(props)
+  
+  with(x, {
+    cat(
+      sep = "\n",
+      catbar(),
+      "Estimation of Annotated Phylogenetic Tree",
+      sprintf("ll: %9.4f,\nMethod used: %s\n# of Functions %i", ll, method, ncol(x$dat$experiment)),
+      sprintf(
+        "# of 0: %5i (%% %4.2f)\n# of 1: %5i (%% %4.2f)", 
+        props["0"], propspcent["0"],
+        props["1"], propspcent["1"]
+        ),
+      "\nEstimates:",
+      sprintf(" psi[0] :  %6.4f (%9.4f)", par["psi0"], sderrors["psi0"]),
+      sprintf(" psi[1] :  %6.4f (%9.4f)", par["psi1"], sderrors["psi1"]),
+      sprintf(" mu[0]  :  %6.4f (%9.4f)", par["mu0"], sderrors["mu0"]),
+      sprintf(" mu[1]  :  %6.4f (%9.4f)", par["mu1"], sderrors["mu1"]),
+      sprintf(" Pi     :  %6.4f (%9.4f)", par["Pi"], sderrors["Pi"]),
+      "\nStandard Errors in parenthesis.",
+      catbar()
+      )
+    
+  })
+  
+  invisible(x)
 }
 
 #' @param x An object of class \code{phylo_mle}.

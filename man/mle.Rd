@@ -4,6 +4,7 @@
 \alias{phylo_mcmc}
 \alias{mle}
 \alias{phylo_mle}
+\alias{print.phylo_mle}
 \alias{plot.phylo_mle}
 \title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
@@ -13,6 +14,8 @@ phylo_mcmc(params, dat, priors = NULL, fix.params = c(psi0 = FALSE, psi1 =
 phylo_mle(params, dat, useABC = FALSE, priors = NULL, control = list(),
   fix.params = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi =
   FALSE))
+
+\method{print}{phylo_mle}(x, ...)
 
 \method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
   ylab = "Log-Likelihood", type = "l", addlegend = TRUE, ...)
@@ -38,6 +41,8 @@ optimization algorithm instead.}
 
 \item{x}{An object of class \code{phylo_mle}.}
 
+\item{...}{Further arguments passed to plot}
+
 \item{y}{Ignored.}
 
 \item{main}{Passed to plot.}
@@ -50,16 +55,20 @@ optimization algorithm instead.}
 
 \item{addlegend}{Logical scalar. When \code{TRUE} adds extra info to the
 plot as a legend including ll at the optimum and parameter values.}
-
-\item{...}{Further arguments passed to plot}
 }
 \value{
 A list of class \code{phylo_mle} with the following elements:
 \item{par}{A numeric vector of length 5 with the solution.}
 \item{hist}{A numeric matrix of size \code{counts*5} with the solution path.}
 \item{value}{A numeric scalar with the value of \code{fun(par)}}
+\item{ll}{A numeric scalar with the value of \code{-fun(par)}}
 \item{fun}{A function (the objective function).}
+\item{priors}{If specified, the function \code{priors} passed to the method.}
 \item{dat}{The data \code{dat} provided to the function.}
+\item{par0}{A numeric vector of length 5 with the initial parameters.}
+\item{fix.params}{Logical vector of length 5, as passed to the method.}
+\item{method}{Character scalar with the name of the method used.}
+\item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
 }
 \description{
 The optimization is done either via \code{abc_cpp} or Newton-Raphson.

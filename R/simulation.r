@@ -3,7 +3,9 @@
 #' @param n Integer scalar. Number of leafs. If not specified, then 
 #' @param tree An object of class \code{\link[=sim_tree]{phylo_tree}}.
 #' @param P Integer scalar. Number of functions to generate.
-#' @param pars Numeric vector of length 5. Parameters of the Data Generating Process
+#' @param psi A numeric vector of length 2 (see details).
+#' @param mu A numeric vector of length 2 (see details).
+#' @param Pi A numeric vector of length 2 (see details).
 #' (see \code{\link{LogLike}})
 #' @return An object of class \code{\link[=get_offspring]{phylo_offspring}}
 #' @family Simulation Functions 
@@ -16,8 +18,10 @@
 #' 
 sim_annotated_tree <- function(
   n = NULL, tree = NULL, P=1,
-  pars = c(psi0=.05, psi1=.05, mu0=.1, mu1=.05, Pi=.5)
+  psi=c(.05, .05), mu=c(.1,.05), Pi=.5
   ) {
+  
+  pars <- c(psi0 = psi[1], psi1 = psi[2], mu0 = mu[1], mu1 = mu[2], Pi = Pi)
   
   # Step 1: Simulate a tree
   if (!length(tree)) {

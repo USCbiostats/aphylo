@@ -4,8 +4,8 @@
 \alias{sim_annotated_tree}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
-sim_annotated_tree(n = NULL, tree = NULL, P = 1, pars = c(psi0 = 0.05,
-  psi1 = 0.05, mu0 = 0.1, mu1 = 0.05, Pi = 0.5))
+sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
+  mu = c(0.1, 0.05), Pi = 0.5)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
@@ -14,7 +14,11 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, pars = c(psi0 = 0.05,
 
 \item{P}{Integer scalar. Number of functions to generate.}
 
-\item{pars}{Numeric vector of length 5. Parameters of the Data Generating Process
+\item{psi}{A numeric vector of length 2 (see details).}
+
+\item{mu}{A numeric vector of length 2 (see details).}
+
+\item{Pi}{A numeric vector of length 2 (see details).
 (see \code{\link{LogLike}})}
 }
 \value{

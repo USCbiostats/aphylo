@@ -1,3 +1,7 @@
+2017-03-08  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: New print method + covar matrix in phylo_mle.
+
+
 2017-03-07  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Working with -as.phylo- method.
 	* src/sim_phylo.cpp: Moving the sim_tree function there.
