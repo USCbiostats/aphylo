@@ -142,7 +142,7 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #' @details
 #' 
 #' Using the model described in the vignette
-#' \link[=../doc/peeling_phylo.html]{peeling_phylo.html}
+#' \href{../doc/peeling_phylo.html}{peeling_phylo.html}
 #' 
 #' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
 #' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
@@ -150,22 +150,20 @@ LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
 #' @export
 #' @examples
 #' # Example 1 ----------------------------------------------------------------
-#' # Loading the data
-#' data(experiment)
-#' data(tree)
-#'   
+#' # We need to simulate a tree
+#' set.seed(1231)
+#' newtree <- sim_tree(1e3)
+#' 
 #' # Preprocessing the data
-#' O <- get_offspring(experiment, "LeafId", tree, "NodeId", "ParentId")
 #'     
 #' # Simulating
-#' ans <-
-#'   with(O, sim_fun_on_tree(
-#'       offspring,
-#'       noffspring,
-#'       psi = c(.001, .05) * 0,
-#'       mu = c(.01, .05),
-#'       Pi = c(.5, .5)
-#'   ))
+#' ans <- sim_fun_on_tree(
+#'   attr(newtree, "offspring"),
+#'   attr(newtree, "noffspring"),
+#'   psi = c(.001, .05),
+#'   mu = c(.01, .05),
+#'   Pi = c(.5, .5)
+#'   )
 #'       
 #' # Tabulating results
 #' table(ans)
@@ -187,7 +185,7 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' @details The algorithm was implemented as follows
 #' 
 #' \enumerate{
-#'   \item Initialize \code{left =[0,...,(n-1)]} and \code{m = 0}, and
+#'   \item Initialize \code{left =[n*2 - 2,...,(n-1)]} and \code{m = n*2 - 2}, and
 #'         initialize the vectors \code{parent} and \code{offspring} to be
 #'         empty.
 #'   \item While \code{length(left) > 1} do:
@@ -200,8 +198,6 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #'     \item next
 #'   }
 #'   
-#'   \item Substract \code{m} to each element of both lists, this way the 
-#'   root node will have id 0.
 #' }
 #' 
 #' The \code{\link[ape:rtree]{rtree}} function in the \pkg{ape} package is similar,
@@ -211,28 +207,18 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' 
 #' @return An matrix of size \code{n*2 - 2} with column names \code{"offspring"} and
 #' \code{"parent"} representing an edgelist with \code{n*2-1} nodes. A Directed
-#' Acyclic Graph (DAG).
+#' Acyclic Graph (DAG). Also, includes the following attributes:
+#' 
+#' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
+#' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
+#' offspring that each node has.}
 #' 
 #' @examples
 #' # A very simple example ----------------------------------------------------
 #' set.seed(1223)
-#' ans <- sim_tree(50);range(ans)
+#' newtree <- sim_tree(50)
 #' 
-#' # To visualize it, we create a random experimental dataset
-#' O <- get_offspring(
-#'   data_exper  = data.frame(
-#'     f = rep(1L, nrow(ans)),
-#'     id = (nrow(ans)-1):nrow(ans)
-#'     ),
-#'   data_tree   = data.frame(ans),
-#'   leafidvar   = "id", 
-#'   nodeidvar   = "offspring",
-#'   parentidvar = "parent"
-#'   )
-#' 
-#' # Now we plot it as a phylo object
-#' library(ape)
-#' plot(as.phylo(O))
+#' plot(as.phylo(newtree))
 #' 
 #' # This is what you would do in igraph --------------------------------------
 #' \dontrun{
@@ -250,10 +236,10 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' unit = "relative"
 #' )
 #' # This is what you would get.
-#' # Unit: relative
-#' #   expr      min       lq     mean  median       uq      max neval
-#' #    ape 33.31827 31.85769 33.04708 30.8261 36.51258 25.75327   100
-#' #    phy  1.00000  1.00000  1.00000  1.0000  1.00000  1.00000   100
+#' Unit: relative
+#'   expr     min       lq     mean  median       uq      max neval
+#'    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100
+#'    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
 #' }
 #' @export
 sim_tree <- function(n) {

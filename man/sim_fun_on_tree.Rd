@@ -30,26 +30,24 @@ Simulate functions on a ginven tree
 }
 \details{
 Using the model described in the vignette
-\link[=../doc/peeling_phylo.html]{peeling_phylo.html}
+\href{../doc/peeling_phylo.html}{peeling_phylo.html}
 }
 \examples{
 # Example 1 ----------------------------------------------------------------
-# Loading the data
-data(experiment)
-data(tree)
-  
+# We need to simulate a tree
+set.seed(1231)
+newtree <- sim_tree(1e3)
+
 # Preprocessing the data
-O <- get_offspring(experiment, "LeafId", tree, "NodeId", "ParentId")
     
 # Simulating
-ans <-
-  with(O, sim_fun_on_tree(
-      offspring,
-      noffspring,
-      psi = c(.001, .05) * 0,
-      mu = c(.01, .05),
-      Pi = c(.5, .5)
-  ))
+ans <- sim_fun_on_tree(
+  attr(newtree, "offspring"),
+  attr(newtree, "noffspring"),
+  psi = c(.001, .05),
+  mu = c(.01, .05),
+  Pi = c(.5, .5)
+  )
       
 # Tabulating results
 table(ans)

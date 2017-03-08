@@ -132,7 +132,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sim_fun_on_tree
-arma::umat sim_fun_on_tree(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
+IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
 RcppExport SEXP phylogenetic_sim_fun_on_tree(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

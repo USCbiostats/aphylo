@@ -1,3 +1,14 @@
+2017-03-07  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Working with -as.phylo- method.
+	* src/sim_phylo.cpp: Moving the sim_tree function there.
+	* src/sim_tree.cpp: . .
+	* playground/simulating_and_estimating_data.r: Check the performance
+	  of the mle estimator.
+	* R/simulation.r: Implements the function for sim annotated phylo
+	  trees.
+	* tests/testthat/test-data-management.r: New set of tests
+
+
 2017-02-28  George G. Vega Yon <g.vegayon@gmail.com>
 	* src/sim_tree.cpp: A function to simulate Directed Acyclic Graphs
 	  is faster than ape::rtree and more convenient since it creates
