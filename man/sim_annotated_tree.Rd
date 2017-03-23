@@ -14,18 +14,19 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 
 \item{P}{Integer scalar. Number of functions to generate.}
 
-\item{psi}{A numeric vector of length 2 (see details).}
+\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{A numeric vector of length 2 (see details).}
+\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
-\item{Pi}{A numeric vector of length 2 (see details).
-(see \code{\link{LogLike}})}
+\item{Pi}{Numeric vector of length 2. Root node probabilities (see \code{\link{LogLike}}).}
 }
 \value{
 An object of class \code{\link[=get_offspring]{phylo_offspring}}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees
+
+A TITLE
 }
 \examples{
 # A simple example ----------------------------------------------------------

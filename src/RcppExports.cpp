@@ -73,44 +73,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// leaf_prob
-arma::mat leaf_prob(const arma::imat& Z, const arma::imat& S, const arma::vec& psi, const arma::ivec& noffspring);
-RcppExport SEXP phylogenetic_leaf_prob(SEXP ZSEXP, SEXP SSEXP, SEXP psiSEXP, SEXP noffspringSEXP) {
+// root_node_prob
+arma::vec root_node_prob(const arma::vec& Pi, const arma::imat& S);
+RcppExport SEXP phylogenetic_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
+    rcpp_result_gen = Rcpp::wrap(root_node_prob(Pi, S));
+    return rcpp_result_gen;
+END_RCPP
+}
+// probabilities
+arma::mat probabilities(const arma::imat& Z, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
+RcppExport SEXP phylogenetic_probabilities(SEXP ZSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
-    rcpp_result_gen = Rcpp::wrap(leaf_prob(Z, S, psi, noffspring));
-    return rcpp_result_gen;
-END_RCPP
-}
-// root_node_prob
-arma::vec root_node_prob(const arma::vec& pi, const arma::imat& S);
-RcppExport SEXP phylogenetic_root_node_prob(SEXP piSEXP, SEXP SSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type pi(piSEXP);
-    Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
-    rcpp_result_gen = Rcpp::wrap(root_node_prob(pi, S));
-    return rcpp_result_gen;
-END_RCPP
-}
-// internal_prob
-arma::mat internal_prob(arma::mat Pr, const arma::vec& mu, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
-RcppExport SEXP phylogenetic_internal_prob(SEXP PrSEXP, SEXP muSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type Pr(PrSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
-    rcpp_result_gen = Rcpp::wrap(internal_prob(Pr, mu, S, noffspring, offspring));
+    rcpp_result_gen = Rcpp::wrap(probabilities(Z, mu, psi, S, noffspring, offspring));
     return rcpp_result_gen;
 END_RCPP
 }

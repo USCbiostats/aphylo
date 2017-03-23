@@ -1,11 +1,12 @@
 #' @importFrom Rcpp evalCpp
-#' @importFrom stats runif
+#' @importFrom stats runif var
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom numDeriv jacobian hessian
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #' @importFrom grDevices colors
-#' @importFrom coda mcmc
+#' @importFrom coda mcmc mcmc.list
 #' @importFrom ape as.phylo plot.phylo
+#' @importFrom parallel makePSOCKcluster stopCluster clusterExport clusterEvalQ clusterApply detectCores
 NULL
 
 #' @useDynLib phylogenetic
@@ -96,3 +97,10 @@ release_questions <- function() {
     "Have you clean the vignettes file (source)?"
   )
 }
+
+#' Statistical Inference in Annotated Phylogenetic Trees
+#' 
+#' @docType package
+#' @name phylogenetic
+#' 
+NULL

@@ -7,20 +7,17 @@
 LogLike(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE)
 }
 \arguments{
-\item{Z}{A numeric matrix of size \eqn{N\times P}{N*P} with the function
-states of each leaf (experimental data).}
+\item{Z}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
 
-\item{offspring}{A List of length \eqn{N} with the set of offspring of
-each node.}
+\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{get_offspring}}).}
 
-\item{noffspring}{An integer vector of length \eqn{N} with the number of
-offspring per node.}
+\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{get_offspring}}).}
 
-\item{psi}{A numeric vector of length 2 (see details).}
+\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{A numeric vector of length 2 (see details).}
+\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
-\item{Pi}{A numeric vector of length 2 (see details).}
+\item{Pi}{Numeric vector of length 2. Root node probabilities (see \code{\link{LogLike}}).}
 
 \item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
 returns a list with a single scalar (the log-likelihood).}
@@ -29,10 +26,6 @@ returns a list with a single scalar (the log-likelihood).}
 A list of class \code{phylo_LogLik} with the following elements:
 \item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned
 by \code{\link{states}}.}
-\item{PI}{A numeric vector of size \eqn{2^p} with each given state's root
-node probabilities.}
-\item{PSI}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
-probabilities only including leaf node probabilities (this is for debugging).}
 \item{Pr}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
 probabilities.}
 \item{ll}{A numeric scalar with the log-likelihood value given the chosen
@@ -43,6 +36,8 @@ This function computes the log-likelihood of the chosen parameters given
 a particular dataset. The arguments \code{Z}, \code{offspring}, and
 \code{noffspring} should be as those returned by \code{\link{get_offspring}}.
 For complete Maximum Likelihood Estimation see \code{\link{mle}}.
+
+A TITLE
 }
 \details{
 The parameters to estimate are described as follows:

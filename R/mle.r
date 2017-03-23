@@ -321,9 +321,9 @@ print.phylo_mle <- function(x, ...) {
   # Function to print a bar with variable width
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
-  sderrors   <- diag(x$varcovar)
+  sderrors   <- sqrt(diag(x$varcovar))
   props      <- table(x$dat$experiment)
-  propspcent <- prop.table(props)
+  propspcent <- prop.table(props)*100
   
   with(x, {
     cat(
@@ -331,11 +331,7 @@ print.phylo_mle <- function(x, ...) {
       catbar(),
       "Estimation of Annotated Phylogenetic Tree",
       sprintf("ll: %9.4f,\nMethod used: %s\n# of Functions %i", ll, method, ncol(x$dat$experiment)),
-      sprintf(
-        "# of 0: %5i (%% %4.2f)\n# of 1: %5i (%% %4.2f)", 
-        props["0"], propspcent["0"],
-        props["1"], propspcent["1"]
-        ),
+      paste0(sprintf("# of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
       "\nEstimates:",
       sprintf(" psi[0] :  %6.4f (%9.4f)", par["psi0"], sderrors["psi0"]),
       sprintf(" psi[1] :  %6.4f (%9.4f)", par["psi1"], sderrors["psi1"]),

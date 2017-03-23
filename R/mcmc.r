@@ -5,6 +5,8 @@
 #' @param fun A function. Returns the log-likelihood
 #' @param initial A numeric vector. Initial values of the parameters.
 #' @param nbatch Integer scalar. Number of MCMC runs.
+#' @param nchains Integer scalar. Number of chains to run (in parallel).
+#' @param cl A cluster object passed to \code{\link[parallel:clusterApply]{clusterApply}}.
 #' @param thin Integer scalar. Passed to \code{\link[coda:mcmc]{coda::mcmc}}.
 #' @param scale Either a numeric vector of length \code{length(initial)} or a
 #' scalar. Step size for the transition kernel (see details).
@@ -13,6 +15,7 @@
 #' @param lb Numeric vector of length \code{length(initial)}. Lower bounds
 #' @param ub Numeric vector of length \code{length(initial)}. Upper bounds
 #' @param useCpp Logical scalar. When \code{TRUE}, loops using a Rcpp implementation.
+#' @param ... Further arguments passed to \code{fun}.
 #' 
 #' @details This function implements MCMC using the Metropolis-Hastings ratio with
 #' scaled standard normal propositions for each parameter. For each parameter
@@ -36,10 +39,19 @@
 #' If \code{name(initial) == NULL}, then a names in the form of \code{par1, par2, ...}
 #' will be assigned to the variables.
 #' 
+#' When \code{nchains > 1}, the function will run multiple chains. Furthermore,
+#' if \code{cl} is not passed, \code{MCMC} will create a \code{PSOCK} cluster
+#' using \code{\link[parallel:makePSOCKcluster]{makePSOCKcluster}} with
+#' \code{\link[parallel:detectCores]{detectCores}}
+#' clusters and try to run it using multiple cores. In such case, objects that are
+#' used within \code{fun} must be passed throught \code{...}, otherwise the cluster
+#' will return with an error.
+#' 
+#' 
 #' 
 #' @return An object of class \code{\link[coda:mcmc]{mcmc}} from the \CRANpkg{coda}
 #' package. The \code{mcmc} object is a matrix with one column per parameter,
-#' and \code{nbatch} rows.
+#' and \code{nbatch} rows. If \code{nchains > 1}, then it returns a \code{\link[coda:mcmc]{mcmc.list}}.
 #' 
 #' 
 #' @export
@@ -56,7 +68,11 @@
 #'   x <- log(dnorm(D, x[1], x[2]))
 #'   sum(x)
 #' }
+#' 
+#' # Calling MCMC
 #' ans <- MCMC(fun, c(mu=1, sigma=1), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
+#' 
+#' # Ploting the output
 #' oldpar <- par(no.readonly = TRUE)
 #' par(mfrow = c(1,2))
 #' boxplot(as.matrix(ans), 
@@ -114,29 +130,136 @@
 #' # Checking out the outcomes
 #' plot(ans)
 #' summary(ans)
+#' 
+#' # Multiple chains -----------------------------------------------------------
+#' 
+#' # As we want to run -fun- in multiple cores, we have to
+#' # pass -D- explicitly (unless using Fork Clusters)
+#' # just like specifying that we are calling a function from the
+#' # -mvtnorm- package.
+#'   
+#' fun <- function(pars, D) {
+#'   # Putting the parameters in a sensible way
+#'   m <- pars[1:2]
+#'   s <- cbind( c(pars[3], pars[4]), c(pars[4], pars[5]) )
+#'   
+#'   # Computing the unnormalized log likelihood
+#'   sum(log(mvtnorm::dmvnorm(D, m, s)))
+#' }
+#' 
+#' # Two chains
+#' ans <- MCMC(
+#'   fun,
+#'   initial = c(mu0=5, mu1=5, s0=5, s01=0, s2=5), 
+#'   nchains = 2,
+#'   lb      = c(-10, -10, .01, -5, .01),
+#'   ub      = 5,
+#'   nbatch  = 1e5,
+#'   thin    = 20,
+#'   scale   = .01,
+#'   burnin  = 5e3,
+#'   useCpp  = TRUE,
+#'   D       = D
+#' )
+#' 
+#' summary(ans)
 #' }
 #' 
 #' @aliases Metropolis-Hastings
 MCMC <- function(
   fun,
   initial, 
-  nbatch = 2e4L,
-  thin   = 1L,
-  scale  = rep(1, length(initial)),
-  burnin = 1e3L,
-  ub = rep(.Machine$double.xmax, length(initial)),
-  lb = rep(-.Machine$double.xmax, length(initial)),
-  useCpp = FALSE
+  nbatch  = 2e4L,
+  nchains = 1L,
+  thin    = 1L,
+  scale   = rep(1, length(initial)),
+  burnin  = 1e3L,
+  ub      = rep(.Machine$double.xmax, length(initial)),
+  lb      = rep(-.Machine$double.xmax, length(initial)),
+  useCpp  = FALSE,
+  cl      = NULL,
+  ...
   ) {
+  
+  # Filling the gap on parallel
+  if ((nchains > 1L) && !length(cl)) {
+    
+    # Creating the cluster
+    ncores <- parallel::detectCores()
+    ncores <- ifelse(nchains < ncores, nchains, ncores)
+    cl     <- parallel::makePSOCKcluster(ncores)
+  
+    invisible(parallel::clusterEvalQ(cl, library(phylogenetic)))
+    
+    on.exit(parallel::stopCluster(cl))
+    
+  }
+  
+  if (nchains > 1L) {
+
+    # Running the cluster
+    ans <- parallel::clusterApply(
+      cl, 1:nchains, fun=
+        function(i, Fun, initial, thin, scale, burnin, ub, lb, useCpp, ...) {
+          MCMC(
+            fun     = Fun,
+            initial = initial,
+            nchains = 1L,
+            thin    = thin,
+            scale   = scale,
+            burnin  = burnin,
+            ub      = ub,
+            lb      = lb,
+            useCpp  = useCpp,
+            ...
+            )
+          }, Fun = fun, initial = initial, thin = thin, scale = scale,
+      burnin = burnin, ub = ub, lb = lb, useCpp = useCpp, ...)
+    
+    return(coda::mcmc.list(ans))
+    
+  } else {
   
   # Adding names
   cnames <- names(initial)
   if (!length(cnames))
     cnames <- paste0("par",1:length(initial))
   
-  # Wrapping function
-  f <- function(z) fun(z)
+  # Wrapping function. If ellipsis is there, it will wrap it
+  # so that the MCMC call only uses a single argument
+  passedargs <- names(list(...))
+  funargs    <- formalArgs(fun)
   
+  # ... has extra args
+  if (length(passedargs)) {
+    # ... has stuff that fun doesnt
+    if (any(!(passedargs %in% funargs))) {
+      
+      stop("Some arguments passed via -...- are not present in -fun-.")
+    
+    # fun has stuff that ... doesnt
+    } else if (length(funargs) > 1 && any(!(funargs[-1] %in% passedargs))) {
+      
+      stop("-fun- requires more arguments to be passed via -...-.")
+    
+    # Everything OK
+    } else {
+      f <- function(z) {
+        fun(z, ...)
+      }
+    }
+  # ... doesnt have extra args, but funargs does!
+  } else if (length(funargs) > 1) {
+    
+    stop("-fun- has extra arguments not passed by -...-.")
+    
+  # Everything OK
+  } else {
+    
+    f <- function(z) fun(z)
+    
+  }
+   
   # Checking boundaries
   if (length(ub) > 1 && (length(initial) != length(ub)))
     stop("Incorrect length of -ub-")
@@ -194,20 +317,6 @@ MCMC <- function(
         )
       
       # Step 2. Hastings ratio
-      # r <- tryCatch(
-      #   expr  = min(1, exp(f1 - f0)),
-      #   error = function(e) {
-      #     list(t0 = theta0, t1 = theta1, err = e)
-      #   }
-      # )
-      # 
-      # # Checking if there's an error: This should be an error
-      # if (length(r) > 1 | is.nan(r)) {
-      #   stop("The value of the Metropolist-Hastings ",
-      #        "ratio is either -NaN- or it returned error.\n", r)
-      #   
-      #   next
-      # }
       r <- min(1, exp(f1 - f0))
       
       # Updating the value
@@ -240,6 +349,7 @@ MCMC <- function(
       thin = thin
       )
     )
+  }
 }
 
 
@@ -334,16 +444,17 @@ phylo_mcmc <- function(
   # Returning
   structure(
     list(
-      par = ans[nrow(ans),],
-      hist = ans,
-      value = fun(ans[nrow(ans),]),
-      ll    = fun(ans[nrow(ans),]),
-      fun = fun,
-      priors = priors,
-      dat = dat,
-      par0 = par0,
+      par        = ans[nrow(ans),],
+      hist       = ans,
+      value      = fun(ans[nrow(ans),]),
+      ll         = fun(ans[nrow(ans),]),
+      fun        = fun,
+      priors     = priors,
+      dat        = dat,
+      par0       = par0,
       fix.params = fix.params,
-      method = "mcmc"
+      method     = "mcmc",
+      varcovar   = var(ans)
     ),
     class = "phylo_mle"
   )

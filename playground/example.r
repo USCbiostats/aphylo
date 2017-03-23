@@ -24,7 +24,7 @@ set.seed(1231)
 
 S   <- states(ncol(O$experiment))
 PSI <- leaf_prob(O$experiment, S, psi, O$noffspring)
-PI  <- root_node_prob(pi_root, S)
+PI  <- phylogenetic:::root_node_prob(pi_root, S)
 Pr  <- internal_prob(PSI, mu, S, O$noffspring, O$offspring)
 
 # Doing the same in a single step ---------------------------------------------

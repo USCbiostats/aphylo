@@ -1,3 +1,12 @@
+2017-03-22  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mcmc.r: Multiple parallel chains and passing extra arguments to
+	fun.
+	* R/mle.r: Working on printing method.
+	* R/simulation.r: Adding templates for doc.
+	* tests/*: Adding more tests.
+	* src/phylo.cpp: Cleaning code and collapsing prob loops.
+
+
 2017-03-08  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: New print method + covar matrix in phylo_mle.
 

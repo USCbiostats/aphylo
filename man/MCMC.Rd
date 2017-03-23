@@ -5,10 +5,11 @@
 \alias{Metropolis-Hastings}
 \title{Markov Chain Monte Carlo}
 \usage{
-MCMC(fun, initial, nbatch = 20000L, thin = 1L, scale = rep(1,
-  length(initial)), burnin = 1000L, ub = rep(.Machine$double.xmax,
-  length(initial)), lb = rep(-.Machine$double.xmax, length(initial)),
-  useCpp = FALSE)
+MCMC(fun, initial, nbatch = 20000L, nchains = 1L, thin = 1L,
+  scale = rep(1, length(initial)), burnin = 1000L,
+  ub = rep(.Machine$double.xmax, length(initial)),
+  lb = rep(-.Machine$double.xmax, length(initial)), useCpp = FALSE,
+  cl = NULL, ...)
 }
 \arguments{
 \item{fun}{A function. Returns the log-likelihood}
@@ -16,6 +17,8 @@ MCMC(fun, initial, nbatch = 20000L, thin = 1L, scale = rep(1,
 \item{initial}{A numeric vector. Initial values of the parameters.}
 
 \item{nbatch}{Integer scalar. Number of MCMC runs.}
+
+\item{nchains}{Integer scalar. Number of chains to run (in parallel).}
 
 \item{thin}{Integer scalar. Passed to \code{\link[coda:mcmc]{coda::mcmc}}.}
 
@@ -30,11 +33,15 @@ scalar. Step size for the transition kernel (see details).}
 \item{lb}{Numeric vector of length \code{length(initial)}. Lower bounds}
 
 \item{useCpp}{Logical scalar. When \code{TRUE}, loops using a Rcpp implementation.}
+
+\item{cl}{A cluster object passed to \code{\link[parallel:clusterApply]{clusterApply}}.}
+
+\item{...}{Further arguments passed to \code{fun}.}
 }
 \value{
 An object of class \code{\link[coda:mcmc]{mcmc}} from the \CRANpkg{coda}
 package. The \code{mcmc} object is a matrix with one column per parameter,
-and \code{nbatch} rows.
+and \code{nbatch} rows. If \code{nchains > 1}, then it returns a \code{\link[coda:mcmc]{mcmc.list}}.
 }
 \description{
 Metropolis-Hastings algorithm using a random walk kernel with reflecting boundaries.
@@ -61,6 +68,14 @@ is substracted from \eqn{ub}. At the same time, if it is less than \code{lb}, th
 
 If \code{name(initial) == NULL}, then a names in the form of \code{par1, par2, ...}
 will be assigned to the variables.
+
+When \code{nchains > 1}, the function will run multiple chains. Furthermore,
+if \code{cl} is not passed, \code{MCMC} will create a \code{PSOCK} cluster
+using \code{\link[parallel:makePSOCKcluster]{makePSOCKcluster}} with
+\code{\link[parallel:detectCores]{detectCores}}
+clusters and try to run it using multiple cores. In such case, objects that are
+used within \code{fun} must be passed throught \code{...}, otherwise the cluster
+will return with an error.
 }
 \examples{
 # Univariate distributed data with multiple parameters ----------------------
@@ -75,7 +90,11 @@ fun <- function(x) {
   x <- log(dnorm(D, x[1], x[2]))
   sum(x)
 }
+
+# Calling MCMC
 ans <- MCMC(fun, c(mu=1, sigma=1), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
+
+# Ploting the output
 oldpar <- par(no.readonly = TRUE)
 par(mfrow = c(1,2))
 boxplot(as.matrix(ans), 
@@ -132,6 +151,39 @@ ans <- MCMC(
 
 # Checking out the outcomes
 plot(ans)
+summary(ans)
+
+# Multiple chains -----------------------------------------------------------
+
+# As we want to run -fun- in multiple cores, we have to
+# pass -D- explicitly (unless using Fork Clusters)
+# just like specifying that we are calling a function from the
+# -mvtnorm- package.
+  
+fun <- function(pars, D) {
+  # Putting the parameters in a sensible way
+  m <- pars[1:2]
+  s <- cbind( c(pars[3], pars[4]), c(pars[4], pars[5]) )
+  
+  # Computing the unnormalized log likelihood
+  sum(log(mvtnorm::dmvnorm(D, m, s)))
+}
+
+# Two chains
+ans <- MCMC(
+  fun,
+  initial = c(mu0=5, mu1=5, s0=5, s01=0, s2=5), 
+  nchains = 2,
+  lb      = c(-10, -10, .01, -5, .01),
+  ub      = 5,
+  nbatch  = 1e5,
+  thin    = 20,
+  scale   = .01,
+  burnin  = 5e3,
+  useCpp  = TRUE,
+  D       = D
+)
+
 summary(ans)
 }
 

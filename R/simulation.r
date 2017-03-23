@@ -3,10 +3,10 @@
 #' @param n Integer scalar. Number of leafs. If not specified, then 
 #' @param tree An object of class \code{\link[=sim_tree]{phylo_tree}}.
 #' @param P Integer scalar. Number of functions to generate.
-#' @param psi A numeric vector of length 2 (see details).
-#' @param mu A numeric vector of length 2 (see details).
-#' @param Pi A numeric vector of length 2 (see details).
-#' (see \code{\link{LogLike}})
+#' @template parameters
+#' @templateVar psi 1
+#' @templateVar mu 1
+#' @templateVar Pi 1
 #' @return An object of class \code{\link[=get_offspring]{phylo_offspring}}
 #' @family Simulation Functions 
 #' @export
