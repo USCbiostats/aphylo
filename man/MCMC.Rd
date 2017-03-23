@@ -73,7 +73,21 @@ When \code{nchains > 1}, the function will run multiple chains. Furthermore,
 if \code{cl} is not passed, \code{MCMC} will create a \code{PSOCK} cluster
 using \code{\link[parallel:makePSOCKcluster]{makePSOCKcluster}} with
 \code{\link[parallel:detectCores]{detectCores}}
-clusters and try to run it using multiple cores. In such case, objects that are
+clusters and try to run it using multiple cores. Internally, the function does
+the following:
+
+\preformatted{
+  # Creating the cluster
+  ncores <- parallel::detectCores()
+  ncores <- ifelse(nchains < ncores, nchains, ncores)
+  cl     <- parallel::makePSOCKcluster(ncores)
+  
+  # Loading the package and setting the seed using clusterRNGStream
+  invisible(parallel::clusterEvalQ(cl, library(phylogenetic)))
+  parallel::clusterSetRNGStream(cl, .Random.seed)
+}
+
+In such case, when running in parallel, objects that are
 used within \code{fun} must be passed throught \code{...}, otherwise the cluster
 will return with an error.
 }

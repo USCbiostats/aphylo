@@ -6,7 +6,8 @@
 #' @importFrom grDevices colors
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom ape as.phylo plot.phylo
-#' @importFrom parallel makePSOCKcluster stopCluster clusterExport clusterEvalQ clusterApply detectCores
+#' @importFrom parallel makePSOCKcluster stopCluster clusterExport clusterEvalQ
+#'   clusterApply detectCores clusterSetRNGStream
 NULL
 
 #' @useDynLib phylogenetic

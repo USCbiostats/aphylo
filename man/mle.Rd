@@ -5,6 +5,8 @@
 \alias{mle}
 \alias{phylo_mle}
 \alias{print.phylo_mle}
+\alias{coef.phylo_mle}
+\alias{vcov.phylo_mle}
 \alias{plot.phylo_mle}
 \title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
@@ -16,6 +18,10 @@ phylo_mle(params, dat, useABC = FALSE, priors = NULL, control = list(),
   FALSE))
 
 \method{print}{phylo_mle}(x, ...)
+
+\method{coef}{phylo_mle}(object, ...)
+
+\method{vcov}{phylo_mle}(object, ...)
 
 \method{plot}{phylo_mle}(x, y = NULL, main = "", xlab = "Step",
   ylab = "Log-Likelihood", type = "l", addlegend = TRUE, ...)
@@ -91,7 +97,7 @@ the following:
 
 \tabular{ll}{
 \code{maxiter} \tab Integer scalar. Maximum number of steps in the Newton-Raphson
-algorithm. Default \code{20L}.\cr
+algorithm. Default \code{100L}.\cr
 \code{criter} \tab Numeric scalar. Stoping criteria for the Newton-Raphson
 algorithm. Default \code{1e-15}.\cr
 \code{method.args} \tab A list of arguments passed to
@@ -100,6 +106,10 @@ package. Default \code{list(d = .0001)}\cr
 \code{solve.tol} \tab Numeric scalar passed to \code{\link{solve}}. Default
 \code{1e-40}.
 }
+
+Notice that the algorithm is somewhat numerically unstable when using starting points
+with values higher than \code{0.4}. It is recomended to use values closer to
+\code{0.1} instead.
 
 \code{phylo_mcmc} is a wrapper of \code{\link{MCMC}}, so, instead of treating the
 problem as a maximization problem, \code{phylo_mcmc} generates a \bold{Markov Chain}.
@@ -114,36 +124,31 @@ The default values of \code{control} are:
 }
 \examples{
 
-\dontrun{
-# Using the package data ----------------------------------------------------
-# Loading data
-data(experiment)
-data(tree)
+# Using simulated data ------------------------------------------------------
+set.seed(890)
+dat <- sim_annotated_tree(250, P=2)
 
-# Preprocessing the data
-O <- get_offspring(
-  experiment, "LeafId", 
-  tree, "NodeId", "ParentId"
-)
 
 # Computing Estimating the parameters 
-ans_nr  <- phylo_mle(rep(.5,5), O)
-ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
+# for some reason, starting with parameters equal to .5 breaks NR.
+ans_nr  <- phylo_mle(rep(.1,5), dat)
+ans_abc <- phylo_mle(rep(.1,5), dat, useABC = TRUE)
 
 # Plotting the path
 with(ans_nr, plot(
-  - apply(hist, 1, fun),
-  type = "l",
-  xlab = "Step",
-  ylab = "Log-Likelihood"
+ - apply(hist, 1, fun),
+ type = "l",
+ xlab = "Step",
+ ylab = "Log-Likelihood"
 ))
+
 
 # Computing Estimating the parameters Using Priors for PSI 
 mypriors <- function(params) {
     dbeta(params[1:2], 2, 10)
 }
-ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
-ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+ans_nr_dbeta <- phylo_mle(rep(.1,5), dat, priors = mypriors)
+ans_abc_dbeta <- phylo_mle(rep(.1,5), dat, priors = mypriors, useABC = TRUE)
 
 # Plotting the path
 oldpar <- par(no.readonly = TRUE)
@@ -155,57 +160,29 @@ plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
 plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
 
 par(oldpar)
-}
-# Adding some zeros to the data ---------------------------------------------
-set.seed(1231)
-mysample <- which(rowSums(experiment[,1:3]) == 27)
-mysample <- sample(mysample, 20)
-experiment[mysample,1:3] <- 0
 
-O <- get_offspring(
-  experiment, "LeafId", 
-  tree, "NodeId", "ParentId"
-)
-
-ans_nr  <- phylo_mle(rep(.5,5), O)
-ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
-
-
-# Computing Estimating the parameters Using Priors for PSI ------------------
-mypriors <- function(params) {
-  dbeta(params[1:2], 2, 10)
-}
-ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
-ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
-
-# Plotting the path
-oldpar <- par(no.readonly = TRUE)
-par(mfrow = c(2, 2))
-
-plot(ans_nr, main = "No priors NR")
-plot(ans_abc, main = "No priors ABC")
-plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
-plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
-
-par(oldpar)
 
 # Using the MCMC ------------------------------------------------------------
 
 \dontrun{
-rm(experiment)
-data(experiment)
 
-# Preparing the data
-O <- get_offspring(
-  experiment, "LeafId", 
-  tree, "NodeId", "ParentId"
+set.seed(1233)
+# Simulating a tree
+tree <- sim_tree(200)
+
+# Simulating functions
+dat <- sim_annotated_tree(
+  tree = tree,
+  psi  = c(.01, .03),
+  mu   = c(.05, .02),
+  Pi   = .5
 )
 
 # Running the MCMC
 set.seed(1231)
 
 ans_mcmc <- phylo_mcmc(
-  rep(.5, 5), O,
+  rep(.5, 5), dat,
   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 )
 }

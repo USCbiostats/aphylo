@@ -55,3 +55,33 @@ test_that("Error passing arguents", {
   expect_error(MCMC(fun1, 1), "has extra arguments")
   expect_error(MCMC(fun2, 1, a=1), "requires more arguments")
 })
+
+# ------------------------------------------------------------------------------
+test_that("Repeating the chains in parallel", {
+  # Simulating data
+  set.seed(981)
+  
+  D <- rnorm(500, 0)
+  
+  # Preparing function
+  fun <- function(x, D) {
+    res <- log(dnorm(D, x))
+    if (any(is.infinite(res) | is.nan(res)))
+      return(.Machine$double.xmin)
+    sum(res)
+  }
+  
+  # Running the algorithm and checking expectation
+  set.seed(1)
+  ans0 <- suppressWarnings(
+    MCMC(fun, 1, 200, burnin = 0, ub = 3, lb = -3, scale = 1, nchains=2, D=D)
+  )
+  
+  set.seed(1)
+  ans1 <- suppressWarnings(
+    MCMC(fun, 1, 200, burnin = 0, ub = 3, lb = -3, scale = 1, nchains=2, D=D)
+  )
+  
+  expect_equal(ans0, ans1)
+  
+})

@@ -32,7 +32,7 @@
 #' 
 #' \tabular{ll}{
 #' \code{maxiter} \tab Integer scalar. Maximum number of steps in the Newton-Raphson
-#' algorithm. Default \code{20L}.\cr
+#' algorithm. Default \code{100L}.\cr
 #' \code{criter} \tab Numeric scalar. Stoping criteria for the Newton-Raphson
 #' algorithm. Default \code{1e-15}.\cr
 #' \code{method.args} \tab A list of arguments passed to
@@ -41,6 +41,10 @@
 #' \code{solve.tol} \tab Numeric scalar passed to \code{\link{solve}}. Default
 #' \code{1e-40}.
 #' }
+#' 
+#' Notice that the algorithm is somewhat numerically unstable when using starting points
+#' with values higher than \code{0.4}. It is recomended to use values closer to
+#' \code{0.1} instead.
 #' 
 #' \code{phylo_mcmc} is a wrapper of \code{\link{MCMC}}, so, instead of treating the
 #' problem as a maximization problem, \code{phylo_mcmc} generates a \bold{Markov Chain}.
@@ -69,36 +73,31 @@
 #' 
 #' @examples 
 #' 
-#' \dontrun{
-#' # Using the package data ----------------------------------------------------
-#' # Loading data
-#' data(experiment)
-#' data(tree)
+#' # Using simulated data ------------------------------------------------------
+#' set.seed(890)
+#' dat <- sim_annotated_tree(250, P=2)
 #' 
-#' # Preprocessing the data
-#' O <- get_offspring(
-#'   experiment, "LeafId", 
-#'   tree, "NodeId", "ParentId"
-#' )
 #' 
 #' # Computing Estimating the parameters 
-#' ans_nr  <- phylo_mle(rep(.5,5), O)
-#' ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
+#' # for some reason, starting with parameters equal to .5 breaks NR.
+#' ans_nr  <- phylo_mle(rep(.1,5), dat)
+#' ans_abc <- phylo_mle(rep(.1,5), dat, useABC = TRUE)
 #' 
 #' # Plotting the path
 #' with(ans_nr, plot(
-#'   - apply(hist, 1, fun),
-#'   type = "l",
-#'   xlab = "Step",
-#'   ylab = "Log-Likelihood"
+#'  - apply(hist, 1, fun),
+#'  type = "l",
+#'  xlab = "Step",
+#'  ylab = "Log-Likelihood"
 #' ))
+#' 
 #' 
 #' # Computing Estimating the parameters Using Priors for PSI 
 #' mypriors <- function(params) {
 #'     dbeta(params[1:2], 2, 10)
 #' }
-#' ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
-#' ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
+#' ans_nr_dbeta <- phylo_mle(rep(.1,5), dat, priors = mypriors)
+#' ans_abc_dbeta <- phylo_mle(rep(.1,5), dat, priors = mypriors, useABC = TRUE)
 #' 
 #' # Plotting the path
 #' oldpar <- par(no.readonly = TRUE)
@@ -110,57 +109,29 @@
 #' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
 #' 
 #' par(oldpar)
-#' }
-#' # Adding some zeros to the data ---------------------------------------------
-#' set.seed(1231)
-#' mysample <- which(rowSums(experiment[,1:3]) == 27)
-#' mysample <- sample(mysample, 20)
-#' experiment[mysample,1:3] <- 0
 #' 
-#' O <- get_offspring(
-#'   experiment, "LeafId", 
-#'   tree, "NodeId", "ParentId"
-#' )
-#' 
-#' ans_nr  <- phylo_mle(rep(.5,5), O)
-#' ans_abc <- phylo_mle(rep(.5,5), O, useABC = TRUE)
-#' 
-#' 
-#' # Computing Estimating the parameters Using Priors for PSI ------------------
-#' mypriors <- function(params) {
-#'   dbeta(params[1:2], 2, 10)
-#' }
-#' ans_nr_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors)
-#' ans_abc_dbeta <- phylo_mle(rep(.5,5), O, priors = mypriors, useABC = TRUE)
-#'
-#' # Plotting the path
-#' oldpar <- par(no.readonly = TRUE)
-#' par(mfrow = c(2, 2))
-#' 
-#' plot(ans_nr, main = "No priors NR")
-#' plot(ans_abc, main = "No priors ABC")
-#' plot(ans_nr_dbeta, main = "NR w/ Prior for Psi ~ beta(2,10)")
-#' plot(ans_abc_dbeta, main = "ABC w/ Prior for Psi ~ beta(2,10)")
-#' 
-#' par(oldpar)
 #' 
 #' # Using the MCMC ------------------------------------------------------------
 #' 
 #' \dontrun{
-#' rm(experiment)
-#' data(experiment)
 #' 
-#' # Preparing the data
-#' O <- get_offspring(
-#'   experiment, "LeafId", 
-#'   tree, "NodeId", "ParentId"
+#' set.seed(1233)
+#' # Simulating a tree
+#' tree <- sim_tree(200)
+#' 
+#' # Simulating functions
+#' dat <- sim_annotated_tree(
+#'   tree = tree,
+#'   psi  = c(.01, .03),
+#'   mu   = c(.05, .02),
+#'   Pi   = .5
 #' )
 #' 
 #' # Running the MCMC
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- phylo_mcmc(
-#'   rep(.5, 5), O,
+#'   rep(.5, 5), dat,
 #'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
@@ -187,8 +158,7 @@ phylo_mle <- function(
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
   
-  # Auxiliary functions for 
-  expit <- function(x) exp(x)/(1 + exp(x))
+  
   
   # In case of fixing parameters
   par0 <- params
@@ -235,31 +205,37 @@ phylo_mle <- function(
       do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), control))
   } else {
     
-    if (!length(control$maxiter))     control$maxiter    <- 20L
+    # Checking NR args
+    if (!length(control$maxiter))     control$maxiter    <- 100L
     if (!length(control$criter))      control$criter     <- 1e-15
     if (!length(control$solve.tol))   control$solve.tol  <- 1e-40
     if (!length(control$method.args)) control$method.args  <- list(d = .0001)
     
+    # Auxiliary functions for 
+    expit <- function(x) exp(x)/(1 + exp(x))
+    logit <- function(x) - log(1/x - 1)
+    
     # Creating space
-    PARAMS <- matrix(ncol = 5, nrow = control$maxiter)
+    PARAMS     <- matrix(ncol = 5, nrow = control$maxiter)
+    params     <- logit(params)
     
     # Newton-Raphson. Observe that in each evaluation of -fun- we apply the
     # -expit- function to the parameters so that those are transformed to [0,1]
     for (i in 1:control$maxiter) {
       
+      # Current value
       PARAMS[i,] <- params
       
       # Computing jacobian and hessian
-      fun_jacb   <- numDeriv::jacobian(fun, expit(params), method.args = control$method.args)
-      fun_hess   <- numDeriv::hessian(fun, expit(params), method.args = control$method.args)
+      fun_jacb <- numDeriv::jacobian(fun, expit(params), method.args = control$method.args)
+      fun_hess <- numDeriv::hessian(fun, expit(params), method.args = control$method.args)
       
       # Updating step
       params <- params - fun_jacb %*% solve(fun_hess, tol = control$solve.tol) 
-      
+
       # Error
       if (is.na(fun(expit(params)))) {
-        message("Undefined value of fun(params).")
-        break
+        stop("Undefined value of fun(params). Try using a different starting point for -params-.")
       }
         
       # Stopping criteria
@@ -322,29 +298,41 @@ print.phylo_mle <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
-  props      <- table(x$dat$experiment)
+  props      <- with(x$dat, table(experiment[noffspring == 0,,drop=FALSE]))
   propspcent <- prop.table(props)*100
   
   with(x, {
     cat(
       sep = "\n",
-      catbar(),
-      "Estimation of Annotated Phylogenetic Tree",
-      sprintf("ll: %9.4f,\nMethod used: %s\n# of Functions %i", ll, method, ncol(x$dat$experiment)),
-      paste0(sprintf("# of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
-      "\nEstimates:",
-      sprintf(" psi[0] :  %6.4f (%9.4f)", par["psi0"], sderrors["psi0"]),
-      sprintf(" psi[1] :  %6.4f (%9.4f)", par["psi1"], sderrors["psi1"]),
-      sprintf(" mu[0]  :  %6.4f (%9.4f)", par["mu0"], sderrors["mu0"]),
-      sprintf(" mu[1]  :  %6.4f (%9.4f)", par["mu1"], sderrors["mu1"]),
-      sprintf(" Pi     :  %6.4f (%9.4f)", par["Pi"], sderrors["Pi"]),
-      "\nStandard Errors in parenthesis.",
-      catbar()
+      "ESTIMATION OF ANNOTATED PHYLOGENETIC TREE",
+      sprintf(
+        "ll: %9.4f,\nMethod used: %s (%i steps)\nLeafs\n # of Functions %i",
+        ll, method, nrow(x$hist), ncol(x$dat$experiment)
+        ),
+      paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
+            "\n         Estimate  Std. Error",
+      sprintf(" psi[0]    %6.4f      %6.4f", par["psi0"], sderrors["psi0"]),
+      sprintf(" psi[1]    %6.4f      %6.4f", par["psi1"], sderrors["psi1"]),
+      sprintf(" mu[0]     %6.4f      %6.4f", par["mu0"], sderrors["mu0"]),
+      sprintf(" mu[1]     %6.4f      %6.4f", par["mu1"], sderrors["mu1"]),
+      sprintf(" Pi        %6.4f      %6.4f", par["Pi"], sderrors["Pi"])
       )
     
   })
   
   invisible(x)
+}
+
+#' @export
+#' @rdname mle
+coef.phylo_mle <- function(object, ...) {
+  object$par
+}
+
+#' @export
+#' @rdname mle
+vcov.phylo_mle <- function(object, ...) {
+  object$varcovar
 }
 
 #' @param x An object of class \code{phylo_mle}.

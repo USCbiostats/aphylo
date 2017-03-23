@@ -43,7 +43,21 @@
 #' if \code{cl} is not passed, \code{MCMC} will create a \code{PSOCK} cluster
 #' using \code{\link[parallel:makePSOCKcluster]{makePSOCKcluster}} with
 #' \code{\link[parallel:detectCores]{detectCores}}
-#' clusters and try to run it using multiple cores. In such case, objects that are
+#' clusters and try to run it using multiple cores. Internally, the function does
+#' the following:
+#' 
+#' \preformatted{
+#'   # Creating the cluster
+#'   ncores <- parallel::detectCores()
+#'   ncores <- ifelse(nchains < ncores, nchains, ncores)
+#'   cl     <- parallel::makePSOCKcluster(ncores)
+#'   
+#'   # Loading the package and setting the seed using clusterRNGStream
+#'   invisible(parallel::clusterEvalQ(cl, library(phylogenetic)))
+#'   parallel::clusterSetRNGStream(cl, .Random.seed)
+#' }
+#' 
+#' In such case, when running in parallel, objects that are
 #' used within \code{fun} must be passed throught \code{...}, otherwise the cluster
 #' will return with an error.
 #' 
@@ -189,7 +203,9 @@ MCMC <- function(
     ncores <- ifelse(nchains < ncores, nchains, ncores)
     cl     <- parallel::makePSOCKcluster(ncores)
   
+    # Loading the package and setting the seed using clusterRNGStream
     invisible(parallel::clusterEvalQ(cl, library(phylogenetic)))
+    parallel::clusterSetRNGStream(cl, .Random.seed)
     
     on.exit(parallel::stopCluster(cl))
     
@@ -220,135 +236,135 @@ MCMC <- function(
     
   } else {
   
-  # Adding names
-  cnames <- names(initial)
-  if (!length(cnames))
-    cnames <- paste0("par",1:length(initial))
-  
-  # Wrapping function. If ellipsis is there, it will wrap it
-  # so that the MCMC call only uses a single argument
-  passedargs <- names(list(...))
-  funargs    <- formalArgs(fun)
-  
-  # ... has extra args
-  if (length(passedargs)) {
-    # ... has stuff that fun doesnt
-    if (any(!(passedargs %in% funargs))) {
-      
-      stop("Some arguments passed via -...- are not present in -fun-.")
+    # Adding names
+    cnames <- names(initial)
+    if (!length(cnames))
+      cnames <- paste0("par",1:length(initial))
     
-    # fun has stuff that ... doesnt
-    } else if (length(funargs) > 1 && any(!(funargs[-1] %in% passedargs))) {
-      
-      stop("-fun- requires more arguments to be passed via -...-.")
+    # Wrapping function. If ellipsis is there, it will wrap it
+    # so that the MCMC call only uses a single argument
+    passedargs <- names(list(...))
+    funargs    <- formalArgs(fun)
     
+    # ... has extra args
+    if (length(passedargs)) {
+      # ... has stuff that fun doesnt
+      if (any(!(passedargs %in% funargs))) {
+        
+        stop("Some arguments passed via -...- are not present in -fun-.")
+      
+      # fun has stuff that ... doesnt
+      } else if (length(funargs) > 1 && any(!(funargs[-1] %in% passedargs))) {
+        
+        stop("-fun- requires more arguments to be passed via -...-.")
+      
+      # Everything OK
+      } else {
+        f <- function(z) {
+          fun(z, ...)
+        }
+      }
+    # ... doesnt have extra args, but funargs does!
+    } else if (length(funargs) > 1) {
+      
+      stop("-fun- has extra arguments not passed by -...-.")
+      
     # Everything OK
     } else {
-      f <- function(z) {
-        fun(z, ...)
+      
+      f <- function(z) fun(z)
+      
+    }
+     
+    # Checking boundaries
+    if (length(ub) > 1 && (length(initial) != length(ub)))
+      stop("Incorrect length of -ub-")
+    
+    if (length(lb) > 1 && (length(initial) != length(lb)))
+      stop("Incorrect length of -lb-")
+    
+    # Repeating boundaries
+    if (length(ub) == 1)
+      ub <- rep(ub, length(initial))
+  
+    if (length(lb) == 1)
+      lb <- rep(lb, length(initial))
+    
+    if (any(ub <= lb))
+      stop("-ub- cannot be <= than -lb-.")
+    
+    # Repeating scale
+    if (length(scale) == 1)
+      scale <- rep(scale, length(initial))
+    
+    # Checkihg burnins
+    if (burnin >= nbatch)
+      stop("-burnin- (",burnin,") cannot be >= than -nbatch- (",nbatch,").")
+  
+    # Checking thin
+    if (thin > nbatch)
+      stop("-thin- (",thin,") cannot be > than -nbatch- (",nbatch,").")
+    
+    if (thin < 1L)
+      stop("-thin- should be >= 1.")
+    
+    if (useCpp) {
+      ans <- MCMCcpp(f, initial, nbatch, lb, ub, scale)
+      dimnames(ans) <- list(1:nbatch, cnames)
+      
+    } else {
+      R <- runif(nbatch)
+      ans <- matrix(ncol = length(initial), nrow = nbatch,
+                    dimnames = list(1:nbatch, cnames))
+      
+      
+      theta0 <- initial
+      f0     <- f(theta0)
+      for (i in 1:nbatch) {
+        # Step 1. Propose
+        theta1 <- normal_prop(theta0, lb, ub, scale)
+        f1     <- f(theta1)
+        
+        # Checking f(theta1) (it must be a number, can be Inf)
+        if (is.nan(f1) | is.na(f1) | is.null(f1)) 
+          stop(
+            "fun(par) is undefined (", f1, ")",
+            "Check either -fun- or the -lb- and -ub- parameters."
+          )
+        
+        # Step 2. Hastings ratio
+        r <- min(1, exp(f1 - f0))
+        
+        # Updating the value
+        if (R[i] < r) {
+          theta0 <- theta1
+          f0     <- f(theta0)
+        }
+        
+        # Storing
+        ans[i,] <- theta0
+        
       }
     }
-  # ... doesnt have extra args, but funargs does!
-  } else if (length(funargs) > 1) {
-    
-    stop("-fun- has extra arguments not passed by -...-.")
-    
-  # Everything OK
-  } else {
-    
-    f <- function(z) fun(z)
-    
-  }
-   
-  # Checking boundaries
-  if (length(ub) > 1 && (length(initial) != length(ub)))
-    stop("Incorrect length of -ub-")
-  
-  if (length(lb) > 1 && (length(initial) != length(lb)))
-    stop("Incorrect length of -lb-")
-  
-  # Repeating boundaries
-  if (length(ub) == 1)
-    ub <- rep(ub, length(initial))
-
-  if (length(lb) == 1)
-    lb <- rep(lb, length(initial))
-  
-  if (any(ub <= lb))
-    stop("-ub- cannot be <= than -lb-.")
-  
-  # Repeating scale
-  if (length(scale) == 1)
-    scale <- rep(scale, length(initial))
-  
-  # Checkihg burnins
-  if (burnin >= nbatch)
-    stop("-burnin- (",burnin,") cannot be >= than -nbatch- (",nbatch,").")
-
-  # Checking thin
-  if (thin > nbatch)
-    stop("-thin- (",thin,") cannot be > than -nbatch- (",nbatch,").")
-  
-  if (thin < 1L)
-    stop("-thin- should be >= 1.")
-  
-  if (useCpp) {
-    ans <- MCMCcpp(f, initial, nbatch, lb, ub, scale)
-    dimnames(ans) <- list(1:nbatch, cnames)
-    
-  } else {
-    R <- runif(nbatch)
-    ans <- matrix(ncol = length(initial), nrow = nbatch,
-                  dimnames = list(1:nbatch, cnames))
     
     
-    theta0 <- initial
-    f0     <- f(theta0)
-    for (i in 1:nbatch) {
-      # Step 1. Propose
-      theta1 <- normal_prop(theta0, lb, ub, scale)
-      f1     <- f(theta1)
-      
-      # Checking f(theta1) (it must be a number, can be Inf)
-      if (is.nan(f1) | is.na(f1) | is.null(f1)) 
-        stop(
-          "fun(par) is undefined (", f1, ")",
-          "Check either -fun- or the -lb- and -ub- parameters."
+    # Thinning the data
+    if (burnin) ans <- ans[-c(1:burnin), , drop=FALSE]
+    if (thin)   ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
+    
+    # Returning an mcmc object from the coda package
+    # if the coda package hasn't been loaded, then return a warning
+    if (!("package:coda" %in% search()))
+      warning("The -coda- package has not been loaded.")
+    
+    return(
+      coda::mcmc(
+        ans,
+        start = as.integer(rownames(ans)[1]),
+        end   = as.integer(rownames(ans)[nrow(ans)]),
+        thin = thin
         )
-      
-      # Step 2. Hastings ratio
-      r <- min(1, exp(f1 - f0))
-      
-      # Updating the value
-      if (R[i] < r) {
-        theta0 <- theta1
-        f0     <- f(theta0)
-      }
-      
-      # Storing
-      ans[i,] <- theta0
-      
-    }
-  }
-  
-  
-  # Thinning the data
-  if (burnin) ans <- ans[-c(1:burnin), , drop=FALSE]
-  if (thin)   ans <- ans[(1:nrow(ans) %% thin) == 0, , drop=FALSE]
-  
-  # Returning an mcmc object from the coda package
-  # if the coda package hasn't been loaded, then return a warning
-  if (!("package:coda" %in% search()))
-    warning("The -coda- package has not been loaded.")
-  
-  return(
-    coda::mcmc(
-      ans,
-      start = as.integer(rownames(ans)[1]),
-      end   = as.integer(rownames(ans)[nrow(ans)]),
-      thin = thin
       )
-    )
   }
 }
 
