@@ -47,7 +47,9 @@ optimization algorithm instead.}
 
 \item{x}{An object of class \code{phylo_mle}.}
 
-\item{...}{Further arguments passed to plot}
+\item{...}{Further arguments passed to the method.}
+
+\item{object}{An object of class \code{phylo_mle}.}
 
 \item{y}{Ignored.}
 

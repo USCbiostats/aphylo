@@ -14,6 +14,7 @@
 #' a particular parameter to that of what was specified in \code{params}.
 #' @param control A list with parameters for the optimization method (see
 #' details).
+#' @param object An object of class \code{phylo_mle}.
 #' 
 #' @details When \code{useABC = TRUE}, the optimization is done via 
 #' \bold{Artificial Bee Colony method}. The default \code{control} parameters, which
@@ -341,7 +342,7 @@ vcov.phylo_mle <- function(object, ...) {
 #' @param xlab Passed to plot.
 #' @param ylab Passed to plot.
 #' @param type Passed to plot.
-#' @param ... Further arguments passed to plot
+#' @param ... Further arguments passed to the method.
 #' @param addlegend Logical scalar. When \code{TRUE} adds extra info to the
 #' plot as a legend including ll at the optimum and parameter values.
 #' @rdname mle
