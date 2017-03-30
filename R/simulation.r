@@ -43,7 +43,8 @@ sim_annotated_tree <- function(
     noffspring = attr(tree, "noffspring"),
     psi        = c(pars["psi0"], pars["psi1"]),
     mu         = c(pars["mu0"], pars["mu1"]),
-    Pi         = pars["Pi"] 
+    Pi         = pars["Pi"],
+    P          = P
   )
   
   # Creating the phylo_offspring object

@@ -79,7 +79,7 @@ LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, pi_root)
 ```{r MLE}
 # Using Artificial Bee Colony algorithm
 ans0 <- phylo_mle(rep(.2,5), dat, useABC = TRUE, control = list(maxCycle = 50))
-
+ans1 <- phylo_mle(ans0$par, dat)
 # Plotting the path
 plot(ans0)
 ```

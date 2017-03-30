@@ -1,3 +1,8 @@
+2017-03-29  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mcmc.r: Moved phylo_mcmc to R/mle.r
+	* R/mle.r: MLE now uses stats::optim rather than own NR.
+	* tests/testthat/*: new tests
+
 2017-03-22  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: Multiple parallel chains and passing extra arguments to
 	fun.

@@ -85,3 +85,4 @@ test_that("Repeating the chains in parallel", {
   expect_equal(ans0, ans1)
   
 })
+

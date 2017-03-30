@@ -144,7 +144,8 @@ arma::mat probabilities(
     // Parent node states integration
     for (int s=0; s<nstates; s++) {
       
-      // Obtaining list of offspring
+      // Obtaining list of offspring <- this can be improved (speed)
+      // can create an std vector of size n
       IntegerVector O(offspring.at(n));
       
       // Loop through offspring
