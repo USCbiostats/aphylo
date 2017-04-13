@@ -387,13 +387,13 @@ phylo_mcmc <- function(
       params <- ifelse(fix.params, par0, params)
       
       res <- LogLike(
-        Z          = dat$annotations,
-        offspring  = dat$offspring,
-        noffspring = dat$noffspring,
-        psi        = params[1:2] ,
-        mu         = params[3:4] ,
-        Pi         = c(1 - params[5], params[5]),
-        verb_ans   = FALSE
+        annotations = dat$annotations,
+        offspring   = dat$offspring,
+        noffspring  = dat$noffspring,
+        psi         = params[1:2] ,
+        mu          = params[3:4] ,
+        Pi          = c(1 - params[5], params[5]),
+        verb_ans    = FALSE
       )$ll + sum(log(priors(params)))
       
       if (is.nan(res) | is.infinite(res)) return(-Inf)
@@ -411,13 +411,13 @@ phylo_mcmc <- function(
       params <- ifelse(fix.params, par0, params)
       
       res <- LogLike(
-        Z          = dat$annotations,
-        offspring  = dat$offspring,
-        noffspring = dat$noffspring,
-        psi        = params[1:2] ,
-        mu         = params[3:4] ,
-        Pi         = c(1 - params[5], params[5]),
-        verb_ans   = FALSE
+        annotations = dat$annotations,
+        offspring   = dat$offspring,
+        noffspring  = dat$noffspring,
+        psi         = params[1:2] ,
+        mu          = params[3:4] ,
+        Pi          = c(1 - params[5], params[5]),
+        verb_ans    = FALSE
       )$ll
       
       if (is.nan(res) | is.infinite(res)) return(-Inf)

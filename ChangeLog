@@ -1,3 +1,15 @@
+2017-04-13  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Functions as.phylo and recode_vertices
+	  rewritten and renamed to as.apephylo and as_ape_tree. Also
+	  now all use an edgelist instead of offspring and parent vectors.
+	* src/phylo.cpp: Changing name from Z to annotations (makes more sense).
+	* R/mle.r: Idem.
+	* src/sim_phylo.cpp: Name conventions, again, now edgelists are always
+	  in the form of (parent, offspring).
+	* src/tree.cpp: Function to relabel edgelist so that these form a
+	  partial ordered tree. Plus more doc.
+
+
 2017-04-12  George G. Vega Yon <g.vegayon@gmail.com>
 	* src/tree: New functions for recoding trees as PO.
 	* R/*: Changing language... now phylo_tree is aphylo (Annotated

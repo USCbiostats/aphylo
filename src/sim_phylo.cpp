@@ -170,9 +170,9 @@ table(ans)
 //' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 //' in some (most) of its routines.
 //' 
-//' @return An matrix of size \code{n*2 - 2} with column names \code{"offspring"} and
-//' \code{"parent"} representing an edgelist with \code{n*2-1} nodes. A Directed
-//' Acyclic Graph (DAG). Also, includes the following attributes:
+//' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+//' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
+//' Also, includes the following attributes:
 //' 
 //' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
 //' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
@@ -183,7 +183,7 @@ table(ans)
 //' set.seed(1223)
 //' newtree <- sim_tree(50)
 //' 
-//' plot(as.phylo(newtree))
+//' plot(as.apephylo(newtree))
 //' 
 //' # This is what you would do in igraph --------------------------------------
 //' \dontrun{
@@ -211,11 +211,11 @@ table(ans)
 IntegerMatrix sim_tree(int n) {
   
   // Initializing
-  std::vector< int > source, target;
+  std::vector< int > offspring, parent;
   std::vector< int > left(n);
   
-  std::vector< std::vector<int> > offspring(n*2 - 1);
-  IntegerVector noffspring(offspring.size(), 0);
+  std::vector< std::vector<int> > offspring_list(n*2 - 1);
+  IntegerVector noffspring(offspring_list.size(), 0);
   
   
   // Filling the temporary ids
@@ -234,15 +234,15 @@ IntegerMatrix sim_tree(int n) {
     --m;
     
     // Adding to the edgelist
-    source.push_back(left.at(i));
-    offspring.at(m).push_back(left.at(i));
+    offspring.push_back(left.at(i));
+    offspring_list.at(m).push_back(left.at(i));
     left.erase(left.begin() + i);
     
-    source.push_back(left.at(j));
-    offspring.at(m).push_back(left.at(j));
+    offspring.push_back(left.at(j));
+    offspring_list.at(m).push_back(left.at(j));
     
-    target.push_back(m);
-    target.push_back(m);
+    parent.push_back(m);
+    parent.push_back(m);
     
     left.at(j) = m;
     noffspring.at(m)+=2;
@@ -250,36 +250,25 @@ IntegerMatrix sim_tree(int n) {
   }
   
   // Coercing into a Integer Matrix
-  IntegerMatrix edges(source.size(),2);
-  for (unsigned int i=0; i<source.size(); i++) {
-    edges.at(i,0) = source.at(i); // - m;
-    edges.at(i,1) = target.at(i); // - m;
+  IntegerMatrix edges(offspring.size(),2);
+  for (unsigned int i=0; i<offspring.size(); i++) {
+    edges.at(i,0) = parent.at(i); // - m;
+    edges.at(i,1) = offspring.at(i); // - m;
   }
   
-  // Adding some attributes
-  edges.attr("dimnames") = List::create(
-    R_NilValue,
-    CharacterVector::create("offspring","parent")
-  );
-  
   // Coercing into list
-  List O(offspring.size());
-  for (unsigned int i = 0; i<offspring.size(); i++) {
-    if (!offspring.at(i).size()) continue;
-    int no = offspring.at(i).size();
-    NumericVector o(no);
+  List O(offspring_list.size());
+  for (unsigned int i = 0; i<offspring_list.size(); i++) {
+    if (!offspring_list.at(i).size()) continue;
     
-    for (int j = 0; j<no; j++)
-      o.at(j) = offspring.at(i).at(j);
-    
-    O.at(i) = o;
+    O.at(i) = wrap(arma::conv_to< arma::urowvec >::from(offspring_list.at(i)));
   }
   
   // Creating the answer
-  edges.attr("offspring") = O;
+  edges.attr("offspring")  = O;
   edges.attr("noffspring") = noffspring;
   edges.attr("class") = CharacterVector::create(
-    "phylo_tree",
+    "po_tree",
     "matrix"
   );
   

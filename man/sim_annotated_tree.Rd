@@ -10,7 +10,7 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
 
-\item{tree}{An object of class \code{\link[=sim_tree]{phylo_tree}}.}
+\item{tree}{An object of class \code{\link[=sim_tree]{po_tree}}.}
 
 \item{P}{Integer scalar. Number of functions to generate.}
 
@@ -25,6 +25,8 @@ An object of class \code{\link[=new_aphylo]{aphylo}}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees
+
+\code{}
 }
 \examples{
 # A simple example ----------------------------------------------------------

@@ -4,10 +4,10 @@
 \alias{probabilities}
 \title{State probabilities}
 \usage{
-probabilities(Z, mu, psi, S, noffspring, offspring)
+probabilities(annotations, mu, psi, S, noffspring, offspring)
 }
 \arguments{
-\item{Z}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
+\item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
@@ -27,4 +27,6 @@ probabilities for each node.
 Compute the state probabilities for each node in the tree using the peeling
 algorithm. This function is the horse-power of the function \code{\link{LogLike}}
 so it is not intended to be used directly.
+
+\code{}
 }

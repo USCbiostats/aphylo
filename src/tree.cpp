@@ -39,13 +39,14 @@ IntegerMatrix fast_table(
   return ans;
 }
 
-void _fast_table(
+// [[Rcpp::export]]
+arma::uvec fast_table_using_labels(
     const arma::ivec & x,
-    const arma::ivec & ids,
-    arma::uvec & ans
+    const arma::ivec & ids
 ) {
   
   arma::imat x0(x.size(), 1u);
+  arma::uvec ans(ids.size());
   x0.col(0u) = x;
   
   unsigned int N = ids.size(), i, j;
@@ -63,20 +64,53 @@ void _fast_table(
       if (x0.at(j, 0u) == ids.at(i)) {
         
         // Incrementing counter and removing the row
+        // that we just counted
         ++ans.at(i);
         x0.shed_row(j);
         
-      } else j++;
+      } else ++j;
     }
   }
   
-  return;
+  return ans;
 }
 
 //' Recodes an edgelist as a Partially Ordered Tree
+//' 
+//' The function \code{\link{new_aphylo}} uses this function to make sure that
+//' the edgelist that is passed makes a partial order. This is a requirement
+//' for the peeling algorithm, which is used explicitly in the \code{LogLike}
+//' function.
+//' 
+//' @details
+//' The recoded edgelist is such that in all rows the first element, parent
+//' node, as a label that is less than the second element, the offspring, a
+//' partial order.
+//' 
+//' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
+//' to form a partial order. Besides of been of class \code{matrix}, the resulting
+//' object is also of class \code{po_tree} and has an aditional attribute:
+//' \item{labels}{Named integer vector of size n. Original labels of the edgelist
+//' where the names are from 0 to \code{n}.}
+//' 
 //' @template parameters
 //' @templateVar edges 1
 //' @export
+//' @family Data management functions
+//' @examples
+//' # Recoding an ape tree -----------------------------------------------------
+//' 
+//' set.seed(1122233)
+//' apetree <- ape::rtree(5)
+//' potree  <- as_po_tree(apetree$edge)
+//' 
+//' apetree$edge
+//' potree
+//' 
+//' # Going back
+//' potree[] <- attr(potree, "labels")[potree[] + 1]
+//' potree # Ordering is a little off, but is the same tree
+//' 
 // [[Rcpp::export]]
 IntegerMatrix as_po_tree(
     const arma::imat & edges
@@ -91,9 +125,8 @@ IntegerMatrix as_po_tree(
   
   // Fetching labels and computing the indegree vector
   arma::ivec L = arma::unique(arma::vectorise(edges0));
-  arma::uvec Lans(L.size());  
-  arma::uvec nparents(L.size());
-  _fast_table(edges0.col(1u), L, nparents);
+  IntegerVector Lans(L.size());  
+  arma::uvec nparents = fast_table_using_labels(edges0.col(1u), L);
   
 
   // Tagging possible root nodes and computing number of parents
@@ -135,6 +168,16 @@ IntegerMatrix as_po_tree(
     }
       
   }
+  
+  // Creating nametags
+  StringVector names(Lans.size());
+  for (int i = 0; i< (int) Lans.size(); i++) {
+    char name[10];
+    sprintf(&(name[0]), "%i", i);
+    names[i] = name;
+  }
+  
+  Lans.attr("names") = names;
   
   // Returning
   edges1.attr("labels") = Lans;

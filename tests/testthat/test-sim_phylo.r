@@ -2,8 +2,8 @@ context("Simulation of Annotated Phylogenetic Trees")
 
 # Function to compute degree distribution
 degseq <- function(x) {
-  ind <- as.data.frame(table(x[,"parent"]), responseName = "ind")
-  oud <- as.data.frame(table(x[,"offspring"]), responseName = "oud")
+  ind <- as.data.frame(table(x[,2]), responseName = "ind")
+  oud <- as.data.frame(table(x[,1]), responseName = "oud")
   
   ans <- merge(ind, oud, by="Var1", all = TRUE)
   ans[is.na(ans)] <- 0

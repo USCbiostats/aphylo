@@ -40,7 +40,7 @@ root_node_prob <- function(Pi, S) {
 #' so it is not intended to be used directly.
 #' 
 #' @template parameters
-#' @templateVar Z 1
+#' @templateVar annotations 1
 #' @templateVar mu 1
 #' @templateVar psi 1
 #' @templateVar S 1
@@ -51,19 +51,19 @@ root_node_prob <- function(Pi, S) {
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' 
-probabilities <- function(Z, mu, psi, S, noffspring, offspring) {
-    .Call('phylogenetic_probabilities', PACKAGE = 'phylogenetic', Z, mu, psi, S, noffspring, offspring)
+probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
+    .Call('phylogenetic_probabilities', PACKAGE = 'phylogenetic', annotations, mu, psi, S, noffspring, offspring)
 }
 
 #' Computes Log-likelihood
 #' 
 #' This function computes the log-likelihood of the chosen parameters given
-#' a particular dataset. The arguments \code{Z}, \code{offspring}, and
+#' a particular dataset. The arguments \code{annotations}, \code{offspring}, and
 #' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
 #' For complete Maximum Likelihood Estimation see \code{\link{mle}}.
 #' 
 #' @template parameters
-#' @templateVar Z 1
+#' @templateVar annotations 1
 #' @templateVar offspring 1
 #' @templateVar noffspring 1
 #' @templateVar psi 1
@@ -93,8 +93,8 @@ probabilities <- function(Z, mu, psi, S, noffspring, offspring) {
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
-    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', Z, offspring, noffspring, psi, mu, Pi, verb_ans)
+LogLike <- function(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
+    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', annotations, offspring, noffspring, psi, mu, Pi, verb_ans)
 }
 
 #' Simulate functions on a ginven tree
@@ -174,9 +174,9 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 #' in some (most) of its routines.
 #' 
-#' @return An matrix of size \code{n*2 - 2} with column names \code{"offspring"} and
-#' \code{"parent"} representing an edgelist with \code{n*2-1} nodes. A Directed
-#' Acyclic Graph (DAG). Also, includes the following attributes:
+#' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+#' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
+#' Also, includes the following attributes:
 #' 
 #' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
 #' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
@@ -187,7 +187,7 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' set.seed(1223)
 #' newtree <- sim_tree(50)
 #' 
-#' plot(as.phylo(newtree))
+#' plot(as.apephylo(newtree))
 #' 
 #' # This is what you would do in igraph --------------------------------------
 #' \dontrun{
@@ -219,10 +219,46 @@ fast_table <- function(x) {
     .Call('phylogenetic_fast_table', PACKAGE = 'phylogenetic', x)
 }
 
+fast_table_using_labels <- function(x, ids) {
+    .Call('phylogenetic_fast_table_using_labels', PACKAGE = 'phylogenetic', x, ids)
+}
+
 #' Recodes an edgelist as a Partially Ordered Tree
+#' 
+#' The function \code{\link{new_aphylo}} uses this function to make sure that
+#' the edgelist that is passed makes a partial order. This is a requirement
+#' for the peeling algorithm, which is used explicitly in the \code{LogLike}
+#' function.
+#' 
+#' @details
+#' The recoded edgelist is such that in all rows the first element, parent
+#' node, as a label that is less than the second element, the offspring, a
+#' partial order.
+#' 
+#' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
+#' to form a partial order. Besides of been of class \code{matrix}, the resulting
+#' object is also of class \code{po_tree} and has an aditional attribute:
+#' \item{labels}{Named integer vector of size n. Original labels of the edgelist
+#' where the names are from 0 to \code{n}.}
+#' 
 #' @template parameters
 #' @templateVar edges 1
 #' @export
+#' @family Data management functions
+#' @examples
+#' # Recoding an ape tree -----------------------------------------------------
+#' 
+#' set.seed(1122233)
+#' apetree <- ape::rtree(5)
+#' potree  <- as_po_tree(apetree$edge)
+#' 
+#' apetree$edge
+#' potree
+#' 
+#' # Going back
+#' potree[] <- attr(potree, "labels")[potree[] + 1]
+#' potree # Ordering is a little off, but is the same tree
+#' 
 as_po_tree <- function(edges) {
     .Call('phylogenetic_as_po_tree', PACKAGE = 'phylogenetic', edges)
 }

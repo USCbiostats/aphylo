@@ -2,21 +2,20 @@
 % Please edit documentation in R/data-management.r
 \name{new_aphylo}
 \alias{new_aphylo}
-\alias{as.phylo.aphylo}
 \alias{plot.aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
 new_aphylo(annotations, edges, leafidvar, funvars = NULL)
 
-\method{as.phylo}{aphylo}(x, ...)
-
 \method{plot}{aphylo}(x, y = NULL, tip.color = NULL, ...)
 }
 \arguments{
+\item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
+
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 
 \item{leafidvar}{A character scalar with the name of the leaf id variable
-in \code{data_exper}.}
+in \code{annotations}.}
 
 \item{funvars}{A character vector with the names of the function indicator
 (0-1) variables in \code{data_exper}. If not provided, it is assumed that
@@ -24,19 +23,11 @@ all but \code{leafidvar} are function variables.}
 
 \item{x}{An object of class \code{aphylo}.}
 
-\item{...}{Further arguments passed to the method.}
-
 \item{y}{Ignored.}
 
 \item{tip.color}{See \code{\link[ape:plot.phylo]{plot.phylo}}}
 
-\item{data_exper}{A data.frame with the experimental data}
-
-\item{nodeidvar}{A character scalar with the name of the node id variable
-in \code{data_tree}.}
-
-\item{parentidvar}{A character scalar with the name of the parent id variable
-in \code{data_tree}.}
+\item{...}{Further arguments passed to the method.}
 }
 \value{
 A list of length \eqn{n} with relative position of offspring
@@ -45,13 +36,13 @@ of each node, with respect to \code{data_exper}, starting from 0.
 \description{
 Annotated Phylogenetic Tree
 
+\code{}
+
 Plot and print methods for \code{aphylo} objects
 }
 \details{
 Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
 from the \CRANpkg{ape} package.
-
-\code{as.phylo} requires loading the \code{ape} package.
 }
 \examples{
 # A simple example ----------------------------------------------------------
@@ -64,6 +55,6 @@ ans <- new_aphylo(fakeexperiment, faketree, "LeafId")
 plot(ans)
 }
 \seealso{
-Other Data management functions: \code{\link{as.phylo}},
-  \code{\link{recode_vertices}}
+Other Data management functions: \code{\link{as.apephylo}},
+  \code{\link{as_po_tree}}
 }

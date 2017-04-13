@@ -92,7 +92,7 @@ arma::vec root_node_prob(
 //' so it is not intended to be used directly.
 //' 
 //' @template parameters
-//' @templateVar Z 1
+//' @templateVar annotations 1
 //' @templateVar mu 1
 //' @templateVar psi 1
 //' @templateVar S 1
@@ -105,7 +105,7 @@ arma::vec root_node_prob(
 //' 
 // [[Rcpp::export]]
 arma::mat probabilities(
-    const arma::imat & Z,
+    const arma::imat & annotations,
     const arma::vec  & mu,
     const arma::vec  & psi,
     const arma::imat & S,
@@ -115,7 +115,7 @@ arma::mat probabilities(
   
   // Obtaining relevant constants
   int P         = S.n_cols;
-  int N         = Z.n_rows;
+  int N         = annotations.n_rows;
   int nstates   = S.n_rows;
   arma::mat M   = prob_mat(mu);
   arma::mat PSI = prob_mat(psi);
@@ -131,10 +131,10 @@ arma::mat probabilities(
         for (int p=0; p<P; p++) {
           
           // If missing (no experimental data)
-          if (Z.at(n,p) == 9)
+          if (annotations.at(n,p) == 9)
             continue;
           
-          Pr.at(n, s) *= PSI.at(S.at(s, p), Z.at(n, p));
+          Pr.at(n, s) *= PSI.at(S.at(s, p), annotations.at(n, p));
           
         }
         continue;
@@ -182,12 +182,12 @@ arma::mat probabilities(
 //' Computes Log-likelihood
 //' 
 //' This function computes the log-likelihood of the chosen parameters given
-//' a particular dataset. The arguments \code{Z}, \code{offspring}, and
+//' a particular dataset. The arguments \code{annotations}, \code{offspring}, and
 //' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
 //' For complete Maximum Likelihood Estimation see \code{\link{mle}}.
 //' 
 //' @template parameters
-//' @templateVar Z 1
+//' @templateVar annotations 1
 //' @templateVar offspring 1
 //' @templateVar noffspring 1
 //' @templateVar psi 1
@@ -219,7 +219,7 @@ arma::mat probabilities(
 //' @export
 // [[Rcpp::export]]
 List LogLike(
-    const arma::imat & Z,
+    const arma::imat & annotations,
     const List       & offspring,
     const arma::ivec & noffspring,
     const arma::vec  & psi,
@@ -229,11 +229,11 @@ List LogLike(
 ) {
 
   // Obtaining States, PSI, Gain/Loss probs, and root node probs
-  arma::imat S  = states(Z.n_cols);
+  arma::imat S  = states(annotations.n_cols);
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Pr  = probabilities(Z, mu, psi, S, noffspring, offspring);
+  arma::mat Pr  = probabilities(annotations, mu, psi, S, noffspring, offspring);
 
   // We only use the root node
   double ll = 0.0;

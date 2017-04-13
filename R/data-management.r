@@ -2,23 +2,17 @@
 #' 
 #' 
 #' 
-#' @param data_exper A data.frame with the experimental data
 #' @param leafidvar A character scalar with the name of the leaf id variable
-#' in \code{data_exper}.
+#' in \code{annotations}.
 #' @template parameters
 #' @templateVar edges 1
-#' @param nodeidvar A character scalar with the name of the node id variable
-#' in \code{data_tree}.
-#' @param parentidvar A character scalar with the name of the parent id variable
-#' in \code{data_tree}.
+#' @templateVar annotations 1
 #' @param funvars A character vector with the names of the function indicator
 #' (0-1) variables in \code{data_exper}. If not provided, it is assumed that
 #' all but \code{leafidvar} are function variables.
 #' 
 #' @details Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
 #' from the \CRANpkg{ape} package.
-#' 
-#' \code{as.phylo} requires loading the \code{ape} package.
 #' 
 #' @return A list of length \eqn{n} with relative position of offspring
 #' of each node, with respect to \code{data_exper}, starting from 0.
@@ -63,7 +57,11 @@ new_aphylo <- function(
   }
   
   # Coercing edges to aphylo
-  aphylo <- as_po_tree(edges)
+  if (!inherits(edges, "po_tree")) 
+    aphylo <- as_po_tree(edges)
+  else 
+    aphylo <- edges
+  
   labels <- attr(aphylo, "labels")
   
   # Extending and sorting annotations
@@ -112,38 +110,50 @@ as_aphylo <- function(
 
 #' Coercing into \code{phylo} objects of the \pkg{ape} package.
 #'
-#' \code{phylo} objects have several methods such as \code{plot}, \code{print}
-#' and \code{summary}.
+#' \code{as.apephylo} coerces objects to \code{\link[ape:as.phylo]{phylo}} objects
+#' from the \pkg{ape} package. These have several methods including visualization
+#' methods that can be useful.
 #'
-#' @param x An object of class \code{phylo_tree} or \code{aphylo}.
+#' @param x An object of class \code{\link[=as_po_tree]{po_tree}} or
+#' \code{\link[=new_aphylo]{aphylo}}.
 #' @param ... Ignored.
 #' @return An object of class \code{\link[ape:as.phylo]{phylo}}
 #' @family Data management functions
 #' @export
-as.phylo <- function(x, ...) UseMethod("as.phylo")
+as.apephylo <- function(x, ...) UseMethod("as.apephylo")
 
+#' @rdname as.apephylo
 #' @export
-#' @rdname as.phylo
-#' @method as.phylo default
-as.phylo.default <- ape::as.phylo
-
-#' @rdname new_aphylo
-#' @method as.phylo aphylo
-#' @export
-as.phylo.aphylo <- function(x, ...) {
+as.apephylo.aphylo <- function(x, ...) {
   
   # Recoding edgelist
-  recoded_tree       <- with(x, recode_vertices(edges[,1], edges[,2]))
+  x <- with(x, as_ape_tree(edges))
   
   structure(list(
-    edge        = recoded_tree$edges,
-    edge.length = rep(1, nrow(recoded_tree$edges)),
-    tip.label   = sprintf("leaf%03i", 1:sum(recoded_tree$isleaf)),
-    Nnode       = sum(!recoded_tree$isleaf)
+    edge        = x,
+    edge.length = rep(1, nrow(x)),
+    tip.label   = sprintf("leaf%03i", 1:sum(attr(x, "isleaf"))),
+    Nnode       = sum(!attr(x, "isleaf"))
   ), class = "phylo")
   
 }
 
+#' @rdname as.apephylo
+#' @export
+as.apephylo.po_tree <- function(x, ...) {
+  # Cleaning attributes
+  attr(x, "noffspring") <- NULL
+  attr(x, "offspring")  <- NULL
+  
+  x <- as_ape_tree(x)
+  
+  structure(list(
+    edge        = x,
+    edge.length = rep(1, nrow(x)),
+    tip.label   = sprintf("leaf%03i", 1:sum(attr(x, "isleaf"))),
+    Nnode       = sum(!attr(x, "isleaf"))
+  ), class = "phylo")
+}
 
 
 #' Plot and print methods for \code{aphylo} objects
@@ -160,52 +170,34 @@ plot.aphylo <- function(
   #   tip.color <- colors(9)[with(x, experiment[leaf_node,1,drop=TRUE])]
   # } 
   # 
-  plot(as.phylo.aphylo(x), tip.color=tip.color, ...)
+  plot(as.apephylo.aphylo(x), tip.color=tip.color, ...)
   
 }
 
-#' @method as.phylo phylo_tree
-#' @rdname sim_tree
-#' @export
-as.phylo.phylo_tree <- function(x, ...) {
-  
-  # Recoding edgelist
-  recoded_tree       <- recode_vertices(x[,1], x[,2])
-  recoded_tree$edges <- recoded_tree$edges[,2:1]
-  
-  structure(list(
-    edge        = recoded_tree$edges,
-    edge.length = rep(1, nrow(recoded_tree$edges)),
-    tip.label   = sprintf("leaf%03i", 1:sum(recoded_tree$isleaf)),
-    Nnode       = sum(!recoded_tree$isleaf)
-  ), class = "phylo")
-  
-}
-
-#' @param x An object of class \code{phylo_tree}.
+#' @param x An object of class \code{aphylo}.
 #' @param y Ignored.
 #' @param tip.color See \code{\link[ape:plot.phylo]{plot.phylo}}
 #' @param ... Further arguments passed to the method.
-#' @rdname sim_tree
+#' @rdname as_po_tree
 #' @export
-plot.phylo_tree <- function(
+plot.po_tree <- function(
   x, y=NULL, tip.color=NULL, ...) {
-  # 
-  # if (!length(tip.color)) {
-  #   tip.color <- colors(9)[with(x, experiment[leaf_node,1,drop=TRUE])]
-  # } 
-  # 
-  plot(as.phylo(x), tip.color=tip.color, ...)
+
+  plot(as.apephylo(x), tip.color=tip.color, ...)
   
 }
 
-#' Relabel a tree using \pkg{ape}'s convention
-#' @param offspring Vector. Labels of offspring.
-#' @param parent Vector. Labels of parents.
-#' @param root_label Character scalar. Label of the root node.
-#' @return A list with three components:
-#' \item{edges}{Integer Matrix of size \code{length(offspring)*2}. Recoded edgelist}
-#' \item{nodes}{Named character scalar of size \code{n}. Each node's id and label.}
+#' Relabel a tree (edgelist) using \pkg{ape}'s convention
+#' 
+#' \code{as_ape_tree} is the powerhorse of \code{\link{as.apephylo}}.
+#' 
+#' @template parameters
+#' @templateVar edges 1
+#' @return An integer matrix of the same dimmension as \code{edges} with the following
+#' two aditional attributes:
+#' \item{labels}{Named integer vector of size \code{n}. Original labels of the edgelist
+#' where the first \code{n} are leaf nodes, \code{n+1} is the root node, and the reminder
+#' are the internal nodes.}
 #' \item{isleaf}{Logical vector of size \code{n}. \code{TRUE} when the node is a leaf node.}
 #' 
 #' @examples 
@@ -216,40 +208,74 @@ plot.phylo_tree <- function(
 #' # Generating a random tree: Observe that the nodes are coded such that
 #' # for all (i,j) that are offspring and parent i > j. This is a requirement
 #' # of the peeling algorithm
-#' ans0 <- sim_tree(30)
+#' edges <- sim_tree(30)
 #' 
 #' # In the ape package, nodes are labeled such that leafs are from 1 to n
 #' # root node is n+1 and interior nodes can have whatever label.
-#' ans1 <- recode_vertices(ans0[,1], ans0[,2])
+#' ape_edges <- as_ape_tree(edges)
 #' 
-#' head(ans0)
-#' head(ans1)
+#' # And further, is easy to go back to the original code
+#' edges_org <- ape_edges
+#' edges_org[] <- attr(ape_edges, "labels")[ape_edges[]]
+#' 
+#' # Comparing the three versions
+#' head(edges)
+#' head(ape_edges)
+#' head(edges_org)
 #' 
 #' @export
-#' @family Data management functions
-recode_vertices <- function(offspring, parent, root_label = "0") {
+#' @rdname as.apephylo
+as_ape_tree <- function(edges) {
   
-  # Tagging leaf (tip) nodes. These have degree 1
-  edges   <- unname(cbind(offspring, parent))
-  isleaf  <- table(edges) == 1
+  # Computing degrees
+  nodes <- unique(as.vector(edges))
+  ideg  <- fast_table_using_labels(edges[,2], nodes)
+  odeg  <- fast_table_using_labels(edges[,1], nodes)
   
-  nodes        <- sort(unique(as.vector(edges)))
-  names(nodes) <- nodes
-  isleaf       <- isleaf[match(names(isleaf), names(nodes))]
+  # Classifying
+  roots <- nodes[ideg == 0 & odeg > 0]
+  leafs <- nodes[ideg == 1 & odeg == 0]
+  inner <- nodes[ideg == 1 & odeg > 0]
   
-  # Leaf nodes must have ids 1:sum(isleaf), rootnode must have id sum(isleaf) + 1
-  nodes[isleaf]                      <- 1:sum(isleaf)
-  nodes["0"]                         <- sum(isleaf) + 1
-  nodes[names(nodes) != 0 & !isleaf] <- (sum(isleaf) + 2):(length(isleaf))
+  # Multiple parents
+  test <- which(ideg > 1)
+  if (length(test))
+    stop("Multiple parents are not supported. The following nodes have multiple parents: ",
+         paste(nodes[test], collapse=", "))
+
+  # Finding roots
+  if (length(roots) > 1)
+    stop("Multiple root nodes are not supported.")
+  if (length(roots) == 0)
+    stop("Can't find a root node here.")
   
-  # Replacing elements in edges
-  edges[] <- nodes[match(edges[], names(nodes))]
-  edges   <- apply(edges, 2, as.integer)
+  # Defining the labels:
+  #  - Leafs go from 1 to n
+  #  - Root node is n + 1
+  #  - And the inner goes from n + 2 to length(nodes)
+  # This doest it smoothly
+  nodes <- structure(c(leafs, roots, inner), names = 1:length(nodes))
   
-  list(
-    edges  = edges,
-    nodes  = nodes,
-    isleaf = isleaf
+  # Finding indexes and corresponding new labels
+  iroots <- which(edges[] == roots)
+  lroots <- match(roots, nodes)
+  
+  ileafs <- which(edges[] %in% leafs)
+  lleafs <- match(edges[ileafs], nodes)
+  
+  iinner <- which(edges[] %in% inner)
+  linner <- match(edges[iinner], nodes)
+  
+  # Relabeling the edgelist
+  edges[iroots] <- lroots
+  edges[ileafs] <- lleafs
+  edges[iinner] <- linner
+  
+  structure(
+    edges,
+    labels = nodes,
+    isleaf = odeg == 0,
+    class = c("matrix", "ape_tree")
   )
   
 }

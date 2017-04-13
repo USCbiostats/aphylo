@@ -1,7 +1,7 @@
 #' Simulation of Annotated Phylogenetic Trees
 #' 
 #' @param n Integer scalar. Number of leafs. If not specified, then 
-#' @param tree An object of class \code{\link[=sim_tree]{phylo_tree}}.
+#' @param tree An object of class \code{\link[=sim_tree]{po_tree}}.
 #' @param P Integer scalar. Number of functions to generate.
 #' @template parameters
 #' @templateVar psi 1
@@ -34,7 +34,7 @@ sim_annotated_tree <- function(
     
   } else {
     if (!inherits(tree, "po_tree"))
-      stop("-tree- must be an object of class -phylo_tree- (see -sim_tree-).")
+      stop("-tree- must be an object of class -po_tree- (see -sim_tree-).")
     
     attr(tree, "offspring") <- list_offspring(tree)
     attr(tree, "noffspring") <- sapply(attr(tree, "offspring"), length)
