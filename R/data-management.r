@@ -1,9 +1,12 @@
-#' Find the offspring of each node.
+#' Annotated Phylogenetic Tree
+#' 
+#' 
 #' 
 #' @param data_exper A data.frame with the experimental data
 #' @param leafidvar A character scalar with the name of the leaf id variable
 #' in \code{data_exper}.
-#' @param data_tree A data.frame with the tree.
+#' @template parameters
+#' @templateVar edges 1
 #' @param nodeidvar A character scalar with the name of the node id variable
 #' in \code{data_tree}.
 #' @param parentidvar A character scalar with the name of the parent id variable
@@ -20,122 +23,90 @@
 #' @return A list of length \eqn{n} with relative position of offspring
 #' of each node, with respect to \code{data_exper}, starting from 0.
 #' @examples 
-#' # Example with lots of data -------------------------------------------------
-#' # Loading data
-#' data(experiment)
-#' data(tree)
+#' # A simple example ----------------------------------------------------------
 #' 
-#' ans <- get_offspring(
-#'     experiment, "LeafId", 
-#'     tree, "NodeId", "ParentId"
-#' )
-#' 
-#' # We can visualize it
-#' plot(ans)
-#' 
-#' # Example with less data ----------------------------------------------------
-#' 
-#' ans <- get_offspring(
-#'     fakeexperiment, "LeafId", 
-#'     faketree, "NodeId", "ParentId"
-#' )
+#' data(fakeexperiment)
+#' data(faketree)
+#' ans <- new_aphylo(fakeexperiment, faketree, "LeafId")
 #'  
 #' # We can visualize it
 #' plot(ans)
 #' @export
 #' @family Data management functions
-get_offspring <- function(
-  data_exper,
+new_aphylo <- function(
+  annotations,
+  edges,
   leafidvar,
-  data_tree,
-  nodeidvar,
-  parentidvar,
   funvars=NULL
   ) {
   
-  # Identifying function variables
-  if (!length(funvars))
-    funvars <- colnames(data_exper)[colnames(data_exper) != leafidvar]
+  # Step 0: Do the variables exists?
+  if (!(leafidvar %in% colnames(annotations)))
+    stop("The variable -", leafidvar, "- does not exists in -annotations-.")
   
-  # Completing -data_exper- with the tree
-  ids        <- unique(unlist(data_tree[,c(nodeidvar, parentidvar)]))
-  test       <- which(!(ids %in% data_exper[[leafidvar]]))
+  # First check: All nodes in annotations must be in the tree!
+  test <- which(!(annotations[[leafidvar]] %in% as.vector(edges)))
   if (length(test)) {
-    
-    # Adding the tag variable (default FALSE)
-    data_exper[["added"]] <- FALSE
-    
-    # Creating the rows to add
-    newrows              <- data_exper[rep(1, length(test)),,drop=FALSE]
-    newrows[,funvars]    <- 9
-    newrows[[leafidvar]] <- ids[test]
-    newrows[["added"]]   <- TRUE
-    
-    # Adding the rows
-    data_exper <- rbind(data_exper, newrows)
-    rownames(data_exper) <- NULL
+    stop("The following nodes (",length(test),"/",nrow(annotations),
+         ") do not show in -edges- (see ?new_aphylo):\n",
+         paste(annotations[[leafidvar]][test], collapse = ", "))
   }
   
-  # Checking Data sorting
-  data_exper <- data_exper[
-    order(data_exper[[leafidvar]], decreasing = FALSE),,drop=FALSE
-    ]
+  # Identifying function variables
+  if (!length(funvars))
+    funvars <- colnames(annotations)[colnames(annotations) != leafidvar]
+  else {
+    test <- which(!(funvars %in% colnames(annotations)))
+    if (length(test))
+      stop("The following elements of -funvars- are not in -annotations-:\n",
+           paste(funvars[test], collapse = ", "))
+  }
   
-  # Finding 
-  ans <- lapply(data_exper[[leafidvar]], function(x) {
-    x <- data_tree[[nodeidvar]][which(data_tree[[parentidvar]] == x)]
-    x <- match(x, data_exper[[leafidvar]])
-    x[!is.na(x)]
-  })
+  # Coercing edges to aphylo
+  aphylo <- as_po_tree(edges)
+  labels <- attr(aphylo, "labels")
   
-  # Substracting one so we canuse it in C++
-  ans <- lapply(ans, function(x) {
-    if (length(x)) return(x-1)
-    else return(x)
-  })
+  # Extending and sorting annotations
+  dat <- data.frame(pos = 0L:(length(labels) - 1L), id = labels)
+  dat <- merge(dat, annotations, by.x="id", by.y=leafidvar, all=TRUE)
+  dat <- subset(
+    dat[order(dat$pos),],
+    select=colnames(annotations)[colnames(annotations) != leafidvar])
+  
+  dat <- as.matrix(dat)
+  dat[is.na(dat)] <- 9
+  
+  # Listing offsprings
+  ans <- list_offspring(aphylo)
   
   # Returning
-  as_phylo_offspring(
-    experiment = unname(as.matrix(data_exper[,funvars])),
+  as_aphylo(
+    annotations = dat,
     fun_names  = funvars, 
-    added      = data_exper[["added"]],
     offspring  = ans,
     noffspring = sapply(ans, length),
-    edgelist   = unname(as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE]))
+    edges      = aphylo
   )
   
-  # structure(
-  #   list(
-  #     experiment = unname(as.matrix(data_exper[,funvars])),
-  #     fun_names  = funvars, 
-  #     added      = data_exper[["added"]],
-  #     offspring  = ans,
-  #     noffspring = sapply(ans, length),
-  #     edgelist   = unname(as.matrix(data_tree[,c(nodeidvar, parentidvar), drop=FALSE]))
-  #   ),
-  #   class = "phylo_offspring"
-  # )
 }
 
-as_phylo_offspring <- function(
-  experiment,
+as_aphylo <- function(
+  annotations,
   fun_names,
-  added,
   offspring,
   noffspring,
-  edgelist,
+  edges,
   checks = FALSE) {
   
   structure(
     list(
-      experiment = experiment,
-      fun_names  = fun_names, 
-      added      = added,
+      annotations = annotations,
+      fun_names  = fun_names,
       offspring  = offspring,
       noffspring = noffspring,
-      edgelist   = edgelist
+      edges      = edges
     ),
-    class = "phylo_offspring"
+    class = "aphylo"
   )
 }
 
@@ -144,7 +115,7 @@ as_phylo_offspring <- function(
 #' \code{phylo} objects have several methods such as \code{plot}, \code{print}
 #' and \code{summary}.
 #'
-#' @param x An object of class \code{phylo_tree} or \code{phylo_offspring}.
+#' @param x An object of class \code{phylo_tree} or \code{aphylo}.
 #' @param ... Ignored.
 #' @return An object of class \code{\link[ape:as.phylo]{phylo}}
 #' @family Data management functions
@@ -156,14 +127,13 @@ as.phylo <- function(x, ...) UseMethod("as.phylo")
 #' @method as.phylo default
 as.phylo.default <- ape::as.phylo
 
-#' @rdname get_offspring
-#' @method as.phylo phylo_offspring
+#' @rdname new_aphylo
+#' @method as.phylo aphylo
 #' @export
-as.phylo.phylo_offspring <- function(x, ...) {
+as.phylo.aphylo <- function(x, ...) {
   
   # Recoding edgelist
-  recoded_tree       <- with(x, recode_vertices(edgelist[,1], edgelist[,2]))
-  recoded_tree$edges <- recoded_tree$edges[,2:1]
+  recoded_tree       <- with(x, recode_vertices(edges[,1], edges[,2]))
   
   structure(list(
     edge        = recoded_tree$edges,
@@ -176,21 +146,21 @@ as.phylo.phylo_offspring <- function(x, ...) {
 
 
 
-#' Plot and print methods for \code{phylo_offspring} objects
-#' @param x An object of class \code{phylo_offspring}.
+#' Plot and print methods for \code{aphylo} objects
+#' @param x An object of class \code{aphylo}.
 #' @param y Ignored.
 #' @param tip.color See \code{\link[ape:plot.phylo]{plot.phylo}}
 #' @param ... Further arguments passed to the method.
-#' @rdname get_offspring
+#' @rdname new_aphylo
 #' @export
-plot.phylo_offspring <- function(
+plot.aphylo <- function(
   x, y=NULL, tip.color=NULL, ...) {
   # 
   # if (!length(tip.color)) {
   #   tip.color <- colors(9)[with(x, experiment[leaf_node,1,drop=TRUE])]
   # } 
   # 
-  plot(as.phylo.phylo_offspring(x), tip.color=tip.color, ...)
+  plot(as.phylo.aphylo(x), tip.color=tip.color, ...)
   
 }
 

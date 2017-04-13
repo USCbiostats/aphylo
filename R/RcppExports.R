@@ -59,7 +59,7 @@ probabilities <- function(Z, mu, psi, S, noffspring, offspring) {
 #' 
 #' This function computes the log-likelihood of the chosen parameters given
 #' a particular dataset. The arguments \code{Z}, \code{offspring}, and
-#' \code{noffspring} should be as those returned by \code{\link{get_offspring}}.
+#' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
 #' For complete Maximum Likelihood Estimation see \code{\link{mle}}.
 #' 
 #' @template parameters
@@ -213,5 +213,21 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' @export
 sim_tree <- function(n) {
     .Call('phylogenetic_sim_tree', PACKAGE = 'phylogenetic', n)
+}
+
+fast_table <- function(x) {
+    .Call('phylogenetic_fast_table', PACKAGE = 'phylogenetic', x)
+}
+
+#' Recodes an edgelist as a Partially Ordered Tree
+#' @template parameters
+#' @templateVar edges 1
+#' @export
+as_po_tree <- function(edges) {
+    .Call('phylogenetic_as_po_tree', PACKAGE = 'phylogenetic', edges)
+}
+
+list_offspring <- function(edges) {
+    .Call('phylogenetic_list_offspring', PACKAGE = 'phylogenetic', edges)
 }
 

@@ -10,7 +10,7 @@ as.phylo(x, ...)
 \method{as.phylo}{default}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{phylo_tree} or \code{phylo_offspring}.}
+\item{x}{An object of class \code{phylo_tree} or \code{aphylo}.}
 
 \item{...}{Ignored.}
 }
@@ -22,6 +22,6 @@ An object of class \code{\link[ape:as.phylo]{phylo}}
 and \code{summary}.
 }
 \seealso{
-Other Data management functions: \code{\link{get_offspring}},
+Other Data management functions: \code{\link{new_aphylo}},
   \code{\link{recode_vertices}}
 }

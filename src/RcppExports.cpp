@@ -145,3 +145,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fast_table
+IntegerMatrix fast_table(const arma::ivec& x);
+RcppExport SEXP phylogenetic_fast_table(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::ivec& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_table(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_po_tree
+IntegerMatrix as_po_tree(const arma::imat& edges);
+RcppExport SEXP phylogenetic_as_po_tree(SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::imat& >::type edges(edgesSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_po_tree(edges));
+    return rcpp_result_gen;
+END_RCPP
+}
+// list_offspring
+List list_offspring(const arma::umat& edges);
+RcppExport SEXP phylogenetic_list_offspring(SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::umat& >::type edges(edgesSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_offspring(edges));
+    return rcpp_result_gen;
+END_RCPP
+}

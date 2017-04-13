@@ -9,7 +9,7 @@ plot_LogLike(x, psi_range = c(1e-05, 0.1), mu_range = c(1e-05, 0.9999),
   par.args = list(), ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link[phylogenetic:get_offspring]{phylo_offspring}}}
+\item{x}{An object of class \code{\link[phylogenetic:new_aphylo]{aphylo}}}
 
 \item{psi_range}{Numeric vector of length 2. Domain of \eqn{psi}.}
 
@@ -33,12 +33,9 @@ Plot LogLikelihood function of experimental data
 }
 \examples{
 # Loading data
-data(experiment)
-data(tree)
-O <- get_offspring(
-  experiment, "LeafId", 
-  tree, "NodeId", "ParentId"
-)
+data(fakeexperiment)
+data(faketree)
+O <- new_aphylo(fakeexperiment, faketree[,c("ParentId", "NodeId")], "LeafId")
 
 # Nice personalized plot
 plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 

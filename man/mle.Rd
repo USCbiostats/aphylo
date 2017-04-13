@@ -29,8 +29,8 @@ phylo_mcmc(params, dat, priors = NULL, fix.params = c(psi0 = FALSE, psi1 =
   FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE), control = list())
 }
 \arguments{
-\item{dat}{An object of class \code{phylo_offspring} as returned by
-\code{\link{get_offspring}}.}
+\item{dat}{An object of class \code{new_aphylo} as returned by
+\code{\link{new_aphylo}}.}
 
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
 optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{optim}}.}

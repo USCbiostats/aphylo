@@ -140,13 +140,12 @@ arma::mat probabilities(
         continue;
     }
       
+    // Obtaining list of offspring <- this can be improved (speed)
+    // can create an std vector of size n
+    IntegerVector O(offspring.at(n));
     
     // Parent node states integration
     for (int s=0; s<nstates; s++) {
-      
-      // Obtaining list of offspring <- this can be improved (speed)
-      // can create an std vector of size n
-      IntegerVector O(offspring.at(n));
       
       // Loop through offspring
       double offspring_joint_likelihood = 1.0;
@@ -184,7 +183,7 @@ arma::mat probabilities(
 //' 
 //' This function computes the log-likelihood of the chosen parameters given
 //' a particular dataset. The arguments \code{Z}, \code{offspring}, and
-//' \code{noffspring} should be as those returned by \code{\link{get_offspring}}.
+//' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
 //' For complete Maximum Likelihood Estimation see \code{\link{mle}}.
 //' 
 //' @template parameters

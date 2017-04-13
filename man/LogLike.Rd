@@ -9,9 +9,9 @@ LogLike(Z, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE)
 \arguments{
 \item{Z}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
 
-\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{get_offspring}}).}
+\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
 
-\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{get_offspring}}).}
+\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{new_aphylo}}).}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -34,10 +34,8 @@ parameters.}
 \description{
 This function computes the log-likelihood of the chosen parameters given
 a particular dataset. The arguments \code{Z}, \code{offspring}, and
-\code{noffspring} should be as those returned by \code{\link{get_offspring}}.
+\code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
 For complete Maximum Likelihood Estimation see \code{\link{mle}}.
-
-A TITLE
 }
 \details{
 The parameters to estimate are described as follows:

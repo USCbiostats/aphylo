@@ -1,3 +1,11 @@
+2017-04-12  George G. Vega Yon <g.vegayon@gmail.com>
+	* src/tree: New functions for recoding trees as PO.
+	* R/*: Changing language... now phylo_tree is aphylo (Annotated
+	  phylogenetic tree).
+	* R/data-management.r: get_offspring changed to new_aphylo, and
+	  now includes more checks on the edge and annotations.
+
+
 2017-03-29  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mcmc.r: Moved phylo_mcmc to R/mle.r
 	* R/mle.r: MLE now uses stats::optim rather than own NR.

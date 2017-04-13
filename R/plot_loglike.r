@@ -1,5 +1,5 @@
 #' Plot LogLikelihood function of experimental data
-#' @param x An object of class \code{\link[phylogenetic:get_offspring]{phylo_offspring}}
+#' @param x An object of class \code{\link[phylogenetic:new_aphylo]{aphylo}}
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
@@ -12,12 +12,9 @@
 #' @param ... Aditional parameters to be passed to \code{plotfun}.
 #' @examples 
 #' # Loading data
-#' data(experiment)
-#' data(tree)
-#' O <- get_offspring(
-#'   experiment, "LeafId", 
-#'   tree, "NodeId", "ParentId"
-#' )
+#' data(fakeexperiment)
+#' data(faketree)
+#' O <- new_aphylo(fakeexperiment, faketree[,c("ParentId", "NodeId")], "LeafId")
 #' 
 #' # Nice personalized plot
 #' plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 
@@ -53,7 +50,7 @@ plot_LogLike <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       psi_z[i, j] <- LogLike(
-        x$experiment,
+        x$annotations,
         x$offspring,
         x$noffspring,
         c(PSI[i], PSI[j]),
@@ -68,7 +65,7 @@ plot_LogLike <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels) {
       pi_z[i, j] <- LogLike(
-        x$experiment,
+        x$annotations,
         x$offspring,
         x$noffspring,
         c(psi, psi),
@@ -82,7 +79,7 @@ plot_LogLike <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       mu_z[i, j] <- LogLike(
-        x$experiment,
+        x$annotations,
         x$offspring,
         x$noffspring,
         c(psi, psi),

@@ -7,7 +7,7 @@
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
-#' @return An object of class \code{\link[=get_offspring]{phylo_offspring}}
+#' @return An object of class \code{\link[=new_aphylo]{aphylo}}
 #' @family Simulation Functions 
 #' @export
 #' @examples 
@@ -33,8 +33,11 @@ sim_annotated_tree <- function(
     tree <- sim_tree(n)  
     
   } else {
-    if (!inherits(tree, "phylo_tree"))
+    if (!inherits(tree, "po_tree"))
       stop("-tree- must be an object of class -phylo_tree- (see -sim_tree-).")
+    
+    attr(tree, "offspring") <- list_offspring(tree)
+    attr(tree, "noffspring") <- sapply(attr(tree, "offspring"), length)
   }
   
   # Step 2: Simulate the annotations
@@ -47,20 +50,20 @@ sim_annotated_tree <- function(
     P          = P
   )
   
-  # Creating the phylo_offspring object
+  # Creating the aphylo object
   structure(
     list(
-      experiment = unname(ans),
+      annotations = unname(ans),
       fun_names  = colnames(ans), 
       added      = rep(FALSE, nrow(ans)),
       offspring  = attr(tree, "offspring"),
       noffspring = attr(tree, "noffspring"),
-      edgelist   = {
+      edges   = {
         mat <- array(dim=dim(tree))
         mat[] <- tree[]
         mat
       }
     ),
-    class = "phylo_offspring"
+    class = "aphylo"
   )
 }

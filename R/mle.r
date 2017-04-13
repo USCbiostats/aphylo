@@ -4,8 +4,8 @@
 #'
 #' @param params A vector of length 5 with initial parameters. In particular
 #' \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.
-#' @param dat An object of class \code{phylo_offspring} as returned by
-#' \code{\link{get_offspring}}.
+#' @param dat An object of class \code{new_aphylo} as returned by
+#' \code{\link{new_aphylo}}.
 #' @param method Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
 #' optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{optim}}. 
 #' @param priors A list of length 3 with functions named \code{psi}, \code{mu},
@@ -168,7 +168,7 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll -
+      - LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll -
          sum(log(priors(params)))
 
     }
@@ -182,7 +182,7 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      - LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+      - LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
     }
   }
   
@@ -263,7 +263,7 @@ print.phylo_mle <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
-  props      <- with(x$dat, table(experiment[noffspring == 0,,drop=FALSE]))
+  props      <- with(x$dat, table(annotations[noffspring == 0,,drop=FALSE]))
   propspcent <- prop.table(props)*100
   
   with(x, {
@@ -273,7 +273,7 @@ print.phylo_mle <- function(x, ...) {
       sprintf(
         "ll: %9.4f,\nMethod used: %s (%i iterations)", ll, method, x$counts),
       if (method %in% c("mcmc", "ABC")) NULL else sprintf("convergence: %i (see ?optim)", convergence),
-      sprintf("Leafs\n # of Functions %i", ncol(dat$experiment)),
+      sprintf("Leafs\n # of Functions %i", ncol(dat$annotations)),
       paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
             "\n         Estimate  Std. Error",
       sprintf(" psi[0]    %6.4f      %6.4f", par["psi0"], sderrors["psi0"]),
@@ -387,7 +387,7 @@ phylo_mcmc <- function(
       params <- ifelse(fix.params, par0, params)
       
       res <- LogLike(
-        Z          = dat$experiment,
+        Z          = dat$annotations,
         offspring  = dat$offspring,
         noffspring = dat$noffspring,
         psi        = params[1:2] ,
@@ -411,7 +411,7 @@ phylo_mcmc <- function(
       params <- ifelse(fix.params, par0, params)
       
       res <- LogLike(
-        Z          = dat$experiment,
+        Z          = dat$annotations,
         offspring  = dat$offspring,
         noffspring = dat$noffspring,
         psi        = params[1:2] ,

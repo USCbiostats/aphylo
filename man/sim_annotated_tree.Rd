@@ -21,12 +21,10 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \item{Pi}{Numeric vector of length 2. Root node probabilities (see \code{\link{LogLike}}).}
 }
 \value{
-An object of class \code{\link[=get_offspring]{phylo_offspring}}
+An object of class \code{\link[=new_aphylo]{aphylo}}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees
-
-A TITLE
 }
 \examples{
 # A simple example ----------------------------------------------------------

@@ -2,13 +2,10 @@ context("Checking data-management methods")
 
 # As phylo methods -------------------------------------------------------------
 test_that("As phylo conversion and methods", {
-  data(experiment)
-  data(tree)
+  data(fakeexperiment)
+  data(faketree)
   
-  ans <- get_offspring(
-    experiment, "LeafId", 
-    tree, "NodeId", "ParentId"
-  )
+  ans <- new_aphylo(fakeexperiment, faketree[,c("ParentId", "NodeId")], "LeafId")
   
   expect_s3_class(as.phylo(ans), "phylo")
   expect_is(plot(ans), "list")

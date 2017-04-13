@@ -42,5 +42,5 @@ head(ans1)
 }
 \seealso{
 Other Data management functions: \code{\link{as.phylo}},
-  \code{\link{get_offspring}}
+  \code{\link{new_aphylo}}
 }

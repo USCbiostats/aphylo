@@ -15,9 +15,9 @@ probabilities(Z, mu, psi, S, noffspring, offspring)
 
 \item{S}{Integer matrix of size \eqn{2^P\times P}{2^P * P}. See \code{\link{states}}.}
 
-\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{get_offspring}}).}
+\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{new_aphylo}}).}
 
-\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{get_offspring}}).}
+\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
 }
 \value{
 A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
@@ -27,6 +27,4 @@ probabilities for each node.
 Compute the state probabilities for each node in the tree using the peeling
 algorithm. This function is the horse-power of the function \code{\link{LogLike}}
 so it is not intended to be used directly.
-
-A TITLE
 }

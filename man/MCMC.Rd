@@ -105,7 +105,9 @@ fun <- function(x) {
   sum(x)
 }
 
-# Calling MCMC
+# Calling MCMC, but first, loading the coda R package for
+# diagnostics
+library(coda)
 ans <- MCMC(fun, c(mu=1, sigma=1), nbatch = 2e3, scale = .1, ub = 10, lb = 0)
 
 # Ploting the output

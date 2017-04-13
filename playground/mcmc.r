@@ -28,7 +28,7 @@ fun <- function(params) {
   Pi  <- params[5]
   Pi  <- c(1 - Pi, Pi)
   
-  LogLike(dat$experiment,
+  LogLike(dat$annotations,
           dat$offspring,
           dat$noffspring,
           psi,
@@ -76,7 +76,7 @@ fun <- function(params) {
   
   - (
     -LogLike(
-      dat$experiment,
+      dat$annotations,
       dat$offspring,
       dat$noffspring,
       psi,
@@ -122,7 +122,7 @@ fun <- function(params) {
   Pi  <- params[5]
   Pi  <- c(1 - Pi, Pi)
   
-  LogLike(dat$experiment,
+  LogLike(dat$annotations,
           dat$offspring,
           dat$noffspring,
           psi,
