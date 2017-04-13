@@ -10,12 +10,11 @@ Pi     <- c(.3, 1 - .3)
 errtol <- 1e-15
 
 O        <- new_aphylo(fakeexperiment, faketree, leafidvar = "LeafId")
-neworder <- attr(O$edges, "labels")
-neworder <- match(neworder, 0:7)
 
 S  <- states(2)
 # Pr <- phylogenetic:::leaf_prob(O$experiment, S, psi, O$noffspring)
 Pr <- probabilities(O$annotations, mu, psi, S, O$noffspring, O$offspring)
+Pr <- Pr[order(attr(O$edges, "labels")),]
 
 # Checking Leaf Probabilities --------------------------------------------------
 
@@ -49,7 +48,7 @@ test_that("Leaf Probabilities", {
   PrRaw[7, 4] <- (1 - psi[2]) ^ 2
   
   # These should be identical
-  expect_equivalent(PrRaw[4:7,], Pr[neworder,][4:7,])
+  expect_equivalent(PrRaw[4:7,], Pr[4:7,])
 })
 
 
@@ -59,7 +58,6 @@ test_that("Internal Probabilities", {
   # Checking cases compared to the states (0,0) (1,0) (0,1) (1,1)
   
   PrRaw <- Pr
-  PrRaw <- PrRaw[neworder,]
   PrRaw[1:3,] <- 1
   
   # Node 1 (0,0)
@@ -170,7 +168,7 @@ test_that("Internal Probabilities", {
   
   PrRaw[1,4] <- prod(of1)
   
-  expect_equal(Pr[attr(O$edges, "labels"),], PrRaw)
+  expect_equal(Pr, PrRaw)
 })
 
 # Likelihood of Rootnode -------------------------------------------------------
