@@ -83,7 +83,7 @@ the following:
   cl     <- parallel::makePSOCKcluster(ncores)
   
   # Loading the package and setting the seed using clusterRNGStream
-  invisible(parallel::clusterEvalQ(cl, library(phylogenetic)))
+  invisible(parallel::clusterEvalQ(cl, library(aphylo)))
   parallel::clusterSetRNGStream(cl, .Random.seed)
 }
 

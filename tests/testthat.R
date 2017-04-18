@@ -1,5 +1,5 @@
 library(testthat)
-library(phylogenetic)
+library(aphylo)
 
 Sys.setenv("R_TESTS" = "")
-test_check("phylogenetic")
+test_check("aphylo")

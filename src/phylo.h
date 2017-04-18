@@ -1,8 +1,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-#ifndef PHYLOGENETIC_PHYLO_
-#define PHYLOGENETIC_PHYLO_
+#ifndef APHYLO_PHYLO_
+#define APHYLO_PHYLO_
 
 using namespace Rcpp;
 

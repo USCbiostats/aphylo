@@ -1,5 +1,5 @@
 #' Plot LogLikelihood function of experimental data
-#' @param x An object of class \code{\link[phylogenetic:new_aphylo]{aphylo}}
+#' @param x An object of class \code{\link[=new_aphylo]{aphylo}}
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.

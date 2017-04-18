@@ -60,7 +60,7 @@ arma::umat sim_phylo(
 }
 
 /***R
-library(phylogenetic)
+library(aphylo)
 
 data(experiment)
 data(tree)

@@ -6,7 +6,7 @@ rm(list =ls())
 
 # Loading the required packages
 library(mvtnorm)
-library(phylogenetic)
+library(aphylo)
 library(coda)
 
 # Parameters and data simulation

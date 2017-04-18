@@ -1,6 +1,6 @@
 rm(list = ls())
 
-library(phylogenetic)
+library(aphylo)
   
 # Reading data -----------------------------------------------------------------
 data("experiment")

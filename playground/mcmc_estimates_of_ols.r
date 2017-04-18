@@ -1,6 +1,6 @@
 rm(list = ls())
 
-library(phylogenetic)
+library(aphylo)
 
 # Simulating data
 set.seed(13123)

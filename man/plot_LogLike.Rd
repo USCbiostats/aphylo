@@ -9,7 +9,7 @@ plot_LogLike(x, psi_range = c(1e-05, 0.1), mu_range = c(1e-05, 0.9999),
   par.args = list(), ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link[phylogenetic:new_aphylo]{aphylo}}}
+\item{x}{An object of class \code{\link[=new_aphylo]{aphylo}}}
 
 \item{psi_range}{Numeric vector of length 2. Domain of \eqn{psi}.}
 

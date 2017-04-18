@@ -18,7 +18,7 @@ library(parallel)
 cl <- makeCluster(15)
 
 invisible(clusterEvalQ(cl, {
-  library(phylogenetic)
+  library(aphylo)
 }))
 
 # Passing parameters to the clusters

@@ -2,7 +2,7 @@ rm(list = ls())
 
 library(mcmc)
 library(MCMCpack)
-library(phylogenetic)
+library(aphylo)
 
 data(experiment)
 data(tree)

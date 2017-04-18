@@ -10,7 +10,7 @@
 #'   clusterApply detectCores clusterSetRNGStream
 NULL
 
-#' @useDynLib phylogenetic
+#' @useDynLib aphylo
 NULL
 
 # Importing from the Matrix pkg ------------------------------------------------
@@ -102,6 +102,6 @@ release_questions <- function() {
 #' Statistical Inference in Annotated Phylogenetic Trees
 #' 
 #' @docType package
-#' @name phylogenetic
+#' @name aphylo
 #' 
 NULL

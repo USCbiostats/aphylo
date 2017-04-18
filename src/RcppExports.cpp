@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // normal_prop
 NumericVector normal_prop(const NumericVector& x, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
-RcppExport SEXP phylogenetic_normal_prop(SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
+RcppExport SEXP aphylo_normal_prop(SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // gibbs_sampler
 NumericVector gibbs_sampler(const Function& fun, const NumericVector& x, const NumericVector& lb, const NumericVector& ub, double scale);
-RcppExport SEXP phylogenetic_gibbs_sampler(SEXP funSEXP, SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
+RcppExport SEXP aphylo_gibbs_sampler(SEXP funSEXP, SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -37,7 +37,7 @@ END_RCPP
 }
 // MCMCcpp
 NumericMatrix MCMCcpp(Function& fun, NumericVector theta0, int nbatch, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
-RcppExport SEXP phylogenetic_MCMCcpp(SEXP funSEXP, SEXP theta0SEXP, SEXP nbatchSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
+RcppExport SEXP aphylo_MCMCcpp(SEXP funSEXP, SEXP theta0SEXP, SEXP nbatchSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,7 +53,7 @@ END_RCPP
 }
 // states
 arma::imat states(int P);
-RcppExport SEXP phylogenetic_states(SEXP PSEXP) {
+RcppExport SEXP aphylo_states(SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -64,7 +64,7 @@ END_RCPP
 }
 // prob_mat
 arma::mat prob_mat(const arma::vec& pr);
-RcppExport SEXP phylogenetic_prob_mat(SEXP prSEXP) {
+RcppExport SEXP aphylo_prob_mat(SEXP prSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,7 +75,7 @@ END_RCPP
 }
 // root_node_prob
 arma::vec root_node_prob(const arma::vec& Pi, const arma::imat& S);
-RcppExport SEXP phylogenetic_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
+RcppExport SEXP aphylo_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -87,7 +87,7 @@ END_RCPP
 }
 // probabilities
 arma::mat probabilities(const arma::imat& annotations, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const arma::ivec& noffspring, const List& offspring);
-RcppExport SEXP phylogenetic_probabilities(SEXP annotationsSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
+RcppExport SEXP aphylo_probabilities(SEXP annotationsSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP noffspringSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -103,7 +103,7 @@ END_RCPP
 }
 // LogLike
 List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, bool verb_ans);
-RcppExport SEXP phylogenetic_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP) {
+RcppExport SEXP aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -120,7 +120,7 @@ END_RCPP
 }
 // sim_fun_on_tree
 IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
-RcppExport SEXP phylogenetic_sim_fun_on_tree(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
+RcppExport SEXP aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -136,7 +136,7 @@ END_RCPP
 }
 // sim_tree
 IntegerMatrix sim_tree(int n);
-RcppExport SEXP phylogenetic_sim_tree(SEXP nSEXP) {
+RcppExport SEXP aphylo_sim_tree(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -147,7 +147,7 @@ END_RCPP
 }
 // fast_table
 IntegerMatrix fast_table(const arma::ivec& x);
-RcppExport SEXP phylogenetic_fast_table(SEXP xSEXP) {
+RcppExport SEXP aphylo_fast_table(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -158,7 +158,7 @@ END_RCPP
 }
 // fast_table_using_labels
 arma::uvec fast_table_using_labels(const arma::ivec& x, const arma::ivec& ids);
-RcppExport SEXP phylogenetic_fast_table_using_labels(SEXP xSEXP, SEXP idsSEXP) {
+RcppExport SEXP aphylo_fast_table_using_labels(SEXP xSEXP, SEXP idsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -170,7 +170,7 @@ END_RCPP
 }
 // as_po_tree
 IntegerMatrix as_po_tree(const arma::imat& edges);
-RcppExport SEXP phylogenetic_as_po_tree(SEXP edgesSEXP) {
+RcppExport SEXP aphylo_as_po_tree(SEXP edgesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -181,7 +181,7 @@ END_RCPP
 }
 // list_offspring
 List list_offspring(const arma::umat& edges);
-RcppExport SEXP phylogenetic_list_offspring(SEXP edgesSEXP) {
+RcppExport SEXP aphylo_list_offspring(SEXP edgesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

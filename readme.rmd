@@ -1,5 +1,5 @@
 ---
-title: "Phylogenetic tree"
+title: "aphylo: Statistical Inference of Annotated Phylogenetic Trees"
 output: github_document
 ---
 
@@ -11,39 +11,42 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclasification. Furthermore, the log-likelihood is computed using peeling algorithms, which required us to develop efficient algorithms for recoding and preparing phylogenetic tree data so that can be used with the package. The package `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape`--Analyses of Phylogenetics and Evolution--which makes `aphylo`
+
 ## Install
 
 Using devtools
 
 ```r
-devtools::install_github("USCbiostats/phylogenetic")
+devtools::install_github("USCbiostats/aphylo")
 ```
 
 ## Reading data
 
 ```{r Loading the package}
-library(phylogenetic)
+library(aphylo)
 ```
 
 
 ```{r Reading Data}
 
 # This datasets are included in the package
-data("experiment")
-data("tree")
+data("fakeexperiment")
+data("faketree")
 
-head(experiment)
-head(tree)
+head(fakeexperiment)
+head(faketree)
 ```
 
 ```{r Get offspring}
-O <- get_offspring(
-    experiment, "LeafId", 
-    tree, "NodeId", "ParentId"
+O <- new_aphylo(
+  annotations = fakeexperiment, 
+  leafidvar   = "LeafId",
+  edges       = faketree
 )
 
 # There is no nice print method for now
-as.phylo(O)
+as.apephylo(O)
 
 # We can visualize it
 plot(O)
@@ -56,6 +59,7 @@ plot_LogLike(O)
 set.seed(123)
 plot(sim_tree(10))
 dat <- sim_annotated_tree(200, P=2)
+as.apephylo(dat)
 ```
 
 
@@ -64,13 +68,18 @@ dat <- sim_annotated_tree(200, P=2)
 
 ```{r Computing likelihood}
 # Parameters and data
-
 psi     <- c(0.020,0.010)
 mu      <- c(0.04,.01)
 pi_root <- c(1-0.5,.5)
 
 # Computing likelihood
-LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, pi_root)
+with(dat, 
+     LogLike(
+       annotations = annotations, 
+       offspring   = offspring, 
+       noffspring  = noffspring, 
+       psi = psi, mu = mu, Pi = pi_root)
+)
 
 ```
 
@@ -78,8 +87,9 @@ LogLike(dat$experiment, dat$offspring, dat$noffspring, psi, mu, pi_root)
 
 ```{r MLE}
 # Using Artificial Bee Colony algorithm
-ans0 <- phylo_mle(rep(.2,5), dat, useABC = TRUE, control = list(maxCycle = 50))
-ans1 <- phylo_mle(ans0$par, dat)
+ans0 <- phylo_mle(dat, method = "ABC")
+ans0
+
 # Plotting the path
 plot(ans0)
 ```

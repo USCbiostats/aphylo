@@ -2,15 +2,15 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 normal_prop <- function(x, lb, ub, scale) {
-    .Call('phylogenetic_normal_prop', PACKAGE = 'phylogenetic', x, lb, ub, scale)
+    .Call('aphylo_normal_prop', PACKAGE = 'aphylo', x, lb, ub, scale)
 }
 
 gibbs_sampler <- function(fun, x, lb, ub, scale) {
-    .Call('phylogenetic_gibbs_sampler', PACKAGE = 'phylogenetic', fun, x, lb, ub, scale)
+    .Call('aphylo_gibbs_sampler', PACKAGE = 'aphylo', fun, x, lb, ub, scale)
 }
 
 MCMCcpp <- function(fun, theta0, nbatch, lb, ub, scale) {
-    .Call('phylogenetic_MCMCcpp', PACKAGE = 'phylogenetic', fun, theta0, nbatch, lb, ub, scale)
+    .Call('aphylo_MCMCcpp', PACKAGE = 'aphylo', fun, theta0, nbatch, lb, ub, scale)
 }
 
 #' Matrix of states
@@ -22,15 +22,15 @@ MCMCcpp <- function(fun, theta0, nbatch, lb, ub, scale) {
 #' states(3)
 #' @export
 states <- function(P) {
-    .Call('phylogenetic_states', PACKAGE = 'phylogenetic', P)
+    .Call('aphylo_states', PACKAGE = 'aphylo', P)
 }
 
 prob_mat <- function(pr) {
-    .Call('phylogenetic_prob_mat', PACKAGE = 'phylogenetic', pr)
+    .Call('aphylo_prob_mat', PACKAGE = 'aphylo', pr)
 }
 
 root_node_prob <- function(Pi, S) {
-    .Call('phylogenetic_root_node_prob', PACKAGE = 'phylogenetic', Pi, S)
+    .Call('aphylo_root_node_prob', PACKAGE = 'aphylo', Pi, S)
 }
 
 #' State probabilities
@@ -52,7 +52,7 @@ root_node_prob <- function(Pi, S) {
 #' probabilities for each node.
 #' 
 probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
-    .Call('phylogenetic_probabilities', PACKAGE = 'phylogenetic', annotations, mu, psi, S, noffspring, offspring)
+    .Call('aphylo_probabilities', PACKAGE = 'aphylo', annotations, mu, psi, S, noffspring, offspring)
 }
 
 #' Computes Log-likelihood
@@ -94,7 +94,7 @@ probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
 #' parameters.}
 #' @export
 LogLike <- function(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE) {
-    .Call('phylogenetic_LogLike', PACKAGE = 'phylogenetic', annotations, offspring, noffspring, psi, mu, Pi, verb_ans)
+    .Call('aphylo_LogLike', PACKAGE = 'aphylo', annotations, offspring, noffspring, psi, mu, Pi, verb_ans)
 }
 
 #' Simulate functions on a ginven tree
@@ -139,7 +139,7 @@ LogLike <- function(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = 
 #' 
 #' 
 sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
-    .Call('phylogenetic_sim_fun_on_tree', PACKAGE = 'phylogenetic', offspring, noffspring, psi, mu, Pi, P)
+    .Call('aphylo_sim_fun_on_tree', PACKAGE = 'aphylo', offspring, noffspring, psi, mu, Pi, P)
 }
 
 #' Random tree generation
@@ -212,15 +212,15 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' }
 #' @export
 sim_tree <- function(n) {
-    .Call('phylogenetic_sim_tree', PACKAGE = 'phylogenetic', n)
+    .Call('aphylo_sim_tree', PACKAGE = 'aphylo', n)
 }
 
 fast_table <- function(x) {
-    .Call('phylogenetic_fast_table', PACKAGE = 'phylogenetic', x)
+    .Call('aphylo_fast_table', PACKAGE = 'aphylo', x)
 }
 
 fast_table_using_labels <- function(x, ids) {
-    .Call('phylogenetic_fast_table_using_labels', PACKAGE = 'phylogenetic', x, ids)
+    .Call('aphylo_fast_table_using_labels', PACKAGE = 'aphylo', x, ids)
 }
 
 #' Recodes an edgelist as a Partially Ordered Tree
@@ -260,10 +260,10 @@ fast_table_using_labels <- function(x, ids) {
 #' potree # Ordering is a little off, but is the same tree
 #' 
 as_po_tree <- function(edges) {
-    .Call('phylogenetic_as_po_tree', PACKAGE = 'phylogenetic', edges)
+    .Call('aphylo_as_po_tree', PACKAGE = 'aphylo', edges)
 }
 
 list_offspring <- function(edges) {
-    .Call('phylogenetic_list_offspring', PACKAGE = 'phylogenetic', edges)
+    .Call('aphylo_list_offspring', PACKAGE = 'aphylo', edges)
 }
 

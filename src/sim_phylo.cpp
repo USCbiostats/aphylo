@@ -118,7 +118,7 @@ IntegerMatrix sim_fun_on_tree(
 }
 
 /***R
-library(phylogenetic)
+library(aphylo)
 
 # Preprocessing the data
 tree <- sim_tree(1000)

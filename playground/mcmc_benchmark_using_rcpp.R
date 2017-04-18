@@ -1,6 +1,6 @@
 rm(list =ls())
 
-library(phylogenetic)
+library(aphylo)
 library(microbenchmark)
 
 set.seed(1231)

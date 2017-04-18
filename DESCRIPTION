@@ -1,5 +1,5 @@
-Package: phylogenetic
-Title: An R package
+Package: aphylo
+Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("FirsName", "LastName", role=c("aut","cre"), email="hisemail@usc.edu")
 Version: 0.1.99
 Date: 2017-01-18

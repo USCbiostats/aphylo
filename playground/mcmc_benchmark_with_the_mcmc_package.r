@@ -1,7 +1,7 @@
 rm(list = ls())
 
 library(mcmc)
-library(phylogenetic)
+library(aphylo)
 library(microbenchmark)
 library(coda)
 

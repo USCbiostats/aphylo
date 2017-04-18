@@ -43,7 +43,7 @@ header-includes:
 \footnotesize
 
 ```{r phylo-data}
-library(phylogenetic)
+library(aphylo)
 
 # Loading and taking a look at the data
 data("experiment")
@@ -189,7 +189,7 @@ plot(ans_w_prior, main = "MLE using Newton-Raphson\n With Beta(2,10) priors")
 
 ```{r MCMC sim, size='small'}
 # Loading the package
-library(phylogenetic)
+library(aphylo)
 
 # Simulating data
 set.seed(1231)
