@@ -4,6 +4,8 @@ language: R
 sudo: required
 cache: packages
 
+r_github_packages: USCBiostats/amcmc
+
 os:
   - linux
   - osx

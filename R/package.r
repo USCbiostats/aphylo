@@ -1,13 +1,12 @@
 #' @importFrom Rcpp evalCpp
-#' @importFrom stats runif var coef vcov optim
+#' @importFrom stats var coef vcov optim
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom numDeriv jacobian hessian
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #' @importFrom grDevices colors
 #' @importFrom coda mcmc mcmc.list
+#' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
-#' @importFrom parallel makePSOCKcluster stopCluster clusterExport clusterEvalQ
-#'   clusterApply detectCores clusterSetRNGStream
 NULL
 
 #' @useDynLib aphylo

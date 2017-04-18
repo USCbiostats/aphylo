@@ -6,51 +6,6 @@
 
 using namespace Rcpp;
 
-// normal_prop
-NumericVector normal_prop(const NumericVector& x, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
-RcppExport SEXP aphylo_normal_prop(SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(normal_prop(x, lb, ub, scale));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gibbs_sampler
-NumericVector gibbs_sampler(const Function& fun, const NumericVector& x, const NumericVector& lb, const NumericVector& ub, double scale);
-RcppExport SEXP aphylo_gibbs_sampler(SEXP funSEXP, SEXP xSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Function& >::type fun(funSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
-    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(gibbs_sampler(fun, x, lb, ub, scale));
-    return rcpp_result_gen;
-END_RCPP
-}
-// MCMCcpp
-NumericMatrix MCMCcpp(Function& fun, NumericVector theta0, int nbatch, const NumericVector& lb, const NumericVector& ub, const NumericVector& scale);
-RcppExport SEXP aphylo_MCMCcpp(SEXP funSEXP, SEXP theta0SEXP, SEXP nbatchSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP scaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Function& >::type fun(funSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type theta0(theta0SEXP);
-    Rcpp::traits::input_parameter< int >::type nbatch(nbatchSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type lb(lbSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type ub(ubSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(MCMCcpp(fun, theta0, nbatch, lb, ub, scale));
-    return rcpp_result_gen;
-END_RCPP
-}
 // states
 arma::imat states(int P);
 RcppExport SEXP aphylo_states(SEXP PSEXP) {

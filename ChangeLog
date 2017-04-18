@@ -1,3 +1,6 @@
+2017-04-18  George G. Vega Yon <g.vegayon@gmail.com>
+	* *: Moved the MCMC to a new project: USCbiostats/amcmc
+
 2017-04-13  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Functions as.phylo and recode_vertices
 	  rewritten and renamed to as.apephylo and as_ape_tree. Also

@@ -1,24 +1,32 @@
-Phylogenetic tree
+aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/phylogenetic.svg?branch=master)](https://travis-ci.org/USCbiostats/phylogenetic) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/phylogenetic?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/phylogenetic) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/phylogenetic/master.svg)](https://codecov.io/github/USCbiostats/phylogenetic?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](https://codecov.io/github/USCbiostats/aphylo?branch=master)
 
-The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclasification. Furthermore, the log-likelihood is computed using peeling algorithms, which required us to develop efficient algorithms for recoding and preparing phylogenetic tree data so that can be used with the package. The package `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape`--Analyses of Phylogenetics and Evolution--which makes `aphylo`
+The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
+
+The package is under MIT License, and is been developed by the Computing and Software Cores of the Biostatistics Division's NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.
 
 Install
 -------
 
-Using devtools
+This package depends on another on-development R package, the [`amcmc`](https://github.com/USCbiostats/amcmc). So first you need to install it:
 
 ``` r
-devtools::install_github("USCbiostats/phylogenetic")
+devtools::install_github("USCbiostats/amcmc")
+```
+
+Then you can install the `aphylo` package
+
+``` r
+devtools::install_github("USCbiostats/aphylo")
 ```
 
 Reading data
 ------------
 
 ``` r
-library(phylogenetic)
+library(aphylo)
 ```
 
 ``` r

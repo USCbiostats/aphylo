@@ -2,8 +2,18 @@ Package: aphylo
 Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("FirsName", "LastName", role=c("aut","cre"), email="hisemail@usc.edu")
 Version: 0.1.99
-Date: 2017-01-18
-Description: Maximum Likelihood Estimation on Phylogenetic trees.
+Date: 2017-04-18
+Description: The `aphylo` R package implements estimation and data imputation
+  methods for Functional Annotations in Phylogenetic Trees. The core function
+  consists on the computation of the log-likelihood of observing a given
+  phylogenetic tree with functional annotation on its leafs, and probabilities
+  associated to gain and loss of functionalities, including probabilities of
+  experimental misclasification. Furthermore, the log-likelihood is computed
+  using peeling algorithms, which required developing and implementing efficient
+  algorithms for recoding and preparing phylogenetic tree data so that can be
+  used with the package. Finally, `aphylo` works smoothly with popular tools for
+  analysis of phylogenetic data such as `ape` R package, "Analyses of
+  Phylogenetics and Evolution".
 Depends: R (>= 3.1.1)
 LazyData: true
 Imports:
@@ -12,7 +22,8 @@ Imports:
     methods,
     numDeriv,
     ABCoptim (>= 0.14.0),
-    coda, ape
+    coda, ape,
+    amcmc
 Suggests:
     covr,
     testthat,
