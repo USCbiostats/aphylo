@@ -5,7 +5,7 @@
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
 sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
-  mu = c(0.1, 0.05), Pi = 0.5)
+  mu = c(0.1, 0.05), Pi = 1)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}

@@ -64,9 +64,8 @@ plot_LogLike(O)
 ## Simulating annoated trees
 
 ```{r}
-set.seed(123)
-plot(sim_tree(10))
-dat <- sim_annotated_tree(200, P=2)
+set.seed(10)
+dat <- sim_annotated_tree(100, P=1)
 as.apephylo(dat)
 ```
 
@@ -94,8 +93,8 @@ with(dat,
 # MLE estimation
 
 ```{r MLE}
-# Using Artificial Bee Colony algorithm
-ans0 <- phylo_mle(dat, method = "ABC")
+# 
+ans0 <- phylo_mle(dat)
 ans0
 
 # Plotting the path

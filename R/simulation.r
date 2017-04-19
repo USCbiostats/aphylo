@@ -18,7 +18,7 @@
 #' 
 sim_annotated_tree <- function(
   n = NULL, tree = NULL, P=1,
-  psi=c(.05, .05), mu=c(.1,.05), Pi=.5
+  psi=c(.05, .05), mu=c(.1,.05), Pi=1
   ) {
   
   pars <- c(psi0 = psi[1], psi1 = psi[2], mu0 = mu[1], mu1 = mu[2], Pi = Pi)

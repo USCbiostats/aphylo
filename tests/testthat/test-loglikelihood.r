@@ -178,7 +178,7 @@ test_that("Log-Likelihood", {
   
   PI  <- aphylo:::root_node_prob(Pi, S)
   # Pr  <- PrRaw internal_prob(Pr, mu, S, O$noffspring, O$offspring)
-  ll1 <- sum(log(Pr[1, , drop = TRUE] * PI))
+  ll1 <- log(sum(Pr[1, , drop = TRUE] * PI))
   
   expect_equal(abs(ll1 - ll0), 0, tol = errtol)
 })

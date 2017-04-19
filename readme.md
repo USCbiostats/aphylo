@@ -130,7 +130,7 @@ with(dat,
 ```
 
     ## $ll
-    ## [1] -1122.098
+    ## [1] -253.0055
     ## 
     ## attr(,"class")
     ## [1] "phylo_LogLik"
@@ -145,19 +145,19 @@ ans0
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll: -933.6794,
-    ## Method used: ABC (155 iterations)
+    ## ll: -196.0868,
+    ## Method used: ABC (97 iterations)
     ## Leafs
     ##  # of Functions 2
-    ##  # of 0:   202 (50%)
-    ##  # of 1:   198 (50%)
+    ##  # of 0:   100 (25%)
+    ##  # of 1:   300 (75%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.0891      0.0286
-    ##  psi[1]    0.0000      0.0311
-    ##  mu[0]     0.1016      0.0133
-    ##  mu[1]     0.1041      0.0176
-    ##  Pi        0.5000      0.1768
+    ##  psi[0]    0.0001      0.1070
+    ##  psi[1]    0.1252      0.0323
+    ##  mu[0]     0.1132      0.0697
+    ##  mu[1]     0.0254      0.0129
+    ##  Pi        0.9999      1.0527
 
 ``` r
 # Plotting the path

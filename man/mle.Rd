@@ -78,7 +78,8 @@ as the intermediate steps are not available to the user).}
 \item{value}{A numeric scalar with the value of \code{fun(par)}}
 \item{ll}{A numeric scalar with the value of \code{-fun(par)}}
 \item{counts}{Integer scalar number of steps/batch performed.}
-\item{convergence}{Integer scalar. Mostly to report convergence for \code{optim}.}
+\item{convergence}{Integer scalar. Equal to 0 if \code{optim} converged. See \code{optim}.}
+\item{message}{Character scalar. See \code{optim}.}
 \item{fun}{A function (the objective function).}
 \item{priors}{If specified, the function \code{priors} passed to the method.}
 \item{dat}{The data \code{dat} provided to the function.}
@@ -132,7 +133,7 @@ ans_abc <- phylo_mle(dat, method = "ABC")
 
 # Plotting the path
 with(ans_nr, plot(
- - apply(hist, 1, fun),
+ - apply(hist, 1, fun, dat=dat),
  type = "l",
  xlab = "Step",
  ylab = "Log-Likelihood"

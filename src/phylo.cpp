@@ -51,8 +51,10 @@ arma::mat prob_mat(
   
   for (int i=0; i<2; i++)
     for (int j=0; j<2; j++) 
-      ans.at(i,j) = !i ? ( j? pr.at(0) : (1-pr.at(0)) ) :
-      ( !j? pr.at(1) : (1-pr.at(1)) );
+      ans.at(i,j) = 
+        !i?
+        (  j? pr.at(0) : (1-pr.at(0)) ):
+        ( !j? pr.at(1) : (1-pr.at(1)) );
   
   return ans;
 }
@@ -240,7 +242,9 @@ List LogLike(
 
   arma::vec PiP = root_node_prob(Pi, S);  
   for (int s = 0; s<nstates; s++)
-    ll += log(PiP.at(s)*Pr.at(0, s));
+    ll += PiP.at(s)*Pr.at(0, s);
+  
+  ll = std::log(ll);
   
   // return ll;
   if (verb_ans) {

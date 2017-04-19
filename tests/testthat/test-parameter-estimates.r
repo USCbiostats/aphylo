@@ -1,11 +1,11 @@
 context("Parameter estimation")
 
 set.seed(121)
-n <- 50
+n <- 100
 P <- 2
 psi <- c(.01, .01)
 mu  <- c(.04, .02)
-Pi  <- .5
+Pi  <- .7
 
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
 
@@ -29,6 +29,6 @@ test_that("MCMC", {
   )
   
   # Checking expectations
-  expect_equal(ans0$par, ans2$par, tolerance = 0.1)
+  expect_equal(ans0$par, ans2$par, tolerance = 0.2)
 })
 

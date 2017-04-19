@@ -120,6 +120,7 @@ as_aphylo <- function(
 #' @return An object of class \code{\link[ape:as.phylo]{phylo}}
 #' @family Data management functions
 #' @export
+#' @aliases as.aphylo
 as.apephylo <- function(x, ...) UseMethod("as.apephylo")
 
 #' @rdname as.apephylo

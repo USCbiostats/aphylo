@@ -53,7 +53,8 @@
 #' \item{value}{A numeric scalar with the value of \code{fun(par)}}
 #' \item{ll}{A numeric scalar with the value of \code{-fun(par)}}
 #' \item{counts}{Integer scalar number of steps/batch performed.}
-#' \item{convergence}{Integer scalar. Mostly to report convergence for \code{optim}.}
+#' \item{convergence}{Integer scalar. Equal to 0 if \code{optim} converged. See \code{optim}.}
+#' \item{message}{Character scalar. See \code{optim}.}
 #' \item{fun}{A function (the objective function).}
 #' \item{priors}{If specified, the function \code{priors} passed to the method.}
 #' \item{dat}{The data \code{dat} provided to the function.}
@@ -76,7 +77,7 @@
 #' 
 #' # Plotting the path
 #' with(ans_nr, plot(
-#'  - apply(hist, 1, fun),
+#'  - apply(hist, 1, fun, dat=dat),
 #'  type = "l",
 #'  xlab = "Step",
 #'  ylab = "Log-Likelihood"
@@ -151,14 +152,16 @@ phylo_mle <- function(
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
   
-  
-  
   # In case of fixing parameters
   par0 <- params
   
+  # Both available for ABC
+  control$fnscale  <- -1
+  control$parscale <- rep(1, 5)
+  
   # Creating the objective function
   fun <- if (length(priors)) {
-    function(params) {
+    function(params, dat) {
       
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
@@ -168,12 +171,15 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      - LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll -
+      ll <- LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll +
          sum(log(priors(params)))
-
+      
+      # Checking if we got a finite result
+      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-20)
+      ll
     }
   } else {
-    function(params) {
+    function(params, dat) {
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
@@ -182,43 +188,51 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      - LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+      ll <- LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+
+      # Checking if we got a finite result
+      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-20)
+      ll
     }
   }
   
   # Optimizing
   if (method == "ABC") {
     # Checking ABC args
-    if (!length(control$lb))       control$lb       <- 1e-20
-    if (!length(control$ub))       control$ub       <- 1 - 1e-20
+    if (!length(control$lb))       control$lb       <- lower
+    if (!length(control$ub))       control$ub       <- upper
     if (!length(control$maxCycle)) control$maxCycle <- 500L
     if (!length(control$criter))   control$criter   <- 50L
 
     ans <-
-      do.call(ABCoptim::abc_cpp, c(list(par = params, fn = fun), control))
+      do.call(ABCoptim::abc_cpp, c(list(par = params, fun, dat=dat), control))
     ans$convergence <- NA
-    hessian <- numDeriv::hessian(function(p) -fun(p), ans$par, method.args = control$method.args)
+    ans$message     <- NA
   } else {
 
-    
+    # Try to solve it
     ans <- do.call(
       stats::optim, 
       c(
         list(par = params, fn = fun, method=method, upper = upper, lower = lower,
-             hessian=TRUE, control=control)
+             hessian=FALSE, dat = dat, control=control)
         )
       )
-    hessian <- ans$hessian
+    
     ans     <- list(
       hist  = rbind(params, ans$par),
       par   = ans$par,
       value = ans$value,
       convergence = ans$convergence,
+      message = ans$message,
       counts = ans$counts["function"]
       )
     
     
   }
+  
+  # Computing the hessian (information matrix)
+  hessian <- stats::optimHess(ans$par, fun, dat = dat, control = control)
   
   # Working on answer
   env <- new.env()
@@ -241,16 +255,17 @@ phylo_mle <- function(
       par        = ans$par,
       hist       = ans$hist,
       value      = ans$value,
-      ll         = -ans$value,
+      ll         = ans$value,
       counts     = ans$counts,
       convergence = ans$convergence,
+      message    = ans$message,
       fun        = fun,
       priors     = priors,
       dat        = dat,
       par0       = par0,
       fix.params = fix.params,
       method     = method,
-      varcovar   = solve(hessian)*ifelse(method=="ABC", -1, 1)
+      varcovar   = -solve(hessian)
     ),
     class = "phylo_mle"
   )
@@ -272,7 +287,11 @@ print.phylo_mle <- function(x, ...) {
       "ESTIMATION OF ANNOTATED PHYLOGENETIC TREE",
       sprintf(
         "ll: %9.4f,\nMethod used: %s (%i iterations)", ll, method, x$counts),
-      if (method %in% c("mcmc", "ABC")) NULL else sprintf("convergence: %i (see ?optim)", convergence),
+      if (method %in% c("mcmc", "ABC")) 
+        NULL
+      else
+        sprintf("convergence: %i (see ?optim)", convergence)
+      ,
       sprintf("Leafs\n # of Functions %i", ncol(dat$annotations)),
       paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
             "\n         Estimate  Std. Error",
@@ -326,7 +345,7 @@ plot.phylo_mle <- function(
   x$hist <- x$hist[apply(x$hist, 1, function(x) !any(is.na(x))),]
   
   plot(
-    y = ifelse(x$method == "mcmc", 1, -1)*apply(as.matrix(x$hist), 1, x$fun),
+    y = ifelse(x$method == "mcmc", 1, -1)*apply(as.matrix(x$hist), 1, x$fun, dat=x$dat),
     x = if (x$method %in% c("mcmc", "ABC")) 1:nrow(x$hist) else c(1, x$counts),
     type = type,
     main = main,
@@ -445,10 +464,11 @@ phylo_mcmc <- function(
     list(
       par        = colMeans(ans),
       hist       = ans,
-      value      = fun(ans[nrow(ans),], dat),
-      ll         = fun(ans[nrow(ans),], dat),
+      value      = mean(apply(ans, 1, fun, dat=dat), na.rm=TRUE),
+      ll         = mean(apply(ans, 1, fun, dat=dat), na.rm=TRUE),
       counts     = control$nbatch,
       convergence = NA,
+      message    = NA,
       fun        = fun,
       priors     = priors,
       dat        = dat,

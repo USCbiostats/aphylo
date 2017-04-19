@@ -1,5 +1,11 @@
+2017-04-19  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: Using fnscale and parscale in optim and abc_optim.
+	  Now the functions maximize so its all out of the box.
+
+
 2017-04-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* *: Moved the MCMC to a new project: USCbiostats/amcmc
+
 
 2017-04-13  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Functions as.phylo and recode_vertices

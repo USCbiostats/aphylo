@@ -2,6 +2,7 @@
 % Please edit documentation in R/data-management.r
 \name{as.apephylo}
 \alias{as.apephylo}
+\alias{as.aphylo}
 \alias{as.apephylo.aphylo}
 \alias{as.apephylo.po_tree}
 \alias{as_ape_tree}
