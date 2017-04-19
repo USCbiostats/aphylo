@@ -75,8 +75,7 @@ A list of class \code{phylo_mle} with the following elements:
 \item{par}{A numeric vector of length 5 with the solution.}
 \item{hist}{A numeric matrix of size \code{counts*5} with the solution path (length 2 if used \code{optim}
 as the intermediate steps are not available to the user).}
-\item{value}{A numeric scalar with the value of \code{fun(par)}}
-\item{ll}{A numeric scalar with the value of \code{-fun(par)}}
+\item{ll}{A numeric scalar with the value of \code{fun(par, dat)}. The value of the log likelihood.}
 \item{counts}{Integer scalar number of steps/batch performed.}
 \item{convergence}{Integer scalar. Equal to 0 if \code{optim} converged. See \code{optim}.}
 \item{message}{Character scalar. See \code{optim}.}
@@ -87,6 +86,9 @@ as the intermediate steps are not available to the user).}
 \item{fix.params}{Logical vector of length 5, as passed to the method.}
 \item{method}{Character scalar with the name of the method used.}
 \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
+
+In the case of \code{phylo_mcmc}, \code{hist} is an object of class
+\code{\link[coda:mcmc.list]{mcmc.list}}.
 }
 \description{
 The optimization is done either via \code{abc_cpp} or \code{optim}.

@@ -50,8 +50,7 @@
 #' \item{par}{A numeric vector of length 5 with the solution.}
 #' \item{hist}{A numeric matrix of size \code{counts*5} with the solution path (length 2 if used \code{optim}
 #' as the intermediate steps are not available to the user).}
-#' \item{value}{A numeric scalar with the value of \code{fun(par)}}
-#' \item{ll}{A numeric scalar with the value of \code{-fun(par)}}
+#' \item{ll}{A numeric scalar with the value of \code{fun(par, dat)}. The value of the log likelihood.}
 #' \item{counts}{Integer scalar number of steps/batch performed.}
 #' \item{convergence}{Integer scalar. Equal to 0 if \code{optim} converged. See \code{optim}.}
 #' \item{message}{Character scalar. See \code{optim}.}
@@ -254,7 +253,6 @@ phylo_mle <- function(
     list(
       par        = ans$par,
       hist       = ans$hist,
-      value      = ans$value,
       ll         = ans$value,
       counts     = ans$counts,
       convergence = ans$convergence,
@@ -342,11 +340,13 @@ plot.phylo_mle <- function(
   ) {
   
   # Filtering complete cases
-  x$hist <- x$hist[apply(x$hist, 1, function(x) !any(is.na(x))),]
+  # x$hist <- x$hist[apply(x$hist, 1, function(x) !any(is.na(x))),]
+  if (x$method == "mcmc")
+    x$hist <- do.call(rbind, x$hist)
   
   plot(
-    y = ifelse(x$method == "mcmc", 1, -1)*apply(as.matrix(x$hist), 1, x$fun, dat=x$dat),
-    x = if (x$method %in% c("mcmc", "ABC")) 1:nrow(x$hist) else c(1, x$counts),
+    y = apply(as.matrix(x$hist), 1, x$fun, dat=x$dat),
+    x = 1:nrow(x$hist),
     type = type,
     main = main,
     xlab = xlab,
@@ -373,6 +373,8 @@ plot.phylo_mle <- function(
 }
 
 #' @rdname mle
+#' @return In the case of \code{phylo_mcmc}, \code{hist} is an object of class
+#' \code{\link[coda:mcmc.list]{mcmc.list}}.
 #' @export
 phylo_mcmc <- function(
   params,
@@ -450,6 +452,10 @@ phylo_mcmc <- function(
   # Running the MCMC
   ans <- do.call(MCMC, c(list(fun = fun, initial = params, dat=dat), control))
   
+  # We treat all chains as mcmc.list
+  if (!inherits(ans, "mcmc.list"))
+    ans <- coda::mcmc.list(ans)
+  
   # Working on answer
   env <- new.env()
   environment(fun)    <- env
@@ -462,10 +468,9 @@ phylo_mcmc <- function(
   # Returning
   structure(
     list(
-      par        = colMeans(ans),
+      par        = colMeans(do.call(rbind, ans)),
       hist       = ans,
-      value      = mean(apply(ans, 1, fun, dat=dat), na.rm=TRUE),
-      ll         = mean(apply(ans, 1, fun, dat=dat), na.rm=TRUE),
+      ll         = mean(apply(do.call(rbind, ans), 1, fun, dat=dat), na.rm=TRUE),
       counts     = control$nbatch,
       convergence = NA,
       message    = NA,
@@ -475,7 +480,7 @@ phylo_mcmc <- function(
       par0       = par0,
       fix.params = fix.params,
       method     = "mcmc",
-      varcovar   = var(ans)
+      varcovar   = var(do.call(rbind, ans))
     ),
     class = "phylo_mle"
   )

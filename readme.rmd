@@ -64,8 +64,14 @@ plot_LogLike(O)
 ## Simulating annoated trees
 
 ```{r}
-set.seed(10)
-dat <- sim_annotated_tree(100, P=1)
+set.seed(1958)
+dat <- sim_annotated_tree(
+  100, P=1, 
+  psi = c(0.05, 0.05),
+  mu  = c(0.1, 0.05),
+  Pi  = 1
+  )
+
 as.apephylo(dat)
 ```
 
@@ -90,14 +96,26 @@ with(dat,
 
 ```
 
-# MLE estimation
+# Estimation
 
 ```{r MLE}
-# 
-ans0 <- phylo_mle(dat)
-ans0
+# Using L-BFGS-B (MLE)
+(ans0 <- phylo_mle(dat))
 
-# Plotting the path
-plot(ans0)
+# Using ABC (MLE)
+(ans1 <- phylo_mle(dat, method="ABC"))
+
+# MCMC method
+ans2 <- phylo_mcmc(ans0$par, dat, control = list(nbatch=1e4, burnin=100, thin=20,
+                                         nchains=10 # Will run 10 chains
+                                         ))
+ans2
+
+# MCMC Diagnostics with coda
+library(coda)
+gelman.diag(ans2$hist)
+summary(ans2$hist)
+
+plot(ans2$hist)
 ```
 

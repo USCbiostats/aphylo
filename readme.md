@@ -91,19 +91,19 @@ Simulating annoated trees
 -------------------------
 
 ``` r
-set.seed(123)
-plot(sim_tree(10))
-```
+set.seed(1958)
+dat <- sim_annotated_tree(
+  100, P=1, 
+  psi = c(0.05, 0.05),
+  mu  = c(0.1, 0.05),
+  Pi  = 1
+  )
 
-![](readme_files/figure-markdown_github/unnamed-chunk-1-1.png)
-
-``` r
-dat <- sim_annotated_tree(200, P=2)
 as.apephylo(dat)
 ```
 
     ## 
-    ## Phylogenetic tree with 200 tips and 199 internal nodes.
+    ## Phylogenetic tree with 100 tips and 99 internal nodes.
     ## 
     ## Tip labels:
     ##  leaf001, leaf002, leaf003, leaf004, leaf005, leaf006, ...
@@ -130,38 +130,128 @@ with(dat,
 ```
 
     ## $ll
-    ## [1] -253.0055
+    ## [1] -58.03654
     ## 
     ## attr(,"class")
     ## [1] "phylo_LogLik"
 
-MLE estimation
-==============
+Estimation
+==========
 
 ``` r
-# Using Artificial Bee Colony algorithm
-ans0 <- phylo_mle(dat, method = "ABC")
-ans0
+# Using L-BFGS-B (MLE)
+(ans0 <- phylo_mle(dat))
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll: -196.0868,
-    ## Method used: ABC (97 iterations)
+    ## ll:  -46.9587,
+    ## Method used: L-BFGS-B (31 iterations)
+    ## convergence: 0 (see ?optim)
     ## Leafs
-    ##  # of Functions 2
-    ##  # of 0:   100 (25%)
-    ##  # of 1:   300 (75%)
+    ##  # of Functions 1
+    ##  # of 0:    25 (25%)
+    ##  # of 1:    75 (75%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.0001      0.1070
-    ##  psi[1]    0.1252      0.0323
-    ##  mu[0]     0.1132      0.0697
-    ##  mu[1]     0.0254      0.0129
-    ##  Pi        0.9999      1.0527
+    ##  psi[0]    0.2022      0.2499
+    ##  psi[1]    0.0001      0.0609
+    ##  mu[0]     0.0917      0.1366
+    ##  mu[1]     0.0705      0.0382
+    ##  Pi        0.9999      1.0699
 
 ``` r
-# Plotting the path
-plot(ans0)
+# Using ABC (MLE)
+(ans1 <- phylo_mle(dat, method="ABC"))
 ```
 
-![](readme_files/figure-markdown_github/MLE-1.png)
+    ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
+    ## ll:   47.0033,
+    ## Method used: ABC (55 iterations)
+    ## Leafs
+    ##  # of Functions 1
+    ##  # of 0:    25 (25%)
+    ##  # of 1:    75 (75%)
+    ## 
+    ##          Estimate  Std. Error
+    ##  psi[0]    0.2582      0.2434
+    ##  psi[1]    0.0001      0.0573
+    ##  mu[0]     0.0527      0.1335
+    ##  mu[1]     0.0711      0.0379
+    ##  Pi        0.9999      1.0263
+
+``` r
+# MCMC method
+ans2 <- phylo_mcmc(ans0$par, dat, control = list(nbatch=1e4, burnin=100, thin=20,
+                                         nchains=10 # Will run 10 chains
+                                         ))
+ans2
+```
+
+    ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
+    ## ll:  -49.3773,
+    ## Method used: mcmc (10000 iterations)
+    ## Leafs
+    ##  # of Functions 1
+    ##  # of 0:    25 (25%)
+    ##  # of 1:    75 (75%)
+    ## 
+    ##          Estimate  Std. Error
+    ##  psi[0]    0.2247      0.1424
+    ##  psi[1]    0.0512      0.0423
+    ##  mu[0]     0.1365      0.0880
+    ##  mu[1]     0.0703      0.0367
+    ##  Pi        0.6135      0.2743
+
+``` r
+# MCMC Diagnostics with coda
+library(coda)
+gelman.diag(ans2$hist)
+```
+
+    ## Potential scale reduction factors:
+    ## 
+    ##      Point est. Upper C.I.
+    ## psi0       1.13       1.25
+    ## psi1       1.00       1.01
+    ## mu0        1.07       1.14
+    ## mu1        1.02       1.04
+    ## Pi         1.25       1.49
+    ## 
+    ## Multivariate psrf
+    ## 
+    ## 1.3
+
+``` r
+summary(ans2$hist)
+```
+
+    ## 
+    ## Iterations = 120:20000
+    ## Thinning interval = 20 
+    ## Number of chains = 10 
+    ## Sample size per chain = 995 
+    ## 
+    ## 1. Empirical mean and standard deviation for each variable,
+    ##    plus standard error of the mean:
+    ## 
+    ##         Mean      SD  Naive SE Time-series SE
+    ## psi0 0.22470 0.14241 0.0014277       0.009918
+    ## psi1 0.05123 0.04234 0.0004244       0.001054
+    ## mu0  0.13655 0.08797 0.0008819       0.004386
+    ## mu1  0.07033 0.03669 0.0003679       0.001733
+    ## Pi   0.61347 0.27432 0.0027501       0.034867
+    ## 
+    ## 2. Quantiles for each variable:
+    ## 
+    ##          2.5%     25%     50%     75%  97.5%
+    ## psi0 0.012907 0.11077 0.21055 0.31956 0.5376
+    ## psi1 0.001841 0.01924 0.04146 0.07175 0.1606
+    ## mu0  0.007645 0.06562 0.12584 0.19439 0.3300
+    ## mu1  0.020567 0.04678 0.06524 0.08674 0.1473
+    ## Pi   0.052025 0.40843 0.65396 0.85133 0.9871
+
+``` r
+plot(ans2$hist)
+```
+
+![](readme_files/figure-markdown_github/MLE-1.png)![](readme_files/figure-markdown_github/MLE-2.png)

@@ -20,7 +20,6 @@ Imports:
     Rcpp (>= 0.12.1),
     Matrix,
     methods,
-    numDeriv,
     ABCoptim (>= 0.14.0),
     coda, ape,
     amcmc
