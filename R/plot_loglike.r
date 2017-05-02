@@ -56,7 +56,8 @@ plot_LogLike <- function(
         c(PSI[i], PSI[j]),
         c(mu, mu),
         c(Pi, 1 - Pi),
-        verb_ans = FALSE
+        verb_ans = FALSE, 
+        check_dims  = FALSE
       )$ll
   
   psi  <- mean(PSI)
@@ -71,7 +72,8 @@ plot_LogLike <- function(
         c(psi, psi),
         c(MU[j], mu),
         c(PI[i], 1 - PI[i]),
-        verb_ans = FALSE
+        verb_ans = FALSE, 
+        check_dims  = FALSE
       )$ll
     }
   
@@ -85,7 +87,8 @@ plot_LogLike <- function(
         c(psi, psi),
         c(MU[i], MU[j]),
         c(Pi, 1 - Pi),
-        verb_ans = FALSE
+        verb_ans = FALSE, 
+        check_dims  = FALSE
       )$ll
   
   # Plotting

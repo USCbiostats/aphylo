@@ -1,5 +1,6 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#include "misc.h"
 using namespace Rcpp;
 
 //' Matrix of states
@@ -227,9 +228,63 @@ List LogLike(
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi,
-    bool verb_ans = false
+    bool verb_ans = false,
+    bool check_dims = true
 ) {
 
+  // Checking dimmensions
+  if (check_dims) {
+    
+    bool dims_are_ok = true;
+    
+    // Data dims
+    int n_annotations = annotations.n_rows;
+    int n_offspring   = offspring.size();
+    int n_noffspring  = noffspring.size();
+    
+    if (n_annotations != n_offspring) {
+      warning("-annotations- and -offspring- have different lengths.");
+      dims_are_ok = false;
+    }
+      
+      
+    if (n_annotations != n_noffspring) {
+      warning("-annotations- and -noffspring- have different lengths.");
+      dims_are_ok = false;
+    }
+      
+    
+    if (n_noffspring != n_noffspring) {
+      warning("-offspring- and -noffspring- have different lengths.");
+      dims_are_ok = false;
+    }
+      
+    // Parameters dims
+    int n_psi = psi.size();
+    int n_mu  = mu.size();
+    int n_Pi  = Pi.size();
+    
+    if (n_psi != 2) {
+      warning("-psi- must be a vector of size 2.");
+      dims_are_ok = false;
+    }
+    
+    if (n_mu != 2) {
+      warning("-mu- must be a vector of size 2.");
+      dims_are_ok = false;
+    }
+    
+    if (n_Pi != 2) {
+      warning("-Pi- must be a vector of size 2.");
+      dims_are_ok = false;
+    }
+    
+    // Return with error
+    if (!dims_are_ok)
+      stop("Check the size of the inputs.");
+    
+  }
+  
   // Obtaining States, PSI, Gain/Loss probs, and root node probs
   arma::imat S  = states(annotations.n_cols);
   int nstates   = (int) S.n_rows;
@@ -266,4 +321,79 @@ List LogLike(
   }
   
 }
+
+// [[Rcpp::export]]
+double predict_fun(
+  unsigned int i,
+  unsigned int p,
+  unsigned int di0,
+  const arma::imat & annotations,
+  const List       & offspring,
+  const arma::ivec & noffspring,
+  const arma::vec  & psi,
+  const arma::vec  & mu,
+  const arma::vec  & Pi
+) {
+  
+  arma::imat annotations_filled(annotations);
+  
+  //----------------------------------------------------------------------------
+  // Compute likelihood of a_i = 0
+  annotations_filled.at(i, p) = 0;
+  double likelihood_given_ai_0 = exp(
+    as< double >(LogLike(annotations_filled, offspring, noffspring, psi, mu, Pi, false)["ll"])
+    );
+  
+  // Compute likelihood of a_i = 1
+  annotations_filled.at(i, p) = 1;
+  double likelihood_given_ai_1 = exp(
+    as< double >(LogLike(annotations_filled, offspring, noffspring, psi, mu, Pi, false)["ll"])
+    );
+  
+  // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
+  arma::mat MU = prob_mat(mu);
+  
+  // Rasing it to the power of di0
+  for (int i = 1; i < di0; i++)
+    MU = MU * MU;
+  
+  double Pr_ai_1 = Pi.at(1) * MU.at(1, 1) + Pi.at(0) * MU.at(0, 1);
+  
+  // Returning:
+  return likelihood_given_ai_1 / (
+      likelihood_given_ai_1 + likelihood_given_ai_0*(1 - Pr_ai_1)/Pr_ai_1
+  );
+}
+
+// [[Rcpp::export]]
+arma::mat predict_funs(
+  const arma::uvec & ids,
+  const arma::umat & edges,
+  const arma::imat & annotations,
+  const List       & offspring,
+  const arma::ivec & noffspring,
+  const arma::vec  & psi,
+  const arma::vec  & mu,
+  const arma::vec  & Pi
+) {
+  
+  unsigned int n = ids.size(), i;
+  unsigned int P = annotations.n_cols, p;
+  arma::mat ans(n, P);
+  
+  // Computing geodesic
+  arma::umat G = approx_geodesic(edges, 1e3, true, false);
+  
+  for (i = 0u; i < n; i++)
+    for (p = 0u; p < P; p++) {
+      ans.at(i, p) = predict_fun(
+        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, noffspring, psi, mu, Pi
+      );
+    }
+      
+  
+  return ans;
+}
+
+
 

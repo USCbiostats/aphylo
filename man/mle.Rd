@@ -8,12 +8,13 @@
 \alias{vcov.phylo_mle}
 \alias{plot.phylo_mle}
 \alias{phylo_mcmc}
+\alias{predict.phylo_mle}
+\alias{prediction_score}
 \title{Maximum Likelihood Estimation of the Phylogenetic Tree}
 \usage{
 phylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
-  params = rep(0.05, 5), lower = 1e-04, upper = 0.9999,
-  fix.params = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi =
-  FALSE))
+  params = rep(0.05, 5), lower = 0, upper = 1, fix.params = c(psi0 =
+  FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE))
 
 \method{print}{phylo_mle}(x, ...)
 
@@ -27,6 +28,10 @@ phylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 
 phylo_mcmc(params, dat, priors = NULL, fix.params = c(psi0 = FALSE, psi1 =
   FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE), control = list())
+
+\method{predict}{phylo_mle}(object, what = c("missings", "all"), ...)
+
+prediction_score(x, ...)
 }
 \arguments{
 \item{dat}{An object of class \code{new_aphylo} as returned by
@@ -69,6 +74,10 @@ a particular parameter to that of what was specified in \code{params}.}
 
 \item{addlegend}{Logical scalar. When \code{TRUE} adds extra info to the
 plot as a legend including ll at the optimum and parameter values.}
+
+\item{what}{Either a character scalar or an integer vector. If a character,
+then it can be either \code{"missings"} or \code{"all"}. If an integer vector,
+then these must be values between \eqn{[0, n - 1]} (node ids).}
 }
 \value{
 A list of class \code{phylo_mle} with the following elements:
@@ -89,6 +98,9 @@ as the intermediate steps are not available to the user).}
 
 In the case of \code{phylo_mcmc}, \code{hist} is an object of class
 \code{\link[coda:mcmc.list]{mcmc.list}}.
+
+In the case of the \code{predict} method, a two-column numeric matrix
+with values between \eqn{[0,1]} (probabilities).
 }
 \description{
 The optimization is done either via \code{abc_cpp} or \code{optim}.
@@ -120,6 +132,9 @@ The default values of \code{control} are:
 \code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
 \code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
 }
+
+In the case of \code{prediction_score}, \code{...} are passed to
+\code{predict.phylo_mle}.
 }
 \examples{
 

@@ -138,8 +138,8 @@ phylo_mle <- function(
   priors        = NULL, 
   control       = list(),
   params        = rep(.05, 5),
-  lower         = 0.0001,
-  upper         = 0.9999,
+  lower         = 0,
+  upper         = 1,
   fix.params    = c(psi0 = FALSE, psi1 = FALSE, mu0 = FALSE, mu1 = FALSE, Pi = FALSE)
 ) {
   
@@ -170,11 +170,19 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      ll <- LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll +
-         sum(log(priors(params)))
+      ll <- LogLike(
+        annotations = dat$annotations, 
+        offspring   = dat$offspring,
+        noffspring  = dat$noffspring, 
+        psi         = psi, 
+        mu          = mu, 
+        Pi          = Pi, 
+        verb_ans    = FALSE, 
+        check_dims  = FALSE
+        )$ll + sum(log(priors(params)))
       
       # Checking if we got a finite result
-      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-20)
+      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }
   } else {
@@ -187,10 +195,19 @@ phylo_mle <- function(
       Pi  <- params[5]
       Pi  <- c(1 - Pi, Pi)
       
-      ll <- LogLike(dat$annotations, dat$offspring, dat$noffspring, psi, mu, Pi, FALSE)$ll
+      ll <- LogLike(
+        annotations = dat$annotations, 
+        offspring   = dat$offspring,
+        noffspring  = dat$noffspring, 
+        psi         = psi, 
+        mu          = mu, 
+        Pi          = Pi, 
+        verb_ans    = FALSE, 
+        check_dims  = FALSE
+      )$ll
 
       # Checking if we got a finite result
-      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-20)
+      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }
   }
@@ -208,6 +225,11 @@ phylo_mle <- function(
     ans$convergence <- NA
     ans$message     <- NA
   } else {
+    
+    # # Defining gradient
+    # grd <- function(params, dat) {
+    #   numDeriv::grad(fun, params, dat=dat, method.args = list(v = 6))
+    # }
 
     # Try to solve it
     ans <- do.call(
@@ -387,8 +409,8 @@ phylo_mcmc <- function(
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .01
-  if (!length(control$ub))     control$ub     <- rep(1 - 1e-20, 5)
-  if (!length(control$lb))     control$lb     <- rep(1e-20, 5)
+  if (!length(control$ub))     control$ub     <- rep(1, 5)
+  if (!length(control$lb))     control$lb     <- rep(0, 5)
   
   # Checking params
   if (length(params) != 5)
@@ -407,18 +429,16 @@ phylo_mcmc <- function(
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
-      res <- LogLike(
+      LogLike(
         annotations = dat$annotations,
         offspring   = dat$offspring,
         noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = c(1 - params[5], params[5]),
-        verb_ans    = FALSE
+        verb_ans    = FALSE, 
+        check_dims  = FALSE
       )$ll + sum(log(priors(params)))
-      
-      if (is.nan(res) | is.infinite(res)) return(-Inf)
-      res
       
     }
   } else {
@@ -431,18 +451,17 @@ phylo_mcmc <- function(
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
-      res <- LogLike(
+      LogLike(
         annotations = dat$annotations,
         offspring   = dat$offspring,
         noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = c(1 - params[5], params[5]),
-        verb_ans    = FALSE
+        verb_ans    = FALSE, 
+        check_dims  = FALSE
       )$ll
       
-      if (is.nan(res) | is.infinite(res)) return(-Inf)
-      res
     }
   }
   
@@ -450,7 +469,7 @@ phylo_mcmc <- function(
   names(params) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
   # Running the MCMC
-  ans <- do.call(MCMC, c(list(fun = fun, initial = params, dat=dat), control))
+  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat), control))
   
   # We treat all chains as mcmc.list
   if (!inherits(ans, "mcmc.list"))
@@ -487,3 +506,91 @@ phylo_mcmc <- function(
 }
 
 
+#' @rdname mle
+#' @param what Either a character scalar or an integer vector. If a character,
+#' then it can be either \code{"missings"} or \code{"all"}. If an integer vector,
+#' then these must be values between \eqn{[0, n - 1]} (node ids).
+#' @return In the case of the \code{predict} method, a two-column numeric matrix
+#' with values between \eqn{[0,1]} (probabilities).
+#' @export
+predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
+  
+  # Parameters
+  n <- nrow(object$dat$annotations)
+  
+  # Checking the default
+  if (all(what == c("missings", "all")))
+    what <- "missings"
+  
+  # Checking what to predict
+  if (length(what) >= 1 && inherits(what, "integer")) {
+    ran <- range(what)
+    
+    # Out of range
+    test <- which(ran < 0 | ran >= n)
+    if (length(test))
+      stop("Ids in -what- out of range:\n", paste(what[test], collapse=", "), ".")
+    
+    ids <- what
+  } else if (length(what) == 1 && what == "missings") {
+    ids <- with(object$dat, which(noffspring == 0))
+    
+    if (!length(ids))
+      stop("No missing nodes to predict.")
+    
+    # Adjusting indices
+    ids <- ids - 1L
+    
+  } else if (length(what) == 1 && what == "all") {
+    ids <- 0L:(n-1L)
+  } else 
+    stop("Undefined method for -what- equal to: ", what)
+  
+  # Running prediction function
+  pred <- with(object, 
+               predict_funs(
+                 ids         = ids,
+                 edges       = dat$edges,
+                 annotations = dat$annotations,
+                 offspring   = dat$offspring,
+                 noffspring  = dat$noffspring,
+                 psi         = par[1:2],
+                 mu          = par[3:4],
+                 Pi          = c(1 - par[5], par[5])
+               )
+  )
+  
+  # Adding names
+  dimnames(pred) <- list(ids, colnames(object$dat$annotations))
+  
+  pred
+}
+
+#' @rdname mle
+#' @export
+#' @details In the case of \code{prediction_score}, \code{...} are passed to
+#' \code{predict.phylo_mle}.
+prediction_score <- function(x, ...) {
+ 
+  # Prediction
+  pred <- predict.phylo_mle(x)
+  ids  <- as.integer(rownames(pred))
+  
+  # Inverse of Geodesic distances
+  G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
+  G_inv <- 1/(G + 1e-20)
+  diag(G_inv) <- 0
+  
+  # Observed score
+  obs <- sqrt(rowSums((pred - x$dat$annotations[ids, ])^2))
+  t(obs) %*% G_inv %*% obs
+  
+  # Best case
+  best <- 0
+  
+  # Worst case
+  worse <- matrix(1, nrow=length(miss))
+  t(worse) %*% G_inv %*% worse
+  
+  c(worse = worse, obs = obs, best = best)
+}

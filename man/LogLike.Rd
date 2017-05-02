@@ -4,7 +4,8 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE)
+LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE,
+  check_dims = TRUE)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}

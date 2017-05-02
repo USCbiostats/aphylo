@@ -9,12 +9,15 @@ vignette: >
 ---
 
 \newcommand{\isone}[1]{{\boldsymbol{1}\left\{ #1 \right\}}}
-\renewcommand{\Pr}[1]{{\mbox{Pr}\left\{#1\right\} }}
-\newcommand{\Prcond}[2]{{\mbox{Pr}\left\{#1\;|\;#2\right\} }}
+\renewcommand{\Pr}[1]{{\mbox{Pr}\left(#1\right) }}
+\newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\;|\;#2\right) }}
 
 ## Definitions
 
 A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offspring such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
+
+An Annotated Phylogenetic Tree $\tau \equiv (N, E, A)$ is a tuple with nodes $N \equiv \{n \in \{0,\dots,G\}\}$,  edges $E\equiv \{(n, n') \in N\times N\}$, and annotations $A \equiv \{a_{np} \in \{0,1\}: n\in N, p = \{1,\dots,p\}\}$. Furthermore, we say that this tree is a Partially Ordered Annotated Phylogenetic Tree if
+it's nodes labels form a partial order, this is $E\equiv \{(n, n') \in N\times N: n < n'\}$
 
 ### Leaf Probabilities
 
@@ -67,6 +70,61 @@ Finally, let $\pi\equiv\{\pi_s\}_{s=1}^{2^P}$ to be the root node state probabil
 $$
 L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}
 $$
+
+# Data Imputation
+
+The ultimate goal of this model is to be able to predict, or rather, impute functional states to leaf nodes for which we do not have information. Using both, the information that we have about the annotated tree and the parameter estimates of gain and loss probabilities, we can calculate what is the probability of observing either a 0 or a 1. Formally, with $S\equiv (N, E)$, the probability of leaf node $i$ having the function function, conditional on the tree structure $S^*$ and the observed set of annotations $A^*$ is:
+
+$$
+\tag{1}\label{eq:1}
+\Prcond{a_i = 1}{S = S^*, A = A^*} = \frac{\Prcond{A = A^*}{S = S^*, a_i = 1}\times\Prcond{a_i=1}{S = S^*}}{
+\Prcond{A = A^*}{S = S^*}
+}
+$$
+
+For ease of notation, we will drop the $S = S^*$, as all probabilities throughout this section are conditional on the tree structure. Now, we know that
+
+$$
+\tag{2}\label{eq:2}
+\Pr{A = A^*} = \Prcond{A = A^*}{a_i = 1}\times\Pr{a_i = 1} + \Prcond{A = A^*}{a_i = 0}\times(1 - \Pr{a_i = 1})
+$$
+
+Hence, pluging in (2) into (1), and multiplying both numerator and denominator by $1/\Pr{a_i = 1}$, (1) can be rewritten as
+
+$$
+\tag{1'}
+\Prcond{a_i = 1}{A = A^*} = \frac{\Prcond{A = A^*}{a_i = 1}}{
+\Prcond{A = A^*}{a_i = 1} + \Prcond{A = A^*}{a_i = 0}\times\frac{\left(1 - \Pr{a_i = 1}\right)}{\Pr{a_i = 1}}
+}
+$$
+Where $\Prcond{A = A^*}{a_i = 1}$ is the likelihood of the data given that we set the ith node to be 1, which we already know how to compute. This way, we are only missing $\Pr{a_i=1}$, which we can compute as follows:
+
+$$
+\begin{align}
+\Pr{a_i = 1} & = \pi \Prcond{a_i = 1}{a_0 = 1} + (1 - \pi) \Prcond{a_i = 1}{a_0 = 0}
+\end{align}
+$$
+
+Where, given that $\gamma_{01}$ is the shorest path length between node 0 and node $i$, we have:
+
+$$
+\left[\begin{array}{cc}
+\Prcond{a_i = 0}{a_0 = 0} & \Prcond{a_i = 1}{a_0 = 0} \\
+\Prcond{a_i = 0}{a_0 = 1} & \Prcond{a_i = 1}{a_0 = 1}
+\end{array}
+\right]
+=
+\left[\begin{array}{cc}
+1 & 0 \\
+0 & 1
+\end{array} \right] \times
+\left[\begin{array}{cc}
+1 - \hat\mu_0 &  \hat\mu_0 \\
+\hat\mu_1 &  1 - \hat\mu_1
+\end{array}
+\right]^{\gamma_{0i}}
+$$
+
 
 # Data
 

@@ -1,3 +1,12 @@
+2017-05-02  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/mle.r: Added new functions to predict and evaluate prediction.
+	  Plus, some code improvement.
+	* R/plot_loglike.r: Making code more clear.
+	* src/phylo.cpp: Prediction functions.
+	* src/misc.cpp: Function to compute geodesics.
+	* vignettes/*: Working on doc, including data imputation.
+
+
 2017-04-19  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Using fnscale and parscale in optim and abc_optim.
 	  Now the functions maximize so its all out of the box.
