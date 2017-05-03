@@ -583,14 +583,13 @@ prediction_score <- function(x, ...) {
   
   # Observed score
   obs <- sqrt(rowSums((pred - x$dat$annotations[ids, ])^2))
-  t(obs) %*% G_inv %*% obs
+  obs <- t(obs) %*% G_inv %*% obs
   
   # Best case
   best <- 0
   
   # Worst case
-  worse <- matrix(1, nrow=length(ids))
-  t(worse) %*% G_inv %*% worse
+  worse <- sum(G_inv)
   
   c(worse = worse, obs = obs, best = best)
 }
