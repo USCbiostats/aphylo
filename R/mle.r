@@ -589,7 +589,7 @@ prediction_score <- function(x, ...) {
   best <- 0
   
   # Worst case
-  worse <- matrix(1, nrow=length(miss))
+  worse <- matrix(1, nrow=length(ids))
   t(worse) %*% G_inv %*% worse
   
   c(worse = worse, obs = obs, best = best)

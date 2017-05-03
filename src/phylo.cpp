@@ -198,6 +198,8 @@ arma::mat probabilities(
 //' @templateVar Pi 1
 //' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
 //' returns a list with a single scalar (the log-likelihood).
+//' @param check_dims Logical scalar. When \code{TRUE} (default) the function
+//' checks the dimmension of the passed parameters.
 //' 
 //' @details
 //' The parameters to estimate are described as follows:

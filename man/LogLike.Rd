@@ -22,6 +22,9 @@ LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE,
 
 \item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
 returns a list with a single scalar (the log-likelihood).}
+
+\item{check_dims}{Logical scalar. When \code{TRUE} (default) the function
+checks the dimmension of the passed parameters.}
 }
 \value{
 A list of class \code{phylo_LogLik} with the following elements:
