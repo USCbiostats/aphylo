@@ -127,7 +127,7 @@ arma::mat probabilities(
   Pr.ones();
   
   for (int n=(N-1); n>=0; n--) {
-    
+    // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
     if (!noffspring.at(n)) {
       for (int s=0; s<nstates; s++)

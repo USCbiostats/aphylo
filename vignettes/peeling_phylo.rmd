@@ -10,7 +10,9 @@ vignette: >
 
 \newcommand{\isone}[1]{{\boldsymbol{1}\left\{ #1 \right\}}}
 \renewcommand{\Pr}[1]{{\mbox{Pr}\left(#1\right) }}
+\renewcommand{\f}[1]{{f\left(#1\right) }}
 \newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\;|\;#2\right) }}
+\newcommand{\fcond}[2]{{f\left(#1\;|\;#2\right) }}
 
 ## Definitions
 
@@ -70,6 +72,44 @@ Finally, let $\pi\equiv\{\pi_s\}_{s=1}^{2^P}$ to be the root node state probabil
 $$
 L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}
 $$
+
+# Maximum a Posteriori (MAP) Estimation
+
+Using bayes we have
+
+$$
+\fcond{\theta}{D} = \frac{\fcond{X}{\theta}\f{\theta}}{f{X}}
+$$
+
+Then, assumming iid, to estimate $\hat \theta$ we can solve the following problem
+
+$$
+\label{eq:maptheta}
+\begin{align}
+\hat \theta & = \arg\max_{\theta \in \Theta} \frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} \\
+ & \mbox{Since the denominator is constant, this is equivalent to} \\
+ & = \arg\max_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta} \tag{MAP estimate} 
+\end{align}
+$$
+
+Observe that under a uniform prior, this is equivalent to the MLE estimate. Now, the variance (what about the covariance) estimator is as follows
+
+$$
+\label{eq:mapvar}
+\mbox{Var}\left(\hat\theta\right) = \int_{\theta \in \Theta} \left(\hat\theta - \theta\right)^2
+\frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} d\theta \tag{MAP variance}
+$$
+
+Where the denominator, probability of evidence, can be computed as
+
+$$
+\label{eq:d}
+\f{X} = \int_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta}d\theta 
+$$
+
+Given $\hat \theta$, the variance can be computed using numerical integration.
+
+
 
 # Data Imputation
 

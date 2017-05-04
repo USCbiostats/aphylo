@@ -285,7 +285,7 @@ phylo_mle <- function(
       par0       = par0,
       fix.params = fix.params,
       method     = method,
-      varcovar   = -solve(hessian)
+      varcovar   = solve(-hessian)
     ),
     class = "phylo_mle"
   )
@@ -425,7 +425,7 @@ phylo_mcmc <- function(
   # Creating the objective function
   fun <- if (length(priors)) {
     function(params, dat) {
-      
+
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
@@ -443,11 +443,7 @@ phylo_mcmc <- function(
     }
   } else {
     function(params, dat) {
-      # These are probabilitis, so they should be in the unit sphere.
-      # So the probability of these is zero
-      if (any(params > 1 | params < 0))
-        return(-Inf)
-      
+
       # Checking whether params are fixed or not
       params <- ifelse(fix.params, par0, params)
       
@@ -533,7 +529,9 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
     
     ids <- what
   } else if (length(what) == 1 && what == "missings") {
-    ids <- with(object$dat, which(noffspring == 0))
+    ids <- with(object$dat, which(
+      noffspring == 0 & apply(annotations, 1, function(a) any(a == 9)*1L) > 0
+      ))
     
     if (!length(ids))
       stop("No missing nodes to predict.")
@@ -570,17 +568,16 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
 #' @export
 #' @details In the case of \code{prediction_score}, \code{...} are passed to
 #' \code{predict.phylo_mle}.
-prediction_score <- function(x, ...) {
+prediction_score <- function(x,  ...) {
  
   # Prediction
-  pred <- predict.phylo_mle(x)
+  pred <- predict.phylo_mle(x, ...)
   ids  <- as.integer(rownames(pred))
   
   # Inverse of Geodesic distances
   G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
-  G_inv <- 1/(G + 1e-20)
-  diag(G_inv) <- 0
-  
+  G_inv <- 1/(G + 1)
+
   # Observed score
   obs <- sqrt(rowSums((pred - x$dat$annotations[ids, ])^2))
   obs <- t(obs) %*% G_inv %*% obs

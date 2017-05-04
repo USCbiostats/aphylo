@@ -104,6 +104,11 @@ plot_LogLike <- function(
   psi <- sprintf("%0.4f", psi)
   Pi <- sprintf("%0.4f", Pi)
   
+  # Replacing the infs
+  psi_z[is.infinite(psi_z)] <- min(psi_z[!is.infinite(psi_z)])
+  mu_z[is.infinite(mu_z)]   <- min(mu_z[!is.infinite(mu_z)])
+  pi_z[is.infinite(pi_z)]   <- min(pi_z[!is.infinite(pi_z)])
+  
   plotfun(
     PSI,
     PSI,
@@ -113,6 +118,8 @@ plot_LogLike <- function(
     main = bquote(mu == .(mu) ~ and ~ pi == .(Pi)),
     ...
   )
+  
+  
   
   plotfun(
     MU,
