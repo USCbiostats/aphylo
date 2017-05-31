@@ -1,3 +1,6 @@
+2017-05-31  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/simulations.r: Fixed a small bug related to names of a vector.
+
 2017-05-02  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Added new functions to predict and evaluate prediction.
 	  Plus, some code improvement.

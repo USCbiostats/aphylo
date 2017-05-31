@@ -21,7 +21,9 @@ sim_annotated_tree <- function(
   psi=c(.05, .05), mu=c(.1,.05), Pi=1
   ) {
   
-  pars <- c(psi0 = psi[1], psi1 = psi[2], mu0 = mu[1], mu1 = mu[2], Pi = Pi)
+  
+  pars <- unlist(c(psi, mu, Pi), recursive = TRUE)
+  names(pars) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
   # Step 1: Simulate a tree
   if (!length(tree)) {
