@@ -1,15 +1,23 @@
 rm(list = ls())
-
+library(aphylo)
 load("playground/simulations/data_and_functions.rda")
 
-set.seed(1223)
-ans_MCMC_right_prior <- vector("list", nsim)
-for (i in 1:nsim) {
+if (file.exists("playground/simulations/mcmc_right_prior_estimates.rda")) {
+  load("playground/simulations/mcmc_right_prior_estimates.rda")
+  start <- i - 1L
+  set.seed(curseed_MCMC_right_prior)
+} else {
+  set.seed(1223)
+  ans_MCMC_right_prior <- vector("list", nsim)
+  start <- 1
+}
+
+for (i in start:nsim) {
   
   # MCMC estimators
   ans_MCMC_right_prior[[i]] <- mcmc_lite(
     dat_obs[[i]], rep(.1, 5), thin=200,
-    priors = function(params) dbeta(params, 2, 20)
+    priors = function(params) dbeta(params, 1, 20)
   )
   
   # Printing on screen (and saving)

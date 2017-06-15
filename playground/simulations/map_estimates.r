@@ -1,13 +1,14 @@
 rm(list = ls())
 
 load("playground/simulations/data_and_functions.rda")
+library(aphylo)
 
 set.seed(1223)
 ans_MAP <- vector("list", nsim)
 for (i in 1:nsim) {
   
   # MAP estimators
-  ans_MAP[[i]] <- mle_lite(dat_obs[[i]], FALSE, priors = function(params) dbeta(params, 2, 20))
+  ans_MAP[[i]] <- mle_lite(dat_obs[[i]], FALSE, priors = function(params) dbeta(params, 1, 20))
   
   # Printing on screen (and saving)
   if (!(i %% 10)) {

@@ -38,11 +38,10 @@ tabulate_error <- function(object) {
 
 #+ echo=TRUE
 tabulate_error(ans_MLE)
-tabulate_error(ans_LBFGSB_priors)
-tabulate_error(ans_ABC)
-tabulate_error(ans_ABC_priors)
-tabulate_error(ans_MCMC)
+tabulate_error(ans_MAP)
+tabulate_error(ans_MCMC_right_prior)
+tabulate_error(ans_MCMC_wrong_prior)
 
-gel <- lapply(ans_MCMC, "[[", "gelman.mpsrf")
+gel <- lapply(ans_MCMC_right_prior, "[[", "gelman.mpsrf")
 
 

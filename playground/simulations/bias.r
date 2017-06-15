@@ -10,85 +10,128 @@
 knitr::opts_chunk$set(echo = FALSE)
 
 #+ data-loading, cache=TRUE
-load("playground/simulations/simdata3.rda")
-
+load("playground/simulations/data_and_functions.rda")
 
 library(ggplot2)
 library(magrittr)
 
 # Function to measure bias
-bias_calc <- function(x, par0, tree, index) {
+bias_calci <- function(x, par0, tree) {
+
+  if (!length(x)) return(NULL)
+
+  # Names of the objects that will be stored
+  cnames <- c("psi0", "psi1", "mu0", "mu1", "Pi")
+  cnames <- c(
+    "TreeSize",
+    "NLeafs",
+    "Missings",
+    cnames,
+    paste(cnames, "bias", sep="_"),
+    paste(cnames, "var", sep="_")
+  )
   
   # Checking if it was able to solve it or not
-  if (inherits(x, "error")) 
-    return(rep(NA, 9))
-  
+  if (inherits(x, "error"))
+    return(structure(rep(NA, length(cnames)), names = cnames))
+
   # Number of offspring and internal nodes
   treesize <- length(tree$noffspring)
   nleafs   <- sum(tree$noffspring > 0)
-  
+
+
   structure(
     c(
-      index,
       treesize,
       nleafs,
       par0[6],
-      x$par - par0[1:5]
+      x$par,
+      x$par - par0[1:5],
+      diag(x$varcovar)
       ),
-    names = c(
-      "index",
-      "TreeSize",
-      "NLeafs",
-      "Missings",
-      names(x$par))
+    names = cnames
     )
+
+}
+
+# Function to try to load a file -ntries- times waiting -wait- seconds
+# between each try.
+tryLoad <- function(fn, envir = .GlobalEnv, ..., ntries = 5, wait = 120) {
   
+  message("Loading file ",fn, "...", appendLF = FALSE)
+  i <- 1
+  while (i < ntries) {
+    ans <- tryCatch(load(fn, envir = envir), error = function(e) e)
+  
+    if (inherits(ans, "error"))  {
+      i <- i + 1
+      print(ans)
+      message("Error! trying again in ", wait, "seconds (",i,"/",ntries,")...")
+      Sys.sleep(wait)
+      next
+    }
+    
+    break
+  }
+  
+  message("done.")
+  
+}
+
+bias_calc <- function(fn, objname) {
+  env <- new.env()
+
+  # Trying to load the file
+  tryLoad(fn, envir = env)
+  ids <- which(sapply(env[[objname]], length) > 0)
+
+  message("\tComputing bias ...", appendLF = FALSE)
+  ans <- Map(bias_calci, env[[objname]][ids], parameters[ids], dat[ids])
+  ans <- do.call(rbind, ans)
+  message("done.")
+
+  ans <- cbind(index = ids, ans)
+
+  ans[complete.cases(ans),,drop=FALSE]
 }
 
 # Creates nice interval tags in the form of [a,b)...[a,z] (last one closed).
 # All numbers must be within the interval
 interval_tags <- function(x, marks) {
-  
+
   # Generating labels
   n <- length(marks)
   l <- c(sprintf("[%.1f, %.1f)", marks[-n][-(n-1)], marks[-n][-1]),
     sprintf("[%.1f, %.1f]", marks[n-1], marks[n])
   )
-  
+
   # Finding intervals
   x <- findInterval(x, marks, rightmost.closed = TRUE)
   factor(x, levels = 1:length(l), labels = l)
-  
+
 }
 
 
 # Computing bias ---------------------------------------------------------------
-bias_LBFGSB <- do.call(rbind, Map(bias_calc, ans_LBFGSB[1:i], par[1:i], dat[1:i], 1:i))
-bias_LBFGSB_priors <- do.call(rbind, Map(bias_calc, ans_LBFGSB_priors[1:i], par[1:i], dat[1:i], 1:i))
-bias_ABC    <- do.call(rbind, Map(bias_calc, ans_ABC[1:i], par[1:i], dat[1:i], 1:i))
-bias_ABC_priors    <- do.call(rbind, Map(bias_calc, ans_ABC_priors[1:i], par[1:i], dat[1:i], 1:i))
-bias_MCMC   <- do.call(rbind, Map(bias_calc, ans_MCMC[1:i], par[1:i], dat[1:i], 1:i))
+bias_MLE <- bias_calc("playground/simulations/mle_estimates.rda", "ans_MLE")
+bias_MAP <- bias_calc("playground/simulations/map_estimates.rda", "ans_MAP")
+bias_MAP_wrong <- bias_calc("playground/simulations/map_wrong_prior_estimates.rda", "ans_MAP_wrong_prior")
+bias_MCMC_right <- bias_calc("playground/simulations/mcmc_right_prior_estimates.rda", "ans_MCMC_right_prior")
+bias_MCMC_wrong <- bias_calc("playground/simulations/mcmc_wrong_prior_estimates.rda", "ans_MCMC_wrong_prior")
 
 # Checking solved solutions
+common_solutions <- intersect(bias_MLE[,"index"], bias_MCMC_right[,"index"])
+common_solutions <- intersect(common_solutions, bias_MAP_wrong[,"index"])
+common_solutions <- intersect(common_solutions, bias_MCMC_right[,"index"])
+common_solutions <- intersect(common_solutions, bias_MCMC_wrong[,"index"])
 
 bias <- rbind(
-  data.frame(Method = "MLE w/ L-BFGS-B", bias_LBFGSB),
-  # data.frame(Method = "MLE+priors w/ L-BFGS-B", bias_LBFGSB_priors),
-  data.frame(Method = "MCMC", bias_MCMC)
-  # data.frame(Method = "MLE w/ ABC", bias_ABC),
-  # data.frame(Method = "MLE+priors w/ ABC", bias_ABC_priors)
+  data.frame(Method = "MLE", bias_MLE),
+  data.frame(Method = "MAP", bias_MAP),
+  data.frame(Method = "MAP wrong", bias_MAP_wrong),
+  data.frame(Method = "MCMC wrong", bias_MCMC_wrong),
+  data.frame(Method = "MCMC", bias_MCMC_right)
 )
-
-# Reshaping 
-bias <- do.call(rbind, lapply(colnames(bias)[-(1:5)], function(x) {
-  ans <- data.frame(parameter = x, bias[,c("Method", "index", "TreeSize", "NLeafs", "Missings",x),drop=FALSE])
-  colnames(ans)[7] <- "bias"
-  ans
-}
-))
-
-# Dropping missings
-bias <- bias[complete.cases(bias),]
 
 # Categorial variables ---------------------------------------------------------
 
@@ -102,39 +145,6 @@ bias$size_tag <- interval_tags(bias$TreeSize, quantile(bias$TreeSize, na.rm = TR
 bias$PropLeafs <- with(bias, NLeafs/TreeSize)
 bias$PropLeafs_tag <- interval_tags(bias$PropLeafs, quantile(bias$PropLeafs, na.rm=TRUE))
 
-#+ plotting, echo=TRUE
-# Plot -------------------------------------------------------------------------
-graphics.off()
-sizelvls <- levels(bias$size_tag)
-for (i in 1:4) {
-  # Clearing plot space and creating the pdf
-  
-  # pdf(sprintf("playground/simulations/bias_trees_of_size_%s.pdf", sizelvls[i]))
-  
-  # Nobservations in this group
-  nobs <- bias %>% dplyr::filter(as.integer(size_tag) == i) %>%
-    subset(select=index) %>% unique %>% nrow
-  
-  
-  # Creating the plot
-  p <- bias %>% dplyr::filter(as.integer(size_tag) == i) %>%
-    # Creating the boxplot
-    ggplot(aes(parameter, bias)) + geom_boxplot(aes(colour = Method)) +
-    
-    # Adding an horizontal line, and spliting my % of missings
-    geom_hline(yintercept = 0, lty=2) + facet_grid(miss_tag ~ .) +
-    
-    # Adding a title
-    ggtitle(
-      label    = sprintf("Bias distribution for trees of size %s", levels(bias$size_tag)[i]),
-      subtitle = sprintf("# of observations: %i", nobs)
-      ) +
-    
-    ylim(-.75,.75)
-  
-  # Printing it on screen (need to do that explicitly on a loop)
-  print(p)
-  
-  # dev.off()
-  
-}
+save(bias, file = "playground/simulations/bias.rda")
+
+

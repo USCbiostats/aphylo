@@ -197,3 +197,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"aphylo_approx_geodesic", (DL_FUNC) &aphylo_approx_geodesic, 4},
+    {"aphylo_states", (DL_FUNC) &aphylo_states, 1},
+    {"aphylo_prob_mat", (DL_FUNC) &aphylo_prob_mat, 1},
+    {"aphylo_root_node_prob", (DL_FUNC) &aphylo_root_node_prob, 2},
+    {"aphylo_probabilities", (DL_FUNC) &aphylo_probabilities, 6},
+    {"aphylo_LogLike", (DL_FUNC) &aphylo_LogLike, 8},
+    {"aphylo_predict_fun", (DL_FUNC) &aphylo_predict_fun, 9},
+    {"aphylo_predict_funs", (DL_FUNC) &aphylo_predict_funs, 8},
+    {"aphylo_sim_fun_on_tree", (DL_FUNC) &aphylo_sim_fun_on_tree, 6},
+    {"aphylo_sim_tree", (DL_FUNC) &aphylo_sim_tree, 1},
+    {"aphylo_fast_table", (DL_FUNC) &aphylo_fast_table, 1},
+    {"aphylo_fast_table_using_labels", (DL_FUNC) &aphylo_fast_table_using_labels, 2},
+    {"aphylo_as_po_tree", (DL_FUNC) &aphylo_as_po_tree, 1},
+    {"aphylo_list_offspring", (DL_FUNC) &aphylo_list_offspring, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_aphylo(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

@@ -15,7 +15,7 @@ nsim <- 13096
 #  - Pi   Root node probability
 #  - % of missings
 draw_par <- function() {
-  structure(c(rbeta(5, 2, 20), runif(1, .1, .5)), names = c("psi0", "psi1", "mu0", "mu1", "Pi", "missing"))
+  structure(c(rbeta(5, 1, 20), runif(1, .1, .5)), names = c("psi0", "psi1", "mu0", "mu1", "Pi", "missing"))
 }
 
 # Function to simulate annotations on a given tree
@@ -33,13 +33,24 @@ read_and_sim <- function(fn, p) {
 }
 
 # Function to drop annotations
-drop_data <- function(dat, pcent) {
+# @param pcent Numeric scalar. Proportion of missings
+# @param proportions Numeric vector of length 2. Relative probability that 1s
+#  and 0s are kept, i.e., if c(.7, .3) ones will be kept with a 70% chance and
+#  0s will be kept with 30% chance.
+drop_data <- function(dat, pcent, proportions = c(.2, .8)) {
   
   # Identifying some leaf nodes
   ids <- which(dat$noffspring == 0)
-  ids <- sample(ids, floor(pcent*length(ids)))
   
+  # Which ones we will not drop
+  ids <- sample(ids, floor( (1 - pcent)*length(ids)),
+                prob = proportions[dat$annotations[ids] + 1]
+                )
+  
+  # Getting the set that will be set to be zero
+  ids <- setdiff(1:length(dat$noffspring), ids)
   dat$annotations[ids,] <- 9
+  
   dat
 }
 

@@ -285,7 +285,7 @@ phylo_mle <- function(
       par0       = par0,
       fix.params = fix.params,
       method     = method,
-      varcovar   = solve(-hessian)
+      varcovar   = solve(-hessian, tol = 1e-100)
     ),
     class = "phylo_mle"
   )
@@ -501,92 +501,3 @@ phylo_mcmc <- function(
   )
 }
 
-
-#' @rdname mle
-#' @param what Either a character scalar or an integer vector. If a character,
-#' then it can be either \code{"missings"} or \code{"all"}. If an integer vector,
-#' then these must be values between \eqn{[0, n - 1]} (node ids).
-#' @return In the case of the \code{predict} method, a two-column numeric matrix
-#' with values between \eqn{[0,1]} (probabilities).
-#' @export
-predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
-  
-  # Parameters
-  n <- nrow(object$dat$annotations)
-  
-  # Checking the default
-  if (all(what == c("missings", "all")))
-    what <- "missings"
-  
-  # Checking what to predict
-  if (length(what) >= 1 && inherits(what, "integer")) {
-    ran <- range(what)
-    
-    # Out of range
-    test <- which(ran < 0 | ran >= n)
-    if (length(test))
-      stop("Ids in -what- out of range:\n", paste(what[test], collapse=", "), ".")
-    
-    ids <- what
-  } else if (length(what) == 1 && what == "missings") {
-    ids <- with(object$dat, which(
-      noffspring == 0 & apply(annotations, 1, function(a) any(a == 9)*1L) > 0
-      ))
-    
-    if (!length(ids))
-      stop("No missing nodes to predict.")
-    
-    # Adjusting indices
-    ids <- ids - 1L
-    
-  } else if (length(what) == 1 && what == "all") {
-    ids <- 0L:(n-1L)
-  } else 
-    stop("Undefined method for -what- equal to: ", what)
-  
-  # Running prediction function
-  pred <- with(object, 
-               predict_funs(
-                 ids         = ids,
-                 edges       = dat$edges,
-                 annotations = dat$annotations,
-                 offspring   = dat$offspring,
-                 noffspring  = dat$noffspring,
-                 psi         = par[1:2],
-                 mu          = par[3:4],
-                 Pi          = c(1 - par[5], par[5])
-               )
-  )
-  
-  # Adding names
-  dimnames(pred) <- list(ids, colnames(object$dat$annotations))
-  
-  pred
-}
-
-#' @rdname mle
-#' @export
-#' @details In the case of \code{prediction_score}, \code{...} are passed to
-#' \code{predict.phylo_mle}.
-prediction_score <- function(x,  ...) {
- 
-  # Prediction
-  pred <- predict.phylo_mle(x, ...)
-  ids  <- as.integer(rownames(pred))
-  
-  # Inverse of Geodesic distances
-  G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
-  G_inv <- 1/(G + 1)
-
-  # Observed score
-  obs <- sqrt(rowSums((pred - x$dat$annotations[ids, ])^2))
-  obs <- t(obs) %*% G_inv %*% obs
-  
-  # Best case
-  best <- 0
-  
-  # Worst case
-  worse <- sum(G_inv)
-  
-  c(worse = worse, obs = obs, best = best)
-}
