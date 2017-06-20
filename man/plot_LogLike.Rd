@@ -2,14 +2,25 @@
 % Please edit documentation in R/plot_loglike.r
 \name{plot_LogLike}
 \alias{plot_LogLike}
+\alias{plot_LogLike.phylo_mle}
+\alias{plot_LogLike.default}
 \title{Plot LogLikelihood function of experimental data}
 \usage{
-plot_LogLike(x, psi_range = c(1e-05, 0.1), mu_range = c(1e-05, 0.9999),
-  Pi_range = c(1e-05, 0.9999), nlevels = 30, plotfun = persp,
-  par.args = list(), ...)
+plot_LogLike(x, ...)
+
+\method{plot_LogLike}{phylo_mle}(x, ...)
+
+\method{plot_LogLike}{default}(x, psi_range = c(1e-05, 0.3),
+  mu_range = c(1e-05, 0.3), Pi_range = c(1e-05, 0.3),
+  psi = rep(mean(psi_range), 2), mu = rep(mean(mu_range), 2),
+  Pi = mean(Pi_range), nlevels = 30, plotfun = persp,
+  par.args = list(mar = c(1, 1, 1, 1), oma = c(0, 0, 4, 0)), theta = -pi *
+  20, shade = 0.7, border = "darkblue", phi = 30, scale = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link[=new_aphylo]{aphylo}}}
+
+\item{...}{Aditional parameters to be passed to \code{plotfun}.}
 
 \item{psi_range}{Numeric vector of length 2. Domain of \eqn{psi}.}
 
@@ -19,14 +30,22 @@ plot_LogLike(x, psi_range = c(1e-05, 0.1), mu_range = c(1e-05, 0.9999),
 
 \item{nlevels}{Integer scalar. Number of levels of each parameter to create.}
 
-\item{plotfun}{Function. Either \code{\link[graphics:contour]{contour}},
-\code{\link[graphics:persp]{persp}}, or other similar function that takes at
-least 3 parameters, \code{x,y,z}.}
+\item{plotfun}{Function. Either \code{\link[graphics:contour]{contour}},}
 
 \item{par.args}{List of arguments to be passed to \code{\link{par}} before
 \code{plotfun} is called.}
 
-\item{...}{Aditional parameters to be passed to \code{plotfun}.}
+\item{theta}{Passed to \code{persp}.}
+
+\item{shade}{Passed to \code{persp}.}
+
+\item{border}{Passed to \code{persp}.}
+
+\item{phi}{Passed to \code{persp}.}
+
+\item{scale}{Passed to \code{persp}.
+\code{\link[graphics:persp]{persp}}, or other similar function that takes at
+least 3 parameters, \code{x,y,z}.}
 }
 \description{
 Plot LogLikelihood function of experimental data
