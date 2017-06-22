@@ -103,7 +103,7 @@ prediction_score <- function(x, expected = NULL, ...) {
   best <- 0
   
   # Worst case
-  worse <- sum(G_inv)
+  worse <- sum(G_inv)*ncol(pred)
   
   structure(
     list(
