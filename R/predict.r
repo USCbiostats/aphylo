@@ -105,15 +105,28 @@ prediction_score <- function(x, expected = NULL, ...) {
   # Worst case
   worse <- sum(G_inv)*ncol(pred)
   
+  # Random case
+  rand  <- predict_random(ncol(pred), expected[ids,,drop=FALSE], G_inv)
+  
   structure(
     list(
       obs       = obs,
       worse     = worse,
       predicted = pred,
-      expected  = expected[ids, ,drop=FALSE]
+      expected  = expected[ids, ,drop=FALSE],
+      random    = c(mean = mean(rand), sd = sd(rand))
     ), class = "aphylo_prediction_score"
   )
   
+}
+
+predict_random <- function(P, A, G_inv) {
+  n <- nrow(G_inv)
+  sapply(1:10000, function(x) {
+    A_hat <- matrix(sample(c(0,1), P*n, TRUE), ncol = P)
+    obs   <- sqrt(rowSums((A - A_hat)^2))
+    t(obs) %*% G_inv %*% obs
+  })
 }
 
 #' @export
@@ -121,7 +134,9 @@ prediction_score <- function(x, expected = NULL, ...) {
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
   with(x, cat(sprintf("Observed: %.2f\nBest: 0.00\nWorse: %.2f\nRelative (obs/worse):%.2f\n",
-                      obs, worse, 1 - obs/worse)
+                      obs, worse, 1 - obs/worse),
+              sprintf("Random: %.2f (%.2f)\n", random[1], random[2]),
+              sep = ""
               )
        )
   invisible(x)
