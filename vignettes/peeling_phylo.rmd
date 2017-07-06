@@ -14,134 +14,179 @@ vignette: >
 \newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\;|\;#2\right) }}
 \newcommand{\fcond}[2]{{f\left(#1\;|\;#2\right) }}
 
-## Definitions
+# Definitions
 
-A set of genes $N \equiv \{n \in \{1,\dots,G\}\}$ is a partial order according to its relations as parent and offspring such that for any $n,m \in N$ for which a directed path exists, $n<m$ iff $n$ is a parent node and $m$ an offspring.
+## Anotated Phylogenetic Trees
 
-An Annotated Phylogenetic Tree $\tau \equiv (N, E, A)$ is a tuple with nodes $N \equiv \{n \in \{0,\dots,G\}\}$,  edges $E\equiv \{(n, n') \in N\times N\}$, and annotations $A \equiv \{a_{np} \in \{0,1\}: n\in N, p = \{1,\dots,p\}\}$. Furthermore, we say that this tree is a Partially Ordered Annotated Phylogenetic Tree if
-it's nodes labels form a partial order, this is $E\equiv \{(n, n') \in N\times N: n < n'\}$
+A phylogenetic tree $\tau\equiv (N,E)$ is a tuple of nodes $N$, and edges $E\equiv \{(n, m) \in N\times N: n\mapsto m\}$ defined by the binary operator $\mapsto$ _parent of_. Furthermore, we define $O(n)\equiv\{m\in N: (n, m) \in E\}$ as the set of offspring of $n$, and $r(m) \equiv\{n \in N: (n, m) \in E\}$ the parent nodes of $m$. For now on we assume that $|r(m)| \leq 1,\forall n\in N$. 
 
-### Leaf Probabilities
+Given $P$ gene functions, let $A \equiv \{a_n \in \{0,1\}^P: n\in N\}$ denote a set of genetic annotations--which we will also refer as states--of the genes $N$. We define an Annotated Phylogenetic Tree as the tuple $D \equiv(\tau, A)$. Furthermore, we say that this structure is a Partially Ordered Annotated Phylogenetic Tree if it's nodes labels form a partial order, this is $E\equiv \{(n, m) \in N\times N: n < m\}$.
 
-Given $1,\dots, P$ functions, each node has $2^P$ different possible states. For any given node $n$, its state $s_n$ is a vector of length $P$ in $\{0,1\}^P$, _e.g._ $s_n = \{0,0,0\}$.
-
-In the experimental data, for each leaf $l$, we have the observed state defined by the vector $s_l\equiv\{s_{lp}\}_{p=1}^P$ with 
+While $A$ exists, we only observe an imperfect approximation of it, experimental data $\tilde A = \{\tilde a_l\}_{l\in N}$, which only holds information for some of the leaf nodes. Therefore, for any given leaf node $l$, the elements of $\{\tilde a_{lp}\}_{p=1}^P$ can take the following values:
 
 $$
-z_{lp} = \left\{
+\tilde a_{lp} = \left\{
 \begin{array}{ll}
-1 & \mbox{if the function }p\mbox{ is active}\\
-0 & \mbox{if the function }p\mbox{ is not active}\\
+1 & \mbox{if the function }p\mbox{ is cosidered as active}\\
+0 & \mbox{if the function }p\mbox{ is cosidered as non-active}\\
 9 & \mbox{if we don't have information }
 \end{array}\right.
 $$
 
-This way, given that we observe $s'\equiv\{s_p'\}_{p=1}^P$, the probability that the true state is $s$ is:
+This way, assuming that we observe the true phylogenetic tree, we denote the tuple $\tilde D\equiv(\tau, \tilde A)$ to be a Experimentally Annotated Phylogenetic Tree. Ultimately, we are interested in predicting functional annotations for the leaf nodes that have not been annotated yet.
+
+## Likelihood of an Anotated Phylogenetic Tree
+
+Given $\tilde D$, the probability that the true state is of the $l$-leaf is $a_l = \{a_{lp}\}_{p=1}^P$ is:
 
 $$ 
-\Psi_{ss'} = \left\{
-\begin{array}{ll}
-\prod_p\left\{\left[\psi_0^{s_{lp}'}(1-\psi_0)^{\neg s_{lp}'}\right]^\isone{\neg s_{lp}} \left[\psi_1^{\neg s_{lp}'}(1-\psi_1)^{s_{lp}'}\right]^\isone{s_{lp}} \right\} & \mbox{if }s_{lp}'\neq 9 \\ \\
-1 & \mbox{otherwise}
-\end{array}
-\right.
+\label{eq:1a}\tag{1a}
+\Prcond{a_l}{\tilde D, \psi} = \prod_{p = 1}^P\left\{\left[\psi_0^{\tilde a_{lp}}(1-\psi_0)^{1- \tilde a_{lp}}\right]^{1- a_{lp}} \left[\psi_1^{1- \tilde a_{lp}}(1-\psi_1)^{\tilde a_{lp}}\right]^{a_{lp}} \right\}^{\left[1 - \isone{\tilde a_{lp} !=9}\right]}
 $$ 
 
-Where $\psi\equiv\{\psi_0, \psi_1\}$ is a vector of missclassification probabilities for un-activated and activated functions.
+Where $\psi\equiv\{\psi_0, \psi_1\}$ is a vector of missclassification probabilities, formally:
 
-### Internal Nodes Probabilities
+$$
+\psi_0 = \Prcond{\tilde a_{lp}=1}{a_{lp} = 0},\quad
+\psi_1 = \Prcond{\tilde a_{lp}=0}{a_{lp} = 1}
+$$
 
-For any internal node $n$, the likelihood is defined in terms of gain and loss functions (also stored as a $N\times 2^P$ array). Furthermore, it is conditional on $n$'s offspring $o_n\subset\{m\in N:m<n\}$, which has cardinality $|o_n|=O_n$, and the true state $s$. Then, the probability that the internal node $n$ has state $s$ is
+Computationally, observe that the largest parenthesis needs to be calculated only once and then retrieved depending on the values of $(a_{lp},\tilde a_{lp})$. Let $S$ be a square matrix defined as follows
+
+$$
+S = \left[\begin{array}{cc}
+s_{00} & s_{01} \\
+s_{10} & s_{11}
+\end{array}\right]
+=\left[\begin{array}{cc}
+1-\psi_0 & \psi_0 \\
+\psi_1 & 1 - \psi_1
+\end{array}\right]
+$$
+
+Then, (1a) can be reexpress using $S$:
+
+$$ 
+\label{eq:1b}\tag{1b}
+\Prcond{a_l}{\tilde D, \psi} = \prod_{p = 1}^P {s_{a_{lp} \tilde a_{lp}}}^{\left[1 - \isone{\tilde a_{lp} !=9}\right]}
+$$
+
+For any internal node $n \in N$, the probability of observing a given state is defined in terms of its offspring $O(n)$, and parameters $(\psi, \mu)$, where $\mu \equiv \{\mu_0,\mu_1\}$ is a vector of probabilities of gain and loss of a function, formally
+
+$$
+\mu_0 = \Prcond{a_{lp} = 1}{a_{r(l)p} = 0},\quad  \mu_0 = \Prcond{a_{lp} = 0}{a_{r(l)p} = 1}
+$$
+
+This way, the probability of observing state $a_n = \{a_{np}\}_{p=1}^P$ is
 
  
 $$
-P_{n,s} = \prod_{o_n} \sum_{s^*} P_{o_n,s^*}
-\prod_p \left(\left[\underbrace{\mu_0^\isone{s_p^*}}_{\mbox{Gain}}\underbrace{(1-\mu_0)^\isone{\neg s_p^*}}_{\mbox{No gain}}\right]^\isone{\neg s_p}\times
-  \left[\underbrace{\mu_1^\isone{\neg s_p^*}}_{\mbox{Loss}}\underbrace{(1-\mu_1)^\isone{s_p^*}}_{\mbox{No Loss}}\right]^\isone{s_p}\right)
+\tag{2}
+\Prcond{a_n}{\tilde D, \psi,\mu} = \prod_{m \in O_n} \sum_{a_m \in \{0,1\}^P} \Prcond{a_m}{\tilde D, \psi,\mu}
+\prod_{p = 1}^P \left\{\left[\mu_0^{a_{mp}}(1-\mu_0)^{1 - a_{mp}}\right]^{1 - a_{np}}
+  \left[\mu_1^{1 - a_{mp}}(1-\mu_1)^{a_{mp}}\right]^{a_{np}}\right\}
 $$
 
-Where $P_{o_n,s^*}=\Psi_{s^*s'}$ if the offspring is a leaf. Computationally, observe that the larger parenthesis can be computed only once and then retrieved depending on the values of $\{s_p^*,s_p\}$. Let $M\equiv\{m_{s_p^*,s_p}\}$ to be an array of size $2\times 2$ holding the Gain/Loss probabilities, then, the previous equation reduces to:
+Observe that if $m\in O(n)$ is a leaf node, then $\Prcond{a_m}{\tilde D, \psi,\mu} = \Prcond{a_m}{\tilde D, \psi}$ which was defined in (1b).
+
+Let $M\equiv\{m_{ij}\}_{i,j \in \{0,1\}}$ to be an array of size $2\times 2$ holding the Gain/Loss probabilities, formally 
 
 $$
-P_{n,s}  = \prod_{o_n} \sum_{s^*} P_{o_n,s^*}
-\prod_p m_{s_p^*,s_p}
+M = \left[\begin{array}{cc}
+m_{00} & m_{01} \\
+m_{10} & m_{11}
+\end{array}\right]
+= \left[\begin{array}{cc}
+1-\mu_0 & \mu_0 \\
+\mu_1 & 1 - \mu_1
+\end{array}\right]
 $$
 
-Finally, let $\pi\equiv\{\pi_s\}_{s=1}^{2^P}$ to be the root node state probabilities, then, the likelihood for $n=0$ can be computed as
+This way, (2a) can be reexpress as follows
 
 $$
-L_0(\pi,\mu,\psi) = \sum_s \pi_s P_{0,s}
+\tag{2b}
+\Prcond{a_n}{\tilde D, \psi,\mu} = \prod_{m \in O_n} \sum_{a_m \in \{0,1\}^P} \Prcond{a_m}{\tilde D, \psi,\mu}
+\prod_p m_{a_{np}a_{mp}}
 $$
 
-# Maximum a Posteriori (MAP) Estimation
-
-Using bayes we have
+Finally, let $\pi\equiv\{\pi_p\}_{p=1}^{P}$ to be the root node state probabilities for each function, then, the likelihood of observing a particular set of annotations conditional on the tree structure and model parameters can be computed using the root node states probabilities:
 
 $$
-\fcond{\theta}{D} = \frac{\fcond{X}{\theta}\f{\theta}}{f{X}}
+\tag{3}
+\Prcond{\tilde A}{\tau,\psi, \mu, \pi} = \sum_{a_0 \in \{0,1\}^P} \Prcond{a_0}{\pi} \Prcond{a_0}{\tilde D,\psi,\mu}
 $$
 
-Then, assumming iid, to estimate $\hat \theta$ we can solve the following problem
+where $\Prcond{a_0}{\pi} = \prod_{p=1}^P \pi_p^{a_{0p}}\left(1 - \pi_p\right)^{1 - a_{0p}}$.
+
+# Estimation
+
+## Maximum Likelihood
+
+Let $\theta = (\psi, \mu, \pi)$ denote the vector of model parameters. Furthermore, $\theta \in \Psi\times \mathcal{M} \times \Pi$, then, the maximun likelihood estimator $\hat \theta$ is
 
 $$
-\label{eq:maptheta}
-\begin{align}
-\hat \theta & = \arg\max_{\theta \in \Theta} \frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} \\
- & \mbox{Since the denominator is constant, this is equivalent to} \\
- & = \arg\max_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta} \tag{MAP estimate} 
-\end{align}
+(\hat \psi, \hat \mu, \hat \pi) = \hat\theta = \arg \max_{\theta \in \Theta} \log \Prcond{\tilde A}{\tau, \theta}
 $$
 
-Observe that under a uniform prior, this is equivalent to the MLE estimate. Now, the variance (what about the covariance) estimator is as follows
+
+## Markov Chain Monte Carlo with Reflective Boundaries Kernel
+
+# Assesment of Model Predictions
+
+Let $A_H$ and $\hat A_H$ be the observed and predicted annotations for the set of nodes $H$. We write $W_H$ to refer to the undirected shortest path length matrix in which each one of its entries $w_{Hnm}$ holds shortest path length between nodes $n, m$ $\in H$. Then, we assess the prediction quality by the following statistic
 
 $$
-\label{eq:mapvar}
-\mbox{Var}\left(\hat\theta\right) = \int_{\theta \in \Theta} \left(\hat\theta - \theta\right)^2
-\frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} d\theta \tag{MAP variance}
+\left\{\left\| a_h - \hat a_h \right\|\right\}_{h \in H}^\mathbf{t}
+\left(W_H + I_{|H|}\right)^{-1}
+\left\{\left\| a_h - \hat a_h \right\|\right\}_{h \in H}
 $$
 
-Where the denominator, probability of evidence, can be computed as
+Where $I_{|H|}$ is the identity matrix of size $|H|^2$, and $\|\cdot\|$ is the $\ell^2$-norm.
+
+It can be shown that the previous expression can be written as
 
 $$
-\label{eq:d}
-\f{X} = \int_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta}d\theta 
+\delta = \sum_{i,j}\left[\sum_{p,r} (a_{ip} - \hat a_{ir})^2(a_{jr} - \hat a_{jr})^2\right]^{1/2}w_{ij}^{-1}
 $$
 
-Given $\hat \theta$, the variance can be computed using numerical integration.
+So, $\mbox{E}\left(\delta\right)$ reduces to computing the following
 
-
+$$
+\sum_{i,j} w_{ij}^{-1}\mbox{E}\left[\sum_{p,r} (a_{ip} - \hat a_{ir})^2(a_{jr} - \hat a_{jr})^2\right]^{1/2}
+$$
 
 # Data Imputation
 
-The ultimate goal of this model is to be able to predict, or rather, impute functional states to leaf nodes for which we do not have information. Using both, the information that we have about the annotated tree and the parameter estimates of gain and loss probabilities, we can calculate what is the probability of observing either a 0 or a 1. Formally, with $S\equiv (N, E)$, the probability of leaf node $i$ having the function function, conditional on the tree structure $S^*$ and the observed set of annotations $A^*$ is:
+The ultimate goal of this model is to be able to predict, or rather, impute functional states to leaf nodes for which we do not have information. Using both, the information that we have about the annotated tree and the parameter estimates of gain and loss probabilities, we can calculate what is the probability of observing either a 0 or a 1. Formally, with $S\equiv (N, E)$, the probability of leaf node $n$ having state $a_l = \{a_{lp}\}_{p=1}^P$, conditional on the tree structure $\tilde D S^*$ and the observed set of annotations $A^*$ is:
 
 $$
-\tag{1}\label{eq:1}
-\Prcond{a_i = 1}{S = S^*, A = A^*} = \frac{\Prcond{A = A^*}{S = S^*, a_i = 1}\times\Prcond{a_i=1}{S = S^*}}{
-\Prcond{A = A^*}{S = S^*}
+\tag{1}
+\Prcond{a_{np} = 1}{\tau, \tilde A} = \frac{\Prcond{\tilde A}{\tau, a_{np} = 1} \Prcond{a_{np}=1}{\tau}}{
+\Prcond{\tilde A}{\tau}
 }
 $$
 
-For ease of notation, we will drop the $S = S^*$, as all probabilities throughout this section are conditional on the tree structure. Now, we know that
+For ease of notation, we will drop the $\tau$, as all probabilities throughout this section are conditional on the tree structure. Now, we know that
 
 $$
 \tag{2}\label{eq:2}
-\Pr{A = A^*} = \Prcond{A = A^*}{a_i = 1}\times\Pr{a_i = 1} + \Prcond{A = A^*}{a_i = 0}\times(1 - \Pr{a_i = 1})
+\Pr{\tilde A} = \Prcond{\tilde A}{a_{np} = 1} \Pr{a_{np} = 1} + \Prcond{\tilde A}{a_{np} = 0} (1 - \Pr{a_{np} = 1})
 $$
 
-Hence, pluging in (2) into (1), and multiplying both numerator and denominator by $1/\Pr{a_i = 1}$, (1) can be rewritten as
+Hence, pluging in (2) into (1), and multiplying both numerator and denominator by $1/\Pr{a_{np} = 1}$, (1) can be rewritten as
 
 $$
 \tag{1'}
-\Prcond{a_i = 1}{A = A^*} = \frac{\Prcond{A = A^*}{a_i = 1}}{
-\Prcond{A = A^*}{a_i = 1} + \Prcond{A = A^*}{a_i = 0}\times\frac{\left(1 - \Pr{a_i = 1}\right)}{\Pr{a_i = 1}}
+\Prcond{a_{np} = 1}{\tilde A} = \frac{\Prcond{\tilde A}{a_{np} = 1}}{
+\Prcond{\tilde A}{a_{np} = 1} + \Prcond{\tilde A}{a_{np} = 0} \frac{\left(1 - \Pr{a_{np} = 1}\right)}{\Pr{a_{np} = 1}}
 }
 $$
-Where $\Prcond{A = A^*}{a_i = 1}$ is the likelihood of the data given that we set the ith node to be 1, which we already know how to compute. This way, we are only missing $\Pr{a_i=1}$, which we can compute as follows:
+Where $\Prcond{\tilde A}{a_{np} = 1}$ is the likelihood of the data given that we set the ith node to be 1, which we already know how to compute. This way, we are only missing $\Pr{a_{np=1}}$, which we can compute as follows:
 
 $$
 \begin{align}
-\Pr{a_i = 1} & = \pi \Prcond{a_i = 1}{a_0 = 1} + (1 - \pi) \Prcond{a_i = 1}{a_0 = 0}
+\Pr{a_{np} = 1} & = \pi_p \Prcond{a_{np} = 1}{a_{0p} = 1} + (1 - \pi_p) \Prcond{a_{np} = 1}{a_{0p} = 0}
 \end{align}
 $$
 
@@ -185,3 +230,39 @@ Given how the algorithm for computing the likelihood has been programmed, it is 
 Once the experimental data has been processed, 
     
 4.  We identify
+
+# Maximum a Posteriori (MAP) Estimation
+
+Using bayes we have
+
+$$
+\fcond{\theta}{D} = \frac{\fcond{X}{\theta}\f{\theta}}{f{X}}
+$$
+
+Then, assumming iid, to estimate $\hat \theta$ we can solve the following problem
+
+$$
+\label{eq:maptheta}
+\begin{align}
+\hat \theta & = \arg\max_{\theta \in \Theta} \frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} \\
+ & \mbox{Since the denominator is constant, this is equivalent to} \\
+ & = \arg\max_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta} \tag{MAP estimate} 
+\end{align}
+$$
+
+Observe that under a uniform prior, this is equivalent to the MLE estimate. Now, the variance (what about the covariance) estimator is as follows
+
+$$
+\label{eq:mapvar}
+\mbox{Var}\left(\hat\theta\right) = \int_{\theta \in \Theta} \left(\hat\theta - \theta\right)^2
+\frac{\fcond{X}{\theta}\f{\theta}}{\f{X}} d\theta \tag{MAP variance}
+$$
+
+Where the denominator, probability of evidence, can be computed as
+
+$$
+\label{eq:d}
+\f{X} = \int_{\theta \in \Theta} \fcond{X}{\theta}\f{\theta}d\theta 
+$$
+
+Given $\hat \theta$, the variance can be computed using numerical integration.

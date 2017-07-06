@@ -72,10 +72,22 @@ Finally, we will denote the predicted probability as $\hat a_i = \Prcond{a_i = 1
 
 # Assesment of Model Predictions
 
-Fixing $P=1$, let $A \equiv \{a_i \in \{0, 1\}: i\in N\}$ are the latent annotations and $Z \equiv \{z_i \in \{0,1,9\}: i\in N\}$ is the experimental data (some missings, 9), we measure the quality of the imputation as
+Let $A \equiv \{a_{ip}\}_{i\in N, p \in P}$ be an array of size $|N| \times |P|$ are the latent annotations and $Z \equiv \{z_i \in \{0,1,9\}: i\in N\}$ is the experimental data (some missings, 9), we measure the quality of the imputation as
 
 $$
 \left\| A_m - \hat A_m \right\|^\mathbf{t} \mathbf{W}^{-1}_m\left\| A_m - \hat A_m \right\|
 $$
 
 where $A_m \equiv\{a_i \in A: z_i = 9\}$, the real annotations of the imputed genes, $\tilde A_m \equiv \{\hat a_i: z_i = 9\}$ the predicted annotations of the imputed genes, and $\mathbf{W}$ is a weighting matrix of size $|A_m|^2$, in particular, the shortest path length between all nodes with $z_i = 9$.
+
+It can be shown that the previous expression can be written as
+
+$$
+\delta = \sum_{i,j}\left[\sum_{p,r} (a_{ip} - \hat a_{ir})^2(a_{jr} - \hat a_{jr})^2\right]^{1/2}w_{ij}^{-1}
+$$
+
+So, $\mbox{E}\left(\delta\right)$ reduces to computing the following
+
+$$
+\sum_{i,j} w_{ij}^{-1}\mbox{E}\left[\sum_{p,r} (a_{ip} - \hat a_{ir})^2(a_{jr} - \hat a_{jr})^2\right]^{1/2}
+$$

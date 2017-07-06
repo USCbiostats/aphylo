@@ -90,7 +90,7 @@ prediction_score <- function(x, expected = NULL, ...) {
   
   # Inverse of Geodesic distances
   G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
-  G_inv <- 1/(G + 1)
+  G_inv <- 1/(G + diag(nrow(G)))
   
   # Observed score
   if (!length(expected))
@@ -122,7 +122,7 @@ prediction_score <- function(x, expected = NULL, ...) {
 
 predict_random <- function(P, A, G_inv) {
   n <- nrow(G_inv)
-  sapply(1:10000, function(x) {
+  sapply(1:2000, function(x) {
     A_hat <- matrix(sample(c(0,1), P*n, TRUE), ncol = P)
     obs   <- sqrt(rowSums((A - A_hat)^2))
     t(obs) %*% G_inv %*% obs
