@@ -124,6 +124,10 @@ predict_funs <- function(ids, edges, annotations, offspring, noffspring, psi, mu
     .Call('aphylo_predict_funs', PACKAGE = 'aphylo', ids, edges, annotations, offspring, noffspring, psi, mu, Pi)
 }
 
+prediction_score_rand <- function(A, W, alpha) {
+    .Call('aphylo_prediction_score_rand', PACKAGE = 'aphylo', A, W, alpha)
+}
+
 #' Simulate functions on a ginven tree
 #' 
 #' @param offspring A List of length \eqn{N} with the set of offspring of

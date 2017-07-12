@@ -1,20 +1,24 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
+\usepackage{setspace}
+  \onehalfspace
+  
 \usepackage{graphicx}
 \usepackage{amsmath, amssymb}
 
-\usepackage{hyperref}
-
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+  
 \usepackage[margin=1in]{geometry}
 
 \newcommand{\isone}[1]{{\boldsymbol{1}\left\{ #1 \right\}}}
 \renewcommand{\Pr}[1]{{\mbox{Pr}\left(#1\right) }}
 \newcommand{\f}[1]{{f\left(#1\right) }}
-\newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\;|\;#2\right) }}
+\newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\;\vphantom{#2}\right|\left.\vphantom{#1}#2\right) }}
 \newcommand{\fcond}[2]{{f\left(#1\;|\;#2\right) }}
 \newcommand{\Expected}[1]{{\mathbb{E}\left\{#1\right\}}}
 
 \title{On the Automatic Annotation of Gene Functions Using Observational Data and Phylogenetic Trees}
+\author{Department of Preventive Medicine\\University of Southern California}
 \date{This version: \today}
 
 \begin{document}
@@ -27,7 +31,7 @@
 
 \subsection{Anotated Phylogenetic Trees}
 
-A phylogenetic tree $\tau\equiv (N,E)$ is a tuple of nodes $N$, and edges $E\equiv \{(n, m) \in N\times N: n\mapsto m\}$ defined by the binary operator $\mapsto$ \emph{parent of}. Furthermore, we define $O(n)\equiv\{m\in N: (n, m) \in E\}$ as the set of offspring of $n$, and $r(m) \equiv\{n \in N: (n, m) \in E\}$ the parent nodes of $m$. For now on we assume that $|r(m)| \leq 1,\forall n\in N$. 
+A phylogenetic tree $\tau\equiv (N,E)$ is a tuple of nodes $N$, and edges $E\equiv \{(n, m) \in N\times N: n\mapsto m\}$ defined by the binary operator $\mapsto$ \emph{parent of}. Furthermore, we define $O(n)\equiv\{m\in N: (n, m) \in E\}$ as the set of offspring of $n$, and $r(m) \equiv\{n \in N: (n, m) \in E\}$ the parent nodes of $m$. For now on we assume that $|r(m)| \leq 1,\forall n\in N$. By definition, all trees have a corresponding undirected shortest path lengths matrix $\Gamma(\tau) \equiv \{\gamma_{nm}\}_{n,m\in N}$, where $\gamma_{nm}$ denotes the undirected shorest path length between genes $n$ and $m$. 
 
 Given $P$ gene functions, let $A \equiv \{a_n \in \{0,1\}^P: n\in N\}$ denote a set of genetic annotations--which we will also refer as states--of the genes $N$. We define an Annotated Phylogenetic Tree as the tuple $D \equiv(\tau, A)$. Furthermore, we say that this structure is a Partially Ordered Annotated Phylogenetic Tree if it's nodes labels form a partial order, this is $E\equiv \{(n, m) \in N\times N: n < m\}$.
 
@@ -136,11 +140,12 @@ $$
 
 \subsection{Markov Chain Monte Carlo with Reflective Boundaries Kernel}
 
-\subsection{Data Imputation}
+\section{Data Imputation}
 
 The ultimate goal of this model is to be able to predict functional states of leaf nodes. Using both, the information that we have about the annotated tree and the parameter estimates of the model, we can calculate what is the probability of observing either a 0 or a 1 for each given node+function. Formally, the probability of leaf node $l$ having state $a_l = \{a_{lp}\}_{p=1}^P$, conditional on the observed data $(\tau, \tilde A)$ and the model parameter $(\psi, \mu, \pi)$ is:
 
 \begin{equation}
+\label{eq:impute1}
 \Prcond{a_{np} = 1}{\tau, \tilde A, \psi, \mu, \pi} = \frac{\Prcond{\tilde A}{\tau, \psi, \mu, \pi, a_{np} = 1} \Prcond{a_{np}=1}{\tau, \psi, \mu, \pi}}{
 \Prcond{\tilde A}{\tau, \psi, \mu, \pi}
 }
@@ -149,14 +154,14 @@ The ultimate goal of this model is to be able to predict functional states of le
 For ease of notation, we will drop the $(\tau, \psi, \mu, \pi)$, as all probabilities throughout this section are conditional on the tree structure and model parameters. Now, we know that
 
 \begin{equation}
-\label{eq:2}
+\label{eq:prob_evidence}
 \Pr{\tilde A} = \Prcond{\tilde A}{a_{np} = 1} \Pr{a_{np} = 1} + \Prcond{\tilde A}{a_{np} = 0} (1 - \Pr{a_{np} = 1})
 \end{equation}
 
-Hence, pluging in (2) into (1), and multiplying both numerator and denominator by $1/\Pr{a_{np} = 1}$, (1) can be rewritten as
+Hence, pluging in \eqref{eq:prob_evidence} into \eqref{eq:impute1}, and multiplying both numerator and denominator by $1/\Pr{a_{np} = 1}$, \eqref{eq:impute1} can be rewritten as
 
 \begin{equation}
-\tag{1'}
+\tag{\ref*{eq:impute1}'}
 \Prcond{a_{np} = 1}{\tilde A} = \frac{\Prcond{\tilde A}{a_{np} = 1}}{
 \Prcond{\tilde A}{a_{np} = 1} + \Prcond{\tilde A}{a_{np} = 0} \frac{\left(1 - \Pr{a_{np} = 1}\right)}{\Pr{a_{np} = 1}}
 }
@@ -179,10 +184,6 @@ $$
 \right]
 =
 \left[\begin{array}{cc}
-1 & 0 \\
-0 & 1
-\end{array} \right] \times
-\left[\begin{array}{cc}
 1 - \hat\mu_0 &  \hat\mu_0 \\
 \hat\mu_1 &  1 - \hat\mu_1
 \end{array}
@@ -192,53 +193,60 @@ $$
 
 \section{Assesment of Model Predictions}
 
-Let $A_H$ and $\hat A_H$ be the observed and predicted annotations for the set of nodes $H$. We write $G_H$ to refer to the undirected shortest path length matrix in which each one of its entries $g_{Hnm}$ holds shortest path length between nodes $n, m$ $\in H$. Define $W_H = G_H - I_{|H|}$ which has typical element $\left\{ {w_{hu}} \right\}_{h, u\in H}$, and where $I_{|H|}$ is the identity matrix of size $|H|^2$. We assess the prediction quality by the following statistic
+As our model predictions are probabilities, measuring the quality of of the predictions is not very straight forward. While in an ideal world we would like to count how many of the annotations were correctly predicted, what we can do at best is measure how close the predictions are to the observed data. In this section we propose an statistic to do such.
+
+Let $A_H$ and $\hat A_H$ be the observed and predicted annotations for the set of nodes $H$. Given a matrix of weights $W_H$ which for now we set as $\{\left(\gamma_{hu} + 1\right)^{-1}\}_{h,u\in H}$, which has typical element $\left\{ {w_{hu}} \right\}_{h, u\in H}$, we define the following statistic:
 
 \begin{equation}
 \label{eq:delta1}
-\delta = \left\{\left\| a_h - \hat a_h \right\|\right\}_{h \in H}^\mathbf{t}
-\left\{ {w_{hu}}^{-1} \right\}_{h, u\in H}
+\delta\left(A_H, \hat A_H\right) = \left\{\left\| a_h - \hat a_h \right\|\right\}_{h \in H}^\mathbf{t}
+W_H
 \left\{\left\| a_h - \hat a_h \right\|\right\}_{h \in H}
 \end{equation}
 
-Where $\|\cdot\|$ is the $\ell^2$-norm. Which can be rewritten as
+Where $\|\cdot\|$ is the $\ell^2$-norm. Such can be rewritten as:
 
 \begin{equation}
 \label{eq:delta2}
-\delta = \sum_{h, u \in H}\left[\sum_{p=1}^P\sum_{r=1}^P (a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2\right]^{1/2}{w_{hu}}^{-1}
+\delta = \sum_{h, u \in H}\left[\sum_{p=1}^P\sum_{r=1}^P (a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2\right]^{1/2}w_{hu}
 \end{equation}
 
 In the best case, we will have $a_h = \hat a_h, \forall h \in H$, which would yield $\delta = 0$. On the other hand, the worse case, the model would yield predictions completely opposed to what we observe, hence $a_h = 1 - \hat a_h, \forall h \in H$, which, following \eqref{eq:delta2}, yields:
 
 \begin{equation*}
-\delta  = \sum_{h, u \in H}\left[\sum_{p=1}^P\sum_{r=1}^P 1\right]^{1/2}{w_{hu}}^{-1} = \sum_{h, u \in H}P{w_{hu}}^{-1} = P \sum_{h, u \in H}{w_{hu}}^{-1} = \underline{\delta}
+\delta\left(A_H, \jmath_{|H|, P} - A_H\right)  = %
+\sum_{h, u \in H}\left[\sum_{p=1}^P\sum_{r=1}^P 1\right]^{1/2}w_{hu} = %
+\sum_{h, u \in H}Pw_{hu} = P \sum_{h, u \in H}w_{hu} = \underline{\delta}
 \end{equation*}
 
-
-
-We can also calculate how much better can the model do compared to a random imputation. Assuming that we randomly assign zeros and ones according to a Bernoulli distribution with parameter $\alpha$, the expected value of $\delta$ equals:
+We can also calculate how much better can the model do compared to a random imputation, then, the expected value of $\delta$ equals:
 
 \begin{equation*}
-\Expected{\delta} = \sum_{h, u \in H}\Expected{\left[\sum_{p=1}^P\sum_{r=1}^P (a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2\right]^{1/2}}{w_{hu}}^{-1}
+\Expected{\delta} = \sum_{h, u \in H}\Expected{\left[\sum_{p=1}^P\sum_{r=1}^P (a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2\right]^{1/2}}w_{hu}
 \end{equation*}
 
-Furthermore, in the case that $P = 1$, the previous expression equals
+Furthermore, if we assume that each annotations is randomly distributed $\sim\mbox{Bernoulli}(\alpha)$
 
-\begin{align*}
-\Expected{\delta} & = \sum_{h, u \in H}\Expected{(a_{h1} - \hat a_{h1})(a_{u1} - \hat a_{u1})}{w_{hu}}^{-1} \\
-& = \sum_{h, u \in H}\left[%
-\alpha^2(a_{h1} - 1)(a_{u1} - 1) + %
-\alpha(1-\alpha)(a_{h1} - 1)a_{u1} +\right. \\
-& \left.\hspace{2cm} (1-\alpha)\alpha a_{h1}(a_{u1} - 1) + %
-(1-\alpha)^2a_{h1}a_{u1} 
-\right]{w_{hu}}^{-1}
-\end{align*}
+\begin{equation}
+\Expected{\delta} = \sum_{h, u \in H}w_{hu}\sum_{\hat a_h, \hat a_u \in \{0,1\}^P}\Pr{\hat a_h}\Pr{\hat a_u}\left[\sum_{p=1}^P\sum_{r=1}^P (a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2\right]^{1/2}
+\end{equation}
 
-The relative prediction score 
+
+Where $\Pr{a_h} = \prod_{p=1}^P\alpha^{a_{hp}}(1 - \alpha)^{1 - a_{hp}}$. The relative prediction score 
 
 \begin{equation}
 \tilde\delta = \delta \underline{\delta}^{-1},\quad \underline{\bar{\delta}} = \Expected{\delta}\underline{\delta}^{-1}
 \end{equation}
+
+We can also compute the variance of such statistic. Since we already have $\Expected{\delta}$, we just need to calculate $\Expected{\delta^2}$. It can be shown that it has the following form:
+
+\begin{multline}
+\Expected{\delta^2} = \sum_{h, u, h', u' \in H} w_{nu}w_{n'u'} %
+\sum_{\hat a_h, \hat a_u, \hat a_{h'}, \hat a_{u'} \in \{0,1\}^P} % 
+\Pr{\hat a_h}\Pr{\hat a_u}\Pr{\hat a_{h'}}\Pr{\hat a_{u'}} \left[\vphantom{\sum_{p}}\right. \\
+\left. \sum_{p,r,p',r'} %
+(a_{hp} - \hat a_{hp})^2(a_{ur} - \hat a_{ur})^2(a_{h'p'} - \hat a_{h'p'})^2(a_{u'r'} - \hat a_{u'r'})^2\right]^{1/2}
+\end{multline}
 
 \section{Monte Carlo Simulations}
 

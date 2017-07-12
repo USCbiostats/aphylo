@@ -32,7 +32,7 @@ phylo_mcmc(params, dat, priors = NULL, fix.params = c(psi0 = FALSE, psi1 =
 
 \method{predict}{phylo_mle}(object, what = c("missings", "all"), ...)
 
-prediction_score(x, expected = NULL, ...)
+prediction_score(x, expected = NULL, alpha = 0.5, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }
@@ -83,6 +83,9 @@ then it can be either \code{"missings"}, \code{"leafs"}, or \code{"all"}. If an 
 then these must be values between \eqn{[0, n - 1]} (node ids).}
 
 \item{expected}{Integer vector of length \eqn{n}. Expected values (either 0 or 1).}
+
+\item{alpha}{Numeric scalar. Prior belief of the parameter of the bernoulli distribution
+used to compute the random imputation score.}
 }
 \value{
 A list of class \code{phylo_mle} with the following elements:

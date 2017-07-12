@@ -86,3 +86,60 @@ arma::umat approx_geodesic(
   
   return ans;
 }
+
+//' Matrix of states
+//' 
+//' @param P Integer scalar. Number of functions.
+//' @return A matrix of size 2^P by P with all the possible
+//' (0,1) combinations of functions.
+//' @examples
+//' states(3)
+//' @export
+// [[Rcpp::export]]
+arma::imat states(
+    int P
+) {
+  
+  // Creating output matrix
+  int nstates = pow(2, P);
+  arma::imat ans(nstates, P);
+  
+  // Go through states
+  for (int i=0; i<nstates; i++) {
+    int x=i;
+    
+    // Go through functions
+    for (int p=0; p<P; p++) {
+      ans.at(i, p) = x%2;
+      x /= 2;
+    }
+  }
+  
+  return ans;
+}
+
+// Probability Matrix
+// 
+// Generates a 2x2 matrix with probabilities for states 0/1, with rows and columns
+// corresponding to states (0,1) of parent and offspring respectively.
+// 
+// @param pr A numeric vector of length 2.
+// 
+// @return a 2x2 matrix with 0/1 probabilities, with rows and columns
+// corresponding to states (0,1) of parent and offspring respectively.
+// @export
+// [[Rcpp::export]]
+arma::mat prob_mat(
+    const arma::vec & pr
+) {
+  arma::mat ans(2,2);
+  
+  for (int i=0; i<2; i++)
+    for (int j=0; j<2; j++) 
+      ans.at(i,j) = 
+        !i?
+        (  j? pr.at(0) : (1-pr.at(0)) ):
+      ( !j? pr.at(1) : (1-pr.at(1)) );
+  
+  return ans;
+}

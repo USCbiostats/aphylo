@@ -13,4 +13,12 @@ arma::umat approx_geodesic(
     bool warn = false
 );
 
+arma::mat prob_mat(
+    const arma::vec & pr
+);
+
+arma::imat states(
+    int P
+);
+
 #endif

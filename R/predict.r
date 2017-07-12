@@ -65,10 +65,12 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
 
 #' @rdname mle
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
+#' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
+#' used to compute the random imputation score.
 #' @export
 #' @details In the case of \code{prediction_score}, \code{...} are passed to
 #' \code{predict.phylo_mle}.
-prediction_score <- function(x, expected = NULL, ...) {
+prediction_score <- function(x, expected = NULL, alpha = 0.5, ...) {
   
   # Finding relevant ids
   if (!length(expected)) 
@@ -106,7 +108,7 @@ prediction_score <- function(x, expected = NULL, ...) {
   worse <- sum(G_inv)*ncol(pred)
   
   # Random case
-  rand  <- predict_random(ncol(pred), expected[ids,,drop=FALSE], G_inv)
+  rand  <- prediction_score_rand(expected[ids,,drop=FALSE], G_inv, alpha)
   
   structure(
     list(
@@ -114,7 +116,8 @@ prediction_score <- function(x, expected = NULL, ...) {
       worse     = worse,
       predicted = pred,
       expected  = expected[ids, ,drop=FALSE],
-      random    = c(mean = mean(rand), sd = sd(rand))
+      random    = rand,
+      alpha     = alpha
     ), class = "aphylo_prediction_score"
   )
   
@@ -122,7 +125,7 @@ prediction_score <- function(x, expected = NULL, ...) {
 
 predict_random <- function(P, A, G_inv) {
   n <- nrow(G_inv)
-  sapply(1:2000, function(x) {
+  sapply(1:10000, function(x) {
     A_hat <- matrix(sample(c(0,1), P*n, TRUE), ncol = P)
     obs   <- sqrt(rowSums((A - A_hat)^2))
     t(obs) %*% G_inv %*% obs
@@ -133,12 +136,15 @@ predict_random <- function(P, A, G_inv) {
 #' @rdname mle
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
-  with(x, cat(sprintf("Observed: %.2f\nBest: 0.00\nWorse: %.2f\nRelative (obs/worse):%.2f\n",
-                      obs, worse, 1 - obs/worse),
-              sprintf("Random: %.2f (%.2f)\n", random[1], random[2]),
-              sep = ""
-              )
-       )
+  with(x, cat(
+    sprintf("Observed : %-.2f (%.2f)", obs/worse, obs),
+    sprintf("Random   : %-.2f (%.2f)", random/worse, random),
+    sprintf("Best     : 0.00 (0.00)"),
+    sprintf("Worse    : 1.00 (%.2f)", worse),
+    paste0(rep("-", getOption("width")), collapse=""),
+    "Values between 0 and 1, 0 been best. Absolute scores in parenthesis.",
+    sep ="\n"
+  ))
   invisible(x)
 }
   

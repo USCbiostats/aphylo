@@ -125,6 +125,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// prediction_score_rand
+double prediction_score_rand(const arma::mat& A, const arma::mat& W, double alpha);
+RcppExport SEXP aphylo_prediction_score_rand(SEXP ASEXP, SEXP WSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type W(WSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(prediction_score_rand(A, W, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sim_fun_on_tree
 IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
 RcppExport SEXP aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
@@ -207,6 +220,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"aphylo_LogLike", (DL_FUNC) &aphylo_LogLike, 8},
     {"aphylo_predict_fun", (DL_FUNC) &aphylo_predict_fun, 9},
     {"aphylo_predict_funs", (DL_FUNC) &aphylo_predict_funs, 8},
+    {"aphylo_prediction_score_rand", (DL_FUNC) &aphylo_prediction_score_rand, 3},
     {"aphylo_sim_fun_on_tree", (DL_FUNC) &aphylo_sim_fun_on_tree, 6},
     {"aphylo_sim_tree", (DL_FUNC) &aphylo_sim_tree, 1},
     {"aphylo_fast_table", (DL_FUNC) &aphylo_fast_table, 1},

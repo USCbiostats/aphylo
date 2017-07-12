@@ -1,3 +1,7 @@
+2017-07-11  George G. Vega Yon <g.vegayon@gmail.com>
+	* src/quality.cpp, R/predict.r: Included new function to compute
+	  expected value of random imputation given parameter alpha.
+
 2017-05-31  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/simulations.r: Fixed a small bug related to names of a vector.
 
