@@ -37,6 +37,7 @@ plot_LogLike <- function(x, ...) UseMethod("plot_LogLike")
 #' @export
 #' @rdname plot_LogLike
 plot_LogLike.phylo_mle <- function(x, ...) {
+  # provided <- names(list(...))
   plot_LogLike.default(x$dat, psi = x$par[1:2], mu = x$par[3:4], Pi = x$par[5], ...)
 }
 

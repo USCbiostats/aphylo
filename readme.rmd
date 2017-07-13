@@ -83,7 +83,7 @@ as.apephylo(dat)
 # Parameters and data
 psi     <- c(0.020,0.010)
 mu      <- c(0.04,.01)
-pi_root <- c(1-0.5,.5)
+pi_root <- .999
 
 # Computing likelihood
 with(dat, 
@@ -101,16 +101,21 @@ with(dat,
 ```{r MLE}
 # Using L-BFGS-B (MLE)
 (ans0 <- phylo_mle(dat))
+# Plotting loglike
+plot_LogLike(ans0)
 
 # Using ABC (MLE)
 (ans1 <- phylo_mle(dat, method="ABC"))
 
 # MCMC method
-ans2 <- phylo_mcmc(ans0$par, dat, control = list(nbatch=1e4, burnin=100, thin=20,
-                                         nchains=10 # Will run 10 chains
-                                         ))
+ans2 <- phylo_mcmc(
+  ans0$par, dat,
+  prior = function(p) dbeta(p, 2,20),
+  control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
+```
 
+```{r MCMC}
 # MCMC Diagnostics with coda
 library(coda)
 gelman.diag(ans2$hist)

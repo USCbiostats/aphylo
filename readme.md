@@ -1,7 +1,7 @@
 aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](https://codecov.io/github/USCbiostats/aphylo?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](http://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](http://codecov.io/github/USCbiostats/aphylo?branch=master)
 
 The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
 
@@ -79,13 +79,13 @@ as.apephylo(O)
 plot(O)
 ```
 
-![](readme_files/figure-markdown_github/Get%20offspring-1.png)
+![](readme_files/figure-markdown_github-ascii_identifiers/Get%20offspring-1.png)
 
 ``` r
 plot_LogLike(O)
 ```
 
-![](readme_files/figure-markdown_github/Get%20offspring-2.png)
+![](readme_files/figure-markdown_github-ascii_identifiers/Get%20offspring-2.png)
 
 Simulating annoated trees
 -------------------------
@@ -117,7 +117,7 @@ Likelihood
 # Parameters and data
 psi     <- c(0.020,0.010)
 mu      <- c(0.04,.01)
-pi_root <- c(1-0.5,.5)
+pi_root <- .999
 
 # Computing likelihood
 with(dat, 
@@ -130,7 +130,7 @@ with(dat,
 ```
 
     ## $ll
-    ## [1] -58.03654
+    ## [1] -57.35087
     ## 
     ## attr(,"class")
     ## [1] "phylo_LogLik"
@@ -144,8 +144,8 @@ Estimation
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -46.9587,
-    ## Method used: L-BFGS-B (31 iterations)
+    ## ll:  -46.9586,
+    ## Method used: L-BFGS-B (39 iterations)
     ## convergence: 0 (see ?optim)
     ## Leafs
     ##  # of Functions 1
@@ -154,10 +154,17 @@ Estimation
     ## 
     ##          Estimate  Std. Error
     ##  psi[0]    0.2022      0.2499
-    ##  psi[1]    0.0001      0.0609
+    ##  psi[1]    0.0000      0.0609
     ##  mu[0]     0.0917      0.1366
     ##  mu[1]     0.0705      0.0382
-    ##  Pi        0.9999      1.0699
+    ##  Pi        1.0000      1.0702
+
+``` r
+# Plotting loglike
+plot_LogLike(ans0)
+```
+
+![](readme_files/figure-markdown_github-ascii_identifiers/MLE-1.png)
 
 ``` r
 # Using ABC (MLE)
@@ -165,30 +172,31 @@ Estimation
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:   47.0033,
-    ## Method used: ABC (55 iterations)
+    ## ll:   46.9605,
+    ## Method used: ABC (119 iterations)
     ## Leafs
     ##  # of Functions 1
     ##  # of 0:    25 (25%)
     ##  # of 1:    75 (75%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.2582      0.2434
-    ##  psi[1]    0.0001      0.0573
-    ##  mu[0]     0.0527      0.1335
-    ##  mu[1]     0.0711      0.0379
-    ##  Pi        0.9999      1.0263
+    ##  psi[0]    0.1869      0.2542
+    ##  psi[1]    0.0000      0.0613
+    ##  mu[0]     0.0991      0.1380
+    ##  mu[1]     0.0699      0.0380
+    ##  Pi        1.0000      1.0798
 
 ``` r
 # MCMC method
-ans2 <- phylo_mcmc(ans0$par, dat, control = list(nbatch=1e4, burnin=100, thin=20,
-                                         nchains=10 # Will run 10 chains
-                                         ))
+ans2 <- phylo_mcmc(
+  ans0$par, dat,
+  prior = function(p) dbeta(p, 2,20),
+  control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -49.3773,
+    ## ll:  -42.7479,
     ## Method used: mcmc (10000 iterations)
     ## Leafs
     ##  # of Functions 1
@@ -196,11 +204,11 @@ ans2
     ##  # of 1:    75 (75%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.2247      0.1424
-    ##  psi[1]    0.0512      0.0423
-    ##  mu[0]     0.1365      0.0880
-    ##  mu[1]     0.0703      0.0367
-    ##  Pi        0.6135      0.2743
+    ##  psi[0]    0.1092      0.0650
+    ##  psi[1]    0.0496      0.0296
+    ##  mu[0]     0.1234      0.0569
+    ##  mu[1]     0.0588      0.0227
+    ##  Pi        0.1393      0.1090
 
 ``` r
 # MCMC Diagnostics with coda
@@ -211,47 +219,47 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##      Point est. Upper C.I.
-    ## psi0       1.13       1.25
-    ## psi1       1.00       1.01
-    ## mu0        1.07       1.14
-    ## mu1        1.02       1.04
-    ## Pi         1.25       1.49
+    ## psi0       1.07       1.18
+    ## psi1       1.01       1.03
+    ## mu0        1.05       1.13
+    ## mu1        1.00       1.01
+    ## Pi         1.21       1.49
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.3
+    ## 1.17
 
 ``` r
 summary(ans2$hist)
 ```
 
     ## 
-    ## Iterations = 120:20000
+    ## Iterations = 120:10000
     ## Thinning interval = 20 
-    ## Number of chains = 10 
-    ## Sample size per chain = 995 
+    ## Number of chains = 5 
+    ## Sample size per chain = 495 
     ## 
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
     ##         Mean      SD  Naive SE Time-series SE
-    ## psi0 0.22470 0.14241 0.0014277       0.009918
-    ## psi1 0.05123 0.04234 0.0004244       0.001054
-    ## mu0  0.13655 0.08797 0.0008819       0.004386
-    ## mu1  0.07033 0.03669 0.0003679       0.001733
-    ## Pi   0.61347 0.27432 0.0027501       0.034867
+    ## psi0 0.10917 0.06502 0.0013070      0.0046768
+    ## psi1 0.04960 0.02959 0.0005948      0.0010528
+    ## mu0  0.12339 0.05690 0.0011438      0.0034039
+    ## mu1  0.05876 0.02266 0.0004556      0.0006983
+    ## Pi   0.13927 0.10897 0.0021903      0.0102248
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##          2.5%     25%     50%     75%  97.5%
-    ## psi0 0.012907 0.11077 0.21055 0.31956 0.5376
-    ## psi1 0.001841 0.01924 0.04146 0.07175 0.1606
-    ## mu0  0.007645 0.06562 0.12584 0.19439 0.3300
-    ## mu1  0.020567 0.04678 0.06524 0.08674 0.1473
-    ## Pi   0.052025 0.40843 0.65396 0.85133 0.9871
+    ## psi0 0.015696 0.05897 0.09805 0.15079 0.2541
+    ## psi1 0.006994 0.02720 0.04467 0.06644 0.1197
+    ## mu0  0.030326 0.08157 0.11899 0.16014 0.2497
+    ## mu1  0.022568 0.04296 0.05566 0.07199 0.1090
+    ## Pi   0.017302 0.06655 0.11554 0.18080 0.4659
 
 ``` r
 plot(ans2$hist)
 ```
 
-![](readme_files/figure-markdown_github/MLE-1.png)![](readme_files/figure-markdown_github/MLE-2.png)
+![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-1.png)![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-2.png)
