@@ -6,7 +6,7 @@ data("fakeexperiment")
 # Parameters
 psi    <- c(.01, .02)
 mu     <- c(.05, .1)
-Pi     <- c(.3, 1 - .3)
+Pi     <- 1 - .3
 errtol <- 1e-15
 
 O        <- new_aphylo(fakeexperiment, faketree, leafidvar = "LeafId")

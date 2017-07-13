@@ -18,7 +18,7 @@ LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE,
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
-\item{Pi}{Numeric vector of length 2. Root node probabilities (see \code{\link{LogLike}}).}
+\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
 returns a list with a single scalar (the log-likelihood).}
@@ -52,8 +52,7 @@ The parameters to estimate are described as follows:
 respectively.}
 \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
 \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
-\item{\code{Pi}: A vector of length 2 with \eqn{\pi_0}{pi[0]}} and
-\eqn{\pi_1}{pi[1]}, which for now is specified as \eqn{(1 - \pi_1)}{(1 - pi[0]),
-which holds the root node probabilities.}
+\item{\code{Pi}: A numeric scalar which for which equals the probability
+of the root node having the function.}
 }
 }

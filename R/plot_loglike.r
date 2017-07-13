@@ -41,6 +41,10 @@ plot_LogLike.phylo_mle <- function(x, ...) {
 }
 
 #' @rdname plot_LogLike
+#' @template parameters
+#' @templateVar psi TRUE
+#' @templateVar mu TRUE
+#' @templateVar Pi TRUE
 #' @export
 plot_LogLike.default <- function(
   x,
@@ -87,7 +91,7 @@ plot_LogLike.default <- function(
     x$noffspring, 
     psi, 
     mu,
-    c(Pi, 1 - Pi),
+    Pi,
     verb_ans = FALSE,
     check_dims = FALSE
   )$ll
@@ -102,7 +106,7 @@ plot_LogLike.default <- function(
         x$noffspring,
         c(PSI[i], PSI[j]),
         mu,
-        c(Pi, 1 - Pi),
+        Pi,
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
@@ -118,7 +122,7 @@ plot_LogLike.default <- function(
         x$noffspring,
         psi,
         c(MU[j], mu[2]),
-        c(PI[i], 1 - PI[i]),
+        PI[i],
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
@@ -133,7 +137,7 @@ plot_LogLike.default <- function(
         x$noffspring,
         psi,
         c(MU[i], MU[j]),
-        c(Pi, 1 - Pi),
+        Pi,
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll

@@ -14,7 +14,7 @@ using namespace Rcpp;
 // @export
 // [[Rcpp::export]]
 arma::vec root_node_prob(
-    const arma::vec  & Pi,
+    double Pi,
     const arma::imat & S
 ) {
   // Obtaining relevant constants
@@ -26,7 +26,7 @@ arma::vec root_node_prob(
   
   for (int s=0; s<nstates; s++)
     for (int p=0; p<P; p++)
-      ans.at(s) *= Pi.at(S.at(s,p));
+      ans.at(s) *= (S.at(s,p) == 0)? (1.0 - Pi) : Pi;
   
   return ans;
 }
@@ -153,9 +153,8 @@ arma::mat probabilities(
 //' respectively.}
 //' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
 //' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
-//' \item{\code{Pi}: A vector of length 2 with \eqn{\pi_0}{pi[0]}} and
-//' \eqn{\pi_1}{pi[1]}, which for now is specified as \eqn{(1 - \pi_1)}{(1 - pi[0]),
-//' which holds the root node probabilities.}
+//' \item{\code{Pi}: A numeric scalar which for which equals the probability
+//' of the root node having the function.}
 //' }
 //' @return A list of class \code{phylo_LogLik} with the following elements:
 //' \item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned
@@ -172,7 +171,7 @@ List LogLike(
     const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
-    const arma::vec  & Pi,
+    double Pi,
     bool verb_ans = false,
     bool check_dims = true
 ) {
@@ -207,7 +206,6 @@ List LogLike(
     // Parameters dims
     int n_psi = psi.size();
     int n_mu  = mu.size();
-    int n_Pi  = Pi.size();
     
     if (n_psi != 2) {
       warning("-psi- must be a vector of size 2.");
@@ -219,10 +217,6 @@ List LogLike(
       dims_are_ok = false;
     }
     
-    if (n_Pi != 2) {
-      warning("-Pi- must be a vector of size 2.");
-      dims_are_ok = false;
-    }
     
     // Return with error
     if (!dims_are_ok)
@@ -277,7 +271,7 @@ double predict_fun(
   const arma::ivec & noffspring,
   const arma::vec  & psi,
   const arma::vec  & mu,
-  const arma::vec  & Pi
+  double Pi
 ) {
   
   arma::imat annotations_filled(annotations);
@@ -302,7 +296,7 @@ double predict_fun(
   for (unsigned int i = 1; i < di0; i++)
     MU = MU * MU;
   
-  double Pr_ai_1 = Pi.at(1) * MU.at(1, 1) + Pi.at(0) * MU.at(0, 1);
+  double Pr_ai_1 = Pi * MU.at(1, 1) + (1.0 - Pi) * MU.at(0, 1);
   
   // Returning:
   return likelihood_given_ai_1 / (
@@ -319,7 +313,7 @@ arma::mat predict_funs(
   const arma::ivec & noffspring,
   const arma::vec  & psi,
   const arma::vec  & mu,
-  const arma::vec  & Pi
+  double Pi
 ) {
   
   unsigned int n = ids.size(), i;

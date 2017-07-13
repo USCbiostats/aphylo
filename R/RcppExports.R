@@ -100,9 +100,8 @@ probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
 #' respectively.}
 #' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
 #' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
-#' \item{\code{Pi}: A vector of length 2 with \eqn{\pi_0}{pi[0]}} and
-#' \eqn{\pi_1}{pi[1]}, which for now is specified as \eqn{(1 - \pi_1)}{(1 - pi[0]),
-#' which holds the root node probabilities.}
+#' \item{\code{Pi}: A numeric scalar which for which equals the probability
+#' of the root node having the function.}
 #' }
 #' @return A list of class \code{phylo_LogLik} with the following elements:
 #' \item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned

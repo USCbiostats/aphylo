@@ -28,6 +28,12 @@ plot_LogLike(x, ...)
 
 \item{Pi_range}{Numeric vector of length 2. Domain of \eqn{pi}.}
 
+\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
+
+\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+
+\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
+
 \item{nlevels}{Integer scalar. Number of levels of each parameter to create.}
 
 \item{plotfun}{Function. Either \code{\link[graphics:contour]{contour}},}
@@ -49,6 +55,8 @@ least 3 parameters, \code{x,y,z}.}
 }
 \description{
 Plot LogLikelihood function of experimental data
+
+\code{}
 }
 \examples{
 # Loading data

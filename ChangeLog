@@ -1,9 +1,18 @@
+2017-07-12  George G. Vega Yon <g.vegayon@gmail.com>
+	* playground/simulations: Moved to a different project aphylo_paper.
+	* src/phylo.cpp: Changed Pi to be -double- no longer an -arma::mat-.
+	* R/mle.r, R/plog_loglike.r: Idem.
+	* tests/testthat/test-loglikelihood.r: Idem.
+
+
 2017-07-11  George G. Vega Yon <g.vegayon@gmail.com>
 	* src/quality.cpp, R/predict.r: Included new function to compute
 	  expected value of random imputation given parameter alpha.
 
+
 2017-05-31  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/simulations.r: Fixed a small bug related to names of a vector.
+
 
 2017-05-02  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/mle.r: Added new functions to predict and evaluate prediction.

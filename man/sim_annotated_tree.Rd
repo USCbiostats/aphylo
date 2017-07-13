@@ -18,7 +18,7 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
-\item{Pi}{Numeric vector of length 2. Root node probabilities (see \code{\link{LogLike}}).}
+\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 }
 \value{
 An object of class \code{\link[=new_aphylo]{aphylo}}

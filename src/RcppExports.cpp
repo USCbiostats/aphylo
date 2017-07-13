@@ -43,12 +43,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // root_node_prob
-arma::vec root_node_prob(const arma::vec& Pi, const arma::imat& S);
+arma::vec root_node_prob(double Pi, const arma::imat& S);
 RcppExport SEXP aphylo_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     rcpp_result_gen = Rcpp::wrap(root_node_prob(Pi, S));
     return rcpp_result_gen;
@@ -71,7 +71,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, bool verb_ans, bool check_dims);
+List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, double Pi, bool verb_ans, bool check_dims);
 RcppExport SEXP aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -81,7 +81,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< bool >::type verb_ans(verb_ansSEXP);
     Rcpp::traits::input_parameter< bool >::type check_dims(check_dimsSEXP);
     rcpp_result_gen = Rcpp::wrap(LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans, check_dims));
@@ -89,7 +89,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // predict_fun
-double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
+double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, double Pi);
 RcppExport SEXP aphylo_predict_fun(SEXP iSEXP, SEXP pSEXP, SEXP di0SEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -102,13 +102,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
     rcpp_result_gen = Rcpp::wrap(predict_fun(i, p, di0, annotations, offspring, noffspring, psi, mu, Pi));
     return rcpp_result_gen;
 END_RCPP
 }
 // predict_funs
-arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi);
+arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::ivec& noffspring, const arma::vec& psi, const arma::vec& mu, double Pi);
 RcppExport SEXP aphylo_predict_funs(SEXP idsSEXP, SEXP edgesSEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP noffspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -120,7 +120,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::ivec& >::type noffspring(noffspringSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
     rcpp_result_gen = Rcpp::wrap(predict_funs(ids, edges, annotations, offspring, noffspring, psi, mu, Pi));
     return rcpp_result_gen;
 END_RCPP

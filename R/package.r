@@ -2,7 +2,8 @@
 #' @importFrom stats var coef vcov optim optimHess
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
-#' @importFrom grDevices colors
+#'  points
+#' @importFrom grDevices colors trans3d
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo

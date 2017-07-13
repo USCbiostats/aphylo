@@ -168,7 +168,6 @@ phylo_mle <- function(
       psi <- params[1:2] 
       mu  <- params[3:4] 
       Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi)
       
       ll <- LogLike(
         annotations = dat$annotations, 
@@ -193,7 +192,6 @@ phylo_mle <- function(
       psi <- params[1:2] 
       mu  <- params[3:4] 
       Pi  <- params[5]
-      Pi  <- c(1 - Pi, Pi)
       
       ll <- LogLike(
         annotations = dat$annotations, 
@@ -435,7 +433,7 @@ phylo_mcmc <- function(
         noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
-        Pi          = c(1 - params[5], params[5]),
+        Pi          = params[5],
         verb_ans    = FALSE, 
         check_dims  = FALSE
       )$ll + sum(log(priors(params)))
@@ -453,7 +451,7 @@ phylo_mcmc <- function(
         noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
-        Pi          = c(1 - params[5], params[5]),
+        Pi          = params[5],
         verb_ans    = FALSE, 
         check_dims  = FALSE
       )$ll
