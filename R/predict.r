@@ -53,7 +53,7 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
                  noffspring  = dat$noffspring,
                  psi         = par[1:2],
                  mu          = par[3:4],
-                 Pi          = c(1 - par[5], par[5])
+                 Pi          = par[5]
                )
   )
   
