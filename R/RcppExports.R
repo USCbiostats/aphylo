@@ -253,44 +253,8 @@ fast_table_using_labels <- function(x, ids) {
     .Call('aphylo_fast_table_using_labels', PACKAGE = 'aphylo', x, ids)
 }
 
-#' Recodes an edgelist as a Partially Ordered Tree
-#' 
-#' The function \code{\link{new_aphylo}} uses this function to make sure that
-#' the edgelist that is passed makes a partial order. This is a requirement
-#' for the peeling algorithm, which is used explicitly in the \code{LogLike}
-#' function.
-#' 
-#' @details
-#' The recoded edgelist is such that in all rows the first element, parent
-#' node, as a label that is less than the second element, the offspring, a
-#' partial order.
-#' 
-#' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
-#' to form a partial order. Besides of been of class \code{matrix}, the resulting
-#' object is also of class \code{po_tree} and has an aditional attribute:
-#' \item{labels}{Named integer vector of size n. Original labels of the edgelist
-#' where the names are from 0 to \code{n}.}
-#' 
-#' @template parameters
-#' @templateVar edges 1
-#' @export
-#' @family Data management functions
-#' @examples
-#' # Recoding an ape tree -----------------------------------------------------
-#' 
-#' set.seed(1122233)
-#' apetree <- ape::rtree(5)
-#' potree  <- as_po_tree(apetree$edge)
-#' 
-#' apetree$edge
-#' potree
-#' 
-#' # Going back
-#' potree[] <- attr(potree, "labels")[potree[] + 1]
-#' potree # Ordering is a little off, but is the same tree
-#' 
-as_po_tree <- function(edges) {
-    .Call('aphylo_as_po_tree', PACKAGE = 'aphylo', edges)
+recode_as_po <- function(edges) {
+    .Call('aphylo_recode_as_po', PACKAGE = 'aphylo', edges)
 }
 
 list_offspring <- function(edges) {

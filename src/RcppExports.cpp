@@ -188,14 +188,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// as_po_tree
-IntegerMatrix as_po_tree(const arma::imat& edges);
-RcppExport SEXP aphylo_as_po_tree(SEXP edgesSEXP) {
+// recode_as_po
+IntegerMatrix recode_as_po(const arma::imat& edges);
+RcppExport SEXP aphylo_recode_as_po(SEXP edgesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type edges(edgesSEXP);
-    rcpp_result_gen = Rcpp::wrap(as_po_tree(edges));
+    rcpp_result_gen = Rcpp::wrap(recode_as_po(edges));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,7 +225,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"aphylo_sim_tree", (DL_FUNC) &aphylo_sim_tree, 1},
     {"aphylo_fast_table", (DL_FUNC) &aphylo_fast_table, 1},
     {"aphylo_fast_table_using_labels", (DL_FUNC) &aphylo_fast_table_using_labels, 2},
-    {"aphylo_as_po_tree", (DL_FUNC) &aphylo_as_po_tree, 1},
+    {"aphylo_recode_as_po", (DL_FUNC) &aphylo_recode_as_po, 1},
     {"aphylo_list_offspring", (DL_FUNC) &aphylo_list_offspring, 1},
     {NULL, NULL, 0}
 };

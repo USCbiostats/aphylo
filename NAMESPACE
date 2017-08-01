@@ -2,6 +2,8 @@
 
 S3method(as.apephylo,aphylo)
 S3method(as.apephylo,po_tree)
+S3method(as_po_tree,default)
+S3method(as_po_tree,phylo)
 S3method(coef,phylo_mle)
 S3method(plot,aphylo)
 S3method(plot,phylo_mle)

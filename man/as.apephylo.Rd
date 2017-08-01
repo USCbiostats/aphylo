@@ -68,6 +68,6 @@ head(edges_org)
 
 }
 \seealso{
-Other Data management functions: \code{\link{as_po_tree}},
-  \code{\link{new_aphylo}}
+Other Data management functions: \code{\link{aphylo-class}},
+  \code{\link{as_po_tree}}
 }
