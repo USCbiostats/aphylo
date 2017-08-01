@@ -10,10 +10,9 @@ sim_tree(n)
 \item{n}{Integer scalar. Number of leaf nodes.}
 }
 \value{
-An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
-Also, includes the following attributes:
-
+A List with the following:
+\item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
 \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
 \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
 offspring that each node has.}
@@ -51,7 +50,7 @@ in some (most) of its routines.
 \examples{
 # A very simple example ----------------------------------------------------
 set.seed(1223)
-newtree <- sim_tree(50)
+newtree <- sim_tree(50)$edges
 
 plot(as.apephylo(newtree))
 

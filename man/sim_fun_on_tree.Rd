@@ -42,8 +42,8 @@ newtree <- sim_tree(1e3)
     
 # Simulating
 ans <- sim_fun_on_tree(
-  attr(newtree, "offspring"),
-  attr(newtree, "noffspring"),
+  newtree$offspring,
+  newtree$noffspring,
   psi = c(.001, .05),
   mu = c(.01, .05),
   Pi = c(.5, .5)

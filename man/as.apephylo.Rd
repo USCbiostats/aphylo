@@ -51,7 +51,7 @@ set.seed(1231)
 # Generating a random tree: Observe that the nodes are coded such that
 # for all (i,j) that are offspring and parent i > j. This is a requirement
 # of the peeling algorithm
-edges <- sim_tree(30)
+edges <- sim_tree(30)$edges
 
 # In the ape package, nodes are labeled such that leafs are from 1 to n
 # root node is n+1 and interior nodes can have whatever label.

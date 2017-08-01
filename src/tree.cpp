@@ -80,7 +80,6 @@ IntegerMatrix recode_as_po(
     const arma::imat & edges
   ) {
 
-  
   // Creating saving storage
   unsigned int N = edges.n_rows;
   arma::imat edges0(edges);
@@ -134,17 +133,17 @@ IntegerMatrix recode_as_po(
   }
   
   // Creating nametags
-  StringVector names(Lans.size());
+  StringVector nnames(Lans.size());
   for (int i = 0; i< (int) Lans.size(); i++) {
     char name[10];
     sprintf(&(name[0]), "%i", i);
-    names[i] = name;
+    nnames[i] = name;
   }
   
-  Lans.attr("names") = names;
+  nnames.attr("names") = Rcpp::clone(nnames);
   
   // Returning
-  edges1.attr("labels") = Lans;
+  edges1.attr("labels") = nnames;
   edges1.attr("class")  = CharacterVector::create(
     "po_tree", "matrix"
   );

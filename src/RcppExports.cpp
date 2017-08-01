@@ -155,7 +155,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sim_tree
-IntegerMatrix sim_tree(int n);
+List sim_tree(int n);
 RcppExport SEXP aphylo_sim_tree(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

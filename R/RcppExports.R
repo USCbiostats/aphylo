@@ -157,8 +157,8 @@ prediction_score_rand <- function(A, W, alpha) {
 #'     
 #' # Simulating
 #' ans <- sim_fun_on_tree(
-#'   attr(newtree, "offspring"),
-#'   attr(newtree, "noffspring"),
+#'   newtree$offspring,
+#'   newtree$noffspring,
 #'   psi = c(.001, .05),
 #'   mu = c(.01, .05),
 #'   Pi = c(.5, .5)
@@ -204,10 +204,9 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 #' in some (most) of its routines.
 #' 
-#' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-#' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
-#' Also, includes the following attributes:
-#' 
+#' @return A List with the following:
+#' \item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+#' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
 #' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
 #' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
 #' offspring that each node has.}
@@ -215,7 +214,7 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' @examples
 #' # A very simple example ----------------------------------------------------
 #' set.seed(1223)
-#' newtree <- sim_tree(50)
+#' newtree <- sim_tree(50)$edges
 #' 
 #' plot(as.apephylo(newtree))
 #' 

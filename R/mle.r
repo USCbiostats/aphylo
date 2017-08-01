@@ -108,7 +108,7 @@
 #' 
 #' set.seed(1233)
 #' # Simulating a tree
-#' tree <- sim_tree(200)
+#' tree <- sim_tree(200)$edges
 #' 
 #' # Simulating functions
 #' dat <- sim_annotated_tree(

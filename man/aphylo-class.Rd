@@ -3,21 +3,21 @@
 \name{aphylo-class}
 \alias{aphylo-class}
 \alias{new_aphylo}
+\alias{print.aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
 new_aphylo(annotations, edges)
+
+\method{print}{aphylo}(x, ...)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
 
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 
-\item{leafidvar}{A character scalar with the name of the leaf id variable
-in \code{annotations}.}
+\item{x}{An object of class \code{aphylo}.}
 
-\item{funvars}{A character vector with the names of the function indicator
-(0-1) variables in \code{data_exper}. If not provided, it is assumed that
-all but \code{leafidvar} are function variables.}
+\item{...}{Further parameters passed to the method.}
 }
 \value{
 A list of length \eqn{n} with relative position of offspring
@@ -37,7 +37,7 @@ from the \CRANpkg{ape} package.
 
 data(fakeexperiment)
 data(faketree)
-ans <- new_aphylo(fakeexperiment, faketree, "LeafId")
+ans <- new_aphylo(fakeexperiment, faketree)
  
 # We can visualize it
 plot(ans)

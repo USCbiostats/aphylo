@@ -9,12 +9,10 @@ mu     <- c(.05, .1)
 Pi     <- 1 - .3
 errtol <- 1e-15
 
-O        <- new_aphylo(fakeexperiment, faketree, leafidvar = "LeafId")
+O  <- new_aphylo(fakeexperiment, faketree)
 
 S  <- states(2)
-# Pr <- phylogenetic:::leaf_prob(O$experiment, S, psi, O$noffspring)
 Pr <- probabilities(O$annotations, mu, psi, S, O$noffspring, O$offspring)
-Pr <- Pr[order(attr(O$edges, "labels")),]
 
 # Checking Leaf Probabilities --------------------------------------------------
 

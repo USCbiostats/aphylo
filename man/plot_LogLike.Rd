@@ -62,7 +62,7 @@ Plot LogLikelihood function of experimental data
 # Loading data
 data(fakeexperiment)
 data(faketree)
-O <- new_aphylo(fakeexperiment, faketree[,c("ParentId", "NodeId")], "LeafId")
+O <- new_aphylo(fakeexperiment, faketree)
 
 # Nice personalized plot
 plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 

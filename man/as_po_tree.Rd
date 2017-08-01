@@ -3,6 +3,8 @@
 \name{as_po_tree}
 \alias{as_po_tree}
 \alias{as_po_tree.phylo}
+\alias{is.po_tree}
+\alias{print.po_tree}
 \alias{as_po_tree.default}
 \alias{plot.po_tree}
 \title{Recodes an edgelist as a Partially Ordered Tree}
@@ -10,6 +12,10 @@
 as_po_tree(edges)
 
 \method{as_po_tree}{phylo}(edges)
+
+is.po_tree(x)
+
+\method{print}{po_tree}(x, ...)
 
 \method{as_po_tree}{default}(edges)
 
@@ -20,11 +26,11 @@ as_po_tree(edges)
 
 \item{x}{An object of class \code{aphylo}.}
 
+\item{...}{Further arguments passed to the method.}
+
 \item{y}{Ignored.}
 
 \item{tip.color}{See \code{\link[ape:plot.phylo]{plot.phylo}}}
-
-\item{...}{Further arguments passed to the method.}
 }
 \value{
 A matrix of the same dimension as \code{edges}, an edgelist, recoded
@@ -32,6 +38,9 @@ to form a partial order. Besides of been of class \code{matrix}, the resulting
 object is also of class \code{po_tree} and has an aditional attribute:
 \item{labels}{Named integer vector of size n. Original labels of the edgelist
 where the names are from 0 to \code{n}.}
+
+In the case of \code{is.po_tree}, \code{TRUE} if is an object of
+class \code{po_tree}, \code{FALSE} otherwise.
 }
 \description{
 The function \code{\link{new_aphylo}} uses this function to make sure that

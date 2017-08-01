@@ -1,5 +1,6 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats var coef vcov optim optimHess
+#' @importFrom utils head
 #' @importFrom ABCoptim abc_cpp
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points

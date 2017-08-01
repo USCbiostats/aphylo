@@ -35,8 +35,8 @@ int sample_int(int n) {
 //'     
 //' # Simulating
 //' ans <- sim_fun_on_tree(
-//'   attr(newtree, "offspring"),
-//'   attr(newtree, "noffspring"),
+//'   newtree$offspring,
+//'   newtree$noffspring,
 //'   psi = c(.001, .05),
 //'   mu = c(.01, .05),
 //'   Pi = c(.5, .5)
@@ -170,10 +170,9 @@ table(ans)
 //' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 //' in some (most) of its routines.
 //' 
-//' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-//' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
-//' Also, includes the following attributes:
-//' 
+//' @return A List with the following:
+//' \item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+//' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
 //' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
 //' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
 //' offspring that each node has.}
@@ -181,7 +180,7 @@ table(ans)
 //' @examples
 //' # A very simple example ----------------------------------------------------
 //' set.seed(1223)
-//' newtree <- sim_tree(50)
+//' newtree <- sim_tree(50)$edges
 //' 
 //' plot(as.apephylo(newtree))
 //' 
@@ -208,7 +207,7 @@ table(ans)
 //' }
 //' @export
 // [[Rcpp::export]]
-IntegerMatrix sim_tree(int n) {
+List sim_tree(int n) {
   
   // Initializing
   std::vector< int > offspring, parent;
@@ -265,14 +264,29 @@ IntegerMatrix sim_tree(int n) {
   }
   
   // Creating the answer
-  edges.attr("offspring")  = O;
-  edges.attr("noffspring") = noffspring;
   edges.attr("class") = CharacterVector::create(
     "po_tree",
     "matrix"
   );
   
-  return edges;
+  // And the vector of labels
+  StringVector nnames(O.size());
+  for (unsigned int i = 0; i<O.size() ; i++) {
+    char name[10];
+    sprintf(&(name[0]), "%i", i);
+    nnames[i] = name;
+  }
+  
+  nnames.attr("names") = Rcpp::clone(nnames);
+  
+  edges.attr("labels") = nnames;
+  
+  
+  return List::create(
+    _["edges"]      = edges,
+    _["offspring"]  = O,
+    _["noffspring"] = noffspring
+  );
   
 }
 

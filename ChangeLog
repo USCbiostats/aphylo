@@ -1,4 +1,9 @@
 2017-07-12  George G. Vega Yon <g.vegayon@gmail.com>
+	* Overall, working on the -aphylo- class object. Now it is better
+	  integrated with ape-phylo objects. Also, including class checks
+	  for the class creation method.
+
+2017-07-12  George G. Vega Yon <g.vegayon@gmail.com>
 	* playground/simulations: Moved to a different project aphylo_paper.
 	* src/phylo.cpp: Changed Pi to be -double- no longer an -arma::mat-.
 	* R/mle.r, R/plog_loglike.r: Idem.

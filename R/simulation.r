@@ -17,10 +17,13 @@
 #' ans <- sim_annotated_tree(n=500)
 #' 
 sim_annotated_tree <- function(
-  n = NULL, tree = NULL, P=1,
-  psi=c(.05, .05), mu=c(.1,.05), Pi=1
+  n    = NULL,
+  tree = NULL,
+  P    = 1,
+  psi  = c(.05, .05),
+  mu   = c(.1,.05),
+  Pi   = 1
   ) {
-  
   
   pars <- unlist(c(psi, mu, Pi), recursive = TRUE)
   names(pars) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
@@ -32,40 +35,37 @@ sim_annotated_tree <- function(
     if (!length(n))
       stop("When -tree- is not specified, -n- must be specified.")
     
-    tree <- sim_tree(n)  
+    ntree <- sim_tree(n)  
+    tree  <- ntree[["edges"]]
+    O     <- ntree[["offspring"]]
+    nO    <- ntree[["noffspring"]]
     
   } else {
     if (!inherits(tree, "po_tree"))
       stop("-tree- must be an object of class -po_tree- (see -sim_tree-).")
     
-    attr(tree, "offspring") <- list_offspring(tree)
-    attr(tree, "noffspring") <- sapply(attr(tree, "offspring"), length)
+    O  <- list_offspring(tree)
+    nO <- sapply(O, length)
   }
   
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
-    offspring  = attr(tree, "offspring"),
-    noffspring = attr(tree, "noffspring"),
+    offspring  = O,
+    noffspring = nO,
     psi        = c(pars["psi0"], pars["psi1"]),
     mu         = c(pars["mu0"], pars["mu1"]),
     Pi         = pars["Pi"],
     P          = P
   )
   
+  rownames(ans) <- unname(attr(tree, "labels"))
+  
   # Creating the aphylo object
-  structure(
-    list(
-      annotations = unname(ans),
-      fun_names  = colnames(ans), 
-      added      = rep(FALSE, nrow(ans)),
-      offspring  = attr(tree, "offspring"),
-      noffspring = attr(tree, "noffspring"),
-      edges   = {
-        mat <- array(dim=dim(tree))
-        mat[] <- tree[]
-        mat
-      }
-    ),
-    class = "aphylo"
+  as_aphylo(
+    annotations = ans,
+    offspring   = O,
+    noffspring  = nO,
+    edges       = tree
   )
+  
 }
