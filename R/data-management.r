@@ -103,34 +103,24 @@ as_po_tree.default <- function(edges) {
     edges <- as.matrix(edges)
   }
   
-  # Checking if it is character
+  # Treating as character
   m <- nrow(edges)
-  if (mode(edges) == "character") {
-    
-    # Retrieving labels
-    labels <- as.factor(c(edges[,1,drop=TRUE], edges[,2,drop=TRUE]))
-    
-    # Getting it as integer
-    edges      <- cbind(
-      as.integer(labels[1:m]),
-      as.integer(labels[(m+1):length(labels)])
-    )
-    
-    # And the corresponding labels
-    labels <- levels(labels)
-    
-  } else {
-    
-    edges  <- apply(edges, 2, as.integer)
-    labels <- NULL
-    
-  }
+  edges <- apply(edges, 2, as.character)
+
+  # Retrieving labels
+  labels <- as.factor(c(edges[,1,drop=TRUE], edges[,2,drop=TRUE]))
+  
+  # Getting it as integer
+  edges      <- matrix(as.integer(labels), byrow = FALSE, ncol = 2)
+  
+  # And the corresponding labels
+  labels <- levels(labels)
   
   # Recoding as a PO tree and recycling the labels
   edges <- recode_as_po(edges)
   if (length(labels)) {
     attr(edges, "labels") <- structure(
-      labels[attr(edges, "labels")],
+      labels[as.integer(attr(edges, "labels"))],
       names = names(attr(edges, "labels"))
     )
   }

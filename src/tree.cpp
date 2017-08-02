@@ -87,6 +87,8 @@ IntegerMatrix recode_as_po(
   IntegerMatrix edges1(N, 2u);
   
   // Fetching labels and computing the indegree vector
+  // L    : Labels,
+  // Lans : Resulting labels
   arma::ivec L = arma::unique(arma::vectorise(edges0));
   IntegerVector Lans(L.size());  
   arma::uvec nparents = fast_table_using_labels(edges0.col(1u), L);
@@ -103,11 +105,13 @@ IntegerMatrix recode_as_po(
   // Checking if all this makes sense
   if (counter == 0u)
     Rcpp::stop("There are no root nodes (i.e. indegree == 0).");
+  else if (counter > 1u)
+    Rcpp::stop("There are more than 1 root node.");
   
   unsigned int i, j, iE = 0u;
   for (i = 0u; i < Lans.size(); i++) {
     
-    // Find offsprings: Vector of individuals equal to 
+    // Find offsprings: Vector of individuals equal to the label of Lans.at(i)
     arma::uvec offspring = arma::find(edges0.col(0u) == Lans.at(i));
     
     // If no offspring, then continue
@@ -134,16 +138,20 @@ IntegerMatrix recode_as_po(
   
   // Creating nametags
   StringVector nnames(Lans.size());
+  StringVector labels(Lans.size());
   for (int i = 0; i< (int) Lans.size(); i++) {
-    char name[10];
+    char name[10], lab[10];
     sprintf(&(name[0]), "%i", i);
     nnames[i] = name;
+    
+    sprintf(&(lab[0]), "%i", Lans.at(i));
+    labels[i] = lab;
   }
   
-  nnames.attr("names") = Rcpp::clone(nnames);
+  labels.attr("names") = Rcpp::clone(nnames);
   
   // Returning
-  edges1.attr("labels") = nnames;
+  edges1.attr("labels") = labels;
   edges1.attr("class")  = CharacterVector::create(
     "po_tree", "matrix"
   );

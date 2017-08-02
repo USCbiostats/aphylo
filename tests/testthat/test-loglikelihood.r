@@ -14,6 +14,9 @@ O  <- new_aphylo(fakeexperiment, faketree)
 S  <- states(2)
 Pr <- probabilities(O$annotations, mu, psi, S, O$noffspring, O$offspring)
 
+# Sorting
+Pr <- Pr[order(rownames(O$annotations)),]
+
 # Checking Leaf Probabilities --------------------------------------------------
 
 test_that("Leaf Probabilities", {
