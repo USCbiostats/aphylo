@@ -48,8 +48,7 @@ head(faketree)
 
 ```{r Get offspring}
 O <- new_aphylo(
-  annotations = fakeexperiment, 
-  leafidvar   = "LeafId",
+  annotations = fakeexperiment,
   edges       = faketree
 )
 

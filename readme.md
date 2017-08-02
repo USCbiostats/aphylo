@@ -1,7 +1,7 @@
 aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](http://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](http://codecov.io/github/USCbiostats/aphylo?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](https://codecov.io/github/USCbiostats/aphylo?branch=master)
 
 The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
 
@@ -37,11 +37,11 @@ data("faketree")
 head(fakeexperiment)
 ```
 
-    ##   f1 f2 LeafId
-    ## 1  0  0      3
-    ## 2  0  1      4
-    ## 3  1  0      5
-    ## 4  1  1      6
+    ##   LeafId f1 f2
+    ## 1      3  0  0
+    ## 2      4  0  1
+    ## 3      5  1  0
+    ## 4      6  1  1
 
 ``` r
 head(faketree)
@@ -57,8 +57,7 @@ head(faketree)
 
 ``` r
 O <- new_aphylo(
-  annotations = fakeexperiment, 
-  leafidvar   = "LeafId",
+  annotations = fakeexperiment,
   edges       = faketree
 )
 
@@ -70,7 +69,9 @@ as.apephylo(O)
     ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] "leaf001" "leaf002" "leaf003" "leaf004"
+    ## [1] "3" "4" "5" "6"
+    ## Node labels:
+    ## [1] "0" "1" "2"
     ## 
     ## Rooted; includes branch lengths.
 
@@ -106,7 +107,9 @@ as.apephylo(dat)
     ## Phylogenetic tree with 100 tips and 99 internal nodes.
     ## 
     ## Tip labels:
-    ##  leaf001, leaf002, leaf003, leaf004, leaf005, leaf006, ...
+    ##  164, 168, 109, 110, 175, 171, ...
+    ## Node labels:
+    ##  0, 98, 97, 96, 95, 94, ...
     ## 
     ## Rooted; includes branch lengths.
 
@@ -172,7 +175,7 @@ plot_LogLike(ans0)
 ```
 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:   46.9605,
+    ## ll:  -46.9605,
     ## Method used: ABC (119 iterations)
     ## Leafs
     ##  # of Functions 1
