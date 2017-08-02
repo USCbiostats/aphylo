@@ -1,7 +1,7 @@
 aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](https://codecov.io/github/USCbiostats/aphylo?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 
 The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
 
@@ -61,7 +61,29 @@ O <- new_aphylo(
   edges       = faketree
 )
 
-# There is no nice print method for now
+O
+```
+
+    ## 
+    ## A PARTIALLY ORDERED PHYLOGENETIC TREE
+    ## 
+    ##   # Internal nodes: 3
+    ##   # Leaf nodes    : 4
+    ## 
+    ##   Leaf nodes labels: 
+    ##     6, 5, 4, 3, ...
+    ## 
+    ##   Internal nodes labels:
+    ##     0, 2, 1, ...
+    ## 
+    ## ANNOTATIONS:
+    ##   f1 f2
+    ## 6  1  1
+    ## 5  1  0
+    ## 4  0  1
+    ## 3  0  0
+
+``` r
 as.apephylo(O)
 ```
 
@@ -79,6 +101,9 @@ as.apephylo(O)
 # We can visualize it
 plot(O)
 ```
+
+    ## Scale for 'fill' is already present. Adding another scale for 'fill',
+    ## which will replace the existing scale.
 
 ![](readme_files/figure-markdown_github-ascii_identifiers/Get%20offspring-1.png)
 
@@ -100,18 +125,31 @@ dat <- sim_annotated_tree(
   Pi  = 1
   )
 
-as.apephylo(dat)
+dat
 ```
 
     ## 
-    ## Phylogenetic tree with 100 tips and 99 internal nodes.
+    ## A PARTIALLY ORDERED PHYLOGENETIC TREE
     ## 
-    ## Tip labels:
-    ##  164, 168, 109, 110, 175, 171, ...
-    ## Node labels:
-    ##  0, 98, 97, 96, 95, 94, ...
+    ##   # Internal nodes: 99
+    ##   # Leaf nodes    : 100
     ## 
-    ## Rooted; includes branch lengths.
+    ##   Leaf nodes labels: 
+    ##     99, 100, 101, 102, 103, 104, ...
+    ## 
+    ##   Internal nodes labels:
+    ##     0, 1, 2, 3, 4, 5, ...
+    ## 
+    ## ANNOTATIONS:
+    ##     fun0000
+    ## 99        1
+    ## 100       1
+    ## 101       0
+    ## 102       1
+    ## 103       1
+    ## 104       1
+    ## 
+    ## ...(94 obs. omitted)...
 
 Likelihood
 ----------
@@ -143,9 +181,10 @@ Estimation
 
 ``` r
 # Using L-BFGS-B (MLE)
-(ans0 <- phylo_mle(dat))
+(ans0 <- aphylo_mle(dat))
 ```
 
+    ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
     ## ll:  -46.9586,
     ## Method used: L-BFGS-B (39 iterations)
@@ -170,34 +209,15 @@ plot_LogLike(ans0)
 ![](readme_files/figure-markdown_github-ascii_identifiers/MLE-1.png)
 
 ``` r
-# Using ABC (MLE)
-(ans1 <- phylo_mle(dat, method="ABC"))
-```
-
-    ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -46.9605,
-    ## Method used: ABC (119 iterations)
-    ## Leafs
-    ##  # of Functions 1
-    ##  # of 0:    25 (25%)
-    ##  # of 1:    75 (75%)
-    ## 
-    ##          Estimate  Std. Error
-    ##  psi[0]    0.1869      0.2542
-    ##  psi[1]    0.0000      0.0613
-    ##  mu[0]     0.0991      0.1380
-    ##  mu[1]     0.0699      0.0380
-    ##  Pi        1.0000      1.0798
-
-``` r
 # MCMC method
-ans2 <- phylo_mcmc(
+ans2 <- aphylo_mcmc(
   ans0$par, dat,
   prior = function(p) dbeta(p, 2,20),
   control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
 ```
 
+    ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
     ## ll:  -42.7479,
     ## Method used: mcmc (10000 iterations)

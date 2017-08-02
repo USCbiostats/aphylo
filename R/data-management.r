@@ -31,8 +31,7 @@
 #' potree
 #' 
 #' # Going back
-#' potree[] <- attr(potree, "labels")[potree[] + 1]
-#' potree # Ordering is a little off, but is the same tree
+#' as_po_tree(apetree)
 #' 
 #' @export
 as_po_tree <- function(edges) UseMethod("as_po_tree")
@@ -65,12 +64,22 @@ is.po_tree <- function(x) inherits(x, "po_tree")
 #' @export
 #' @rdname as_po_tree
 print.po_tree <- function(x, ...) {
+  # Which are leafs
+  dgr <- fast_table_using_labels(
+    x[,1],
+    as.integer(names(attr(x, "labels")))
+    )
+  
   cat(
-    "\nA PARTIALLY ORDERED PHYLOGENETIC TREE",
-    sprintf("  # Internal nodes: %i", 1),
-    sprintf("  Leaf nodes labels: %s, ...\n",
-            paste0(utils::head(attr(x, "labels")), collapse = ", ")
+    "\nA PARTIALLY ORDERED PHYLOGENETIC TREE\n",
+    sprintf("  # Internal nodes: %i", attr(x, "Nnode")),
+    sprintf("  # Leaf nodes    : %i\n", length(attr(x, "labels")) - attr(x, "Nnode")),
+    sprintf("  Leaf nodes labels: \n    %s, ...\n",
+            paste0(utils::head(attr(x, "labels")[which(dgr==0)]), collapse = ", ")
             ),
+    sprintf("  Internal nodes labels:\n    %s, ...\n",
+            paste0(utils::head(attr(x, "labels")[which(dgr>0)]), collapse = ", ")
+    ),
     
     sep = "\n"
   )
@@ -135,7 +144,7 @@ as_po_tree.default <- function(edges) {
 #' 
 #' @template parameters
 #' @templateVar edges 1
-#' @templateVar annotations 1
+#' @templateVar annotationslab 1
 #' @param ... Further parameters passed to the method.
 #' 
 #' @details Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
@@ -153,6 +162,7 @@ as_po_tree.default <- function(edges) {
 #' # We can visualize it
 #' plot(ans)
 #' @family Data management functions
+#' @family aphylo methods
 #' @name aphylo-class
 NULL
 
@@ -252,7 +262,7 @@ new_aphylo <- function(
   }
   
   # Sorting the data
-  A <- A[attr(E, "labels"), ]
+  A <- A[attr(E, "labels"), ,drop=FALSE]
   
   # Listing offsprings
   O <- list_offspring(E)
@@ -300,19 +310,6 @@ as_aphylo <- function(
     ),
     class = "aphylo"
   )
-}
-
-#' @export
-#' @rdname aphylo-class
-#' @param x An object of class \code{aphylo}.
-print.aphylo <- function(x, ...) {
-  cat(
-    "\nANNOTATED PHYLOGENETIC TREE",
-    sprintf("  # of functions: %i", ncol(x$annotations)),
-    sep="\n"
-    )
-  print(x$edges)
-  invisible(x)
 }
 
 #' Coercing into \code{phylo} objects of the \pkg{ape} package.
@@ -392,22 +389,92 @@ as.apephylo.po_tree <- function(x, ...) {
 
 
 #' Plot and print methods for \code{aphylo} objects
+#' 
 #' @param x An object of class \code{aphylo}.
 #' @param y Ignored.
-#' @param tip.color See \code{\link[ape:plot.phylo]{plot.phylo}}
+#' @param geom.tiplab.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
+#' @param gheatmap.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
+#' @param scale.fill.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
 #' @param ... Further arguments passed to the method.
-#' @rdname new_aphylo
+#' @name aphylo-methods
+#' @details The \code{plot.aphylo} function is a wrapper of \code{\link[ggtree:ggtree]{ggtree}}
+#' that creates a visualization as follows:
+#' \enumerate{
+#'   \item Retrieve the annotations from the \code{\link[=aphylo-class]{aphylo}} object
+#'   \item Create a \code{ggtree} map adding \code{\link[ggtree:geom_tiplab]{geom_tiplab}}s
+#'   \item Use \code{\link[ggtree:gheatmap]{gheatmap}} to add a heatmap.
+#'   \item Set the colors using \code{\link[ggplot2:scale_fill_manual]{scale_fill_manual}}
+#' }
+#' 
 #' @export
+#' @return In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
+#' @family aphylo methods
 plot.aphylo <- function(
-  x, y=NULL, tip.color=NULL, ...) {
-  # 
-  # if (!length(tip.color)) {
-  #   tip.color <- colors(9)[with(x, experiment[leaf_node,1,drop=TRUE])]
-  # } 
-  # 
-  plot(as.apephylo.aphylo(x), tip.color=tip.color, ...)
+  x,
+  y=NULL,
+  geom.tiplab.args = list(),
+  gheatmap.args    = list(),
+  scale.fill.args  = list(), 
+  ...
+) {
   
+  # Checkingout arguments
+  if (!("align" %in% geom.tiplab.args)) geom.tiplab.args$align <- TRUE
+  
+  if (!("width" %in% gheatmap.args)) gheatmap.args$width <- .25
+  if (!("color" %in% gheatmap.args)) gheatmap.args$color <- "black"
+  
+  if (!("breaks" %in% scale.fill.args)) scale.fill.args$breaks <- c("0", "1", "9")
+  if (!("values" %in% scale.fill.args)) scale.fill.args$values <- c("0" = "gray", "1" = "steelblue", "9"="white")
+  if (!("labels" %in% scale.fill.args)) scale.fill.args$labels <- c("No function", "Function", "N/A")
+  
+  # Retrieving the annotations
+  A <- as.data.frame(apply(x$annotations,2,as.character))
+  
+  # Creating the mapping
+  p <- ggtree::ggtree(as.apephylo(x$edges)) +
+    do.call(ggtree::geom_tiplab, geom.tiplab.args)
+  
+  # Adding the functions
+  p <- do.call(ggtree::gheatmap, c(list(p=p, data=A),gheatmap.args)) +
+    do.call(ggplot2::scale_fill_manual, scale.fill.args)
+  
+  p
 }
+
+#' @rdname aphylo-methods
+#' @export
+leafs <- function(x) {
+  if (!inherits(x, "aphylo"))
+    stop("No -leafs- method for class -", class(x),"-.")
+  
+  labs <- attr(x$edges, "labels")
+  d <- fast_table_using_labels(x$edges[,1], as.integer(names(labs)))
+  
+  unname(labs[which(d == 0)])
+}
+
+#' @export
+#' @rdname aphylo-methods
+#' @return In the case of \code{print.aphylo}, the same \code{aphylo} object
+#' invisible.
+print.aphylo <- function(x, ...) {
+  
+  print(x$edges)
+  
+  cat("ANNOTATIONS:\n")
+  
+  ids <- leafs(x)
+  print(utils::head(x$annotations[ids,,drop=FALSE]))
+  
+  if (length(ids) > 6)
+    cat("\n...(", length(ids) - 6, " obs. omitted)...\n\n", sep="")
+  
+  
+  invisible(x)
+}
+
+
 
 #' @param x An object of class \code{aphylo}.
 #' @param y Ignored.

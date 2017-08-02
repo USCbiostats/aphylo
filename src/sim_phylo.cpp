@@ -280,13 +280,17 @@ List sim_tree(int n) {
   nnames.attr("names") = Rcpp::clone(nnames);
   
   edges.attr("labels") = nnames;
+  edges.attr("Nnode")  = nnames.size() - n;
   
-  
-  return List::create(
+  List ans = List::create(
     _["edges"]      = edges,
     _["offspring"]  = O,
     _["noffspring"] = noffspring
   );
+  
+  ans.attr("class") = "aphylo_sim_tree";
+  
+  return ans;
   
 }
 

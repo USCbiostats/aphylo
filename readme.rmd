@@ -5,7 +5,8 @@ output: github_document
 
 [![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo)
-[![Coverage Status](https://img.shields.io/codecov/c/github/USCbiostats/aphylo/master.svg)](https://codecov.io/github/USCbiostats/aphylo?branch=master)
+[![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -52,7 +53,7 @@ O <- new_aphylo(
   edges       = faketree
 )
 
-# There is no nice print method for now
+O
 as.apephylo(O)
 
 # We can visualize it
@@ -71,7 +72,7 @@ dat <- sim_annotated_tree(
   Pi  = 1
   )
 
-as.apephylo(dat)
+dat
 ```
 
 
@@ -99,15 +100,13 @@ with(dat,
 
 ```{r MLE}
 # Using L-BFGS-B (MLE)
-(ans0 <- phylo_mle(dat))
+(ans0 <- aphylo_mle(dat))
 # Plotting loglike
 plot_LogLike(ans0)
 
-# Using ABC (MLE)
-(ans1 <- phylo_mle(dat, method="ABC"))
 
 # MCMC method
-ans2 <- phylo_mcmc(
+ans2 <- aphylo_mcmc(
   ans0$par, dat,
   prior = function(p) dbeta(p, 2,20),
   control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))

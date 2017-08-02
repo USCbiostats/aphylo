@@ -3,19 +3,14 @@
 \name{aphylo-class}
 \alias{aphylo-class}
 \alias{new_aphylo}
-\alias{print.aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
 new_aphylo(annotations, edges)
-
-\method{print}{aphylo}(x, ...)
 }
 \arguments{
-\item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
+\item{annotations}{Matrix of size \eqn{n\times P + 1}{n*P + 1}. Annotation data, where the first column is the nodeid (should coincide with the coding of the tree), the following columns are function annotations coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
 
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
-
-\item{x}{An object of class \code{aphylo}.}
 
 \item{...}{Further parameters passed to the method.}
 }
@@ -45,4 +40,6 @@ plot(ans)
 \seealso{
 Other Data management functions: \code{\link{as.apephylo}},
   \code{\link{as_po_tree}}
+
+Other aphylo methods: \code{\link{aphylo-methods}}
 }

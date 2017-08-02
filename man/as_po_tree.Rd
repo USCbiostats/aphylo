@@ -66,8 +66,7 @@ apetree$edge
 potree
 
 # Going back
-potree[] <- attr(potree, "labels")[potree[] + 1]
-potree # Ordering is a little off, but is the same tree
+as_po_tree(apetree)
 
 }
 \seealso{

@@ -108,16 +108,18 @@ IntegerMatrix recode_as_po(
   else if (counter > 1u)
     Rcpp::stop("There are more than 1 root node.");
   
-  unsigned int i, j, iE = 0u;
+  unsigned int i, j, iE = 0u, nleafs = 0u;
   for (i = 0u; i < Lans.size(); i++) {
     
     // Find offsprings: Vector of individuals equal to the label of Lans.at(i)
     arma::uvec offspring = arma::find(edges0.col(0u) == Lans.at(i));
     
-    // If no offspring, then continue
-    if (offspring.n_rows == 0u)
+    // If no offspring (then leaf), then continue
+    if (offspring.n_rows == 0u) {
+      nleafs++;
       continue;
-    
+    }
+
     // Add them to the list
     j = offspring.size();
     while (j != 0) {
@@ -135,7 +137,7 @@ IntegerMatrix recode_as_po(
     }
       
   }
-  
+
   // Creating nametags
   StringVector nnames(Lans.size());
   StringVector labels(Lans.size());
@@ -155,6 +157,8 @@ IntegerMatrix recode_as_po(
   edges1.attr("class")  = CharacterVector::create(
     "po_tree", "matrix"
   );
+  
+  edges1.attr("Nnode") = labels.size() - nleafs;
   
   return edges1;
   

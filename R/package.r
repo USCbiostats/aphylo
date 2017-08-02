@@ -1,13 +1,14 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats var coef vcov optim optimHess
 #' @importFrom utils head
-#' @importFrom ABCoptim abc_cpp
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points
 #' @importFrom grDevices colors trans3d
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
+#' @importFrom ggtree ggtree geom_tiplab gheatmap
+#' @importFrom ggplot2 scale_fill_manual
 NULL
 
 #' @useDynLib aphylo

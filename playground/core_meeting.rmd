@@ -105,8 +105,8 @@ mtext(
 
 ```{r mle, cache=TRUE}
 # Computing Estimating the parameters 
-ans_nr  <- phylo_mle(rep(.5,5), dat=O)
-ans_abc <- phylo_mle(rep(.5,5), dat=O, useABC = TRUE,
+ans_nr  <- aphylo_mle(rep(.5,5), dat=O)
+ans_abc <- aphylo_mle(rep(.5,5), dat=O, useABC = TRUE,
                      control = list(maxCycle = 50))
 ```
 
@@ -129,7 +129,7 @@ par(oldpar)
 \footnotesize
 
 ```{r mle-prior, cache=TRUE}
-ans_w_prior <- phylo_mle(rep(.5,5), dat=O, useABC = TRUE,
+ans_w_prior <- aphylo_mle(rep(.5,5), dat=O, useABC = TRUE,
                      priors = function(pars) dbeta(pars[1:2], 2, 10),
                      control = list(maxCycle = 50))
 ```

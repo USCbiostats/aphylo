@@ -1,4 +1,11 @@
-2017-08-31  George G. Vega Yon <g.vegayon@gmail.com>
+2017-08-01  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Working on aphylo-class. Plot method
+	  using ggtree.
+	* R/estimation.r: Removing ABC method and cleaning code.
+	* tests/*: Adding more tests.
+
+
+2017-07-31  George G. Vega Yon <g.vegayon@gmail.com>
 	* Overall, working on the -aphylo- class object. Now it is better
 	  integrated with ape-phylo objects. Also, including class checks
 	  for the class creation method.

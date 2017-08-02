@@ -8,7 +8,7 @@ test_that("plotll", {
   expect_silent(plot_LogLike(dat))
 
   # phylo_mle method
-  ans <- phylo_mle(dat)
+  ans <- aphylo_mle(dat)
   expect_silent(plot_LogLike(ans))
   
 })

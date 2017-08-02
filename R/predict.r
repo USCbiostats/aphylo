@@ -1,12 +1,12 @@
 
-#' @rdname mle
+#' @rdname aphylo_estimates-class
 #' @param what Either a character scalar or an integer vector. If a character,
 #' then it can be either \code{"missings"}, \code{"leafs"}, or \code{"all"}. If an integer vector,
 #' then these must be values between \eqn{[0, n - 1]} (node ids).
 #' @return In the case of the \code{predict} method, a two-column numeric matrix
 #' with values between \eqn{[0,1]} (probabilities).
 #' @export
-predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
+predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   
   # Parameters
   n <- nrow(object$dat$annotations)
@@ -40,7 +40,9 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
     ids <- 0L:(n-1L)
   } else if (length(what) == 1 && what == "leafs") {
     ids <- which(object$dat$noffspring == 0) - 1L
-  }else 
+  } else if (is.vector(what) & inherits(what, "character")) {
+    ids <- match(what, rownames(object$dat$annotations))
+  } else 
     stop("Undefined method for -what- equal to: ", what)
   
   # Running prediction function
@@ -58,18 +60,20 @@ predict.phylo_mle <- function(object, what = c("missings", "all"), ...) {
   )
   
   # Adding names
-  dimnames(pred) <- list(ids, colnames(object$dat$annotations))
+  dimnames(pred) <- list(
+    rownames(object$dat$annotations)[ids],
+    colnames(object$dat$annotations))
   
   pred
 }
 
-#' @rdname mle
+#' @rdname aphylo_estimates-class
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
 #' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
 #' used to compute the random imputation score.
 #' @export
 #' @details In the case of \code{prediction_score}, \code{...} are passed to
-#' \code{predict.phylo_mle}.
+#' \code{predict.aphylo_estimates}.
 prediction_score <- function(x, expected = NULL, alpha = 0.5, ...) {
   
   # Finding relevant ids
@@ -88,7 +92,7 @@ prediction_score <- function(x, expected = NULL, alpha = 0.5, ...) {
   ids <- intersect(ids, which(x$dat$noffspring == 0))
 
   # Prediction
-  pred <- predict.phylo_mle(x, what = ids - 1L, ...)
+  pred <- predict.aphylo_estimates(x, what = ids - 1L, ...)
   
   # Inverse of Geodesic distances
   G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
@@ -133,7 +137,7 @@ predict_random <- function(P, A, G_inv) {
 }
 
 #' @export
-#' @rdname mle
+#' @rdname aphylo_estimates-class
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
   with(x, cat(

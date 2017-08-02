@@ -7,7 +7,7 @@
 probabilities(annotations, mu, psi, S, noffspring, offspring)
 }
 \arguments{
-\item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, one column per function coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} otherwise (no information).}
+\item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, each column is a functional annotation coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 

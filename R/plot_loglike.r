@@ -36,7 +36,7 @@ plot_LogLike <- function(x, ...) UseMethod("plot_LogLike")
 
 #' @export
 #' @rdname plot_LogLike
-plot_LogLike.phylo_mle <- function(x, ...) {
+plot_LogLike.aphylo_estimates <- function(x, ...) {
   # provided <- names(list(...))
   plot_LogLike.default(x$dat, psi = x$par[1:2], mu = x$par[3:4], Pi = x$par[5], ...)
 }
@@ -60,7 +60,7 @@ plot_LogLike.default <- function(
   par.args  = list(mar=c(1, 1, 1, 1), oma=c(0,0,4,0)),
   theta     = -pi*20, 
   shade     = .7,
-  border    = "darkblue",
+  border    = "steelblue",
   phi       = 30,
   scale     = TRUE,
   ...

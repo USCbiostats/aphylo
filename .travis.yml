@@ -8,6 +8,9 @@ r_github_packages:
   - USCBiostats/amcmc
   - gvegayon/ABCoptim
 
+bioc_packages:
+  - ggtree
+
 os:
   - linux
   - osx

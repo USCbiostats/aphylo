@@ -130,7 +130,7 @@ arma::mat probabilities(
 //' This function computes the log-likelihood of the chosen parameters given
 //' a particular dataset. The arguments \code{annotations}, \code{offspring}, and
 //' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
-//' For complete Maximum Likelihood Estimation see \code{\link{mle}}.
+//' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
 //' 
 //' @template parameters
 //' @templateVar annotations 1

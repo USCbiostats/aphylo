@@ -15,6 +15,7 @@ install:
 build_script:
   - travis-tool.sh install_github USCbiostats/amcmc
   - travis-tool.sh install_github gvegayon/ABCoptim
+  - travis-tool.sh install_bioc ggtree
   - travis-tool.sh install_deps
 
 test_script:

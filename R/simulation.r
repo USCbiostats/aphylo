@@ -69,3 +69,22 @@ sim_annotated_tree <- function(
   )
   
 }
+
+
+#' @rdname sim_tree
+#' @export
+#' @param x An object of class \code{sim_tree}
+#' @param ... Ignored.
+print.aphylo_sim_tree <- function(x, ...) {
+  nelems <- length(attr(x$edges, "labels"))
+  
+  cat("\nA RANDOM PHYLOGENETIC TREE (list with 3 elements):\n\n(1) po_tree ($edges):")
+  print(x$edges)
+  
+  cat("(2) List of offspring ($offspring).\n")
+
+  cat("\n(3) Number of offspring ($noffspring).\n\n")
+
+  
+  invisible(x)
+}
