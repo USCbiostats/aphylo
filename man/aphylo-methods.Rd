@@ -5,6 +5,7 @@
 \alias{plot.aphylo}
 \alias{leafs}
 \alias{print.aphylo}
+\alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
 \method{plot}{aphylo}(x, y = NULL, geom.tiplab.args = list(),
@@ -13,6 +14,8 @@
 leafs(x)
 
 \method{print}{aphylo}(x, ...)
+
+\method{summary}{aphylo}(object, ...)
 }
 \arguments{
 \item{x}{An object of class \code{aphylo}.}

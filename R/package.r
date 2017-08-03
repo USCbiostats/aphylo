@@ -3,7 +3,7 @@
 #' @importFrom utils head
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points
-#' @importFrom grDevices colors trans3d
+#' @importFrom grDevices colors trans3d adjustcolor
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo

@@ -173,6 +173,18 @@ NULL
 # attr(x, "offspring") <- NULL
 # check_edgelist(as.matrix(unclass(x)));x
 
+duplicate_check <- function(x, what) {
+  f <- as.factor(x)
+  l <- levels(f)
+  d <- fast_table(as.integer(f))
+  ans <- l[d[which(d[,2] > 1),1]]
+  if (length(ans))
+    stop("The following ", what, " have repeated measures:\n  ",
+         paste(sprintf("- %s (x%i)", ans, d[which(d[,2] > 1),2]), collapse=",\n  "), ".")
+  
+  invisible(0)
+}
+
 check_annotations <- function(x) {
   
   # Checking class
@@ -187,6 +199,9 @@ check_annotations <- function(x) {
   
   # Checking class and coercing
   node_labels <- as.character(x[,1])
+  duplicate_check(node_labels, "genes in -annotations-")
+  
+  
   test        <- apply(x[,-1,drop=FALSE], 2, typeof)
   test        <- which(!sapply(test, `%in%`, table = c("integer", "double")))
   if (length(test))
@@ -419,14 +434,14 @@ plot.aphylo <- function(
 ) {
   
   # Checkingout arguments
-  if (!("align" %in% geom.tiplab.args)) geom.tiplab.args$align <- TRUE
+  if (!("align" %in% names(geom.tiplab.args))) geom.tiplab.args$align <- TRUE
   
-  if (!("width" %in% gheatmap.args)) gheatmap.args$width <- .25
-  if (!("color" %in% gheatmap.args)) gheatmap.args$color <- "black"
+  if (!("width" %in% names(gheatmap.args))) gheatmap.args$width <- .25
+  if (!("color" %in% names(gheatmap.args))) gheatmap.args$color <- grDevices::adjustcolor("gray", .5)
   
-  if (!("breaks" %in% scale.fill.args)) scale.fill.args$breaks <- c("0", "1", "9")
-  if (!("values" %in% scale.fill.args)) scale.fill.args$values <- c("0" = "gray", "1" = "steelblue", "9"="white")
-  if (!("labels" %in% scale.fill.args)) scale.fill.args$labels <- c("No function", "Function", "N/A")
+  if (!("breaks" %in% names(scale.fill.args))) scale.fill.args$breaks <- c("0", "1", "9")
+  if (!("values" %in% names(scale.fill.args))) scale.fill.args$values <- c("gray", "steelblue", "white")
+  if (!("labels" %in% names(scale.fill.args))) scale.fill.args$labels <- c("No function", "Function", "N/A")
   
   # Retrieving the annotations
   A <- as.data.frame(apply(x$annotations,2,as.character))
@@ -474,6 +489,32 @@ print.aphylo <- function(x, ...) {
   invisible(x)
 }
 
+#' @export
+#' @rdname aphylo-methods
+summary.aphylo <- function(object, ...) {
+  ans <- apply(object$annotations, 2, table)
+  
+  if (!inherits(ans, "list"))
+    ans <- list(ans[,1,drop=TRUE])
+  
+  ans <- do.call(
+    rbind, 
+    lapply(ans, function(x)
+    data.frame(
+      `0` = x["0"],
+      `1` = x["1"],
+      `NA` = x["9"],
+      check.names = FALSE
+      )
+    )
+  )
+  rownames(ans) <- colnames(object$annotations)
+  cat("\nDistribution of functions:\n")
+  print(ans)
+  
+  invisible(ans)
+  
+}
 
 
 #' @param x An object of class \code{aphylo}.
