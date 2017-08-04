@@ -154,4 +154,12 @@ ans_mcmc <- aphylo_mcmc(
 )
 }
 
+# Example with prediction_score ---------------------------------------------
+set.seed(1312)
+ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
+ans <- aphylo_mcmc(rep(.05, 5), ap, control = list(nbatch=1e4, thin=100),
+                   priors = function(x) dbeta(x, 1, 30))
+                   
+pr <- prediction_score(ans)
+with(pr, cbind(Expected = expected, Predicted = predicted))
 }

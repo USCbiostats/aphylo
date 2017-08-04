@@ -490,6 +490,7 @@ print.aphylo <- function(x, ...) {
 }
 
 #' @export
+#' @param object An object of class \code{aphylo}.
 #' @rdname aphylo-methods
 summary.aphylo <- function(object, ...) {
   ans <- apply(object$annotations, 2, table)

@@ -1,3 +1,7 @@
+2017-08-04  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/panther.r: New function to read panther trees' annotation.
+
+
 2017-08-01  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Working on aphylo-class. Plot method
 	  using ggtree.

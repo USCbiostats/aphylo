@@ -21,6 +21,7 @@ Imports:
     Matrix,
     methods,
     coda, ape,
+    stringr,
     ggplot2, ggtree,
     amcmc
 Suggests:

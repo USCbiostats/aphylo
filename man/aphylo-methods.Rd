@@ -29,6 +29,8 @@ leafs(x)
 \item{scale.fill.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}}
 
 \item{...}{Further arguments passed to the method.}
+
+\item{object}{An object of class \code{aphylo}.}
 }
 \value{
 In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
