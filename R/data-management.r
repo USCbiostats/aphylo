@@ -437,7 +437,7 @@ plot.aphylo <- function(
   if (!("align" %in% names(geom.tiplab.args))) geom.tiplab.args$align <- TRUE
   
   if (!("width" %in% names(gheatmap.args))) gheatmap.args$width <- .25
-  if (!("color" %in% names(gheatmap.args))) gheatmap.args$color <- grDevices::adjustcolor("gray", .5)
+  if (!("color" %in% names(gheatmap.args))) gheatmap.args$color <- "transparent"
   
   if (!("breaks" %in% names(scale.fill.args))) scale.fill.args$breaks <- c("0", "1", "9")
   if (!("values" %in% names(scale.fill.args))) scale.fill.args$values <- c("gray", "steelblue", "white")

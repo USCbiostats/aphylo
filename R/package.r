@@ -1,7 +1,7 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
 #' @importFrom stats var coef vcov optim optimHess
-#' @importFrom utils head
+#' @importFrom utils head utils
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points
 #' @importFrom grDevices colors trans3d adjustcolor

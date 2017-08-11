@@ -71,6 +71,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
 #' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
 #' used to compute the random imputation score.
+#' @param W A square matrix. Must have as many rows as genes in \code{expected}.
 #' @export
 #' @details In the case of \code{prediction_score}, \code{...} are passed to
 #' \code{predict.aphylo_estimates}.
@@ -84,7 +85,12 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
 #'                    
 #' pr <- prediction_score(ans)
 #' with(pr, cbind(Expected = expected, Predicted = predicted))
-prediction_score <- function(x, expected = NULL, alpha = 0.5, ...) {
+prediction_score <- function(
+  x,
+  expected = NULL,
+  alpha    = 0.5,
+  W        = NULL,
+  ...) {
   
   # Finding relevant ids
   if (!length(expected)) 
@@ -105,8 +111,15 @@ prediction_score <- function(x, expected = NULL, alpha = 0.5, ...) {
   pred <- predict.aphylo_estimates(x, what = ids - 1L, ...)
   
   # Inverse of Geodesic distances
-  G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
-  G_inv <- 1/(G + diag(nrow(G)))
+  if (!length(W)) {
+    G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
+    G_inv <- 1/(G + diag(nrow(G)))
+  } else {
+    G_inv <- W
+    if (!all(dim(W) == rep(length(ids), 2)))
+      stop(sprintf("-W- must have be of dimmension dim(W) == c(%i, %1$i)", length(ids)))
+  }
+  
   
   # Observed score
   if (!length(expected))
@@ -162,4 +175,55 @@ print.aphylo_prediction_score <- function(x, ...) {
   invisible(x)
 }
   
+
+#' @export
+#' @param y Ignored.
+#' @rdname aphylo_estimates-class  
+plot.aphylo_prediction_score <- function(x, y=NULL, ...) {
+  
+  k <- ncol(x$expected)
+  y <- rep(1L, nrow(x$expected))
+  
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  par(mfrow=c(1, k), mai=c(1,.25,1,.25))
+  
+  for (i in 1:k) {
+    
+    # Sorting accordingly to predicted
+    ord <- order(x$predicted[,i])
+
+    # Processing labels
+    L <- c(.1, .25, .5, .75)
+    pos <- NULL
+    for (l in L)
+      pos <- c(pos, which.min(abs(x$predicted[ord,i] - l))[1])
+    labs <- rep("", length(ord))
+    labs[pos] <- L
+    
+    piechart(
+      y,
+      doughnut = .81,
+      col=grDevices::gray(1-x$predicted[ord,i]),
+      border=NA, 
+      labs = labs
+    )
+    
+    graphics::polygon(circle(0, 0, r=1), border = "black")
+    
+    piechart(
+      y,
+      doughnut = 0.60,
+      r=.80,
+      add=TRUE,
+      col=grDevices::gray(1-x$expected[ord,i]),
+      border=NA
+    )
+    
+    graphics::polygon(circle(0, 0, r=.60), border = "black")
+  }
+  par(mfrow=c(1,1))
+  title(main="Predicted vs Expected", sub = "Inner circle corresponds to expected and outer to predicted")
+
+}
   
