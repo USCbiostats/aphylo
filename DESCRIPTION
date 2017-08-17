@@ -23,7 +23,8 @@ Imports:
     coda, ape,
     stringr,
     ggplot2, ggtree,
-    amcmc
+    amcmc,
+    utils
 Suggests:
     covr,
     testthat,

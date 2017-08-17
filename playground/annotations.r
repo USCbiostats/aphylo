@@ -57,12 +57,13 @@ L <- Map(
   fun    = as.list(counts_relevant$go_id)
   )
 
-
+atree <- L[[2]]
 ans_mle  <- aphylo_mle(atree)
 ans_mcmc <- aphylo_mcmc(ans_mle$par, atree, priors = function(x) dbeta(x, 2, 30),
                         control=list(nbatch=1e5, thin=100, burnin=1e4, nchains=5))
 
-
+score <- prediction_score(ans_mcmc)
+plot(score)
 cbind(
   predict(ans_mcmc, what = names(which(ans_mcmc$dat$annotations[,1] != 9))),
   ans_mcmc$dat$annotations[names(which(ans_mcmc$dat$annotations[,1] != 9)),]

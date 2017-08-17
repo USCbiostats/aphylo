@@ -1,10 +1,10 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
 #' @importFrom stats var coef vcov optim optimHess
-#' @importFrom utils head utils
+#' @importFrom utils head tail
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
-#'  points
-#' @importFrom grDevices colors trans3d adjustcolor
+#'  points segments polygon
+#' @importFrom grDevices colors trans3d adjustcolor rgb colorRamp
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo

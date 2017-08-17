@@ -41,7 +41,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   } else if (length(what) == 1 && what == "leafs") {
     ids <- which(object$dat$noffspring == 0) - 1L
   } else if (is.vector(what) & inherits(what, "character")) {
-    ids <- match(what, rownames(object$dat$annotations))
+    ids <- match(what, rownames(object$dat$annotations)) - 1L
   } else 
     stop("Undefined method for -what- equal to: ", what)
   
@@ -61,7 +61,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   
   # Adding names
   dimnames(pred) <- list(
-    rownames(object$dat$annotations)[ids],
+    rownames(object$dat$annotations)[ids+1L],
     colnames(object$dat$annotations))
   
   pred
@@ -174,56 +174,116 @@ print.aphylo_prediction_score <- function(x, ...) {
   ))
   invisible(x)
 }
-  
+
 
 #' @export
 #' @param y Ignored.
+#' @param main Passed to \code{title}.
+#' @param which.fun Integer vector. Which function to plot.
 #' @rdname aphylo_estimates-class  
-plot.aphylo_prediction_score <- function(x, y=NULL, ...) {
+plot.aphylo_prediction_score <- function(
+  x,
+  y=NULL, 
+  main = "Predicted v/s\nExpected Values",
+  which.fun = seq_len(ncol(x$expected)),
+  ...) {
   
-  k <- ncol(x$expected)
+  k <- length(which.fun)
   y <- rep(1L, nrow(x$expected))
   
-  oldpar <- par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(mfrow=c(1, k), mai=c(1,.25,1,.25))
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
+  graphics::par(mfrow=c(1, k), mar=c(6,0,3,0))
   
   for (i in 1:k) {
     
     # Sorting accordingly to predicted
     ord <- order(x$predicted[,i])
+    
+    # Outer polygon
+    piechart(
+      y, border="gray", col = "lightgray", lwd=2,
+      radius = 1.5,
+      doughnut = .6
+      )
 
-    # Processing labels
-    L <- c(.1, .25, .5, .75)
-    pos <- NULL
-    for (l in L)
-      pos <- c(pos, which.min(abs(x$predicted[ord,i] - l))[1])
-    labs <- rep("", length(ord))
-    labs[pos] <- L
+    # Function to color the absence/presence of function
+    blue <- function(x) {
+      ans <- grDevices::colorRamp(c("steelblue", "lightgray", "darkred"))(x)
+      grDevices::rgb(ans[,1], ans[,2], ans[,3], maxColorValue = 256)
+    }
     
+    # Outer pie
     piechart(
       y,
-      doughnut = .81,
-      col=grDevices::gray(1-x$predicted[ord,i]),
-      border=NA, 
-      labs = labs
+      radius    = 1,
+      doughnut  = .82,
+      add       = TRUE,
+      col       = blue(x$predicted[ord,i]),
+      border    = "gray", 
+      lwd       = 1.5,
+      slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
     )
     
-    graphics::polygon(circle(0, 0, r=1), border = "black")
-    
+    # Inner pie
     piechart(
       y,
-      doughnut = 0.60,
-      r=.80,
-      add=TRUE,
-      col=grDevices::gray(1-x$expected[ord,i]),
-      border=NA
+      doughnut  = 0.60,
+      radius    = .80,
+      add       = TRUE,
+      col       = blue(x$expected[ord,i]),
+      border    = "gray",
+      lwd       = 1.5,
+      slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
     )
     
-    graphics::polygon(circle(0, 0, r=.60), border = "black")
+    # Inner circle
+    # graphics::polygon(circle(0,0,1.5), lwd=1)
+    
+    deg <- 1:length(y)
+    deg <- c(deg[1], deg[-1] + deg[-length(y)])/length(y)/2*360
+    piechart(
+      y,
+      radius    = .6,
+      add       = TRUE,
+      border    = NA,
+      labels    = rownames(x$expected)[ord],
+      text.args = list(
+        srt  = ifelse(deg > 270, deg,
+                     ifelse(deg > 90, deg + 180, deg)),
+        col  = "white", #c("white", "darkgray"),
+        cex  = .75 - (1 - 1/k)*.5,
+        font = 2,
+        xpd  = TRUE
+      ),
+      tick.len  = 0,
+      segments.args = list(col="transparent")
+    )
+    
+    
+    # graphics::polygon(circle(0, 0, r=.60), border = "black", lwd=1)
+    graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
   }
-  par(mfrow=c(1,1))
-  title(main="Predicted vs Expected", sub = "Inner circle corresponds to expected and outer to predicted")
+  
+  # Drawing color key
+  graphics::par(mfrow=c(1,1), new=TRUE, mar=c(3,0,3,0))
+  graphics::plot.new()
+  graphics::plot.window(c(0,1), c(0,1))
+  
+  colorkey(
+    .10, 0, .90, .05, 
+    label.from = 'No function',
+    label.to = "Function",
+    cols = c("steelblue", "lightgray", "darkred"),
+    tick.range = c(0,1),
+    tick.marks = c(0,.25,.5,.75,1),
+    nlevels = 200
+    
+  )
+  
+  graphics::title(
+    main= main, font.main=1
+    )
 
 }
   

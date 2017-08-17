@@ -4,29 +4,40 @@
 \alias{piechart}
 \title{A flexible piechart.}
 \usage{
-piechart(x, add = FALSE, r = 1, doughnut = 0, origin = c(0, 0),
-  smooth = 100, labs = NULL, text.off = 0.1, text.args = list(), ...)
+piechart(x, labels = names(x), radius = 1, doughnut = 0, origin = c(0,
+  0), edges = 200, slice.off = 0, init.angle = 0, last.angle = 360,
+  tick.len = 0.1, text.args = list(), segments.args = list(),
+  skip.plot.slices = FALSE, add = FALSE, ...)
 }
 \arguments{
 \item{x}{Numeric vector. Values that specify the area of the slices.}
 
-\item{add}{Logical scalar. When \code{TRUE} it is added to the current device.}
+\item{labels}{Character vector of length \code{length(x)}. Passed to
+\code{\link[graphics:text]{text}}.}
 
-\item{r}{Numeric scalar. Radious of the pie.}
+\item{radius}{Numeric scalar. Radious of the pie.}
 
 \item{doughnut}{Numeric scalar. Radious of the inner circle (doughnut).}
 
 \item{origin}{Numeric vector of length 2. Coordinates of the origin.}
 
-\item{smooth}{Numeric scalar. Smoothness of the slices curve.}
+\item{edges}{Numeric scalar. Smoothness of the slices curve.}
 
-\item{labs}{Character vector of length \code{length(x)}. Passed to
-\code{\link[graphics:text]{text}}.}
+\item{slice.off}{Numeric vector. When \code{!=0}, specifies how much to
+move the slice away from the origin. When scalar is recycled.}
 
-\item{text.off}{Numeric scalar. Proportion that the text should be off (on)
-the circle with respect to \code{r}.}
+\item{init.angle}{Numeric scalar. Angle from where to start drawing in degrees.}
+
+\item{last.angle}{Numeric scalar. Angle where to finish drawing in degrees.}
+
+\item{tick.len}{Numeric scalar. Size of the tick marks as \% of the radious.}
 
 \item{text.args}{List. Further arguments passed to \code{\link[graphics:text]{text}}.}
+
+\item{segments.args}{List. Further arguments passed to \code{\link[graphics:segments]{segments}}
+when drawing the tickmarks.}
+
+\item{add}{Logical scalar. When \code{TRUE} it is added to the current device.}
 
 \item{...}{Further arguments passed to \code{\link[graphics:polygon]{polygon}}.}
 }
@@ -36,6 +47,10 @@ A list with two elements:
   slice.}
 \item{textcoords}{A numeric matrix of size \code{length(x)*2} with 
   coordinates where the labels can be put at.}
+\item{alpha0}{A numeric vector of size \code{length(x)} with the starting
+degree in radians of the slice.}
+\item{alpha1}{A numeric vector of size \code{length(x)} with the ending
+degree in radians of the slice.}
 }
 \description{
 A flexible piechart.
@@ -43,7 +58,7 @@ A flexible piechart.
 \examples{
  
 vals <- c(1,2,3,10)
-piechart(vals, col=grDevices::blues9[5:8], border=NA, doughnut = .5, r=.75, labs=vals, text.off = .05)
-piechart(vals, col=grDevices::blues9[3:6], border=NA, doughnut = .3, r=.5, add=TRUE)
-piechart(vals, col=grDevices::blues9[1:4], border=NA, doughnut = .1, r=.3, add=TRUE)
+piechart(vals, col=grDevices::blues9[5:8], border=NA, doughnut = .5, radius=.75, labs=vals)
+piechart(vals, col=grDevices::blues9[3:6], border=NA, doughnut = .3, radius=.5, add=TRUE)
+piechart(vals, col=grDevices::blues9[1:4], border=NA, doughnut = .1, radius=.3, add=TRUE)
 }

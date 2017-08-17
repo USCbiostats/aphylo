@@ -33,7 +33,9 @@ prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 
-\method{plot}{aphylo_prediction_score}(x, y = NULL, ...)
+\method{plot}{aphylo_prediction_score}(x, y = NULL,
+  main = "Predicted v/s\\nExpected Values",
+  which.fun = seq_len(ncol(x$expected)), ...)
 }
 \arguments{
 \item{dat}{An object of class \code{new_aphylo} as returned by
@@ -71,6 +73,12 @@ then these must be values between \eqn{[0, n - 1]} (node ids).}
 used to compute the random imputation score.}
 
 \item{W}{A square matrix. Must have as many rows as genes in \code{expected}.}
+
+\item{y}{Ignored.}
+
+\item{main}{Passed to \code{title}.}
+
+\item{which.fun}{Integer vector. Which function to plot.}
 }
 \value{
 A list of class \code{aphylo_estimates} with the following elements:
