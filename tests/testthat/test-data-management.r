@@ -8,7 +8,7 @@ test_that("As phylo conversion and methods", {
   ans <- new_aphylo(fakeexperiment, faketree)
   
   expect_s3_class(as.apephylo(ans), "phylo")
-  expect_is(plot(ans), "ggtree")
+  expect_s3_class(plot(ans), "ggplot")
   expect_output(summary(as.apephylo(ans)), "Phylogenetic tree")
 })
 

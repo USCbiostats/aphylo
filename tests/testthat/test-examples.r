@@ -1,3 +1,3 @@
-context("Examples")
-
-testthat::test_examples()
+# context("Examples")
+# 
+# testthat::test_examples()
