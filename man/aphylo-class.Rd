@@ -15,11 +15,23 @@ new_aphylo(annotations, edges)
 \item{...}{Further parameters passed to the method.}
 }
 \value{
-A list of length \eqn{n} with relative position of offspring
-of each node, with respect to \code{data_exper}, starting from 0.
+A list of class \code{aphylo} with the following elements:
+\item{annotations}{A matrix of size \eqn{n\times P}{n * P} with leaf functional
+annotations. These can be either 0, 1, or 9 indicating no function, function, and
+no information respectively.}
+\item{offspring}{A list of size \eqn{n}. The \eqn{i}-th element of the list
+can be either \code{NULL} (meaning no offspring), or a vector of length \code{noffspring[i]},
+with the relative positions of the offspring from \eqn{1} to \eqn{n}.} 
+\item{noffspring}{An integer vector of size \eqn{n}. Indicates the number of
+offspring each node has.}
+\item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
+\code{\link{as_po_tree}}).}
 }
 \description{
-Annotated Phylogenetic Tree
+The \code{aphylo} class tree holds both the tree structure represented as a
+partially ordered phylogenetic tree, and node annotations. While annotations
+are included for both leafs and inner nodes, the algorithms included in this
+package only uses the leaf annotations.
 
 \code{}
 }

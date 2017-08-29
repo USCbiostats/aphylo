@@ -13,7 +13,7 @@ bioc_packages:
   - ggtree
 
 r:
-  - relase
+  - release
   - devel
   - oldrel
 
