@@ -35,7 +35,9 @@ prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
 
 \method{plot}{aphylo_prediction_score}(x, y = NULL,
   main = "Predicted v/s\\nExpected Values",
-  which.fun = seq_len(ncol(x$expected)), ...)
+  main.colorkey = "Probability of Functional Annotation",
+  which.fun = seq_len(ncol(x$expected)), include.labels = NULL,
+  labels.col = "black", ...)
 }
 \arguments{
 \item{dat}{An object of class \code{new_aphylo} as returned by
@@ -78,7 +80,15 @@ used to compute the random imputation score.}
 
 \item{main}{Passed to \code{title}.}
 
+\item{main.colorkey}{Character scalar. Title of the colorkey (optional).}
+
 \item{which.fun}{Integer vector. Which function to plot.}
+
+\item{include.labels}{Logical scalar. When \code{TRUE}, draws nice labels
+at each slice which by default are specified as the rownames of \code{x$expected}.
+This is mostly useful when the number of predictions is small.}
+
+\item{labels.col}{Character scalar. Color of the labels.}
 }
 \value{
 A list of class \code{aphylo_estimates} with the following elements:
@@ -119,6 +129,9 @@ The default values of \code{control} are:
 
 In the case of \code{prediction_score}, \code{...} are passed to
 \code{predict.aphylo_estimates}.
+
+If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
+then \code{include.labels=FALSE} by default.
 }
 \examples{
 

@@ -41,7 +41,14 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   } else if (length(what) == 1 && what == "leafs") {
     ids <- which(object$dat$noffspring == 0) - 1L
   } else if (is.vector(what) & inherits(what, "character")) {
-    ids <- match(what, rownames(object$dat$annotations)) - 1L
+    
+    # Fetching nodes using labels
+    ids  <- match(what, rownames(object$dat$annotations))
+    test <- which(is.na(ids))
+    if (length(test))
+      stop("Some elements of -what- are not present in the data: ",
+           paste0(what[test], collapse=", "))
+      
   } else 
     stop("Undefined method for -what- equal to: ", what)
   
@@ -180,16 +187,35 @@ print.aphylo_prediction_score <- function(x, ...) {
 #' @param y Ignored.
 #' @param main Passed to \code{title}.
 #' @param which.fun Integer vector. Which function to plot.
+#' @param include.labels Logical scalar. When \code{TRUE}, draws nice labels
+#' at each slice which by default are specified as the rownames of \code{x$expected}.
+#' This is mostly useful when the number of predictions is small.
+#' @param labels.col Character scalar. Color of the labels.
+#' @param main.colorkey Character scalar. Title of the colorkey (optional).
 #' @rdname aphylo_estimates-class  
+#' @details If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
+#' then \code{include.labels=FALSE} by default.
+#' 
 plot.aphylo_prediction_score <- function(
   x,
   y=NULL, 
   main = "Predicted v/s\nExpected Values",
+  main.colorkey = "Probability of Functional Annotation",
   which.fun = seq_len(ncol(x$expected)),
+  include.labels = NULL,
+  labels.col = "black",
   ...) {
   
   k <- length(which.fun)
   y <- rep(1L, nrow(x$expected))
+  
+  # Should we draw the labels?
+  if (!length(include.labels)) {
+    if (nrow(x$expected) > 40) include.labels <- FALSE
+    else include.labels <- TRUE
+  }
+    
+  
   
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit(graphics::par(oldpar))
@@ -202,25 +228,28 @@ plot.aphylo_prediction_score <- function(
     
     # Outer polygon
     piechart(
-      y, border="gray", col = "lightgray", lwd=2,
+      y, border="transparent", col = "transparent", lwd=2,
       radius = 1.5,
-      doughnut = .6
+      doughnut = .5, skip.plot.slices = TRUE
       )
+    
+    graphics::polygon(circle(0,0,1.5), border="gray", lwd = 1.5)
+    graphics::polygon(circle(0,0,0.5), border="gray", lwd = 1.5)
 
     # Function to color the absence/presence of function
     blue <- function(x) {
       ans <- grDevices::colorRamp(c("steelblue", "lightgray", "darkred"))(x)
-      grDevices::rgb(ans[,1], ans[,2], ans[,3], maxColorValue = 256)
+      grDevices::rgb(ans[,1], ans[,2], ans[,3], 200, maxColorValue = 255)
     }
     
     # Outer pie
     piechart(
       y,
       radius    = 1,
-      doughnut  = .82,
+      doughnut  = .755,
       add       = TRUE,
       col       = blue(x$predicted[ord,i]),
-      border    = "gray", 
+      border    = blue(x$predicted[ord,i]), 
       lwd       = 1.5,
       slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
     )
@@ -228,38 +257,37 @@ plot.aphylo_prediction_score <- function(
     # Inner pie
     piechart(
       y,
-      doughnut  = 0.60,
-      radius    = .80,
+      doughnut  = 0.5,
+      radius    = .745,
       add       = TRUE,
       col       = blue(x$expected[ord,i]),
-      border    = "gray",
+      border    = blue(x$expected[ord,i]),
       lwd       = 1.5,
       slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
     )
     
-    # Inner circle
-    # graphics::polygon(circle(0,0,1.5), lwd=1)
-    
-    deg <- 1:length(y)
-    deg <- c(deg[1], deg[-1] + deg[-length(y)])/length(y)/2*360
-    piechart(
-      y,
-      radius    = .6,
-      add       = TRUE,
-      border    = NA,
-      labels    = rownames(x$expected)[ord],
-      text.args = list(
-        srt  = ifelse(deg > 270, deg,
-                     ifelse(deg > 90, deg + 180, deg)),
-        col  = "white", #c("white", "darkgray"),
-        cex  = .75 - (1 - 1/k)*.5,
-        font = 2,
-        xpd  = TRUE
-      ),
-      tick.len  = 0,
-      segments.args = list(col="transparent")
-    )
-    
+    # Labels
+    if (include.labels) {
+      deg <- 1:length(y)
+      deg <- c(deg[1], deg[-1] + deg[-length(y)])/length(y)/2*360
+      piechart(
+        y,
+        radius    = .5,
+        add       = TRUE,
+        border    = NA,
+        labels    = rownames(x$expected)[ord],
+        text.args = list(
+          srt  = ifelse(deg > 270, deg,
+                        ifelse(deg > 90, deg + 180, deg)),
+          col  = labels.col, #c("white", "darkgray"),
+          cex  = .7 - (1 - 1/k)*.5,
+          xpd  = TRUE
+        ),
+        tick.len  = 0,
+        segments.args = list(col="transparent"),
+        skip.plot.slices = TRUE
+      )
+    }
     
     # graphics::polygon(circle(0, 0, r=.60), border = "black", lwd=1)
     graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
@@ -274,11 +302,11 @@ plot.aphylo_prediction_score <- function(
     .10, 0, .90, .05, 
     label.from = 'No function',
     label.to = "Function",
-    cols = c("steelblue", "lightgray", "darkred"),
+    cols = grDevices::adjustcolor(c("steelblue", "lightgray", "darkred"), alpha.f = 200/255),
     tick.range = c(0,1),
     tick.marks = c(0,.25,.5,.75,1),
-    nlevels = 200
-    
+    nlevels = 200,
+    main = main.colorkey
   )
   
   graphics::title(

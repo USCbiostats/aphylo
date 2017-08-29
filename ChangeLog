@@ -1,3 +1,13 @@
+2017-08-29  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/panther.r: Capturing info from newick extended version.
+	* R/pies.r: Adding more features to the pieplot.
+	* R/predict.r: New plot method for prediction.
+	
+	* configure.ac: Compaling using OpenMP.
+	* condigure: idem.
+	* src/Makevars.in: idem.
+
+
 2017-08-04  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/panther.r: New function to read panther trees' annotation.
 

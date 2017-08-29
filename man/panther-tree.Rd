@@ -2,10 +2,15 @@
 % Please edit documentation in R/panther.r
 \name{panther-tree}
 \alias{panther-tree}
-\alias{read_panther_tree}
+\alias{PANTHER}
+\alias{PANTHERDB}
+\alias{read_panther}
+\alias{read.panther}
 \title{Reads PANTHER db trees}
 \usage{
-read_panther_tree(x, ...)
+read_panther(x, ...)
+
+read.panther(x, ...)
 }
 \arguments{
 \item{x}{Character scalar. Full path to the panther file.}
@@ -30,6 +35,6 @@ labels. This function is a wrapper of \code{\link[ape:read.tree]{read.tree}}.
 }
 \examples{
 path <- system.file("tree.tree", package="aphylo")
-read_panther_tree(path)
+read_panther(path)
 
 }

@@ -12,7 +12,7 @@
 #' @importFrom ggplot2 scale_fill_manual
 NULL
 
-#' @useDynLib aphylo
+#' @useDynLib aphylo, .registration=TRUE
 NULL
 
 # Importing from the Matrix pkg ------------------------------------------------

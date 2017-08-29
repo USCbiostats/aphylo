@@ -15,13 +15,13 @@ piechart(x, labels = names(x), radius = 1, doughnut = 0, origin = c(0,
 \item{labels}{Character vector of length \code{length(x)}. Passed to
 \code{\link[graphics:text]{text}}.}
 
-\item{radius}{Numeric scalar. Radious of the pie.}
+\item{radius}{Numeric vector. Radious of each slice (can be a scalar).}
 
-\item{doughnut}{Numeric scalar. Radious of the inner circle (doughnut).}
+\item{doughnut}{Numeric scalar. Radious of each inner circle (doughnut) (can be a scalar).}
 
 \item{origin}{Numeric vector of length 2. Coordinates of the origin.}
 
-\item{edges}{Numeric scalar. Smoothness of the slices curve.}
+\item{edges}{Numeric scalar. Smoothness of the slices curve (can be a vector).}
 
 \item{slice.off}{Numeric vector. When \code{!=0}, specifies how much to
 move the slice away from the origin. When scalar is recycled.}
@@ -37,12 +37,16 @@ move the slice away from the origin. When scalar is recycled.}
 \item{segments.args}{List. Further arguments passed to \code{\link[graphics:segments]{segments}}
 when drawing the tickmarks.}
 
+\item{skip.plot.slices}{Logical scalar. When \code{FALSE}, slices are not drawn.
+This can be useful if, for example, the user only wants to draw the labels.}
+
 \item{add}{Logical scalar. When \code{TRUE} it is added to the current device.}
 
-\item{...}{Further arguments passed to \code{\link[graphics:polygon]{polygon}}.}
+\item{...}{Further arguments passed to \code{\link[graphics:polygon]{polygon}}
+(see details).}
 }
 \value{
-A list with two elements:
+A list with the following elements:
 \item{slices}{A list of length \code{length(x)} with the coordinates of each
   slice.}
 \item{textcoords}{A numeric matrix of size \code{length(x)*2} with 
@@ -53,12 +57,41 @@ degree in radians of the slice.}
 degree in radians of the slice.}
 }
 \description{
-A flexible piechart.
+While similar to \code{\link[graphics:pie]{pie}}, this function is much more
+flexible as it allows providing different parameters for each slice of the pie.
+Furthermore, it allows adding the plot to the current device, making it possible
+to create compound piecharts.
+}
+\details{
+The function is a wrapper of \code{\link[graphics:polygon]{polygon}},
+so all parameters such as color, density, border, etc. are passed directly
+by \code{\link{mapply}} so that are specified one per slice. The coordinates
+of the slices are computed internally.
 }
 \examples{
  
+# Example 1 -----------------------------------------------------------------
+# A set of 3 nested rings rings starting at 315 deg. and ending at 270 deg.
+
+# Values to plot
 vals <- c(1,2,3,10)
-piechart(vals, col=grDevices::blues9[5:8], border=NA, doughnut = .5, radius=.75, labs=vals)
-piechart(vals, col=grDevices::blues9[3:6], border=NA, doughnut = .3, radius=.5, add=TRUE)
-piechart(vals, col=grDevices::blues9[1:4], border=NA, doughnut = .1, radius=.3, add=TRUE)
+
+# Outer (includes labels)
+piechart(vals, col=grDevices::blues9[5:8], border=NA, doughnut = .5,
+    radius=.75, labels=vals, init.angle = 315, last.angle = 270)
+    
+# Middle
+piechart(vals, col=grDevices::blues9[3:6], border=NA, doughnut = .3,
+    radius=.5, add=TRUE, init.angle = 315, last.angle = 270)
+    
+# Inner
+piechart(vals, col=grDevices::blues9[1:4], border="gray", doughnut = .1,
+    radius=.3, add=TRUE, init.angle = 315, last.angle = 270)
+    
+# Example 2 -----------------------------------------------------------------
+# Passing values to polygon and playing with the radius and slice.off
+
+piechart(1:10, density=(1:10)^2/2, slice.off = (1:10)/30, doughnut = .5,
+  radius = sqrt(10:1))
+
 }

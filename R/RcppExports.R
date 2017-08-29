@@ -27,7 +27,7 @@
 #' R package \CRANpkg{netdiffuseR}.
 #' @export
 approx_geodesic <- function(edges, nsteps = 1e3L, undirected = TRUE, warn = FALSE) {
-    .Call('aphylo_approx_geodesic', PACKAGE = 'aphylo', edges, nsteps, undirected, warn)
+    .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }
 
 #' Matrix of states
@@ -39,15 +39,15 @@ approx_geodesic <- function(edges, nsteps = 1e3L, undirected = TRUE, warn = FALS
 #' states(3)
 #' @export
 states <- function(P) {
-    .Call('aphylo_states', PACKAGE = 'aphylo', P)
+    .Call(`_aphylo_states`, P)
 }
 
 prob_mat <- function(pr) {
-    .Call('aphylo_prob_mat', PACKAGE = 'aphylo', pr)
+    .Call(`_aphylo_prob_mat`, pr)
 }
 
 root_node_prob <- function(Pi, S) {
-    .Call('aphylo_root_node_prob', PACKAGE = 'aphylo', Pi, S)
+    .Call(`_aphylo_root_node_prob`, Pi, S)
 }
 
 #' State probabilities
@@ -69,7 +69,7 @@ root_node_prob <- function(Pi, S) {
 #' probabilities for each node.
 #' 
 probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
-    .Call('aphylo_probabilities', PACKAGE = 'aphylo', annotations, mu, psi, S, noffspring, offspring)
+    .Call(`_aphylo_probabilities`, annotations, mu, psi, S, noffspring, offspring)
 }
 
 #' Computes Log-likelihood
@@ -112,19 +112,19 @@ probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
 #' parameters.}
 #' @export
 LogLike <- function(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call('aphylo_LogLike', PACKAGE = 'aphylo', annotations, offspring, noffspring, psi, mu, Pi, verb_ans, check_dims)
+    .Call(`_aphylo_LogLike`, annotations, offspring, noffspring, psi, mu, Pi, verb_ans, check_dims)
 }
 
 predict_fun <- function(i, p, di0, annotations, offspring, noffspring, psi, mu, Pi) {
-    .Call('aphylo_predict_fun', PACKAGE = 'aphylo', i, p, di0, annotations, offspring, noffspring, psi, mu, Pi)
+    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, noffspring, psi, mu, Pi)
 }
 
 predict_funs <- function(ids, edges, annotations, offspring, noffspring, psi, mu, Pi) {
-    .Call('aphylo_predict_funs', PACKAGE = 'aphylo', ids, edges, annotations, offspring, noffspring, psi, mu, Pi)
+    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, noffspring, psi, mu, Pi)
 }
 
 prediction_score_rand <- function(A, W, alpha) {
-    .Call('aphylo_prediction_score_rand', PACKAGE = 'aphylo', A, W, alpha)
+    .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }
 
 #' Simulate functions on a ginven tree
@@ -169,7 +169,7 @@ prediction_score_rand <- function(A, W, alpha) {
 #' 
 #' 
 sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
-    .Call('aphylo_sim_fun_on_tree', PACKAGE = 'aphylo', offspring, noffspring, psi, mu, Pi, P)
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, noffspring, psi, mu, Pi, P)
 }
 
 #' Random tree generation
@@ -241,22 +241,22 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' }
 #' @export
 sim_tree <- function(n) {
-    .Call('aphylo_sim_tree', PACKAGE = 'aphylo', n)
+    .Call(`_aphylo_sim_tree`, n)
 }
 
 fast_table <- function(x) {
-    .Call('aphylo_fast_table', PACKAGE = 'aphylo', x)
+    .Call(`_aphylo_fast_table`, x)
 }
 
 fast_table_using_labels <- function(x, ids) {
-    .Call('aphylo_fast_table_using_labels', PACKAGE = 'aphylo', x, ids)
+    .Call(`_aphylo_fast_table_using_labels`, x, ids)
 }
 
 recode_as_po <- function(edges) {
-    .Call('aphylo_recode_as_po', PACKAGE = 'aphylo', edges)
+    .Call(`_aphylo_recode_as_po`, edges)
 }
 
 list_offspring <- function(edges) {
-    .Call('aphylo_list_offspring', PACKAGE = 'aphylo', edges)
+    .Call(`_aphylo_list_offspring`, edges)
 }
 
