@@ -7,7 +7,7 @@
 piechart(x, labels = names(x), radius = 1, doughnut = 0, origin = c(0,
   0), edges = 200, slice.off = 0, init.angle = 0, last.angle = 360,
   tick.len = 0.1, text.args = list(), segments.args = list(),
-  skip.plot.slices = FALSE, add = FALSE, ...)
+  skip.plot.slices = FALSE, add = FALSE, rescale = TRUE, ...)
 }
 \arguments{
 \item{x}{Numeric vector. Values that specify the area of the slices.}
@@ -30,7 +30,7 @@ move the slice away from the origin. When scalar is recycled.}
 
 \item{last.angle}{Numeric scalar. Angle where to finish drawing in degrees.}
 
-\item{tick.len}{Numeric scalar. Size of the tick marks as \% of the radious.}
+\item{tick.len}{Numeric scalar. Size of the tick marks as proportion of the radius.}
 
 \item{text.args}{List. Further arguments passed to \code{\link[graphics:text]{text}}.}
 
@@ -41,6 +41,10 @@ when drawing the tickmarks.}
 This can be useful if, for example, the user only wants to draw the labels.}
 
 \item{add}{Logical scalar. When \code{TRUE} it is added to the current device.}
+
+\item{rescale}{Logical scalar. When \code{TRUE} (default), the y-coordinates of
+the polygons (slices), text and tickmarks will be rescaled such that the
+aspect ratio is preserved, i.e. looks like a circle.}
 
 \item{...}{Further arguments passed to \code{\link[graphics:polygon]{polygon}}
 (see details).}
@@ -92,6 +96,9 @@ piechart(vals, col=grDevices::blues9[1:4], border="gray", doughnut = .1,
 # Passing values to polygon and playing with the radius and slice.off
 
 piechart(1:10, density=(1:10)^2/2, slice.off = (1:10)/30, doughnut = .5,
-  radius = sqrt(10:1))
+  radius = sqrt(10:1),
+  # Here we are setting random labels...
+  labels=sapply(1:10, function(x) paste(sample(letters, x, TRUE), collapse=""))
+  )
 
 }

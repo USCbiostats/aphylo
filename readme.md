@@ -1,7 +1,7 @@
 aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
-[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/USCbiostats/aphylo) [![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
+[![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo) [![Build status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic) [![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 
 The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
 
@@ -286,3 +286,25 @@ plot(ans2$hist)
 ```
 
 ![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-1.png)![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-2.png)
+
+Prediction
+==========
+
+``` r
+pred <- prediction_score(ans2)
+pred
+```
+
+    ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
+    ## Observed : 0.08 (73.67)
+    ## Random   : 0.25 (243.26)
+    ## Best     : 0.00 (0.00)
+    ## Worse    : 1.00 (973.05)
+    ## ---------------------------------------------------------------------------
+    ## Values between 0 and 1, 0 been best. Absolute scores in parenthesis.
+
+``` r
+plot(pred)
+```
+
+![](readme_files/figure-markdown_github-ascii_identifiers/Predict-1.png)

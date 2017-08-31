@@ -225,6 +225,7 @@ plot.aphylo_prediction_score <- function(
     
     # Sorting accordingly to predicted
     ord <- order(x$predicted[,i])
+
     
     # Outer polygon
     piechart(
@@ -294,7 +295,7 @@ plot.aphylo_prediction_score <- function(
   }
   
   # Drawing color key
-  graphics::par(mfrow=c(1,1), new=TRUE, mar=c(3,0,3,0))
+  graphics::par(mfrow=c(1,1), new=TRUE, mar=c(3,0,3,0), xpd=TRUE)
   graphics::plot.new()
   graphics::plot.window(c(0,1), c(0,1))
   

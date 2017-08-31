@@ -4,7 +4,7 @@ output: github_document
 ---
 
 [![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/USCbiostats/aphylo?branch=master&svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
+[![Build status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
 [![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 
 
@@ -120,5 +120,15 @@ gelman.diag(ans2$hist)
 summary(ans2$hist)
 
 plot(ans2$hist)
+```
+
+
+# Prediction 
+
+```{r Predict}
+pred <- prediction_score(ans2)
+pred
+
+plot(pred)
 ```
 

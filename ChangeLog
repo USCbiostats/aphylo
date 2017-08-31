@@ -1,3 +1,7 @@
+2017-08-31  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/pies.r: New function to rescale y-coords so that aspect ratio
+	  is kept.
+
 2017-08-29  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/panther.r: Capturing info from newick extended version.
 	* R/pies.r: Adding more features to the pieplot.

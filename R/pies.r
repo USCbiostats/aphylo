@@ -1,3 +1,32 @@
+# Function to rescale a polygon such that it keeps the "original" aspec
+# ratio.
+rescale_polygon <- function(
+  coordinates, 
+  yorigin,
+  adj = NULL
+) {
+  
+  # Adjustment value
+  if (!length(adj)) {
+    usr_adj <- with(graphics::par(), (usr[2] - usr[1])/(usr[4] - usr[3]))
+    dev_adj <- with(graphics::par(), pin[2]/pin[1])
+    adj <- 1/dev_adj/usr_adj
+  }
+  
+  # If it is multiple polygons (adj is passed by scoping)
+  if (!is.data.frame(coordinates) && is.list(coordinates)) 
+    return(mapply(rescale_polygon, coordinates=coordinates, yorigin=yorigin,
+                  SIMPLIFY = FALSE))
+  
+  # Adjusting
+  if ((is.matrix(coordinates) | is.data.frame(coordinates)) && ncol(coordinates) > 1)
+    coordinates[,2] <- yorigin + (coordinates[,2] - yorigin)*adj
+  else 
+    return(yorigin + (coordinates - yorigin)*adj)
+  
+  coordinates
+}
+
 pieslice <- function(a0, a1, r, d, x0, y0, edges, off) {
 
   # Intermideate points
@@ -37,9 +66,14 @@ pieslice <- function(a0, a1, r, d, x0, y0, edges, off) {
 
 }
 
-circle <- function(x0, y0, r) {
+circle <- function(x0, y0, r, rescale=TRUE) {
   ans <-  pieslice(0, 2*pi, r=r, d=0, x0, y0, edges=100, off=0)
-  ans[-nrow(ans), ]
+  ans <- ans[-nrow(ans), ]
+  
+  if (rescale)
+    ans <- rescale_polygon(ans, y0)
+  
+  ans
 }
 
 #' A flexible piechart.
@@ -59,7 +93,7 @@ circle <- function(x0, y0, r) {
 #' move the slice away from the origin. When scalar is recycled.
 #' @param labels Character vector of length \code{length(x)}. Passed to
 #' \code{\link[graphics:text]{text}}.
-#' @param tick.len Numeric scalar. Size of the tick marks as \% of the radious.
+#' @param tick.len Numeric scalar. Size of the tick marks as proportion of the radius.
 #' @param text.args List. Further arguments passed to \code{\link[graphics:text]{text}}.
 #' @param segments.args List. Further arguments passed to \code{\link[graphics:segments]{segments}}
 #' when drawing the tickmarks.
@@ -67,6 +101,9 @@ circle <- function(x0, y0, r) {
 #' @param last.angle Numeric scalar. Angle where to finish drawing in degrees.
 #' @param skip.plot.slices Logical scalar. When \code{FALSE}, slices are not drawn.
 #' This can be useful if, for example, the user only wants to draw the labels.
+#' @param rescale Logical scalar. When \code{TRUE} (default), the y-coordinates of
+#' the polygons (slices), text and tickmarks will be rescaled such that the
+#' aspect ratio is preserved, i.e. looks like a circle.
 #' @param ... Further arguments passed to \code{\link[graphics:polygon]{polygon}}
 #' (see details).
 #' 
@@ -111,7 +148,10 @@ circle <- function(x0, y0, r) {
 #' # Passing values to polygon and playing with the radius and slice.off
 #' 
 #' piechart(1:10, density=(1:10)^2/2, slice.off = (1:10)/30, doughnut = .5,
-#'   radius = sqrt(10:1))
+#'   radius = sqrt(10:1),
+#'   # Here we are setting random labels...
+#'   labels=sapply(1:10, function(x) paste(sample(letters, x, TRUE), collapse=""))
+#'   )
 #' 
 piechart <- function(
   x,
@@ -128,6 +168,7 @@ piechart <- function(
   segments.args = list(),
   skip.plot.slices=FALSE,
   add = FALSE,
+  rescale = TRUE,
   ...) {
   
   # Assigning alpha
@@ -176,11 +217,16 @@ piechart <- function(
     
     ran <- (ran + maxradius*1.1 + tick.len/2 + max(slice.off))*c(-1,1)
 
+    # Adjustment depending on the asp
     if (adj > 1)
       graphics::plot.window(xlim=ran*adj, ylim = ran)
     else
-      graphics::plot.window(xlim=ran, ylim = ran/adj)
+      graphics::plot.window(xlim=ran, ylim = ran*adj)
   }
+  
+  # Adjusting the polygon
+  if (rescale)
+    ans <- rescale_polygon(ans, origin[2])
   
   # Adding the slices
   if (!skip.plot.slices)
@@ -207,6 +253,9 @@ piechart <- function(
         sin(angles)*graphics::strwidth(labels, cex=cex)/2
       )
     
+    if (rescale)
+      textcoords <- rescale_polygon(textcoords, origin[2])
+    
     # Drawing the text
     do.call(mapply,
             c(list(FUN = graphics::text,
@@ -218,10 +267,16 @@ piechart <- function(
     
     
     # Here should go the tick marks...
-    x0 <- origin[1] + cos(angles)*radius*(1 - tick.len/2 + slice.off)
-    x1 <- origin[1] + cos(angles)*radius*(1 + tick.len/2 + slice.off)
-    y0 <- origin[2] + sin(angles)*radius*(1 - tick.len/2 + slice.off)
-    y1 <- origin[2] + sin(angles)*radius*(1 + tick.len/2 + slice.off)
+    x0 <- origin[1] + cos(angles)*(radius - tick.len/2 + slice.off)
+    x1 <- origin[1] + cos(angles)*(radius + tick.len/2 + slice.off)
+    y0 <- origin[2] + sin(angles)*(radius - tick.len/2 + slice.off)
+    y1 <- origin[2] + sin(angles)*(radius + tick.len/2 + slice.off)
+    
+    if (rescale) {
+      y0 <- rescale_polygon(y0, origin[2])
+      y1 <- rescale_polygon(y1, origin[2])
+    }
+    
     
     toplot <- which(!is.na(labels))
     do.call(graphics::segments, 
