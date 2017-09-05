@@ -8,6 +8,7 @@
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
+#' @importFrom rncl read_newick_phylo
 #' @importFrom ggtree ggtree geom_tiplab gheatmap
 #' @importFrom ggplot2 scale_fill_manual
 NULL

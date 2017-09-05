@@ -1,3 +1,6 @@
+2017-09-05  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/panther.r: Now using nrcl to read newick
+
 2017-08-31  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/pies.r: New function to rescale y-coords so that aspect ratio
 	  is kept.

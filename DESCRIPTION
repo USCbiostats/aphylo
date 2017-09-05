@@ -20,7 +20,7 @@ Imports:
     Rcpp (>= 0.12.1),
     Matrix,
     methods,
-    coda, ape,
+    coda, ape, rncl,
     stringr,
     ggplot2, ggtree,
     amcmc,

@@ -53,7 +53,10 @@ read_panther <- function(x, ...) {
   )
   
   # Reading the tree
-  tree <- ape::read.tree(text=x[1], ...)
+  # tree <- ape::read.tree(text=x[1], ...)
+  tmptree <- tempfile()
+  write(x[1], tmptree)
+  tree <- rncl::read_newick_phylo(tmptree, ...)
   
   tree$tip.label <- paste(
     tree$tip.label,
