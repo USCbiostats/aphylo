@@ -109,7 +109,7 @@ tab <- do.call(rbind, tab)
 ```{r benchmark-plot, dependson='speed-benchmarks', echo=FALSE}
 oldpar <- par(no.readonly = TRUE)
 par(las = 2)
-boxplot(tab/1e6, log = "y", ylab = "Time in Milliseconds\n(log scale)",
+boxplot(tab/1e6, log = "y", ylab = "Time in Milliseconds (log scale)",
         main = "Distribution of reading times reading\nall the trees from PANTHER 11.1",
         sub = sprintf("Each boxplot represents elapsed times on reading %i trees.", length(tree.files))
         )
