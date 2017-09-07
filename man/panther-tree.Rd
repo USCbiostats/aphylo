@@ -8,12 +8,15 @@
 \alias{read.panther}
 \title{Reads PANTHER db trees}
 \usage{
-read_panther(x, ...)
+read_panther(x, tree.reader = ape::read.tree, ...)
 
-read.panther(x, ...)
+read.panther(x, tree.reader = ape::read.tree, ...)
 }
 \arguments{
 \item{x}{Character scalar. Full path to the panther file.}
+
+\item{tree.reader}{Function that will be used to read the tree file.
+It can be either \code{ape::read.tree} or \code{rncl::read_newick_phylo}.}
 
 \item{...}{Further arguments passed to \code{\link[ape:read.tree]{read.tree}}.}
 }

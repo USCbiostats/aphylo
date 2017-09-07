@@ -27,8 +27,10 @@
 NULL
 
 #' @export
+#' @param tree.reader Function that will be used to read the tree file.
+#' It can be either \code{ape::read.tree} or \code{rncl::read_newick_phylo}.
 #' @rdname panther-tree
-read_panther <- function(x, ...) {
+read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Reading the data-in
   x  <- readLines(x)
   
@@ -56,7 +58,8 @@ read_panther <- function(x, ...) {
   # tree <- ape::read.tree(text=x[1], ...)
   tmptree <- tempfile()
   write(x[1], tmptree)
-  tree <- rncl::read_newick_phylo(tmptree, ...)
+  tree <- tree.reader(tmptree, ...)
+  file.remove(tmptree)
   
   tree$tip.label <- paste(
     tree$tip.label,

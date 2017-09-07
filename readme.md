@@ -308,3 +308,8 @@ plot(pred)
 ```
 
 ![](readme_files/figure-markdown_github-ascii_identifiers/Predict-1.png)
+
+Misc
+====
+
+During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).

@@ -1,3 +1,10 @@
+2017-09-07  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/panther.r: Now the user can choose which one to use.
+
+	* playground/ape_now_supports_singletons*: A small benchmark between
+	  rncl and ape.
+
+
 2017-09-05  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/panther.r: Now using nrcl to read newick
 
