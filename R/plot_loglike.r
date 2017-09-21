@@ -89,7 +89,6 @@ plot_LogLike.default <- function(
   ll <- LogLike(
     x$annotations, 
     x$offspring,
-    x$noffspring, 
     psi, 
     mu,
     Pi,
@@ -104,7 +103,6 @@ plot_LogLike.default <- function(
       psi_z[i, j] <- LogLike(
         x$annotations,
         x$offspring,
-        x$noffspring,
         c(PSI[i], PSI[j]),
         mu,
         Pi,
@@ -120,7 +118,6 @@ plot_LogLike.default <- function(
       pi_z[i, j] <- LogLike(
         x$annotations,
         x$offspring,
-        x$noffspring,
         psi,
         c(MU[j], mu[2]),
         PI[i],
@@ -135,7 +132,6 @@ plot_LogLike.default <- function(
       mu_z[i, j] <- LogLike(
         x$annotations,
         x$offspring,
-        x$noffspring,
         psi,
         c(MU[i], MU[j]),
         Pi,

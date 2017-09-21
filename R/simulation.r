@@ -36,22 +36,19 @@ sim_annotated_tree <- function(
       stop("When -tree- is not specified, -n- must be specified.")
     
     ntree <- sim_tree(n)  
-    tree  <- ntree[["edges"]]
-    O     <- ntree[["offspring"]]
-    nO    <- ntree[["noffspring"]]
+    tree  <- ntree
+    O     <- attr(ntree, "offspring")
     
   } else {
     if (!inherits(tree, "po_tree"))
       stop("-tree- must be an object of class -po_tree- (see -sim_tree-).")
     
     O  <- list_offspring(tree)
-    nO <- sapply(O, length)
   }
   
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
     offspring  = O,
-    noffspring = nO,
     psi        = c(pars["psi0"], pars["psi1"]),
     mu         = c(pars["mu0"], pars["mu1"]),
     Pi         = pars["Pi"],
@@ -64,7 +61,6 @@ sim_annotated_tree <- function(
   as_aphylo(
     annotations = ans,
     offspring   = O,
-    noffspring  = nO,
     edges       = tree
   )
   
@@ -82,8 +78,6 @@ print.aphylo_sim_tree <- function(x, ...) {
   print(x$edges)
   
   cat("(2) List of offspring ($offspring).\n")
-
-  cat("\n(3) Number of offspring ($noffspring).\n\n")
 
   
   invisible(x)

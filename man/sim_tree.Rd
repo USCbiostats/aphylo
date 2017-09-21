@@ -17,12 +17,10 @@ sim_tree(n)
 \item{...}{Ignored.}
 }
 \value{
-A List with the following:
-\item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
+An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
+With the following additional attributes:
 \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
-\item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
-offspring that each node has.}
 }
 \description{
 By randomly choosing pairs of vertices, this function generates random
@@ -57,7 +55,7 @@ in some (most) of its routines.
 \examples{
 # A very simple example ----------------------------------------------------
 set.seed(1223)
-newtree <- sim_tree(50)$edges
+newtree <- sim_tree(50)
 
 plot(as.apephylo(newtree))
 

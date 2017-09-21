@@ -42,7 +42,6 @@ arma::vec root_node_prob(
 //' @templateVar mu 1
 //' @templateVar psi 1
 //' @templateVar S 1
-//' @templateVar noffspring 1
 //' @templateVar offspring 1
 //' 
 //' @export
@@ -55,7 +54,6 @@ arma::mat probabilities(
     const arma::vec  & mu,
     const arma::vec  & psi,
     const arma::imat & S,
-    const arma::ivec & noffspring,
     const List       & offspring
 ) {
   
@@ -72,7 +70,7 @@ arma::mat probabilities(
   for (int n=(N-1); n>=0; n--) {
     // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
-    if (!noffspring.at(n)) {
+    if (! (bool) Rf_length(offspring.at(n))) {
       for (int s=0; s<nstates; s++)
         for (int p=0; p<P; p++) {
           
@@ -91,11 +89,13 @@ arma::mat probabilities(
     IntegerVector O(offspring.at(n));
     
     // Parent node states integration
+    int N_o;
     for (int s=0; s<nstates; s++) {
       
       // Loop through offspring
       double offspring_joint_likelihood = 1.0;
-      for (int o_n=0; o_n<noffspring.at(n) ; o_n++) {
+      N_o = Rf_length(offspring.at(n));
+      for (int o_n=0; o_n<N_o ; o_n++) {
         
         // Offspring states integration
         double offspring_likelihood = 0.0;
@@ -128,14 +128,13 @@ arma::mat probabilities(
 //' Computes Log-likelihood
 //' 
 //' This function computes the log-likelihood of the chosen parameters given
-//' a particular dataset. The arguments \code{annotations}, \code{offspring}, and
-//' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
+//' a particular dataset. The arguments \code{annotations}, and \code{offspring}
+//' should be as those returned by \code{\link{new_aphylo}}.
 //' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
 //' 
 //' @template parameters
 //' @templateVar annotations 1
 //' @templateVar offspring 1
-//' @templateVar noffspring 1
 //' @templateVar psi 1
 //' @templateVar mu 1
 //' @templateVar Pi 1
@@ -168,7 +167,6 @@ arma::mat probabilities(
 List LogLike(
     const arma::imat & annotations,
     const List       & offspring,
-    const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
     double Pi,
@@ -184,22 +182,9 @@ List LogLike(
     // Data dims
     int n_annotations = annotations.n_rows;
     int n_offspring   = offspring.size();
-    int n_noffspring  = noffspring.size();
     
     if (n_annotations != n_offspring) {
       warning("-annotations- and -offspring- have different lengths.");
-      dims_are_ok = false;
-    }
-      
-      
-    if (n_annotations != n_noffspring) {
-      warning("-annotations- and -noffspring- have different lengths.");
-      dims_are_ok = false;
-    }
-      
-    
-    if (n_noffspring != n_noffspring) {
-      warning("-offspring- and -noffspring- have different lengths.");
       dims_are_ok = false;
     }
       
@@ -229,7 +214,7 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Pr  = probabilities(annotations, mu, psi, S, noffspring, offspring);
+  arma::mat Pr  = probabilities(annotations, mu, psi, S, offspring);
 
   // We only use the root node
   double ll = 0.0;
@@ -268,7 +253,6 @@ double predict_fun(
   unsigned int di0,
   const arma::imat & annotations,
   const List       & offspring,
-  const arma::ivec & noffspring,
   const arma::vec  & psi,
   const arma::vec  & mu,
   double Pi
@@ -280,13 +264,13 @@ double predict_fun(
   // Compute likelihood of a_i = 0
   annotations_filled.at(i, p) = 0;
   double likelihood_given_ai_0 = exp(
-    as< double >(LogLike(annotations_filled, offspring, noffspring, psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, psi, mu, Pi, false)["ll"])
     );
   
   // Compute likelihood of a_i = 1
   annotations_filled.at(i, p) = 1;
   double likelihood_given_ai_1 = exp(
-    as< double >(LogLike(annotations_filled, offspring, noffspring, psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, psi, mu, Pi, false)["ll"])
     );
   
   // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
@@ -310,7 +294,6 @@ arma::mat predict_funs(
   const arma::umat & edges,
   const arma::imat & annotations,
   const List       & offspring,
-  const arma::ivec & noffspring,
   const arma::vec  & psi,
   const arma::vec  & mu,
   double Pi
@@ -326,7 +309,7 @@ arma::mat predict_funs(
   for (i = 0u; i < n; i++)
     for (p = 0u; p < P; p++) {
       ans.at(i, p) = predict_fun(
-        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, noffspring, psi, mu, Pi
+        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, psi, mu, Pi
       );
     }
       

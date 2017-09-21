@@ -27,7 +27,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
     ids <- what
   } else if (length(what) == 1 && what == "missings") {
     ids <- with(object$dat, which(
-      noffspring == 0 & apply(annotations, 1, function(a) any(a == 9)*1L) > 0
+      isleaf(edges) & apply(annotations, 1, function(a) any(a == 9)*1L) > 0
     ))
     
     if (!length(ids))
@@ -39,7 +39,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   } else if (length(what) == 1 && what == "all") {
     ids <- 0L:(n-1L)
   } else if (length(what) == 1 && what == "leafs") {
-    ids <- which(object$dat$noffspring == 0) - 1L
+    ids <- which(isleaf(object$dat$edges)) - 1L
   } else if (is.vector(what) & inherits(what, "character")) {
     
     # Fetching nodes using labels
@@ -59,7 +59,6 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
                  edges       = dat$edges,
                  annotations = dat$annotations,
                  offspring   = dat$offspring,
-                 noffspring  = dat$noffspring,
                  psi         = par[1:2],
                  mu          = par[3:4],
                  Pi          = par[5]
@@ -112,7 +111,7 @@ prediction_score <- function(
   ids <- which(apply(expected, 1L, function(x) all(x != 9L)))
   
   # And furthermore, only on the leafs
-  ids <- intersect(ids, which(x$dat$noffspring == 0))
+  ids <- intersect(ids, which(isleaf(x$dat$edges)))
 
   # Prediction
   pred <- predict.aphylo_estimates(x, what = ids - 1L, ...)

@@ -163,7 +163,6 @@ aphylo_mle <- function(
       ll <- LogLike(
         annotations = dat$annotations, 
         offspring   = dat$offspring,
-        noffspring  = dat$noffspring, 
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -181,7 +180,6 @@ aphylo_mle <- function(
       ll <- LogLike(
         annotations = dat$annotations, 
         offspring   = dat$offspring,
-        noffspring  = dat$noffspring, 
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -254,7 +252,7 @@ print.aphylo_estimates <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
-  props      <- with(x$dat, table(annotations[noffspring == 0,,drop=FALSE]))
+  props      <- with(x$dat, table(annotations[isleaf(edges),,drop=FALSE]))
   propspcent <- prop.table(props)*100
   
   with(x, {
@@ -341,7 +339,6 @@ aphylo_mcmc <- function(
       LogLike(
         annotations = dat$annotations,
         offspring   = dat$offspring,
-        noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],
@@ -356,7 +353,6 @@ aphylo_mcmc <- function(
       LogLike(
         annotations = dat$annotations,
         offspring   = dat$offspring,
-        noffspring  = dat$noffspring,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],

@@ -3,15 +3,12 @@
 \name{aphylo-methods}
 \alias{aphylo-methods}
 \alias{plot.aphylo}
-\alias{leafs}
 \alias{print.aphylo}
 \alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
 \method{plot}{aphylo}(x, y = NULL, geom.tiplab.args = list(),
   gheatmap.args = list(), scale.fill.args = list(), ...)
-
-leafs(...)
 
 \method{print}{aphylo}(x, ...)
 
@@ -34,8 +31,6 @@ leafs(...)
 }
 \value{
 In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
-
-\code{leafs} returns a character vector with the names of the leafs
 
 In the case of \code{print.aphylo}, the same \code{aphylo} object
 invisible.

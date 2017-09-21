@@ -17,8 +17,7 @@ arma::mat prob_mat(
 arma::mat leaf_prob(
     const arma::imat & Z,
     const arma::imat & S,
-    const arma::vec  & psi,
-    const arma::ivec & noffspring
+    const arma::vec  & psi
   );
 
 arma::vec root_node_prob(
@@ -30,14 +29,12 @@ arma::mat internal_prob(
     arma::mat          Pr,
     const arma::vec  & mu,
     const arma::imat & S,
-    const arma::ivec & noffspring,
     const List       & offspring
   );
 
 List LogLike(
     const arma::imat & Z,
     const List       & offspring,
-    const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi,

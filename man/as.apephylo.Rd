@@ -28,18 +28,19 @@ as_ape_tree(edges)
 An object of class \code{\link[ape:as.phylo]{phylo}}
 
 An integer matrix of the same dimmension as \code{edges} with the following
-two aditional attributes:
+aditional attribute:
 \item{labels}{Named integer vector of size \code{n}. Original labels of the edgelist
 where the first \code{n} are leaf nodes, \code{n+1} is the root node, and the reminder
 are the internal nodes.}
-\item{isleaf}{Logical vector of size \code{n}. \code{TRUE} when the node is a leaf node.}
 }
 \description{
 \code{as.apephylo} coerces objects to \code{\link[ape:as.phylo]{phylo}} objects
 from the \pkg{ape} package. These have several methods including visualization
 methods that can be useful.
 
-\code{as_ape_tree} is the powerhorse of \code{\link{as.apephylo}}.
+This function takes an edgelist and recodes (relabels) the nodes following
+\CRANpkg{ape}'s coding convention. \code{as_ape_tree} is the powerhorse of
+\code{\link{as.apephylo}}.
 
 \code{}
 }
@@ -51,7 +52,7 @@ set.seed(1231)
 # Generating a random tree: Observe that the nodes are coded such that
 # for all (i,j) that are offspring and parent i > j. This is a requirement
 # of the peeling algorithm
-edges <- sim_tree(30)$edges
+edges <- sim_tree(30)
 
 # In the ape package, nodes are labeled such that leafs are from 1 to n
 # root node is n+1 and interior nodes can have whatever label.

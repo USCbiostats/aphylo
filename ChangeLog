@@ -1,4 +1,17 @@
 2017-09-07  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: leafs now has its own manual, plus
+	  new internal checks checking labels.
+
+	* src/phylo.cpp: -noffspring- removed since now we use Rf_length.
+	  This included changes in all the functions that used that argument.
+
+	* R/simulation.r: po_tree now has the labels as attributes, including
+	  the offspring.
+	* src/sim_phylo.cpp: sim_tree now returns an integer matrix (edgelist).
+	  Only offspring and labels are included as attributes. 
+
+
+2017-09-07  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/panther.r: Now the user can choose which one to use.
 
 	* playground/ape_now_supports_singletons*: A small benchmark between

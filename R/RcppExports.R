@@ -61,28 +61,26 @@ root_node_prob <- function(Pi, S) {
 #' @templateVar mu 1
 #' @templateVar psi 1
 #' @templateVar S 1
-#' @templateVar noffspring 1
 #' @templateVar offspring 1
 #' 
 #' @export
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' 
-probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
-    .Call(`_aphylo_probabilities`, annotations, mu, psi, S, noffspring, offspring)
+probabilities <- function(annotations, mu, psi, S, offspring) {
+    .Call(`_aphylo_probabilities`, annotations, mu, psi, S, offspring)
 }
 
 #' Computes Log-likelihood
 #' 
 #' This function computes the log-likelihood of the chosen parameters given
-#' a particular dataset. The arguments \code{annotations}, \code{offspring}, and
-#' \code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
+#' a particular dataset. The arguments \code{annotations}, and \code{offspring}
+#' should be as those returned by \code{\link{new_aphylo}}.
 #' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
 #' 
 #' @template parameters
 #' @templateVar annotations 1
 #' @templateVar offspring 1
-#' @templateVar noffspring 1
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
@@ -111,16 +109,16 @@ probabilities <- function(annotations, mu, psi, S, noffspring, offspring) {
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, noffspring, psi, mu, Pi, verb_ans, check_dims)
+LogLike <- function(annotations, offspring, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
+    .Call(`_aphylo_LogLike`, annotations, offspring, psi, mu, Pi, verb_ans, check_dims)
 }
 
-predict_fun <- function(i, p, di0, annotations, offspring, noffspring, psi, mu, Pi) {
-    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, noffspring, psi, mu, Pi)
+predict_fun <- function(i, p, di0, annotations, offspring, psi, mu, Pi) {
+    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, psi, mu, Pi)
 }
 
-predict_funs <- function(ids, edges, annotations, offspring, noffspring, psi, mu, Pi) {
-    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, noffspring, psi, mu, Pi)
+predict_funs <- function(ids, edges, annotations, offspring, psi, mu, Pi) {
+    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, psi, mu, Pi)
 }
 
 prediction_score_rand <- function(A, W, alpha) {
@@ -131,8 +129,6 @@ prediction_score_rand <- function(A, W, alpha) {
 #' 
 #' @param offspring A List of length \eqn{N} with the set of offspring of
 #' each node.
-#' @param noffspring An integer vector of length \eqn{N} with the number of
-#' offspring per node.
 #' @param psi A numeric vector of length 2 (see details).
 #' @param mu A numeric vector of length 2 (see details).
 #' @param Pi A numeric vector of length 2 (see details).
@@ -157,8 +153,7 @@ prediction_score_rand <- function(A, W, alpha) {
 #'     
 #' # Simulating
 #' ans <- sim_fun_on_tree(
-#'   newtree$offspring,
-#'   newtree$noffspring,
+#'   attr(newtree, "offspring"),
 #'   psi = c(.001, .05),
 #'   mu = c(.01, .05),
 #'   Pi = c(.5, .5)
@@ -168,8 +163,8 @@ prediction_score_rand <- function(A, W, alpha) {
 #' table(ans)
 #' 
 #' 
-sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
-    .Call(`_aphylo_sim_fun_on_tree`, offspring, noffspring, psi, mu, Pi, P)
+sim_fun_on_tree <- function(offspring, psi, mu, Pi, P = 1L) {
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, psi, mu, Pi, P)
 }
 
 #' Random tree generation
@@ -204,17 +199,15 @@ sim_fun_on_tree <- function(offspring, noffspring, psi, mu, Pi, P = 1L) {
 #' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 #' in some (most) of its routines.
 #' 
-#' @return A List with the following:
-#' \item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-#' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
+#' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+#' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
+#' With the following additional attributes:
 #' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
-#' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
-#' offspring that each node has.}
 #' 
 #' @examples
 #' # A very simple example ----------------------------------------------------
 #' set.seed(1223)
-#' newtree <- sim_tree(50)$edges
+#' newtree <- sim_tree(50)
 #' 
 #' plot(as.apephylo(newtree))
 #' 

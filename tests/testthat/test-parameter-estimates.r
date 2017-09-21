@@ -51,9 +51,9 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   set.seed(1)
   tree <- sim_tree(10)
-  A    <- which(tree$noffspring == 0L) - 1L
+  A    <- which(aphylo:::isleaf(tree)) - 1L
   A    <- cbind(A, sample(c(NA), length(A), TRUE))
-  dat  <- new_aphylo(A, tree$edges)
+  dat  <- new_aphylo(A, tree)
   
   ans1 <- suppressWarnings(
     aphylo_mcmc(rep(2/12, 5), dat, priors = function(x) dbeta(x, 2, 10),

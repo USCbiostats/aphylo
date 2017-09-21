@@ -90,7 +90,6 @@ with(dat,
      LogLike(
        annotations = annotations, 
        offspring   = offspring, 
-       noffspring  = noffspring, 
        psi = psi, mu = mu, Pi = pi_root)
 )
 

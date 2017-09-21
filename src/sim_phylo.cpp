@@ -9,8 +9,6 @@ int sample_int(int n) {
 //' 
 //' @param offspring A List of length \eqn{N} with the set of offspring of
 //' each node.
-//' @param noffspring An integer vector of length \eqn{N} with the number of
-//' offspring per node.
 //' @param psi A numeric vector of length 2 (see details).
 //' @param mu A numeric vector of length 2 (see details).
 //' @param Pi A numeric vector of length 2 (see details).
@@ -35,8 +33,7 @@ int sample_int(int n) {
 //'     
 //' # Simulating
 //' ans <- sim_fun_on_tree(
-//'   newtree$offspring,
-//'   newtree$noffspring,
+//'   attr(newtree, "offspring"),
 //'   psi = c(.001, .05),
 //'   mu = c(.01, .05),
 //'   Pi = c(.5, .5)
@@ -49,7 +46,6 @@ int sample_int(int n) {
 // [[Rcpp::export]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,
-    const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi,
@@ -71,7 +67,7 @@ IntegerMatrix sim_fun_on_tree(
       
       // Leaf nodes have no offspring. So this is when we include the miss
       // classification factor
-      N_o = noffspring.at(i);
+      N_o = Rf_length(offspring.at(i));
       if (!N_o) {
         
         // Gain Probability
@@ -126,7 +122,6 @@ tree <- sim_tree(1000)
 # Simulating
 ans <- sim_fun_on_tree(
   attr(tree,"offspring"),
-  attr(tree,"noffspring"),
   psi = c(.001, .05),
   mu = c(.05, .005),
   Pi = c(.5, .5)
@@ -170,17 +165,15 @@ table(ans)
 //' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 //' in some (most) of its routines.
 //' 
-//' @return A List with the following:
-//' \item{edges}{An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
-//' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.}
+//' @return An matrix of size \code{(n*2 - 2)*2}, an edgelist, with \code{n*2-1} nodes.
+//' This, a Directed Acyclic Graph (DAG), as classes \code{matrix} and \code{po_tree}.
+//' With the following additional attributes:
 //' \item{offspring}{A list of size \code{n*2 - 1} listing node ith's offspring if any.}
-//' \item{noffspring}{An integer vector of size \code{n*2 - 1} indicating the number of
-//' offspring that each node has.}
 //' 
 //' @examples
 //' # A very simple example ----------------------------------------------------
 //' set.seed(1223)
-//' newtree <- sim_tree(50)$edges
+//' newtree <- sim_tree(50)
 //' 
 //' plot(as.apephylo(newtree))
 //' 
@@ -207,14 +200,13 @@ table(ans)
 //' }
 //' @export
 // [[Rcpp::export]]
-List sim_tree(int n) {
+IntegerMatrix sim_tree(int n) {
   
   // Initializing
   std::vector< int > offspring, parent;
   std::vector< int > left(n);
   
   std::vector< std::vector<int> > offspring_list(n*2 - 1);
-  IntegerVector noffspring(offspring_list.size(), 0);
   
   
   // Filling the temporary ids
@@ -244,7 +236,6 @@ List sim_tree(int n) {
     parent.push_back(m);
     
     left.at(j) = m;
-    noffspring.at(m)+=2;
     
   }
   
@@ -280,17 +271,9 @@ List sim_tree(int n) {
   nnames.attr("names") = Rcpp::clone(nnames);
   
   edges.attr("labels") = nnames;
-  edges.attr("Nnode")  = nnames.size() - n;
+  edges.attr("offspring") = O;
   
-  List ans = List::create(
-    _["edges"]      = edges,
-    _["offspring"]  = O,
-    _["noffspring"] = noffspring
-  );
-  
-  ans.attr("class") = "aphylo_sim_tree";
-  
-  return ans;
+  return edges;
   
 }
 

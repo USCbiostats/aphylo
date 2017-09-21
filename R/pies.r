@@ -171,6 +171,13 @@ piechart <- function(
   rescale = TRUE,
   ...) {
   
+  # X must be numeric
+  if (!is.numeric(x))
+    stop("-x- must be numeric")
+  x <- tryCatch(as.vector(x), error = function(e) e)
+  if (inherits(x, "error"))
+    stop("Coercion of -x- as vector failed:\n", x)
+  
   # Assigning alpha
   init.angle <- init.angle/360*2.0*pi # as radians
   last.angle <- last.angle/360*2.0*pi

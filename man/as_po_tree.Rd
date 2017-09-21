@@ -2,6 +2,7 @@
 % Please edit documentation in R/data-management.r
 \name{as_po_tree}
 \alias{as_po_tree}
+\alias{po_tree}
 \alias{as_po_tree.phylo}
 \alias{is.po_tree}
 \alias{print.po_tree}

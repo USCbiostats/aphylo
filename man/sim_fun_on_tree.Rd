@@ -4,14 +4,11 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(offspring, noffspring, psi, mu, Pi, P = 1L)
+sim_fun_on_tree(offspring, psi, mu, Pi, P = 1L)
 }
 \arguments{
 \item{offspring}{A List of length \eqn{N} with the set of offspring of
 each node.}
-
-\item{noffspring}{An integer vector of length \eqn{N} with the number of
-offspring per node.}
 
 \item{psi}{A numeric vector of length 2 (see details).}
 
@@ -42,8 +39,7 @@ newtree <- sim_tree(1e3)
     
 # Simulating
 ans <- sim_fun_on_tree(
-  newtree$offspring,
-  newtree$noffspring,
+  attr(newtree, "offspring"),
   psi = c(.001, .05),
   mu = c(.01, .05),
   Pi = c(.5, .5)

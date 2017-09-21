@@ -17,7 +17,11 @@ plot(score)
 
 dat
 
+str(dat)
+
 prune <- function(x, which) {
-  leafs <- leafs(x)
+  # Listing leafs and finding the position on the tree
+  leafs     <- leafs(x)
+  leafs_ids <- match(leafs, x$edges)
   
 }

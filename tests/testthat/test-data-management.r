@@ -27,7 +27,7 @@ test_that("as_po tree", {
   
   # Generating a random tree
   set.seed(100)
-  ans0 <- sim_tree(50)$edges
+  ans0 <- sim_tree(50)
   
   attr(ans0, "labels") <-
     structure(
@@ -55,9 +55,9 @@ test_that("as_po tree", {
 test_that("Listing leafs", {
   set.seed(1)
   dat0 <- sim_tree(100)
-  dat1 <- as.apephylo(dat0$edges)
+  dat1 <- as.apephylo(dat0)
   
-  dat0 <- leafs(dat0$edges)
+  dat0 <- leafs(dat0)
   dat1 <- leafs(dat1)
   
   expect_true(all(sort(dat0) == sort(dat1)))

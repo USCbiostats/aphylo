@@ -4,15 +4,13 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(annotations, offspring, noffspring, psi, mu, Pi, verb_ans = FALSE,
+LogLike(annotations, offspring, psi, mu, Pi, verb_ans = FALSE,
   check_dims = TRUE)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, each column is a functional annotation coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
 
 \item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
-
-\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{new_aphylo}}).}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -37,8 +35,8 @@ parameters.}
 }
 \description{
 This function computes the log-likelihood of the chosen parameters given
-a particular dataset. The arguments \code{annotations}, \code{offspring}, and
-\code{noffspring} should be as those returned by \code{\link{new_aphylo}}.
+a particular dataset. The arguments \code{annotations}, and \code{offspring}
+should be as those returned by \code{\link{new_aphylo}}.
 For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
 
 \code{}

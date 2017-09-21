@@ -5,7 +5,6 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 arma::umat sim_phylo(
     const List       & offspring,
-    const arma::ivec & noffspring,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi
@@ -26,7 +25,7 @@ arma::umat sim_phylo(
       
       // Leaf nodes have no offspring. So this is when we include the miss
       // classification factor
-      N_o = noffspring.at(i);
+      N_o = Rf_length(offspring.at(i));
       if (!N_o) {
         
         // Gain Probability
@@ -71,6 +70,6 @@ O <- get_offspring(
   tree, "NodeId", "ParentId"
 )
 
-ans <- with(O, sim_phylo(offspring, noffspring, psi = c(.001,.05)*0, mu = c(.5, .5), Pi = c(1,0)));table(ans)
+ans <- with(O, sim_phylo(offspring, psi = c(.001,.05)*0, mu = c(.5, .5), Pi = c(1,0)));table(ans)
 
 */

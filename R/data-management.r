@@ -1,3 +1,40 @@
+# This function takes and edgelist and tries to find 'labels' attr on it. If
+# there are no labels, it will make some.
+# This only work for matrices (internal use only)
+getlabels <- function(edgelist) {
+  
+  # Checking the class
+  if (!is.integer(edgelist))
+    stop("-edgelist- must be of class integer.")
+  
+  # Are there any labels?
+  labels <- attr(edgelist, "labels")
+  if (length(labels))
+    if (length(names(labels))) {
+      
+      # Coercing as integer and returning
+      return(as.integer(names(labels)))
+    }
+  
+  warning("No labels found. We will use the coding as labels.")
+  
+  # If there are no labels, then we have to 'find them'
+  sort(unique(as.vector(edgelist)))
+}
+
+
+# Returns a logical vector indicating whether the node is a leaf or not
+# The edgelist must be codded from 0 to n-1.
+isleaf <- function(edgelist) {
+  
+  labs <- getlabels(edgelist)
+  
+  # Tabulating the parents, if returns 0 means that it has no
+  # offspring, hence, is a leaf.
+  fast_table_using_labels(edgelist[,1], labs) == 0
+}
+
+
 #' Recodes an edgelist as a Partially Ordered Tree
 #' 
 #' The function \code{\link{new_aphylo}} uses this function to make sure that
@@ -32,7 +69,8 @@
 #' 
 #' # Going back
 #' as_po_tree(apetree)
-#' 
+#'
+#' @aliases po_tree 
 #' @export
 as_po_tree <- function(edges) UseMethod("as_po_tree")
 
@@ -158,10 +196,8 @@ as_po_tree.default <- function(edges) {
 #' annotations. These can be either 0, 1, or 9 indicating no function, function, and
 #' no information respectively.}
 #' \item{offspring}{A list of size \eqn{n}. The \eqn{i}-th element of the list
-#' can be either \code{NULL} (meaning no offspring), or a vector of length \code{noffspring[i]},
+#' can be either \code{NULL} (meaning no offspring), or a vector 
 #' with the relative positions of the offspring from \eqn{1} to \eqn{n}.} 
-#' \item{noffspring}{An integer vector of size \eqn{n}. Indicates the number of
-#' offspring each node has.}
 #' \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 #' \code{\link{as_po_tree}}).}
 #' 
@@ -299,7 +335,6 @@ new_aphylo <- function(
   as_aphylo(
     annotations = A,
     offspring   = O,
-    noffspring  = sapply(O, length),
     edges       = E
   )
   
@@ -308,7 +343,6 @@ new_aphylo <- function(
 as_aphylo <- function(
   annotations,
   offspring,
-  noffspring,
   edges,
   checks     = TRUE
   ) {
@@ -318,13 +352,11 @@ as_aphylo <- function(
     # Checking class
     stopifnot(is.matrix(annotations))
     stopifnot(is.list(offspring))
-    stopifnot(is.vector(noffspring))
     stopifnot(is.po_tree(edges))
     
     # Checking dimmensions
     d <- dim(annotations)
     stopifnot(d[1] == length(offspring))
-    stopifnot(d[1] == length(noffspring))
     stopifnot(length(unique(as.vector(edges))) == d[1])
     
   }
@@ -333,7 +365,6 @@ as_aphylo <- function(
     list(
       annotations = annotations,
       offspring   = offspring,
-      noffspring  = noffspring,
       edges       = edges
     ),
     class = "aphylo"
@@ -362,15 +393,18 @@ as.apephylo.aphylo <- function(x, ...) {
   # Recoding edgelist
   E <- with(x, as_ape_tree(edges))
   
+  # Finding leafs
+  is_leaf <- isleaf(E)
+  
   # Figuring out labels
   tiplabs <- attr(x[["edges"]], "labels")[match(
-    attr(E, "labels")[which(attr(E, "isleaf"))],
+    attr(E, "labels")[which(is_leaf)],
     attr(x[["edges"]], "labels")
     )]
   
   # Internal nodes labels
   nodelabs <- attr(x[["edges"]], "labels")[match(
-    attr(E, "labels")[which(!attr(E, "isleaf"))],
+    attr(E, "labels")[which(!is_leaf)],
     attr(x[["edges"]], "labels")
   )]
   
@@ -379,7 +413,7 @@ as.apephylo.aphylo <- function(x, ...) {
     edge        = E,
     edge.length = rep(1, nrow(E)),
     tip.label   = as.character(unname(tiplabs)),
-    Nnode       = sum(!attr(E, "isleaf")),
+    Nnode       = sum(!is_leaf),
     node.label  = as.character(unname(nodelabs))
   ), class = "phylo")
   
@@ -395,14 +429,16 @@ as.apephylo.po_tree <- function(x, ...) {
   # Recoding edgelist
   E <- as_ape_tree(x)
   
+  is_leaf <- isleaf(E)
+  
   # Figuring out labels
   tiplabs <- attr(x, "labels")[match(
-    attr(E, "labels")[which(attr(E, "isleaf"))],
+    attr(E, "labels")[which(is_leaf)],
     names(attr(x, "labels"))
   )]
   
   nodelabs <- attr(x, "labels")[match(
-    attr(E, "labels")[which(!attr(E, "isleaf"))],
+    attr(E, "labels")[which(!is_leaf)],
     names(attr(x, "labels"))
   )]
   
@@ -411,7 +447,7 @@ as.apephylo.po_tree <- function(x, ...) {
     edge.length = rep(1, nrow(E)),
     tip.label   = as.character(unname(tiplabs)),
     node.label  = as.character(unname(nodelabs)),
-    Nnode       = sum(!attr(E, "isleaf"))
+    Nnode       = sum(!is_leaf)
   ), class = "phylo")
 }
 
@@ -470,18 +506,26 @@ plot.aphylo <- function(
   p
 }
 
-#' @rdname aphylo-methods
-#' @return \code{leafs} returns a character vector with the names of the leafs
-#' @export
-leafs <- function(...) UseMethod("leafs")
 
-#' @rdname aphylo
+
+#' Extract leaf labels 
+#' @param x A phylogenetic tree.
+#' @param ... Ignored.
+#' @return \code{leafs} returns a character vector with the names of the leafs
+#' @examples 
+#' set.seed(1)
+#' ans <- sim_tree(10)
+#' leafs(ans)
+#' @export
+leafs <- function(x, ...) UseMethod("leafs")
+
+#' @rdname leafs
 #' @export
 leafs.phylo <- function(x, ...) {
   x$tip.label
 }
 
-#' @rdname aphylo
+#' @rdname leafs
 #' @export
 leafs.po_tree <- function(x, ...) {
   labs <- attr(x, "labels")
@@ -490,7 +534,7 @@ leafs.po_tree <- function(x, ...) {
   unname(labs[which(d == 0)])
 }
 
-#' @rdname aphylo
+#' @rdname leafs
 #' @export
 leafs.aphylo <- function(x, ...) {
   leafs.po_tree(x$edges)
@@ -560,16 +604,17 @@ plot.po_tree <- function(
 
 #' Relabel a tree (edgelist) using \pkg{ape}'s convention
 #' 
-#' \code{as_ape_tree} is the powerhorse of \code{\link{as.apephylo}}.
+#' This function takes an edgelist and recodes (relabels) the nodes following
+#' \CRANpkg{ape}'s coding convention. \code{as_ape_tree} is the powerhorse of
+#' \code{\link{as.apephylo}}.
 #' 
 #' @template parameters
 #' @templateVar edges 1
 #' @return An integer matrix of the same dimmension as \code{edges} with the following
-#' two aditional attributes:
+#' aditional attribute:
 #' \item{labels}{Named integer vector of size \code{n}. Original labels of the edgelist
 #' where the first \code{n} are leaf nodes, \code{n+1} is the root node, and the reminder
 #' are the internal nodes.}
-#' \item{isleaf}{Logical vector of size \code{n}. \code{TRUE} when the node is a leaf node.}
 #' 
 #' @examples 
 #' 
@@ -579,7 +624,7 @@ plot.po_tree <- function(
 #' # Generating a random tree: Observe that the nodes are coded such that
 #' # for all (i,j) that are offspring and parent i > j. This is a requirement
 #' # of the peeling algorithm
-#' edges <- sim_tree(30)$edges
+#' edges <- sim_tree(30)
 #' 
 #' # In the ape package, nodes are labeled such that leafs are from 1 to n
 #' # root node is n+1 and interior nodes can have whatever label.
@@ -645,8 +690,8 @@ as_ape_tree <- function(edges) {
   structure(
     edges,
     labels = nodes,
-    isleaf = c(rep(TRUE, sum(odeg == 0)), rep(FALSE, length(nodes) - sum(odeg==0))),
     class = c("matrix", "ape_tree")
   )
   
 }
+

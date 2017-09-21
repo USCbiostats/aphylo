@@ -20,10 +20,8 @@ A list of class \code{aphylo} with the following elements:
 annotations. These can be either 0, 1, or 9 indicating no function, function, and
 no information respectively.}
 \item{offspring}{A list of size \eqn{n}. The \eqn{i}-th element of the list
-can be either \code{NULL} (meaning no offspring), or a vector of length \code{noffspring[i]},
+can be either \code{NULL} (meaning no offspring), or a vector 
 with the relative positions of the offspring from \eqn{1} to \eqn{n}.} 
-\item{noffspring}{An integer vector of size \eqn{n}. Indicates the number of
-offspring each node has.}
 \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 \code{\link{as_po_tree}}).}
 }

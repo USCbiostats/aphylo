@@ -4,7 +4,7 @@
 \alias{probabilities}
 \title{State probabilities}
 \usage{
-probabilities(annotations, mu, psi, S, noffspring, offspring)
+probabilities(annotations, mu, psi, S, offspring)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, each column is a functional annotation coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
@@ -14,8 +14,6 @@ probabilities(annotations, mu, psi, S, noffspring, offspring)
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
 \item{S}{Integer matrix of size \eqn{2^P\times P}{2^P * P}. See \code{\link{states}}.}
-
-\item{noffspring}{Integer vector of length \eqn{n}. Number of offspring each node has (see \code{\link{new_aphylo}}).}
 
 \item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
 }
