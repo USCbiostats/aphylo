@@ -471,15 +471,29 @@ plot.aphylo <- function(
 }
 
 #' @rdname aphylo-methods
+#' @return \code{leafs} returns a character vector with the names of the leafs
 #' @export
-leafs <- function(x) {
-  if (!inherits(x, "aphylo"))
-    stop("No -leafs- method for class -", class(x),"-.")
-  
-  labs <- attr(x$edges, "labels")
-  d <- fast_table_using_labels(x$edges[,1], as.integer(names(labs)))
+leafs <- function(...) UseMethod("leafs")
+
+#' @rdname aphylo
+#' @export
+leafs.phylo <- function(x, ...) {
+  x$tip.label
+}
+
+#' @rdname aphylo
+#' @export
+leafs.po_tree <- function(x, ...) {
+  labs <- attr(x, "labels")
+  d <- fast_table_using_labels(x[,1], as.integer(names(labs)))
   
   unname(labs[which(d == 0)])
+}
+
+#' @rdname aphylo
+#' @export
+leafs.aphylo <- function(x, ...) {
+  leafs.po_tree(x$edges)
 }
 
 #' @export

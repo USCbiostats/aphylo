@@ -50,7 +50,7 @@ read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Getting the labels
   labs <- data.frame(
     id       = stringr::str_extract(x[-1], "^.+(?=\\:)"),
-    label    = stringr::str_extract(x[-1], "(?<=\\|).+(?=\\|)"),
+    label    = stringr::str_extract(x[-1], "(?<=\\:).+(?=\\;$)"),
     stringsAsFactors = FALSE
   )
   

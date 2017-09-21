@@ -11,7 +11,7 @@
 \method{plot}{aphylo}(x, y = NULL, geom.tiplab.args = list(),
   gheatmap.args = list(), scale.fill.args = list(), ...)
 
-leafs(x)
+leafs(...)
 
 \method{print}{aphylo}(x, ...)
 
@@ -34,6 +34,8 @@ leafs(x)
 }
 \value{
 In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
+
+\code{leafs} returns a character vector with the names of the leafs
 
 In the case of \code{print.aphylo}, the same \code{aphylo} object
 invisible.
