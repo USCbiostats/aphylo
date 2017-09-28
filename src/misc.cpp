@@ -31,7 +31,7 @@ using namespace Rcpp;
 //[[Rcpp::export]]
 arma::umat approx_geodesic(
     const arma::umat & edges,
-    unsigned int nsteps = 1e3,
+    unsigned int nsteps = 5e3,
     bool undirected = true,
     bool warn = false
 ) {

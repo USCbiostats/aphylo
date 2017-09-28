@@ -26,7 +26,7 @@
 #' This is a modified version of the function of the same name in the
 #' R package \CRANpkg{netdiffuseR}.
 #' @export
-approx_geodesic <- function(edges, nsteps = 1e3L, undirected = TRUE, warn = FALSE) {
+approx_geodesic <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
     .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }
 

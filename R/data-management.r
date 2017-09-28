@@ -1,7 +1,7 @@
 # This function takes and edgelist and tries to find 'labels' attr on it. If
 # there are no labels, it will make some.
 # This only work for matrices (internal use only)
-getlabels <- function(edgelist) {
+getids <- function(edgelist) {
   
   # Checking the class
   if (!is.integer(edgelist))
@@ -22,12 +22,29 @@ getlabels <- function(edgelist) {
   sort(unique(as.vector(edgelist)))
 }
 
+getlabels <- function(edgelist) {
+  
+  # Checking the class
+  if (!is.integer(edgelist))
+    stop("-edgelist- must be of class integer.")
+  
+  # Are there any labels?
+  labels <- attr(edgelist, "labels")
+  if (length(labels))
+    return(unname(labels))
+  
+  warning("No labels found. We will use the coding as labels.")
+  
+  # If there are no labels, then we have to 'find them'
+  sort(unique(as.vector(edgelist)))
+}
+
 
 # Returns a logical vector indicating whether the node is a leaf or not
 # The edgelist must be codded from 0 to n-1.
 isleaf <- function(edgelist) {
   
-  labs <- getlabels(edgelist)
+  labs <- getids(edgelist)
   
   # Tabulating the parents, if returns 0 means that it has no
   # offspring, hence, is a leaf.

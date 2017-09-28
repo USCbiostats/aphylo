@@ -70,5 +70,5 @@ head(edges_org)
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as_po_tree}}
+  \code{\link{as_po_tree}}, \code{\link{prune}}
 }

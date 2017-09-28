@@ -1,20 +1,38 @@
-#' Given that we want to remove a set of \eq{l \subset L}, the algorithm goes as
-#' follows:
+#' Removing leafs and nodes from a tree
 #' 
-#' 1. Match the node ids with position.
-#' 2. Sort it to be decreasing, so the most inner nodes show first,
-#' 3. Increase the list:
-#'   a. Compute the geodesic matrix G,
-#'   b. For i in l do, j != i:
-#'     If G(i,j)!=0, then add it to the list
-#'   
-#'   \code{sapply(1:(3-1), function(x) sapply(x:3, c, x)[,-1,drop=FALSE])}
-#'   
-#'   b. Degine tags(n). For k in p, For s in p[k]:
-#'       1. If G[s] != 0, then tag() = 1
-#'       
-#' Two things to do: 1 remove them from the 
-#'       
+#' This function takes one or more nodes/leafs from a given tree and removes them
+#' making sure that the position indexes are updated, hence preserving the 
+#' \code{\link{po_tree}} structure.
+#' 
+#' @param x An object of class \code{po_tree} or \code{aphylo}.
+#' @param ids Either a vector or a scalar indicating which nodes/leafs to remove.
+#' If integer, then its values should be within (0, n-1]. Otherwise, if character
+#' it can be the nodes/leafs labels.
+#' @param ... Ignored
+#' 
+#' @return A prunned version of the tree.
+#' @family Data management functions
+#' @details 
+#' 
+#' From now we will denote node(s) as either internal node(s) or leaf(s). Given
+#' that we want to remove \code{ids}, the algorithm goes as follows:
+#' \enumerate{
+#' \item Identifies which nodes are been asked to be removed and
+#' checks whether these actually exits.
+#' 
+#' \item Computes the topological shortest path matrix between pairs of
+#' nodes, and if the nodes to be removed are parents of nodes not included
+#' in the list, these will be added (the whole branch is removed).
+#' 
+#' \item Considering which nodes are been removed, a new set of positions
+#' is computed so that it follows \code{\link{po_tree}} convention.
+#' 
+#' \item The edgelist is updated, as well the labels.
+#' 
+#' \item The set of offspring is recalculated.
+#' }
+#' 
+#' @examples 
 #' 
 #' # A simple example of how prune works-------------------------------------------
 #' # Simulating a nice tree
@@ -47,7 +65,7 @@ prune <- function(x, ids, ...) UseMethod("prune")
 
 #' @export
 #' @rdname prune
-prune.po_tree <- function(x, ids) {
+prune.po_tree <- function(x, ids, ...) {
   
   # 1. Identify which will be removed ------------------------------------------
   

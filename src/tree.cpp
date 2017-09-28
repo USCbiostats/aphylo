@@ -170,6 +170,9 @@ List list_offspring(
     const arma::umat & edges
 ) {
   
+  if (edges.n_rows == 0)
+    stop("No edges in this tree (nrow(edges) = 0).");
+  
   unsigned int n = edges.max() - edges.min() + 1u, i;
   std::vector< std::vector< arma::uword > > offspring(n);
   

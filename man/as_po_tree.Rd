@@ -72,5 +72,5 @@ as_po_tree(apetree)
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as.apephylo}}
+  \code{\link{as.apephylo}}, \code{\link{prune}}
 }
