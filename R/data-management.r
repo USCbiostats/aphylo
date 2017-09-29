@@ -1,27 +1,6 @@
 # This function takes and edgelist and tries to find 'labels' attr on it. If
 # there are no labels, it will make some.
 # This only work for matrices (internal use only)
-getids <- function(edgelist) {
-  
-  # Checking the class
-  if (!is.integer(edgelist))
-    stop("-edgelist- must be of class integer.")
-  
-  # Are there any labels?
-  labels <- attr(edgelist, "labels")
-  if (length(labels))
-    if (length(names(labels))) {
-      
-      # Coercing as integer and returning
-      return(as.integer(names(labels)))
-    }
-  
-  warning("No labels found. We will use the coding as labels.")
-  
-  # If there are no labels, then we have to 'find them'
-  sort(unique(as.vector(edgelist)))
-}
-
 getlabels <- function(edgelist) {
   
   # Checking the class
@@ -42,13 +21,13 @@ getlabels <- function(edgelist) {
 
 # Returns a logical vector indicating whether the node is a leaf or not
 # The edgelist must be codded from 0 to n-1.
-isleaf <- function(edgelist) {
+isleaf <- function(edgelist, from0=TRUE) {
   
-  labs <- getids(edgelist)
+  n <- length(getlabels(edgelist))
   
   # Tabulating the parents, if returns 0 means that it has no
   # offspring, hence, is a leaf.
-  fast_table_using_labels(edgelist[,1], labs) == 0
+  fast_table_using_labels(edgelist[,1], (1L-from0):(n - from0)) == 0
 }
 
 
@@ -67,8 +46,7 @@ isleaf <- function(edgelist) {
 #' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
 #' to form a partial order. Besides of been of class \code{matrix}, the resulting
 #' object is also of class \code{po_tree} and has an aditional attribute:
-#' \item{labels}{Named integer vector of size n. Original labels of the edgelist
-#' where the names are from 0 to \code{n}.}
+#' \item{labels}{Character vector of size n. Original labels of the edgelist.}
 #' 
 #' @template parameters
 #' @templateVar edges 1
@@ -121,8 +99,8 @@ is.po_tree <- function(x) inherits(x, "po_tree")
 print.po_tree <- function(x, ...) {
   # Which are leafs
   dgr <- fast_table_using_labels(
-    x[,1],
-    as.integer(names(attr(x, "labels")))
+    x[,1L],
+    0L:(length(attr(x, "labels")) - 1L)
     )
   
   cat(
@@ -182,12 +160,8 @@ as_po_tree.default <- function(edges) {
   
   # Recoding as a PO tree and recycling the labels
   edges <- recode_as_po(edges)
-  if (length(labels)) {
-    attr(edges, "labels") <- structure(
-      labels[as.integer(attr(edges, "labels"))],
-      names = names(attr(edges, "labels"))
-    )
-  }
+  if (length(labels)) 
+    attr(edges, "labels") <- labels[as.integer(attr(edges, "labels"))]
   
   edges
   
@@ -440,24 +414,17 @@ as.apephylo.aphylo <- function(x, ...) {
 #' @export
 as.apephylo.po_tree <- function(x, ...) {
   # Cleaning attributes
-  attr(x, "noffspring") <- NULL
   attr(x, "offspring")  <- NULL
   
   # Recoding edgelist
   E <- as_ape_tree(x)
   
-  is_leaf <- isleaf(E)
+  is_leaf <- isleaf(E, from0 = FALSE)
   
   # Figuring out labels
-  tiplabs <- attr(x, "labels")[match(
-    attr(E, "labels")[which(is_leaf)],
-    names(attr(x, "labels"))
-  )]
-  
-  nodelabs <- attr(x, "labels")[match(
-    attr(E, "labels")[which(!is_leaf)],
-    names(attr(x, "labels"))
-  )]
+  ids <- 0L:(length(attr(x, "labels")) - 1L)
+  tiplabs <- attr(x, "labels")[match(attr(E, "labels")[which(is_leaf)], ids)]
+  nodelabs <- attr(x, "labels")[match(attr(E, "labels")[which(!is_leaf)], ids)]
   
   structure(list(
     edge        = E,
@@ -687,7 +654,7 @@ as_ape_tree <- function(edges) {
   #  - Root node is n + 1
   #  - And the inner goes from n + 2 to length(nodes)
   # This doest it smoothly
-  nodes <- structure(c(leafs, roots, inner), names = 1:length(nodes))
+  nodes <- c(leafs, roots, inner)
   
   # Finding indexes and corresponding new labels
   iroots <- which(edges[] == roots)

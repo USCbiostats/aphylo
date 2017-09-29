@@ -268,8 +268,6 @@ IntegerMatrix sim_tree(int n) {
     nnames[i] = name;
   }
   
-  nnames.attr("names") = Rcpp::clone(nnames);
-  
   edges.attr("labels") = nnames;
   edges.attr("offspring") = O;
   

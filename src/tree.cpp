@@ -150,8 +150,6 @@ IntegerMatrix recode_as_po(
     labels[i] = lab;
   }
   
-  labels.attr("names") = Rcpp::clone(nnames);
-  
   // Returning
   edges1.attr("labels") = labels;
   edges1.attr("class")  = CharacterVector::create(

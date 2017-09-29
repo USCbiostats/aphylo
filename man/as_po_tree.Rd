@@ -37,8 +37,7 @@ is.po_tree(x)
 A matrix of the same dimension as \code{edges}, an edgelist, recoded
 to form a partial order. Besides of been of class \code{matrix}, the resulting
 object is also of class \code{po_tree} and has an aditional attribute:
-\item{labels}{Named integer vector of size n. Original labels of the edgelist
-where the names are from 0 to \code{n}.}
+\item{labels}{Character vector of size n. Original labels of the edgelist.}
 
 In the case of \code{is.po_tree}, \code{TRUE} if is an object of
 class \code{po_tree}, \code{FALSE} otherwise.

@@ -1,4 +1,6 @@
 2017-09-28  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Removing names for the po_tree labels.
+
 	* R/prune.r: New (a bit complex) function to prune trees.
 
 

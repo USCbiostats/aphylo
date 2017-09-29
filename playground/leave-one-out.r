@@ -101,7 +101,6 @@ prune.po_tree <- function(x, ids) {
   x[,1] <- new_ids[match(x[,1], old_ids)]
   x[,2] <- new_ids[match(x[,2], old_ids)]
   
-  names(old_labels) <- new_ids
   attr(x, "labels") <- old_labels[-(nodes_ids + 1L)]
   
   # 5. Re computing the offspring ----------------------------------------------

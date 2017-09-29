@@ -29,10 +29,7 @@ test_that("as_po tree", {
   set.seed(100)
   ans0 <- sim_tree(50)
   
-  attr(ans0, "labels") <-
-    structure(
-      paste0(1:1000,letters)[1:length(attr(ans0, "labels"))],
-      names = names(attr(ans0, "labels")))
+  attr(ans0, "labels") <-paste0(1:1000,letters)[1:length(attr(ans0, "labels"))]
   
   ans1 <- as_po_tree(as.apephylo(ans0))
   

@@ -45,7 +45,7 @@
 #' 
 #' # Plotting 
 #' plot(x, main = "Full tree", show.node.label = TRUE)
-#' plot(prune(x, 5), main="removing 5", show.node.label = TRUE)
+#' plot(prune(x, c(2,6)), main="removing (2,6)", show.node.label = TRUE)
 #' plot(prune(x, 6), main="removing 6", show.node.label = TRUE)
 #' plot(prune(x, 4), main="removing 4", show.node.label = TRUE)
 #' plot(prune(x, 3), main="removing 3", show.node.label = TRUE)

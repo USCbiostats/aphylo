@@ -77,23 +77,19 @@ O
     ##     0, 2, 1, ...
     ## 
     ## ANNOTATIONS:
-    ##   f1 f2
-    ## 6  1  1
-    ## 5  1  0
-    ## 4  0  1
-    ## 3  0  0
+    ##      f1 f2
 
 ``` r
 as.apephylo(O)
 ```
 
     ## 
-    ## Phylogenetic tree with 4 tips and 3 internal nodes.
+    ## Phylogenetic tree with 5 tips and 2 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] "3" "4" "5" "6"
+    ## [1] "3" "4" "5" "6" "0"
     ## Node labels:
-    ## [1] "0" "1" "2"
+    ## [1] "1" "2"
     ## 
     ## Rooted; includes branch lengths.
 
@@ -140,15 +136,7 @@ dat
     ##     0, 1, 2, 3, 4, 5, ...
     ## 
     ## ANNOTATIONS:
-    ##     fun0000
-    ## 99        1
-    ## 100       1
-    ## 101       0
-    ## 102       1
-    ## 103       1
-    ## 104       1
-    ## 
-    ## ...(94 obs. omitted)...
+    ##      fun0000
 
 Likelihood
 ----------
