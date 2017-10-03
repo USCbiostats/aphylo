@@ -143,6 +143,9 @@ aphylo_mle <- function(
   
   
   # Checking params
+  if (!inherits(dat, "aphylo"))
+    stop("-dat- should be of class aphylo")
+  
   if (length(params) != 5)
     stop("-params- must be of length 5.")
   
@@ -162,7 +165,7 @@ aphylo_mle <- function(
 
       ll <- LogLike(
         annotations = dat$annotations, 
-        offspring   = dat$offspring,
+        offspring   = attr(dat$edges, "offspring"),
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -179,7 +182,7 @@ aphylo_mle <- function(
 
       ll <- LogLike(
         annotations = dat$annotations, 
-        offspring   = dat$offspring,
+        offspring   = attr(dat$edges, "offspring"),
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -323,6 +326,9 @@ aphylo_mcmc <- function(
   if (!length(control$lb))     control$lb     <- rep(0, 5)
   
   # Checking params
+  if (!inherits(dat, "aphylo"))
+    stop("-dat- should be of class aphylo")
+  
   if (length(params) != 5)
     stop("-params- must be of length 5.")
   
@@ -338,7 +344,7 @@ aphylo_mcmc <- function(
 
       LogLike(
         annotations = dat$annotations,
-        offspring   = dat$offspring,
+        offspring   = attr(dat$edges, "offspring"),
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],
@@ -352,7 +358,7 @@ aphylo_mcmc <- function(
 
       LogLike(
         annotations = dat$annotations,
-        offspring   = dat$offspring,
+        offspring   = attr(dat$edges, "offspring"),
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],

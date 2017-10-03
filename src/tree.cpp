@@ -75,7 +75,7 @@ arma::uvec fast_table_using_labels(
   return ans;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".recode_as_po")]]
 IntegerMatrix recode_as_po(
     const arma::imat & edges
   ) {
@@ -121,42 +121,34 @@ IntegerMatrix recode_as_po(
     }
 
     // Add them to the list
-    j = offspring.size();
-    while (j != 0) {
+    for (j = 0; j < offspring.size(); j++) {
 
       // Adding the index
-      Lans.at(counter++) = edges0(offspring.at(--j), 1u);
+      Lans.at(counter++) = edges0(offspring.at(j), 1u);
       
       // Adding the
       edges1.at(iE,   0u)   = i;
       edges1.at(iE++, 1u) = counter - 1u;
 
-      // Removing it from E
-      edges0.shed_row(offspring.at(j));
-
     }
+    
+    // Removing from E
+    j = offspring.size();
+    while (j != 0)
+      edges0.shed_row(offspring.at(--j));
       
   }
 
   // Creating nametags
-  StringVector nnames(Lans.size());
   StringVector labels(Lans.size());
   for (int i = 0; i< (int) Lans.size(); i++) {
-    char name[10], lab[10];
-    sprintf(&(name[0]), "%i", i);
-    nnames[i] = name;
-    
+    char lab[10];
     sprintf(&(lab[0]), "%i", Lans.at(i));
     labels[i] = lab;
   }
   
   // Returning
   edges1.attr("labels") = labels;
-  edges1.attr("class")  = CharacterVector::create(
-    "po_tree", "matrix"
-  );
-  
-  edges1.attr("Nnode") = labels.size() - nleafs;
   
   return edges1;
   
@@ -183,7 +175,7 @@ List list_offspring(
   // Coercing into a list
   List ans(n);
   for (i = 0u; i < n; i++) {
-    if (offspring.at(i).size() == 0) ans.at(i) = R_NilValue;
+    if (offspring.at(i).size() == 0) ans.at(i) = IntegerVector::create();
     else ans.at(i) = arma::conv_to< arma::urowvec >::from( offspring.at(i) );
   }
   

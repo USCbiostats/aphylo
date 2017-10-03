@@ -1,7 +1,7 @@
 context("Parameter estimation")
 
 set.seed(121)
-n <- 100
+n <- 200
 P <- 2
 psi <- c(.01, .01)
 mu  <- c(.04, .02)
@@ -16,7 +16,7 @@ ans0 <- aphylo_mle(dat)
 test_that("Methods", {
   
   # Printing
-  expect_output(print(ans0), "ESTIMATION OF")
+  expect_output(suppressWarnings(print(ans0)), "ESTIMATION OF")
   
   # Plotting
   expect_silent(plot(ans0))

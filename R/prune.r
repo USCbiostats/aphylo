@@ -113,22 +113,25 @@ prune.po_tree <- function(x, ids, ...) {
   # From the edgelist
   edges_ids <- which(!(x[,1] %in% nodes_ids) & !(x[,2] %in% nodes_ids))
   x <- x[edges_ids,,drop=FALSE]
-  
-  
+
   # 4. Relabeling --------------------------------------------------------------
   x[,1] <- new_ids[match(x[,1], old_ids)]
   x[,2] <- new_ids[match(x[,2], old_ids)]
   
   names(old_labels) <- new_ids
-  attr(x, "labels") <- old_labels[-(nodes_ids + 1L)]
-  
+
   # 5. Re computing the offspring ----------------------------------------------
-  
-  attr(x, "offspring") <- list_offspring(x)
-  
-  structure(x, class= "po_tree")
+  new_po_tree(
+    edges       = x,
+    edge.length = attr(x, "edge.length")[edges_ids],
+    labels      = old_labels[-(nodes_ids + 1L)]
+    )
   
 }
 
-
+#' @rdname prune
+#' @export
+prune.ape <- function(x, ids, ...) {
+  # as_po_tree()
+}
 

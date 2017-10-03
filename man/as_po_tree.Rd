@@ -3,6 +3,7 @@
 \name{as_po_tree}
 \alias{as_po_tree}
 \alias{po_tree}
+\alias{as.po_tree}
 \alias{as_po_tree.phylo}
 \alias{is.po_tree}
 \alias{print.po_tree}
@@ -10,34 +11,41 @@
 \alias{plot.po_tree}
 \title{Recodes an edgelist as a Partially Ordered Tree}
 \usage{
-as_po_tree(edges)
+as_po_tree(edges, ...)
 
-\method{as_po_tree}{phylo}(edges)
+as.po_tree(edges, ...)
+
+\method{as_po_tree}{phylo}(edges, ...)
 
 is.po_tree(x)
 
 \method{print}{po_tree}(x, ...)
 
-\method{as_po_tree}{default}(edges)
+\method{as_po_tree}{default}(edges, edge.length = NULL, ...)
 
-\method{plot}{po_tree}(x, y = NULL, tip.color = NULL, ...)
+\method{plot}{po_tree}(x, y = NULL, ...)
 }
 \arguments{
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 
-\item{x}{An object of class \code{aphylo}.}
-
 \item{...}{Further arguments passed to the method.}
 
-\item{y}{Ignored.}
+\item{x}{An object of class \code{aphylo}.}
 
-\item{tip.color}{See \code{\link[ape:plot.phylo]{plot.phylo}}}
+\item{edge.length}{A numeric vector of length \code{nrow(edges)}. Branch
+lengths.}
+
+\item{y}{Ignored.}
 }
 \value{
 A matrix of the same dimension as \code{edges}, an edgelist, recoded
 to form a partial order. Besides of been of class \code{matrix}, the resulting
-object is also of class \code{po_tree} and has an aditional attribute:
+object is also of class \code{po_tree} and has an aditional attributes:
+\item{Nnode}{Integer scalar. Number of leaf nodes.}
+\item{edge.length}{Numeric vector of length \code{nrow(edges)}. Branch lengths.}
 \item{labels}{Character vector of size n. Original labels of the edgelist.}
+\item{offspring}{A list of length \eqn{n} with integer vectors. List the
+offsprings that each node has relative to 0, where 0 is the root node.}
 
 In the case of \code{is.po_tree}, \code{TRUE} if is an object of
 class \code{po_tree}, \code{FALSE} otherwise.
@@ -54,19 +62,20 @@ function.
 The recoded edgelist is such that in all rows the first element, parent
 node, as a label that is less than the second element, the offspring, a
 partial order.
+
+\code{as.po_tree} is an alias for \code{as_po_tree}
 }
 \examples{
 # Recoding an ape tree -----------------------------------------------------
 
 set.seed(1122233)
 apetree <- ape::rtree(5)
-potree  <- as_po_tree(apetree$edge)
+potree  <- as_po_tree(apetree)
 
-apetree$edge
 potree
 
 # Going back
-as_po_tree(apetree)
+as.apephylo(potree)
 
 }
 \seealso{

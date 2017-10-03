@@ -10,6 +10,7 @@ test_that("As phylo conversion and methods", {
   expect_s3_class(as.apephylo(ans), "phylo")
   expect_s3_class(plot(ans), "ggplot")
   expect_output(summary(as.apephylo(ans)), "Phylogenetic tree")
+  expect_output(summary(sim_annotated_tree(10, P=4)), "Distri")
 })
 
 # Conversion -------------------------------------------------------------------
@@ -46,8 +47,26 @@ test_that("as_po tree", {
   # These should be the same afterwards
   expect_equal(ans0, ans1)
   
-  
 })
+
+test_that("From po_tree to phylo and viceversa", {
+  
+  # Simulating a tree
+  set.seed(11)
+  ans0 <- ape::rtree(4)
+  ans1 <- as.apephylo(as_po_tree(ans0))
+  
+  # Plot should look the same
+  oldpar <- par(no.readonly = TRUE)
+  par(mfrow=c(1,2))
+  plot(ans0)
+  plot(ans1)
+  par(oldpar)
+  
+  ans0$node.label <- ans1$node.label
+  expect_equal(ans0, ans1)
+})
+
 
 test_that("Listing leafs", {
   set.seed(1)

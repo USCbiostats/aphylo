@@ -12,7 +12,7 @@ errtol <- 1e-15
 O  <- new_aphylo(fakeexperiment, faketree)
 
 S  <- states(2)
-Pr <- probabilities(O$annotations, mu, psi, S, O$offspring)
+Pr <- probabilities(O$annotations, mu, psi, S, attr(O$edges, "offspring"))
 
 # Sorting
 Pr <- Pr[order(rownames(O$annotations)),]
@@ -175,7 +175,7 @@ test_that("Internal Probabilities", {
 # Likelihood of Rootnode -------------------------------------------------------
 
 test_that("Log-Likelihood", {
-  ll0 <- LogLike(O$annotations, O$offspring, psi, mu, Pi)$ll
+  ll0 <- LogLike(O$annotations, attr(O$edges, "offspring"), psi, mu, Pi)$ll
   
   PI  <- aphylo:::root_node_prob(Pi, S)
   ll1 <- log(sum(Pr[1, , drop = TRUE] * PI))

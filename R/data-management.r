@@ -45,8 +45,12 @@ isleaf <- function(edgelist, from0=TRUE) {
 #' 
 #' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
 #' to form a partial order. Besides of been of class \code{matrix}, the resulting
-#' object is also of class \code{po_tree} and has an aditional attribute:
+#' object is also of class \code{po_tree} and has an aditional attributes:
+#' \item{Nnode}{Integer scalar. Number of leaf nodes.}
+#' \item{edge.length}{Numeric vector of length \code{nrow(edges)}. Branch lengths.}
 #' \item{labels}{Character vector of size n. Original labels of the edgelist.}
+#' \item{offspring}{A list of length \eqn{n} with integer vectors. List the
+#' offsprings that each node has relative to 0, where 0 is the root node.}
 #' 
 #' @template parameters
 #' @templateVar edges 1
@@ -57,21 +61,25 @@ isleaf <- function(edgelist, from0=TRUE) {
 #' 
 #' set.seed(1122233)
 #' apetree <- ape::rtree(5)
-#' potree  <- as_po_tree(apetree$edge)
+#' potree  <- as_po_tree(apetree)
 #' 
-#' apetree$edge
 #' potree
 #' 
 #' # Going back
-#' as_po_tree(apetree)
+#' as.apephylo(potree)
 #'
 #' @aliases po_tree 
 #' @export
-as_po_tree <- function(edges) UseMethod("as_po_tree")
+as_po_tree <- function(edges, ...) UseMethod("as_po_tree")
 
 #' @export
 #' @rdname as_po_tree
-as_po_tree.phylo <- function(edges) {
+#' @details \code{as.po_tree} is an alias for \code{as_po_tree}
+as.po_tree <- as_po_tree
+
+#' @export
+#' @rdname as_po_tree
+as_po_tree.phylo <- function(edges, ...) {
   
   atree    <- edges[["edge"]]
 
@@ -85,7 +93,7 @@ as_po_tree.phylo <- function(edges) {
     )[atree[]]
     
   
-  as_po_tree(atree)
+  as_po_tree(atree, edge.length = edges[["edge.length"]])
 }
 
 #' @rdname as_po_tree
@@ -103,15 +111,19 @@ print.po_tree <- function(x, ...) {
     0L:(length(attr(x, "labels")) - 1L)
     )
   
+  leafs <- dgr == 0
+  
   cat(
     "\nA PARTIALLY ORDERED PHYLOGENETIC TREE\n",
     sprintf("  # Internal nodes: %i", attr(x, "Nnode")),
     sprintf("  # Leaf nodes    : %i\n", length(attr(x, "labels")) - attr(x, "Nnode")),
-    sprintf("  Leaf nodes labels: \n    %s, ...\n",
-            paste0(utils::head(attr(x, "labels")[which(dgr==0)]), collapse = ", ")
+    sprintf("  Leaf nodes labels: \n    %s%s\n",
+            paste0(utils::head(attr(x, "labels")[which(leafs)]), collapse = ", "),
+            ifelse(sum(leafs) > 6, ", ...", ".")
             ),
-    sprintf("  Internal nodes labels:\n    %s, ...\n",
-            paste0(utils::head(attr(x, "labels")[which(dgr>0)]), collapse = ", ")
+    sprintf("  Internal nodes labels:\n    %s%s\n",
+            paste0(utils::head(attr(x, "labels")[which(!leafs)]), collapse = ", "),
+            ifelse(sum(!leafs) > 6, ", ...", ".")
     ),
     
     sep = "\n"
@@ -120,9 +132,165 @@ print.po_tree <- function(x, ...) {
   invisible(x)
 }
 
+# This function is intended to be used internally
+new_po_tree <- function(
+  edges,
+  labels, 
+  edge.length        = NULL,
+  offspring       = NULL,
+  check.edges     = TRUE,
+  check.edge.length  = TRUE,
+  check.labels    = TRUE,
+  check.offspring = TRUE
+  ) {
+  
+  # Edges ----------------------------------------------------------------------
+  
+  # Since when checking edges we are able to id -n-, we have to do it all
+  # the time that some other thing that needs is checked.
+  
+  if (check.edges | check.edge.length | check.labels | check.offspring) {
+    
+    # Should be a matrix
+    if (!is.matrix(edges))
+      stop("-edges- should be an object of class matrix")
+    
+    # Coercion into integers
+    if (!is.integer(edges))
+      edges[] <- as.integer(edges[])
+    
+    # Are there any NAs?
+    if (any(is.na(edges)))
+      stop("Some elements of -edges- were not able to be coerced as integers.")
+    
+    # Checking range
+    ran <- range(edges)
+    n   <- ran[2] + 1
+    if (ran[1]!=0)
+      stop("The minimum node id in the tree should be 0, it is ", ran[1], ".")
+    
+  }
+
+  # Labels --------------------------------------------------------------------
+  
+  # Checking length of labels
+  if (check.labels && (length(labels) != n)) {
+    
+    if (!is.vector(labels))
+      stop("-labels- should be a vector.")
+    
+    if (!is.character(labels)) {
+      warning("-labels-is not of class 'character'. Will be coerced.")
+      labels <- as.character(labels)
+    }
+      
+    stop("The length of -labels- should be equal to ", n, ". It is ",
+         length(labels), ".")
+    
+  }
+    
+  
+  # Offsprings -----------------------------------------------------------------
+  
+  # If no offspring was provided, then it is computed, and so no check should be
+  # done
+  
+  if (!length(offspring)) {
+    
+    offspring       <- list_offspring(edges)
+    check.offspring <- FALSE
+    
+  }
+  
+  if (check.offspring) {
+    
+    # Type list
+    if (!is.list(offspring))
+      stop("-offspring- should be a list.")
+    
+    # Length
+    if (length(offspring) != n)
+      stop("The length of -offspring- should be equal to ", n,". It is ",
+           length(offspring), ".")
+    
+    # Subelements should be a list
+    if (any(!sapply(offspring, is.vector)))
+      stop("The elements of -offspring- should be vectors.")
+    
+    # Coercing into integer
+    offspring <- lapply(offspring, as.integer)
+    
+    idx <- unlist(offspring, recursive = TRUE)
+    
+    # All should be integer
+    if (any(is.na(idx)))
+      stop("Some elements of -offspring- faild to be coerced to integer.")
+    
+    # All should be in the same range of ran
+    ran_o <- range(idx)
+    if (ran[1] > ran_o[1] | ran[2] < ran_o[2])
+      stop("Some elements of -offspring- are pointing to elements out of range.")
+    
+  }
+  
+  # Branch lengths -------------------------------------------------------------
+  if (!length(edge.length)) {
+    
+    edge.length       <- rep(1.0, nrow(edges))
+    check.edge.length <- FALSE
+    
+  }
+  
+  if (check.edge.length) {
+    
+    if (!is.vector(edge.length))
+      stop("-edge.length- should be a vector.")
+    
+    if (length(edge.length) != nrow(edges))
+      stop("-edge.length- should have the same length as number of edges.")
+    
+    if (!is.numeric(edge.length))
+      edge.length <- as.numeric(edge.length)
+    
+    if (any(!is.finite(edge.length))) 
+      stop("Some -edge.length- show non-finite values.")
+    
+  }
+  
+  # Removing any other attribute that edges has --------------------------------
+  
+  mostattributes(edges) <- list(dim=dim(edges))
+  attributes(edge.length)  <- NULL
+  attributes(labels)    <- NULL
+  attributes(offspring) <- NULL
+  
+  # Creating the final output
+  structure(
+    edges,
+    class       = "po_tree",
+    Nnode       = sum(sapply(offspring, length) > 0),
+    edge.length = edge.length,
+    labels      = labels,
+    offspring   = offspring
+  )
+  
+}
+
+recode_as_po <- function(edges) {
+  ans <- .recode_as_po(edges)
+  new_po_tree(
+    edges        = ans,
+    labels       = attr(ans, "labels"), 
+    check.edges  = FALSE,
+    check.labels = FALSE
+    )
+}
+
 #' @export
+#' @param edge.length A numeric vector of length \code{nrow(edges)}. Branch
+#' lengths.
 #' @rdname as_po_tree
-as_po_tree.default <- function(edges) {
+as_po_tree.default <- function(edges, edge.length=NULL, ...) {
   
   # If PO tree, then nothing to do
   if (inherits(edges, "po_tree"))
@@ -161,10 +329,18 @@ as_po_tree.default <- function(edges) {
   # Recoding as a PO tree and recycling the labels
   edges <- recode_as_po(edges)
   if (length(labels)) 
-    attr(edges, "labels") <- labels[as.integer(attr(edges, "labels"))]
+    labels <- labels[as.integer(attr(edges, "labels"))]
   
-  edges
-  
+  new_po_tree(
+    edges             = edges,
+    labels            = labels,
+    edge.length       = edge.length,
+    offspring         = NULL, 
+    check.edges       = FALSE,
+    check.labels      = FALSE,
+    check.edge.length = TRUE
+  )
+
 }
 
 #' Annotated Phylogenetic Tree
@@ -177,18 +353,14 @@ as_po_tree.default <- function(edges) {
 #' @template parameters
 #' @templateVar edges 1
 #' @templateVar annotationslab 1
-#' @param ... Further parameters passed to the method.
 #' 
-#' @details Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
-#' from the \CRANpkg{ape} package.
+#' @details Plotting is done via \code{\link[ggtree:ggtree]{ggtree}} 
+#' from the \pkg{ggtree} package (Bioconductor).
 #' 
 #' @return A list of class \code{aphylo} with the following elements:
 #' \item{annotations}{A matrix of size \eqn{n\times P}{n * P} with leaf functional
 #' annotations. These can be either 0, 1, or 9 indicating no function, function, and
 #' no information respectively.}
-#' \item{offspring}{A list of size \eqn{n}. The \eqn{i}-th element of the list
-#' can be either \code{NULL} (meaning no offspring), or a vector 
-#' with the relative positions of the offspring from \eqn{1} to \eqn{n}.} 
 #' \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 #' \code{\link{as_po_tree}}).}
 #' 
@@ -325,7 +497,6 @@ new_aphylo <- function(
   # Returning
   as_aphylo(
     annotations = A,
-    offspring   = O,
     edges       = E
   )
   
@@ -333,7 +504,6 @@ new_aphylo <- function(
 
 as_aphylo <- function(
   annotations,
-  offspring,
   edges,
   checks     = TRUE
   ) {
@@ -342,12 +512,10 @@ as_aphylo <- function(
     
     # Checking class
     stopifnot(is.matrix(annotations))
-    stopifnot(is.list(offspring))
     stopifnot(is.po_tree(edges))
     
     # Checking dimmensions
     d <- dim(annotations)
-    stopifnot(d[1] == length(offspring))
     stopifnot(length(unique(as.vector(edges))) == d[1])
     
   }
@@ -355,7 +523,6 @@ as_aphylo <- function(
   structure(
     list(
       annotations = annotations,
-      offspring   = offspring,
       edges       = edges
     ),
     class = "aphylo"
@@ -399,6 +566,7 @@ as.apephylo.aphylo <- function(x, ...) {
     attr(x[["edges"]], "labels")
   )]
   
+  attributes(E) <- list(dim=dim(E))
   
   structure(list(
     edge        = E,
@@ -426,9 +594,11 @@ as.apephylo.po_tree <- function(x, ...) {
   tiplabs <- attr(x, "labels")[match(attr(E, "labels")[which(is_leaf)], ids)]
   nodelabs <- attr(x, "labels")[match(attr(E, "labels")[which(!is_leaf)], ids)]
   
+  attributes(E) <- list(dim=dim(E))
+  
   structure(list(
     edge        = E,
-    edge.length = rep(1, nrow(E)),
+    edge.length = attr(x, "edge.length"),
     tip.label   = as.character(unname(tiplabs)),
     node.label  = as.character(unname(nodelabs)),
     Nnode       = sum(!is_leaf)
@@ -548,7 +718,8 @@ print.aphylo <- function(x, ...) {
 #' @param object An object of class \code{aphylo}.
 #' @rdname aphylo-methods
 summary.aphylo <- function(object, ...) {
-  ans <- apply(object$annotations, 2, table)
+  
+  ans <- lapply(1:ncol(object$annotations), function(i) table(object$annotations[,i]))
   
   if (!inherits(ans, "list"))
     ans <- list(ans[,1,drop=TRUE])
@@ -557,13 +728,14 @@ summary.aphylo <- function(object, ...) {
     rbind, 
     lapply(ans, function(x)
     data.frame(
-      `0` = x["0"],
-      `1` = x["1"],
-      `NA` = x["9"],
+      `0`  = unname(x["0"]),
+      `1`  = unname(x["1"]),
+      `NA` = unname(x["9"]),
       check.names = FALSE
       )
     )
   )
+  ans[is.na(ans)] <- 0
   rownames(ans) <- colnames(object$annotations)
   cat("\nDistribution of functions:\n")
   print(ans)
@@ -572,17 +744,34 @@ summary.aphylo <- function(object, ...) {
   
 }
 
+# This list sets the default plotting parameters when calling
+# the plot.phylo function.
+default.plot.phylo.params <- list(
+  show.node.label = TRUE,
+  show.tip.label  = TRUE,
+  root.edge       = TRUE
+)
+
+# This is the actual function that does all the job setting the defaults.
+set.default.plot.phylo.params <- function(dots) {
+  env <- parent.frame()
+  
+  for (p in names(default.plot.phylo.params)) 
+    if (!length(env[[dots]][[p]]))
+      env[[dots]][[p]] <- default.plot.phylo.params[[p]]
+}
 
 #' @param x An object of class \code{aphylo}.
 #' @param y Ignored.
-#' @param tip.color See \code{\link[ape:plot.phylo]{plot.phylo}}
 #' @param ... Further arguments passed to the method.
 #' @rdname as_po_tree
 #' @export
 plot.po_tree <- function(
-  x, y=NULL, tip.color=NULL, ...) {
+  x, y=NULL, ...) {
 
-  plot(as.apephylo(x), tip.color=tip.color, ...)
+  dots <- list(...)
+  set.default.plot.phylo.params("dots")
+  do.call(ape::plot.phylo, c(list(as.apephylo(x)), dots))
   
 }
 
@@ -678,4 +867,5 @@ as_ape_tree <- function(edges) {
   )
   
 }
+
 

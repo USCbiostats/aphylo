@@ -1,3 +1,13 @@
+2017-10-03  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: New constructor method for class po_tree.
+	  Now it also includes branch lengths.
+
+	* R/simulation.r: Move documentation of sim_tree.
+	
+	* src/sim_tree.cpp: Efficiency.
+	* src/tree.cpp: Change sorting in final edgelist.	
+
+
 2017-09-28  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Removing names for the po_tree labels.
 

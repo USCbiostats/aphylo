@@ -11,17 +11,12 @@ new_aphylo(annotations, edges)
 \item{annotations}{Matrix of size \eqn{n\times P + 1}{n*P + 1}. Annotation data, where the first column is the nodeid (should coincide with the coding of the tree), the following columns are function annotations coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
 
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
-
-\item{...}{Further parameters passed to the method.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
 \item{annotations}{A matrix of size \eqn{n\times P}{n * P} with leaf functional
 annotations. These can be either 0, 1, or 9 indicating no function, function, and
 no information respectively.}
-\item{offspring}{A list of size \eqn{n}. The \eqn{i}-th element of the list
-can be either \code{NULL} (meaning no offspring), or a vector 
-with the relative positions of the offspring from \eqn{1} to \eqn{n}.} 
 \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 \code{\link{as_po_tree}}).}
 }
@@ -34,8 +29,8 @@ package only uses the leaf annotations.
 \code{}
 }
 \details{
-Plotting is done via \code{\link[ape:plot.phylo]{plot.phylo}} 
-from the \CRANpkg{ape} package.
+Plotting is done via \code{\link[ggtree:ggtree]{ggtree}} 
+from the \pkg{ggtree} package (Bioconductor).
 }
 \examples{
 # A simple example ----------------------------------------------------------

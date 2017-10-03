@@ -4,11 +4,14 @@
 \alias{prune}
 \alias{prune}
 \alias{prune.po_tree}
+\alias{prune.ape}
 \title{Removing leafs and nodes from a tree}
 \usage{
 prune(x, ids, ...)
 
 \method{prune}{po_tree}(x, ids, ...)
+
+\method{prune}{ape}(x, ids, ...)
 }
 \arguments{
 \item{x}{An object of class \code{po_tree} or \code{aphylo}.}
