@@ -56,6 +56,18 @@
 #' title("Prunning trees with -prune-")
 #' par(oldpar)
 #' 
+#' # Removing the leafs --------------------------------------------------------
+#' 
+#' set.seed(1)
+#' x <- sim_tree(25)
+#' oldpar <- par(no.readonly=TRUE)
+#' par(mfrow=c(2,2))
+#' plot(x)
+#' plot(prune(x, "leafs"))
+#' plot(prune(prune(x, "leafs"), "leafs"))
+#' plot(prune(prune(prune(x, "leafs"), "leafs"), "leafs"))
+#' par(oldpar)
+#' 
 #' @name prune
 NULL
 
@@ -70,21 +82,10 @@ prune.po_tree <- function(x, ids, ...) {
   # 1. Identify which will be removed ------------------------------------------
   
   # Getting the unique set, and sorting it
-  ids <- sort(unique(ids))
   n   <- length(attr(x, "labels"))
   
   # Matching to actual labels
-  if (is.character(ids))
-    ids <- match(ids, getlabels(x)) - 1L
-  
-  # Checking the lengths
-  if (any(is.na(ids)))
-    stop("Some -ids- don't match any leafs of the tree.")
-  
-  if (any(ids > (n - 1)))
-    stop("Out of range: Some -ids- are out of range (above n-1).")
-  if (any(ids < 1))
-    stop("Out of range: Some -ids- are out of range (below 1). Root node cannot be removed.")
+  map_ids_to_positions.po_tree("ids", "x")
   
   # 2. Computing Geodesics to extend the list ----------------------------------
   nodes_ids <- ids

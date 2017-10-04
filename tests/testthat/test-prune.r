@@ -17,8 +17,8 @@ test_that("Basic set of tests", {
   )
   
   # Error messages
-  expect_error(prune(x, 0), "Root")
-  expect_error(prune(x, 7), "out of range")
+  expect_error(prune(x, 0), "root")
+  expect_error(prune(x, 7), "Out of range")
   expect_error(prune(x, c(1,5)), "all but the root")
   
   # Removing 2 should take out 4 and 3 (so 3 nodes)

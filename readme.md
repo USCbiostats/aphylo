@@ -71,10 +71,10 @@ O
     ##   # Leaf nodes    : 4
     ## 
     ##   Leaf nodes labels: 
-    ##     6, 5, 4, 3, ...
+    ##     3, 4, 5, 6.
     ## 
     ##   Internal nodes labels:
-    ##     0, 2, 1, ...
+    ##     0, 1, 2.
     ## 
     ## ANNOTATIONS:
     ##      f1 f2
@@ -127,7 +127,8 @@ dat
     ## 
     ## A PARTIALLY ORDERED PHYLOGENETIC TREE
     ## 
-    ## 
+    ##   # Internal nodes: 99
+    ##   # Leaf nodes    : 100
     ## 
     ##   Leaf nodes labels: 
     ##     99, 100, 101, 102, 103, 104, ...
@@ -151,13 +152,13 @@ pi_root <- .999
 with(dat, 
      LogLike(
        annotations = annotations, 
-       offspring   = offspring, 
+       offspring   = attr(edges, "offspring"), 
        psi = psi, mu = mu, Pi = pi_root)
 )
 ```
 
     ## $ll
-    ## [1] -57.35087
+    ## [1] -68.26373
     ## 
     ## attr(,"class")
     ## [1] "phylo_LogLik"
@@ -172,20 +173,20 @@ Estimation
 
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -46.9586,
-    ## Method used: L-BFGS-B (39 iterations)
+    ## ll:  -50.1556,
+    ## Method used: L-BFGS-B (30 iterations)
     ## convergence: 0 (see ?optim)
     ## Leafs
     ##  # of Functions 1
-    ##  # of 0:    25 (25%)
-    ##  # of 1:    75 (75%)
+    ##  # of 0:    22 (22%)
+    ##  # of 1:    78 (78%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.2022      0.2499
-    ##  psi[1]    0.0000      0.0609
-    ##  mu[0]     0.0917      0.1366
-    ##  mu[1]     0.0705      0.0382
-    ##  Pi        1.0000      1.0702
+    ##  psi[0]    0.5394      0.2297
+    ##  psi[1]    0.0724      0.0801
+    ##  mu[0]     0.0369      0.1573
+    ##  mu[1]     0.0677      0.0584
+    ##  Pi        1.0000      1.0360
 
 ``` r
 # Plotting loglike
@@ -205,19 +206,19 @@ ans2
 
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -42.5969,
+    ## ll:  -47.4017,
     ## Method used: mcmc (10000 iterations)
     ## Leafs
     ##  # of Functions 1
-    ##  # of 0:    25 (25%)
-    ##  # of 1:    75 (75%)
+    ##  # of 0:    22 (22%)
+    ##  # of 1:    78 (78%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.1043      0.0613
-    ##  psi[1]    0.0518      0.0309
-    ##  mu[0]     0.1247      0.0562
-    ##  mu[1]     0.0577      0.0219
-    ##  Pi        0.1331      0.1029
+    ##  psi[0]    0.1340      0.0835
+    ##  psi[1]    0.0831      0.0428
+    ##  mu[0]     0.1623      0.0786
+    ##  mu[1]     0.0578      0.0274
+    ##  Pi        0.1312      0.1004
 
 ``` r
 # MCMC Diagnostics with coda
@@ -228,15 +229,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##      Point est. Upper C.I.
-    ## psi0       1.10       1.26
-    ## psi1       1.01       1.02
-    ## mu0        1.04       1.11
-    ## mu1        1.01       1.03
-    ## Pi         1.24       1.57
+    ## psi0       1.11       1.27
+    ## psi1       1.03       1.07
+    ## mu0        1.06       1.16
+    ## mu1        1.04       1.08
+    ## Pi         1.11       1.26
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.19
+    ## 1.11
 
 ``` r
 summary(ans2$hist)
@@ -252,20 +253,20 @@ summary(ans2$hist)
     ##    plus standard error of the mean:
     ## 
     ##         Mean      SD  Naive SE Time-series SE
-    ## psi0 0.10433 0.06128 0.0012319       0.004102
-    ## psi1 0.05176 0.03086 0.0006203       0.001123
-    ## mu0  0.12472 0.05623 0.0011303       0.003268
-    ## mu1  0.05772 0.02189 0.0004400       0.000648
-    ## Pi   0.13306 0.10285 0.0020674       0.009214
+    ## psi0 0.13401 0.08348 0.0016780       0.006577
+    ## psi1 0.08315 0.04275 0.0008594       0.002059
+    ## mu0  0.16226 0.07855 0.0015790       0.006112
+    ## mu1  0.05780 0.02745 0.0005517       0.001168
+    ## Pi   0.13120 0.10041 0.0020183       0.008871
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##          2.5%     25%     50%     75%  97.5%
-    ## psi0 0.013889 0.05625 0.09440 0.14451 0.2406
-    ## psi1 0.007102 0.02800 0.04686 0.07014 0.1233
-    ## mu0  0.030576 0.08445 0.12112 0.16152 0.2458
-    ## mu1  0.021352 0.04225 0.05525 0.07099 0.1059
-    ## Pi   0.017529 0.06576 0.10998 0.17293 0.4069
+    ##         2.5%     25%     50%    75%  97.5%
+    ## psi0 0.01861 0.07174 0.11816 0.1800 0.3394
+    ## psi1 0.01533 0.05103 0.07904 0.1103 0.1775
+    ## mu0  0.03132 0.10577 0.15593 0.2102 0.3364
+    ## mu1  0.01539 0.03805 0.05467 0.0737 0.1191
+    ## Pi   0.01810 0.06455 0.10694 0.1690 0.4257
 
 ``` r
 plot(ans2$hist)
@@ -282,7 +283,7 @@ pred
 ```
 
     ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-    ## Observed : 0.08 (73.72)
+    ## Observed : 0.08 (81.86)
     ## Random   : 0.25 (243.26)
     ## Best     : 0.00 (0.00)
     ## Worse    : 1.00 (973.05)

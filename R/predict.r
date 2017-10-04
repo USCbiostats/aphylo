@@ -15,47 +15,13 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   if (length(what) == 2 && all(what == c("missings", "all")))
     what <- "missings"
   
-  # Checking what to predict
-  if (length(what) >= 1 && inherits(what, "integer")) {
-    ran <- range(what)
-    
-    # Out of range
-    test <- which(ran < 0 | ran >= n)
-    if (length(test))
-      stop("Ids in -what- out of range:\n", paste(what[test], collapse=", "), ".")
-    
-    ids <- what
-  } else if (length(what) == 1 && what == "missings") {
-    ids <- with(object$dat, which(
-      isleaf(edges) & apply(annotations, 1, function(a) any(a == 9)*1L) > 0
-    ))
-    
-    if (!length(ids))
-      stop("No missing nodes to predict.")
-    
-    # Adjusting indices
-    ids <- ids - 1L
-    
-  } else if (length(what) == 1 && what == "all") {
-    ids <- 0L:(n-1L)
-  } else if (length(what) == 1 && what == "leafs") {
-    ids <- which(isleaf(object$dat$edges)) - 1L
-  } else if (is.vector(what) & inherits(what, "character")) {
-    
-    # Fetching nodes using labels
-    ids  <- match(what, rownames(object$dat$annotations))
-    test <- which(is.na(ids))
-    if (length(test))
-      stop("Some elements of -what- are not present in the data: ",
-           paste0(what[test], collapse=", "))
-      
-  } else 
-    stop("Undefined method for -what- equal to: ", what)
+  # This function maps
+  map_ids_to_positions.aphylo_estimates("what", "object")
   
   # Running prediction function
   pred <- with(object, 
                predict_funs(
-                 ids         = ids,
+                 ids         = what,
                  edges       = dat$edges,
                  annotations = dat$annotations,
                  offspring   = attr(dat$edges, "offspring"),
@@ -67,7 +33,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   
   # Adding names
   dimnames(pred) <- list(
-    rownames(object$dat$annotations)[ids+1L],
+    rownames(object$dat$annotations)[what+1L],
     colnames(object$dat$annotations))
   
   pred

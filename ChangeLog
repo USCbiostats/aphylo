@@ -1,3 +1,11 @@
+2017-10-04  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Working in a standard method to point to 
+	  nodes ids.
+	* R/predict.r: Idem.
+
+	* R/prune.r: New example prunning leafs.
+
+
 2017-10-03  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: New constructor method for class po_tree.
 	  Now it also includes branch lengths.

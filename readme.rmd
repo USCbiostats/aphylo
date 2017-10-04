@@ -89,7 +89,7 @@ pi_root <- .999
 with(dat, 
      LogLike(
        annotations = annotations, 
-       offspring   = offspring, 
+       offspring   = attr(edges, "offspring"), 
        psi = psi, mu = mu, Pi = pi_root)
 )
 

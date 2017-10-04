@@ -106,7 +106,7 @@ IntegerMatrix recode_as_po(
   if (counter == 0u)
     Rcpp::stop("There are no root nodes (i.e. indegree == 0).");
   else if (counter > 1u)
-    Rcpp::stop("There are more than 1 root node.");
+    Rcpp::stop("There is more than 1 root node. Multiply rooted trees are not supported.");
   
   unsigned int i, j, iE = 0u, nleafs = 0u;
   for (i = 0u; i < Lans.size(); i++) {
@@ -176,7 +176,8 @@ List list_offspring(
   List ans(n);
   for (i = 0u; i < n; i++) {
     if (offspring.at(i).size() == 0) ans.at(i) = IntegerVector::create();
-    else ans.at(i) = arma::conv_to< arma::urowvec >::from( offspring.at(i) );
+    else ans.at(i) = wrap( offspring.at(i) );
+    // else ans.at(i) = arma::conv_to< arma::urowvec >::from( offspring.at(i) );
   }
   
   return ans;

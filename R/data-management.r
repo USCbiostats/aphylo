@@ -30,6 +30,100 @@ isleaf <- function(edgelist, from0=TRUE) {
   fast_table_using_labels(edgelist[,1], (1L-from0):(n - from0)) == 0
 }
 
+map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
+  
+  # Retrieving information about the tree 
+  env <- parent.frame()
+  labels <- attr(env[[dat_name]][["dat"]][["edges"]], "labels")
+  n      <- length(labels)
+  
+  # Mapping the ids to the positions -------------------------------------------
+  if (is.numeric(env[[ids_name]])) {
+    
+    # Coercing into integer
+    env[[ids_name]] <- as.integer(env[[ids_name]]) 
+    
+  } else if (length(env[[ids_name]]) == 1 && (env[[ids_name]] %in% c("all", "leafs", "missings"))) {
+    
+    # Matching the description
+    env[[ids_name]] <- switch(
+      env[[ids_name]], 
+      all      = 0L:(n - 1L),
+      leafs    = which(isleaf(env[[dat_name]][["dat"]][["edges"]])) - 1L,
+      missings = which(
+        isleaf(env[[dat_name]][["dat"]][["edges"]]) &
+          apply(env[[dat_name]][["dat"]][["annotations"]], 1, function(a) any(a == 9)*1L) > 0
+      ) - 1L
+    )
+    
+  } else if (is.character(env[[ids_name]])) {
+    
+    # Matching the labels
+    env[[ids_name]] <- as.integer(match(env[[ids_name]], labels)) - 1L
+    
+  } else
+    stop("Unsupported type of ids: ", paste0(env[[ids_name]], collapse=", "))
+  
+  # Checking everything is in order --------------------------------------------
+  
+  # All complete
+  if (any(!is.finite(env[[ids_name]])))
+    stop("Some ids are either NAs or Inf.")
+  
+  if (any(env[[ids_name]] >= n))
+    stop("Out of range: Some ids are greater than (n-1). Ids go from 0 to n-1.")
+  
+  if (any(env[[ids_name]] < 0L))
+    stop("Out of range: Some ids are greater less than 0. Ids go from 0 to n-1.")
+  
+}
+
+map_ids_to_positions.po_tree <- function(ids_name, edges_name) {
+  
+  # Retrieving information about the tree 
+  env <- parent.frame()
+  labels <- attr(env[[edges_name]], "labels")
+  n      <- length(labels)
+  
+  # Sorting and unique
+  env[[ids_name]] <- sort(unique(env[[ids_name]]))
+  
+  # Mapping the ids to the positions -------------------------------------------
+  if (is.numeric(env[[ids_name]])) {
+    
+    # Coercing into integer
+    env[[ids_name]] <- as.integer(env[[ids_name]]) 
+    
+  } else if (length(env[[ids_name]]) == 1 && (env[[ids_name]] %in% c("all", "leafs"))) {
+    
+    # Matching the description
+    env[[ids_name]] <- switch(
+      env[[ids_name]], 
+      all      = 0L:(n - 1L),
+      leafs    = which(isleaf(env[[edges_name]])) - 1L
+    )
+    
+  } else if (is.character(env[[ids_name]])) {
+    
+    # Matching the labels
+    env[[ids_name]] <- as.integer(match(env[[ids_name]], labels)) - 1L
+    
+  } else
+    stop("Unsupported type of -ids-: ", paste0(env[[ids_name]], collapse=", "))
+  
+  # Checking everything is in order --------------------------------------------
+  
+  # All complete
+  if (any(!is.finite(env[[ids_name]])))
+    stop("Some ids are either NAs or Inf.")
+  
+  if (any(env[[ids_name]] >= n))
+    stop("Out of range: Some ids are greater than (n-1). Ids go from 0 to n-1.")
+  
+  if (any(env[[ids_name]] < 0L))
+    stop("Out of range: Some ids are greater less than 0. Ids go from 0 to n-1.")
+  
+}
 
 #' Recodes an edgelist as a Partially Ordered Tree
 #' 

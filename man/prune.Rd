@@ -73,6 +73,18 @@ par(mai=rep(1,4), omi=rep(0,4), mfrow=c(1,1), new=FALSE)
 title("Prunning trees with -prune-")
 par(oldpar)
 
+# Removing the leafs --------------------------------------------------------
+
+set.seed(1)
+x <- sim_tree(25)
+oldpar <- par(no.readonly=TRUE)
+par(mfrow=c(2,2))
+plot(x)
+plot(prune(x, "leafs"))
+plot(prune(prune(x, "leafs"), "leafs"))
+plot(prune(prune(prune(x, "leafs"), "leafs"), "leafs"))
+par(oldpar)
+
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
