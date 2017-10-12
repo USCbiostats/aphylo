@@ -42,6 +42,21 @@ library(aphylo)
 
 \tableofcontents{}
 
+# Gene Functions
+
+## Agenda
+
+\tableofcontents[currentsection]
+
+## Introduction
+
+-   Manual Curation (GO): Good but infeasible \pause
+-   Sparse gene functional annotation \pause
+-   Take advantage of the phylogenetic information to make inference of  \pause
+-   This predicted functional information will
+serve as prior covariates (and prior gene-gene connections) in the second level of the hierarchical models in Projects 1 and 3. In particular, this project is the first to make predictions at large scale in a probabilistic
+manner.
+
 # Model
 
 ## Agenda
@@ -432,9 +447,21 @@ prediction_score(ans)
 ```
 
 
-## How good is our prediction {.t}
+## How good is our prediction (cont.) {.t}
 
 ```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".6\\linewidth", echo=TRUE}
 plot(prediction_score(ans), main="")
 ```
+
+# Concluding Remarks
+
+## Concluding Remarks
+
+-   A parsimonious model of gene functions: easy to apply on a large scale
+
+-   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study
+
+-   Unfortunately, since annotation data is so sparse, we lack of a significant number of useful datasets on which we can test our method.
+
+-   For the next steps, we are evaluating ways of solving the sparseness issue: either by imposing correlation structures accross functions, or jumping into another model
 
