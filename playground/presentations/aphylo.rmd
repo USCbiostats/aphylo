@@ -8,7 +8,7 @@ institute:
   - University of Southern California
 short_institute: USC
 short_author: Vega Yon
-output:
+output: 
   uscimage::beamer_USCImage:
     includes:
       in_header:
@@ -65,7 +65,11 @@ manner.
 
 ## Some definitions
 
-1.  Phylogenetic tree: $\phylo\equiv (N,E)$ is a tuple of nodes $N$, and edges $E\equiv \{(n, m) \in N\times N: n\mapsto m\}$
+1.  Phylogenetic tree: In our case, we talk about \textcolor{red}{partially ordered} phylogenetic tree, in particular, $\phylo\equiv (N,E)$ is a tuple of nodes $N$, and edges
+
+    $$
+    E\equiv \{(n, m) \in N\times N: n\mapsto m, \textcolor{red}{n < m}\}
+    $$
 
 2.  Offspring of $n$: $O(n)\equiv\{m\in N: (n, m) \in E, n\in N\}$
 
@@ -73,7 +77,7 @@ manner.
 
 4.  Leaf nodes: $\Leaf(\phylo)\equiv \{m \in N: O(m)=\{\emptyset\}\}$
 
-5.  Annotations $\Ann \equiv \{\ann_n \in \{0,1\}^P: n\in \Leaf(\phylo)\}$ ($P$ functions)
+5.  Annotations: Given $P$ functions, $\Ann \equiv \{\ann_n \in \{0,1\}^P: n\in \Leaf(\phylo)\}$
 
 6.  Annotated Phylogenetic Tree $\aphylo \equiv(\phylo, \Ann)$
 
@@ -105,30 +109,26 @@ $$
         -   A missing function as present, $\psi_0$, and
         -   A present function as missing, $\psi_1$ \pause
 
-    All five parameters are assumed to be equal across functions, this is, $\pi, \mu_0, \mu_1, \psi_0$, and $\psi_1$ are assumed to be independent of the functions that are analyzed.
+    All five parameters are assumed to be equal across functions, this is, $\pi, \mu_0, \mu_1, \psi_0$, and $\psi_1$ are assumed to be independent of the functions that are analyzed.\pause
+    
+3.  In this presentation, we will focus on the case that $P = 1$.
+
 
 ## Leaf node probabilities {.t}
 
--   The probability of the leaf nodes is based on the observed states, in particular, we have \pause
-    
-    $$
-    \Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}} = \left\{
-    \begin{array}{ll}
-    \psi &\mbox{if }\annObs_{lp} \neq \ann_{lp} \\
-    1 - \psi & \mbox{otherwise}
-    \end{array}
-    \right.
-    $$
-    
-    Where $\psi$ can be either $\psi_0$ (mislabelling a zero), or $\psi_1$ (mislabelling a one).  \pause
-    
--   Then, assumming independence accross functions, we can write \pause
+-   The probability of the leaf nodes having annotations $\annObs_l$ conditional on the actual annotation is \pause
     
     \begin{equation}
     \label{eq:leaf1}
-    \Prcond{\Ann_l = \ann_l}{\AnnObs_l = \annObs_l} = \Prcond{\Ann_l = \ann_l}{\aphyloObs} = \prod_{p=1}^P\Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}}
+    \Prcond{\AnnObs_{l} = \annObs_{l}}{\Ann_{l} = \ann_{l}} = \left\{
+    \begin{array}{ll}
+    \psi &\mbox{if }\annObs_{l} \neq \ann_{l} \\
+    1 - \psi & \mbox{otherwise}
+    \end{array}
+    \right.
     \end{equation}
     
+    Where $\psi$ can be either $\psi_0$ (mislabelling a zero), or $\psi_1$ (mislabelling a one).
     
 
 ## Internal node probabilities {.t}
@@ -136,9 +136,9 @@ $$
 -   In the case of the internal nodes, the probability of a given state is defined in terms of the gain/loss probabilities \pause
     
     $$
-    \Prcond{\Ann_{np} = \ann_{lp}}{\Ann_{r(n)p} = \ann_{r(n)p}} = \left\{
+    \Prcond{\Ann_{n} = \ann_{lp}}{\Ann_{r(n)} = \ann_{r(n)}} = \left\{
     \begin{array}{ll}
-    \mu & \mbox{if }\ann_{np} \neq \ann_{r(n)p} \\
+    \mu & \mbox{if }\ann_{n} \neq \ann_{r(n)} \\
     1 - \mu & \mbox{otherwise}
     \end{array}
     \right.
@@ -152,11 +152,11 @@ $$
     \begin{multline}
     \label{eq:interior1}
     \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}^P} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \prod_{p=1}^P \\
-    \Prcond{\Ann_{mp} = \ann_{mp}}{\Ann_{np} = \ann_{np}}
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \\
+    \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
     \end{multline} \pause
     
-    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}$.
+    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\AnnObs_m = \annObs_m}{\Ann_m = \ann_m}$.
 
 ## Likelihood of the tree {.t}
 
@@ -165,10 +165,10 @@ $$
     \tiny
     
     \begin{align*}
-    \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \prod_{p=1}^P\Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}} \tag{\ref{eq:leaf1}}\\
+    \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
     \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}^P} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \prod_{p=1}^P 
-    \Prcond{\Ann_{mp} = \ann_{mp}}{\Ann_{np} = \ann_{np}} \tag{\ref{eq:interior1}}
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs}  
+    \Prcond{\Ann_{m} = \ann_{mp}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
     \end{align*}
     
     
@@ -177,10 +177,38 @@ $$
     Allow us writing the likelihood of the entire tree
     
     \begin{equation}
-    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}^P}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
+    \label{eq:l}
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
     \end{equation}
     
-    Where $\Prcond{\Ann_0=\ann_0}{\pi} = \prod_{p=1}^P\pi^{\ann_{0p}}\left(1 - \pi\right)^{1 - \ann_{0p}}$
+    Where $\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}$
+
+## Peeling algorithm {.t}
+
+Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood computation on a single function is as follows.
+
+1.  Create an matrix $A$ of size $2 \times |N|$,
+
+2.  For node $n = \{|N|, |N| - 1, \dots, 1, 0\}$ do:
+    
+    a.  For $\ann_n\in \{0,1\}$ do:
+        
+        a.  Set $A_{n, \ann_n} = \left\{\begin{array}{ll}
+        \Prcond{\AnnObs_n = \annObs_n}{\Ann_n = \AnnObs_n} & \mbox{If }$n$\mbox{ is a leaf} \\
+        \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise}
+        \end{array}
+        \right.$
+        
+        b.  Next $\ann_n$
+    
+    b.  Next $n$
+    
+3.  At this point the matrix $A$ should be completely filled, so following \eqref{eq:l}, we can compute
+    
+    $$
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}A_{0,\ann_0}
+    $$
+
 
 ## Prediction
 
@@ -457,11 +485,11 @@ plot(prediction_score(ans), main="")
 
 ## Concluding Remarks
 
--   A parsimonious model of gene functions: easy to apply on a large scale
+-   A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 14,000 trees from the Panther DB).\pause
 
--   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study
+-   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
 
--   Unfortunately, since annotation data is so sparse, we lack of a significant number of useful datasets on which we can test our method.
+-   Unfortunately, since annotation data is so sparse, we lack of a significant number of useful datasets on which we can test our method.\pause
 
--   For the next steps, we are evaluating ways of solving the sparseness issue: either by imposing correlation structures accross functions, or jumping into another model
+-   For the next steps, we are evaluating ways of solving the sparseness issue: either by imposing correlation structures accross functions, or jumping into another model.\pause
 

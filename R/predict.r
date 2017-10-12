@@ -141,7 +141,7 @@ print.aphylo_prediction_score <- function(x, ...) {
     sprintf("Best     : 0.00 (0.00)"),
     sprintf("Worse    : 1.00 (%.2f)", worse),
     paste0(rep("-", getOption("width")), collapse=""),
-    "Values between 0 and 1, 0 been best. Absolute scores in parenthesis.",
+    "Values between 0 and 1, 0 being best. Absolute scores in parenthesis.",
     sep ="\n"
   ))
   invisible(x)

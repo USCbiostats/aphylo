@@ -17,9 +17,7 @@ build_script:
   - travis-tool.sh install_github gvegayon/ABCoptim
   - travis-tool.sh install_bioc ggtree
   - travis-tool.sh install_deps
-
-before_build:
-  cmd: Rscript -e 'install.packages("ape", repos = "http://ape-package.ird.fr/")'
+  - cmd: Rscript -e 'install.packages("ape", repos = "http://ape-package.ird.fr/")'
 
 test_script:
   - travis-tool.sh run_tests

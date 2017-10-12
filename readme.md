@@ -84,12 +84,12 @@ as.apephylo(O)
 ```
 
     ## 
-    ## Phylogenetic tree with 5 tips and 2 internal nodes.
+    ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] "3" "4" "5" "6" "0"
+    ## [1] "3" "4" "5" "6"
     ## Node labels:
-    ## [1] "1" "2"
+    ## [1] "0" "1" "2"
     ## 
     ## Rooted; includes branch lengths.
 
@@ -288,7 +288,7 @@ pred
     ## Best     : 0.00 (0.00)
     ## Worse    : 1.00 (973.05)
     ## ---------------------------------------------------------------------------
-    ## Values between 0 and 1, 0 been best. Absolute scores in parenthesis.
+    ## Values between 0 and 1, 0 being best. Absolute scores in parenthesis.
 
 ``` r
 plot(pred)
