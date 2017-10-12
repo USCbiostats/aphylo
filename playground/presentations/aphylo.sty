@@ -1,0 +1,48 @@
+
+% \usetheme{uscimage}
+\pgfdeclareimage[width=.4\paperwidth]{titlelogo}{IMAGELogo.pdf}
+
+
+
+% Mathematical functions
+\newcommand{\isone}[1]{{\boldsymbol{1}\left( #1 \right)}}
+\renewcommand{\Pr}[1]{{\mbox{Pr}\left(#1\right) }}
+\newcommand{\f}[1]{{f\left(#1\right) }}
+\newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
+\newcommand{\fcond}[2]{{f\left(#1|#2\right) }}
+\newcommand{\Expected}[1]{{\mathbb{E}\left\{#1\right\}}}
+\newcommand{\likelihood}[2]{\mbox{L}\left(#1\vphantom{#2}\right|\left.\vphantom{#1}#2\right)}
+
+% Mathematical Annotation -------------------------------
+% Modify this so that it matches the P01 convention overall
+
+% Tree
+\newcommand{\phylo}{\Lambda{}} % The actual tree
+\newcommand{\aphylo}{D{}}      % The annotated phylogenetic tree
+\newcommand{\aphyloObs}{\tilde \aphylo{}} % The observed annotated phylogenetic tree
+
+% Annotations
+\newcommand{\Ann}{Z{}} % Matrix of "real" annotations
+\newcommand{\ann}{z{}} % single element of "real" annotations
+
+% Obs Annotations
+\newcommand{\AnnObs}{X{}}
+\newcommand{\annObs}{x{}}
+
+% Pred. Annotations
+\newcommand{\AnnPred}{\hat Z{}}
+\newcommand{\annPred}{\hat z{}}
+
+% Leaf nodes
+\newcommand{\Leaf}{L{}}
+
+% Shortest path
+\newcommand{\Geodesic}{\mbox{T}{}}
+\newcommand{\geodesic}{\tau{}}
+
+
+% tricks for two column
+\def\begincols{\begin{columns}[T]}
+\def\begincol{\begin{column}[T]}
+\def\endcol{\end{column}}
+\def\endcols{\end{columns}}

@@ -230,7 +230,7 @@ print.po_tree <- function(x, ...) {
 new_po_tree <- function(
   edges,
   labels, 
-  edge.length        = NULL,
+  edge.length     = NULL,
   offspring       = NULL,
   check.edges     = TRUE,
   check.edge.length  = TRUE,
@@ -361,7 +361,7 @@ new_po_tree <- function(
   # Creating the final output
   structure(
     edges,
-    class       = "po_tree",
+    class       = c("po_tree", "matrix"),
     Nnode       = sum(sapply(offspring, length) > 0),
     edge.length = edge.length,
     labels      = labels,
@@ -642,34 +642,7 @@ as.apephylo <- function(x, ...) UseMethod("as.apephylo")
 #' @export
 as.apephylo.aphylo <- function(x, ...) {
   
-  # Recoding edgelist
-  E <- with(x, as_ape_tree(edges))
-  
-  # Finding leafs
-  is_leaf <- isleaf(E)
-  
-  # Figuring out labels
-  tiplabs <- attr(x[["edges"]], "labels")[match(
-    attr(E, "labels")[which(is_leaf)],
-    attr(x[["edges"]], "labels")
-    )]
-  
-  # Internal nodes labels
-  nodelabs <- attr(x[["edges"]], "labels")[match(
-    attr(E, "labels")[which(!is_leaf)],
-    attr(x[["edges"]], "labels")
-  )]
-  
-  attributes(E) <- list(dim=dim(E))
-  
-  structure(list(
-    edge        = E,
-    edge.length = rep(1, nrow(E)),
-    tip.label   = as.character(unname(tiplabs)),
-    Nnode       = sum(!is_leaf),
-    node.label  = as.character(unname(nodelabs))
-  ), class = "phylo")
-  
+  as.apephylo(x$edges)
 }
 
 #' @rdname as.apephylo

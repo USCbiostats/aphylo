@@ -17,7 +17,6 @@ bioc_packages:
 
 r:
   - release
-  - devel
   - oldrel
 
 os:

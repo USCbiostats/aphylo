@@ -38,6 +38,9 @@ test_that("as_po tree", {
   expect_silent(plot(ans0, show.node.label=TRUE))
   
   # Replacing labels
+  w0 <- attr(ans0, "edge.length")[ans0[] + 1]
+  w1 <- attr(ans1, "edge.length")[ans1[] + 1]
+  
   ans0[] <- attr(ans0, "labels")[ans0[]+1]
   ans1[] <- attr(ans1, "labels")[ans1[]+1]
   

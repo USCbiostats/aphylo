@@ -1,0 +1,440 @@
+---
+title: "Project 2: Augmenting functional information about human genes using probabilistic phylogenetic modeling"
+short_title: 
+author: "George G. Vega Yon"
+date: "October 5, 2017"
+institute:
+  - Department of Preventive Medicine
+  - University of Southern California
+short_institute: USC
+short_author: Vega Yon
+output:
+  uscimage::beamer_USCImage:
+    includes:
+      in_header:
+        aphylo.sty
+    toc: false
+    highlight: zenburn
+section-titles: false
+fontsize: 9pt
+handout: true
+page-number: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::knit_hooks$set(smallsize = function(before, options, envir) {
+    if (before) {
+        "\\footnotesize\n\n"
+    } else {
+        "\n\\normalsize\n\n"
+    }
+})
+
+knitr::opts_chunk$set(echo = FALSE, smallsize=TRUE,
+                      out.width = ".8\\linewidth",
+                      fig.width = 7, fig.height = 5, fig.align = 'center')
+
+library(aphylo)
+```
+
+## Agenda
+
+\tableofcontents{}
+
+# Model
+
+## Agenda
+
+\tableofcontents[currentsection]
+
+## Some definitions
+
+1.  Phylogenetic tree: $\phylo\equiv (N,E)$ is a tuple of nodes $N$, and edges $E\equiv \{(n, m) \in N\times N: n\mapsto m\}$
+
+2.  Offspring of $n$: $O(n)\equiv\{m\in N: (n, m) \in E, n\in N\}$
+
+3.  Parent node of $m$: $r(m) \equiv\{n \in N: (n, m) \in E, m\in N\}$
+
+4.  Leaf nodes: $\Leaf(\phylo)\equiv \{m \in N: O(m)=\{\emptyset\}\}$
+
+5.  Annotations $\Ann \equiv \{\ann_n \in \{0,1\}^P: n\in \Leaf(\phylo)\}$ ($P$ functions)
+
+6.  Annotated Phylogenetic Tree $\aphylo \equiv(\phylo, \Ann)$
+
+## Some definitions (cont. 1)
+
+7.  Observed Annotated Annotations $\AnnObs = \{\annObs_l\}_{l\in \Leaf(\phylo)}$, where
+
+$$
+\annObs_{lp} = \left\{
+\begin{array}{ll}
+1 & \mbox{if the function }p\mbox{ is believed to be present}\\
+0 & \mbox{if the function }p\mbox{ is believed to be absent}\\
+9 & \mbox{if we don't have information for this node }
+\end{array}\right.
+$$
+
+8.  Experimentally Annotated Phylogenetic Tree $\aphyloObs\equiv(\phylo, \AnnObs)$
+
+## A probabilistic model of function propagation
+
+1.  For any given node, we can write down the probability of observing a \emph{functional state} as a function of some model parameters and its offspring. \pause
+    
+2.  This version of our model has five parameters (probabilities): \pause
+    
+    a.  Root node had a function: $\pi$, 
+    b.  Gain of function: $\mu_0$,
+    c.  Loss of function: $\mu_1$.
+    d.  Misclassification of:
+        -   A missing function as present, $\psi_0$, and
+        -   A present function as missing, $\psi_1$ \pause
+
+    All five parameters are assumed to be equal across functions, this is, $\pi, \mu_0, \mu_1, \psi_0$, and $\psi_1$ are assumed to be independent of the functions that are analyzed.
+
+## Leaf node probabilities {.t}
+
+-   The probability of the leaf nodes is based on the observed states, in particular, we have \pause
+    
+    $$
+    \Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}} = \left\{
+    \begin{array}{ll}
+    \psi &\mbox{if }\annObs_{lp} \neq \ann_{lp} \\
+    1 - \psi & \mbox{otherwise}
+    \end{array}
+    \right.
+    $$
+    
+    Where $\psi$ can be either $\psi_0$ (mislabelling a zero), or $\psi_1$ (mislabelling a one).  \pause
+    
+-   Then, assumming independence accross functions, we can write \pause
+    
+    \begin{equation}
+    \label{eq:leaf1}
+    \Prcond{\Ann_l = \ann_l}{\AnnObs_l = \annObs_l} = \Prcond{\Ann_l = \ann_l}{\aphyloObs} = \prod_{p=1}^P\Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}}
+    \end{equation}
+    
+    
+
+## Internal node probabilities {.t}
+
+-   In the case of the internal nodes, the probability of a given state is defined in terms of the gain/loss probabilities \pause
+    
+    $$
+    \Prcond{\Ann_{np} = \ann_{lp}}{\Ann_{r(n)p} = \ann_{r(n)p}} = \left\{
+    \begin{array}{ll}
+    \mu & \mbox{if }\ann_{np} \neq \ann_{r(n)p} \\
+    1 - \mu & \mbox{otherwise}
+    \end{array}
+    \right.
+    $$
+    
+    Where $\mu$ can be either $\mu_0$ (gain), or $\mu_1$ (loss). \pause
+    
+-   Assuming independence accross offspring, we can write \pause
+    
+    
+    \begin{multline}
+    \label{eq:interior1}
+    \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}^P} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \prod_{p=1}^P \\
+    \Prcond{\Ann_{mp} = \ann_{mp}}{\Ann_{np} = \ann_{np}}
+    \end{multline} \pause
+    
+    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}$.
+
+## Likelihood of the tree {.t}
+
+-   Once the computation reaches the root node, $n=0$, equations \eqref{eq:leaf1} and \eqref{eq:interior1}: \pause
+    
+    \tiny
+    
+    \begin{align*}
+    \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \prod_{p=1}^P\Prcond{\Ann_{lp} = \ann_{lp}}{\AnnObs_{lp} = \annObs_{lp}} \tag{\ref{eq:leaf1}}\\
+    \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}^P} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \prod_{p=1}^P 
+    \Prcond{\Ann_{mp} = \ann_{mp}}{\Ann_{np} = \ann_{np}} \tag{\ref{eq:interior1}}
+    \end{align*}
+    
+    
+    \normalsize
+    
+    Allow us writing the likelihood of the entire tree
+    
+    \begin{equation}
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}^P}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
+    \end{equation}
+    
+    Where $\Prcond{\Ann_0=\ann_0}{\pi} = \prod_{p=1}^P\pi^{\ann_{0p}}\left(1 - \pi\right)^{1 - \ann_{0p}}$
+
+## Prediction
+
+
+
+-   We implemented this in the `aphylo` R package...
+
+
+# The `aphylo` R package
+
+## Agenda
+
+\tableofcontents[currentsection]
+
+## `aphylo` in a nutshell
+
+With `C++` (`RcppArmadillo`) under-the-hood, `aphylo`:
+
+1.  Defines an S3 class for representing partially ordered trees, including validation of it.
+
+2.  Includes from the basic methods: `print`, `plot`, and `summary`; to more advanced such as `prune`.
+
+3.  Defines an S3 class for representing _annotated_ partially ordered trees.
+
+4.  Includes functions for converting from and to `phylo` class objects from the `ape` package (most used/cited package in Phylogenetics in R)
+
+5.  Implements the loglikelihood calculation of our model.
+
+We'll talk about estimation later...
+
+## Examples: Simulating Trees {.t}
+
+\begincols
+
+\begincol{.48\textwidth}
+
+```{r example_sim_tree, echo=TRUE}
+set.seed(80)
+tree <- sim_tree(5)
+tree
+```
+
+\endcol
+
+\begincol{.48\textwidth}
+
+```{r example_sim_ann_tree, echo=TRUE}
+atree <- sim_annotated_tree(
+  tree = tree, P = 2, Pi=.01, mu=c(.2, .1))
+atree
+```
+
+\endcol
+
+\endcols
+
+
+## Examples: Visualizing annotated data {.c}
+
+\begincols
+
+\begincol{.49\textwidth}
+
+```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
+plot(atree)
+```
+
+\endcol
+
+\begincol{.49\textwidth}
+
+```{r likelihood-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="LogLikelihood surface of the simulated data"}
+plot_LogLike(atree)
+```
+
+\endcol
+
+\endcols
+
+## Example: Interaction with ape {.t}
+
+```{r as-apephylo, echo=TRUE}
+as.apephylo(atree)
+# we can go back using:
+# as.po_tree(as.apephylo(atree))
+```
+
+## Example: Interaction with ape (cont.) {.t}
+
+```{r plotting-ape, fig.cap="These should be identical. as conversion between classes preserves all the information.", cache=TRUE}
+oldpar <- par(no.readonly = TRUE)
+par(mfrow = c(1,2), mar=c(0,0,3,0))
+plot(atree$edges, main = "PO tree")
+plot(as.apephylo(atree), main = "APE tree")
+par(oldpar)
+```
+
+## Example: Tree pruning {.t}
+
+```{r tree-pruning1, fig.cap="Pruning trees"}
+set.seed(1213)
+x <- sim_tree(4)
+
+# Setting up the plot envir
+oldpar <- par(no.readonly = TRUE)
+par(mfrow = c(2,3), mar=c(.5,0,2,0), cex=1, xpd=NA, omi=c(0,0,0,0))
+# Plotting 
+plot(x, main = "x", show.node.label = TRUE)
+plot(prune(x, c(2,6)), main="prune(x, c(2,6))", show.node.label = TRUE)
+plot(z<-prune(x, 6), main="prune(x, 6)", show.node.label = TRUE)
+plot(prune(x, 4), main="prune(x, 4)", show.node.label = TRUE)
+plot(prune(x, 3), main="prune(x, 3)", show.node.label = TRUE)
+plot(prune(x, c(4,6,3)), main="prune(x, c(4,6,3))", show.node.label = TRUE)
+par(oldpar)
+
+```
+
+
+## Example: Tree pruning (cont.) {.t}
+
+
+```{r tree-pruning2, fig.cap="Pruning trees recursively"}
+set.seed(1)
+x <- sim_tree(25)
+oldpar <- par(no.readonly=TRUE)
+par(mfrow=c(2,2), cex=.75, xpd=NA, mar=c(1,0,2,0))
+plot(x, main="x")
+plot(prune(x, "leafs"), main = "prune(x, \"leafs\")")
+plot(prune(prune(x, "leafs"), "leafs"), main = "prune(prune(x, \"leafs\"), \"leafs\")")
+plot(prune(prune(prune(x, "leafs"), "leafs"), "leafs"), main = "prune(prune(prune(x, \"leafs\"), \"leafs\"), \"leafs\")")
+par(oldpar)
+
+```
+
+# The `amcmc` R package
+
+## Agenda
+
+\tableofcontents[currentsection]
+
+## Yet another MCMC package
+
+You may be wondering why, well:
+
+1.  Implements reflective boundaries random-walk kernel
+
+2.  Allows running multiple chains simultaneously (parallel)
+
+3.  Overall faster than other Metrop MCMC algorithms (from our experience)
+
+4.  Planning to include other types of kernels (the Handbook of MCMC)
+
+## Example: MCMC {.t}
+
+```{r amcmc-data, echo=FALSE}
+# Parameters
+set.seed(1231)
+n <- 1e3
+pars <- c(mean = 2.6, sd = 3)
+
+# Generating data and writing the log likelihood function
+D <- rnorm(n, pars[1], pars[2])
+```
+
+
+```{r amcm-example, echo=TRUE, cache=TRUE}
+# Loading the packages
+library(amcmc)
+library(coda)
+
+# Defining the ll function (data was already defined)
+ll <- function(x, D) {
+  x <- log(dnorm(D, x[1], x[2]))
+  sum(x)
+}
+
+ans <- MCMC(
+  # Ll function and the starting parameters
+  ll, c(mu=1, sigma=1),
+  # How many steps, thinning, and burn-in
+  nbatch = 1e5, thin=10, burnin = 100,
+  # Kernel parameters
+  scale = .1, ub = 10, lb = c(-10, 0),
+  # How many parallel chains
+  nchains = 4,
+  # Further arguments passed to ll
+  D=D
+  )
+
+```
+
+## Example: MCMC (cont. 1) {.t}
+
+`ans` is of class `mcmc` from the coda package
+
+```{r amcmc-summary, echo=TRUE}
+summary(ans)
+```
+
+## Example: MCMC (cont. 2) {.t}
+
+```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence'}
+coda::gelman.plot(ans)
+```
+
+## Example: MCMC (cont. 3) {.t}
+
+```{r amcmc-plot, fig.cap='Posterior distribution'}
+oldpar <- par(no.readonly = TRUE)
+# par(mar = c(2.2,2.2,2,2), las=1, xpd=NA)
+plot(ans)
+par(oldpar)
+```
+
+# Bayesian Estimation of the parameters
+
+## Agenda
+
+\tableofcontents[currentsection]
+
+## Putting all together: MCMC of the model {.t}
+
+In this example, using data from PANTHERDB, we will simulate a single function and use the `aphylo_mcmc` function for obtaining parameter estimates
+
+```{r sim-w-panther, echo=TRUE, cache=TRUE}
+# Reading the data
+path <- system.file("tree.tree", package="aphylo")
+tree <- read_panther(path)$tree
+
+# Simulating a function
+set.seed(123)
+atree <- sim_annotated_tree(
+  tree= as_po_tree(tree),
+  Pi = .05, mu = c(.1, .05), psi = c(.01, .02)
+)
+
+# Estimation
+ans <- aphylo_mcmc(
+  params  = rep(.05, 5),
+  dat     = atree,
+  # Passing a Beta prior
+  priors  = function(p) dbeta(p, 2, 20),
+  # Parameters for the MCMC
+  control = list(nchain=4, nbatch=1e4, thin=20, burnin=1e3)
+  )
+```
+
+
+
+## Putting all together: MCMC of the model (cont. 1) {.t}
+
+```{r panther-output, echo=TRUE}
+ans
+```
+
+## How good is our prediction {.t}
+
+```{r print-pred-score, echo=TRUE}
+# Looking at the posterior probabilities
+head(predict(ans, what="leafs"))
+
+# And to the prediction score
+prediction_score(ans)
+```
+
+
+## How good is our prediction {.t}
+
+```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".6\\linewidth", echo=TRUE}
+plot(prediction_score(ans), main="")
+```
+

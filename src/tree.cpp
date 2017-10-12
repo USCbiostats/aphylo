@@ -82,7 +82,13 @@ IntegerMatrix recode_as_po(
 
   // Creating saving storage
   unsigned int N = edges.n_rows;
-  arma::imat edges0(edges);
+  
+  // Original positions
+  arma::icolvec positions(edges.n_rows, arma::fill::ones);
+  positions = arma::cumsum(positions) - 1;
+  
+  // Temporary edgelist
+  arma::imat edges0 = edges;
   
   IntegerMatrix edges1(N, 2u);
   
@@ -92,7 +98,7 @@ IntegerMatrix recode_as_po(
   arma::ivec L = arma::unique(arma::vectorise(edges0));
   IntegerVector Lans(L.size());  
   arma::uvec nparents = fast_table_using_labels(edges0.col(1u), L);
-  
+  edges0 = arma::join_rows(edges0, positions);
 
   // Tagging possible root nodes and computing number of parents
   unsigned int counter = 0u;
@@ -108,7 +114,7 @@ IntegerMatrix recode_as_po(
   else if (counter > 1u)
     Rcpp::stop("There is more than 1 root node. Multiply rooted trees are not supported.");
   
-  unsigned int i, j, iE = 0u, nleafs = 0u;
+  unsigned int i, j, nleafs = 0u;
   for (i = 0u; i < Lans.size(); i++) {
     
     // Find offsprings: Vector of individuals equal to the label of Lans.at(i)
@@ -127,8 +133,8 @@ IntegerMatrix recode_as_po(
       Lans.at(counter++) = edges0(offspring.at(j), 1u);
       
       // Adding the
-      edges1.at(iE,   0u)   = i;
-      edges1.at(iE++, 1u) = counter - 1u;
+      edges1.at(edges0.at(offspring.at(j), 2u), 0u) = i;
+      edges1.at(edges0.at(offspring.at(j), 2u), 1u) = counter - 1u;
 
     }
     

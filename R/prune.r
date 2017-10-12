@@ -87,6 +87,11 @@ prune.po_tree <- function(x, ids, ...) {
   # Matching to actual labels
   map_ids_to_positions.po_tree("ids", "x")
   
+  if (length(ids) == 0) {
+    warning("Nothing to prune.")
+    return(x)
+  }
+  
   # 2. Computing Geodesics to extend the list ----------------------------------
   nodes_ids <- ids
   G <- approx_geodesic(x, undirected = FALSE, warn = FALSE)
@@ -113,6 +118,7 @@ prune.po_tree <- function(x, ids, ...) {
   
   # From the edgelist
   edges_ids <- which(!(x[,1] %in% nodes_ids) & !(x[,2] %in% nodes_ids))
+  edge.length <- attr(x, "edge.length")[edges_ids]
   x <- x[edges_ids,,drop=FALSE]
 
   # 4. Relabeling --------------------------------------------------------------
@@ -124,7 +130,7 @@ prune.po_tree <- function(x, ids, ...) {
   # 5. Re computing the offspring ----------------------------------------------
   new_po_tree(
     edges       = x,
-    edge.length = attr(x, "edge.length")[edges_ids],
+    edge.length = edge.length,
     labels      = old_labels[-(nodes_ids + 1L)]
     )
   
@@ -132,7 +138,7 @@ prune.po_tree <- function(x, ids, ...) {
 
 #' @rdname prune
 #' @export
-prune.ape <- function(x, ids, ...) {
-  # as_po_tree()
+prune.phylo <- function(x, ids, ...) {
+  as.apephylo(prune(as_po_tree(x), ids))
 }
 
