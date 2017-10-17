@@ -15,9 +15,10 @@ output:
         aphylo.sty
     toc: false
     highlight: zenburn
+    keep_tex: true
 section-titles: false
 fontsize: 9pt
-handout: true
+handout: false
 page-number: true
 ---
 
@@ -31,9 +32,12 @@ knitr::knit_hooks$set(smallsize = function(before, options, envir) {
     }
 })
 
+options(digits = 4)
+
 knitr::opts_chunk$set(echo = FALSE, smallsize=TRUE,
                       out.width = ".8\\linewidth",
-                      fig.width = 7, fig.height = 5, fig.align = 'center')
+                      fig.width = 7, fig.height = 5, fig.align = 'center'
+                      )
 
 library(aphylo)
 ```
@@ -62,6 +66,7 @@ manner.
 ## Agenda
 
 \tableofcontents[currentsection]
+
 
 ## Some definitions
 
@@ -95,6 +100,8 @@ $$
 $$
 
 8.  Experimentally Annotated Phylogenetic Tree $\aphyloObs\equiv(\phylo, \AnnObs)$
+
+
 
 ## A probabilistic model of function propagation
 
@@ -183,7 +190,15 @@ $$
     
     Where $\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}$
 
-## Peeling algorithm {.t}
+
+# Peeling algorithm
+
+## Agenda
+
+\tableofcontents[currentsection]s
+
+
+## Peeling phylogenies {.t}
 
 Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood computation on a single function is as follows.
 
@@ -209,6 +224,223 @@ Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood computa
     \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}A_{0,\ann_0}
     $$
 
+
+
+## Peeling algorithm {.t}
+
+\begincols
+
+\begincol{.28\textwidth}
+
+\includetikz{simple_tree.tex}{.6}
+
+\endcol
+
+\begincol{.68\textwidth}
+
+*   Let's calculate the likelihood of observing this tree with the following parameters:
+
+```{r example-parameters}
+psi0 <- .1
+psi1 <- .05
+mu0  <- .04
+mu1  <- .01
+Pi   <- .5
+```
+
+
+$$
+\begin{aligned}
+\psi_0 &= `r psi0` \\
+\psi_1 &= `r psi1` \\
+\mu_0  &= `r mu0`  \\
+\mu_1  &= `r mu1`  \\
+\pi    &= `r Pi`  \\
+\end{aligned}
+$$
+
+\endcol
+
+\endcols
+
+
+## Peeling algorithm (cont. 1) {.t}
+
+\begincols
+
+\begincol{.28\textwidth}
+
+\includetikz{simple_tree.tex}{.6}
+
+\endcol
+
+\begincol{.68\textwidth}
+
+```{r defining-and-printing-tree}
+
+dat <- matrix(
+  as.integer(c(0,1,0,3,1,2,3,4,3,5)), ncol=2, byrow=TRUE)
+dat <- aphylo:::new_po_tree(
+  dat,
+  labels      = as.character(0:5),
+  edge.length = c(2, 5, 3, 6, 4)
+  )
+
+ann <- cbind(
+  Function  = c(NA, NA, 0, NA, 1, 0)
+  )
+dat <- aphylo:::as_aphylo(ann, dat)
+
+LL <- LogLike(
+  dat$annotations,
+  attr(dat$edges, "offspring"),
+  c(psi0, psi1), c(mu0, mu1), Pi, verb_ans = TRUE)
+
+dimnames(LL$Pr) <- list(0:5, paste("State", 0:1))
+```
+
+\pause
+
+*   Essentially we need to get from here: An empty Probability Matrix 
+    
+    ```{r prob-mat-0}
+    # Printing the colored version of the matrix
+    Pr <- LL$Pr
+    Pr[] <- rep(" ", prod(dim(Pr)))
+    knitr::kable(Pr)
+    ```
+    
+    \pause
+    
+*   To here: Filled probabilty Matrix
+    
+    ```{r prob-mat-1}
+    # Printing the colored version of the matrix
+    Pr <- LL$Pr
+    knitr::kable(Pr)
+    ```
+
+
+\endcol
+
+\endcols
+
+
+## Peeling algorithm (cont. 2) {.t}
+
+\begincols
+
+\begincol{.28\textwidth}
+
+\mode<beamer>{
+  \only<1>{\includetikz{simple_tree.tex}{.6}}
+  \only<2-3>{\includetikz{simple_tree_leaf2.tex}{.6}}
+  \only<4-5>{\includetikz{simple_tree_leaf4.tex}{.6}}
+  \only<6-7>{\includetikz{simple_tree_leaf5.tex}{.6}}
+}
+
+\mode<handout>{
+  \includetikz{simple_tree.tex}{.6}
+}
+
+\endcol
+
+\begincol{.68\textwidth}
+
+```{r prob-mat-2, results='asis'}
+# Printing the colored version of the matrix
+Pr <- LL$Pr
+Pr[] <- sprintf("%.4f",Pr[])
+Pr[c(1,2,4),] <- ""
+
+Pr[3,1] <- paste0("\\onslide<2->{\\color{blue}", Pr[3,1], "}")
+Pr[3,2] <- paste0("\\onslide<3->{\\color{red}", Pr[3,2], "}")
+Pr[5,1] <- paste0("\\onslide<4->{\\color{red}", Pr[5,1], "}")
+Pr[5,2] <- paste0("\\onslide<5->{\\color{blue}", Pr[5,2], "}")
+
+Pr[6,1] <- paste0("\\onslide<6->{\\color{blue}", Pr[6,1], "}")
+Pr[6,2] <- paste0("\\onslide<7->{\\color{red}", Pr[6,2], "}")
+
+print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
+```
+
+\footnotesize
+
+$$
+\begin{aligned}
+\onslide<2->{\Prcond{Z_2=0}{X_2=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
+\onslide<3->{\Prcond{Z_2=1}{X_2=0} & = \psi_1 &= \color{red}{`r psi1`}} \\\\
+\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{red}{`r psi0`}} \\
+\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{blue}{`r 1-psi1`}} \\ \\
+\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
+\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{red}{`r psi1`}}
+\end{aligned}
+$$
+
+\normalsize
+
+\endcol
+
+\endcols
+
+## Peeling algorithm (cont. 3) {.t}
+
+\begincols
+
+\begincol{.28\textwidth}
+
+\mode<beamer>{
+  \only<1>{\includetikz{simple_tree.tex}{.6}}
+  \only<2-5>{\includetikz{simple_tree_node1.tex}{.6}}
+  \only<6>{\includetikz{simple_tree_node3.tex}{.6}}
+  \only<7>{\includetikz{simple_tree_node0.tex}{.6}}
+  \only<8->{\includetikz{simple_tree_likelihood.tex}{.6}}
+}
+
+\mode<handout>{
+  \includetikz{simple_tree.tex}{.6}
+}
+
+\endcol
+
+\begincol{.68\textwidth}
+
+```{r prob-mat-3, results='asis'}
+# Printing the colored version of the matrix
+Pr <- LL$Pr
+Pr[] <- sprintf("%.4f",Pr[])
+
+Pr[2, 1] <- paste0("\\onslide<3->{", Pr[2, 1],"}")
+Pr[2, 2] <- paste0("\\onslide<5->{", Pr[2, 2],"}")
+Pr[4, 1] <- paste0("\\onslide<6->{", Pr[4, 1],"}")
+Pr[4, 2] <- paste0("\\onslide<6->{", Pr[4, 2],"}")
+Pr[1, 1] <- paste0("\\onslide<7->{", Pr[1, 1],"}")
+Pr[1, 2] <- paste0("\\onslide<7->{", Pr[1, 2],"}")
+
+print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
+```
+
+\footnotesize
+
+$$
+\begin{aligned}
+\onslide<2->{\Prcond{\Ann_1=0}{O(1)} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 0} +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 0}} \\
+\onslide<3->{& = `r Pr[3, 1]`\times `r 1-mu0` + `r Pr[3, 2]`\times `r mu0` = `r LL$Pr[3, 1]* (1-mu0) +  LL$Pr[3, 2]*mu0`}\\\\
+%
+\onslide<4->{\Prcond{\Ann_1=1}{O(1)} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 1} +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 1}} \\
+\onslide<5->{& = `r Pr[3, 1]`\times `r mu1` + `r Pr[3, 2]`\times `r 1-mu1` = `r LL$Pr[3, 1]* mu1 +  LL$Pr[3, 2]*(1-mu1)`}\\\\
+\onslide<8->{\likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs} + \pi\Prcond{\Ann_0=1}{\aphyloObs}} \\
+\onslide<9->{& = (1 - `r Pi`)\times `r LL$Pr[1,1]` + `r Pi`\times `r LL$Pr[1,2]` = `r exp(LL$ll)`}
+\end{aligned}
+$$
+
+\normalsize
+
+\endcol
+
+\endcols
 
 ## Prediction
 
@@ -410,13 +642,13 @@ summary(ans)
 
 ## Example: MCMC (cont. 2) {.t}
 
-```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence'}
+```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence', cache=TRUE}
 coda::gelman.plot(ans)
 ```
 
 ## Example: MCMC (cont. 3) {.t}
 
-```{r amcmc-plot, fig.cap='Posterior distribution'}
+```{r amcmc-plot, fig.cap='Posterior distribution', cache=TRUE}
 oldpar <- par(no.readonly = TRUE)
 # par(mar = c(2.2,2.2,2,2), las=1, xpd=NA)
 plot(ans)

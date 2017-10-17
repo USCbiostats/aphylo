@@ -1,4 +1,13 @@
 
+\usepackage{tikz}
+
+\newcommand{\includetikz}[2]{
+\begin{figure}
+\scalebox{#2}{
+\input{#1}
+}
+\end{figure}
+}
 
 % Mathematical functions
 \newcommand{\isone}[1]{{\boldsymbol{1}\left( #1 \right)}}
