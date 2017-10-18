@@ -1,4 +1,4 @@
-\documentclass[9pt,ignorenonframetext,]{beamer}
+\documentclass[9pt,handout,ignorenonframetext,]{beamer}
 
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -29,7 +29,7 @@
 \newif\ifbibliography
 \hypersetup{
             pdftitle={Project 2: Augmenting functional information about human genes using probabilistic phylogenetic modeling},
-            pdfauthor={George G. Vega Yon},
+            pdfauthor={George G. Vega Yon vegayon@usc.edu},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -334,7 +334,8 @@
 probabilistic phylogenetic modeling}
 \author[
 Vega Yon
-]{George G. Vega Yon}
+]{George G. Vega Yon
+\linebreak[4] \href{mailto:vegayon@usc.edu}{\nolinkurl{vegayon@usc.edu}}}
 \institute[USC]{Department of Preventive Medicine \and University of Southern California}
 \date{October 5, 2017}
 
@@ -393,49 +394,41 @@ Vega Yon
 
 \section{Model}\label{model}
 
-\begin{frame}{Agenda}
+\begin{frame}[t]{Agenda}
 
 \tableofcontents[currentsection]
 
 \end{frame}
 
-\begin{frame}{Some definitions}
+\begin{frame}[t,label=definitions]{Some definitions}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Phylogenetic tree: In our case, we talk about
-  \textcolor{red}{partially ordered} phylogenetic tree, in particular,
-  \(\phylo\equiv (N,E)\) is a tuple of nodes \(N\), and edges
+\begincols
 
-  \[
-  E\equiv \{(n, m) \in N\times N: n\mapsto m, \textcolor{red}{n < m}\}
-  \]
-\item
-  Offspring of \(n\): \(O(n)\equiv\{m\in N: (n, m) \in E, n\in N\}\)
-\item
-  Parent node of \(m\): \(r(m) \equiv\{n \in N: (n, m) \in E, m\in N\}\)
-\item
-  Leaf nodes: \(\Leaf(\phylo)\equiv \{m \in N: O(m)=\{\emptyset\}\}\)
-\item
-  Annotations: Given \(P\) functions,
-  \(\Ann \equiv \{\ann_n \in \{0,1\}^P: n\in \Leaf(\phylo)\}\)
-\item
-  Annotated Phylogenetic Tree \(\aphylo \equiv(\phylo, \Ann)\)
-\end{enumerate}
+\begincol{.38\linewidth}
 
-\end{frame}
+\includetikz{simple_tree_names.tex}{.5}
 
-\begin{frame}{Some definitions (cont. 1)}
+\endcol
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{6}
-\tightlist
-\item
-  Observed Annotated Annotations
-  \(\AnnObs = \{\annObs_l\}_{l\in \Leaf(\phylo)}\), where
-\end{enumerate}
+\begincol{.58\linewidth}
+
+\footnotesize
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Symbol & Description\tabularnewline
+\midrule
+\endhead
+\(\aphyloObs\) & Observed Annotated Tree\tabularnewline
+\(\phylo\) & Partially ordered phylogenetic tree (PO
+tree)\tabularnewline
+\(O(n)\) & Offspring of node \(n\)\tabularnewline
+\(\aphyloObs_n\) & \(n\)-induced Annotated Sub-tree\tabularnewline
+\(\AnnObs\) & Experimental annotation\tabularnewline
+\bottomrule
+\end{longtable}
+
+Where
 
 \[
 \annObs_{lp} = \left\{
@@ -446,14 +439,13 @@ Vega Yon
 \end{array}\right.
 \]
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{7}
-\tightlist
-\item
-  Experimentally Annotated Phylogenetic Tree
-  \(\aphyloObs\equiv(\phylo, \AnnObs)\)
-\end{enumerate}
+\normalsize
+
+\hyperlink{formaldef}{\beamerbutton{Formal definitions}}
+
+\endcol
+
+\endcols
 
 \end{frame}
 
@@ -498,115 +490,27 @@ Vega Yon
 
 \end{frame}
 
-\begin{frame}[t]{Leaf node probabilities}
-
-\begin{itemize}
-\item
-  The probability of the leaf nodes having annotations \(\annObs_l\)
-  conditional on the actual annotation is \pause
-
-  \begin{equation}
-  \label{eq:leaf1}
-  \Prcond{\AnnObs_{l} = \annObs_{l}}{\Ann_{l} = \ann_{l}} = \left\{
-  \begin{array}{ll}
-  \psi &\mbox{if }\annObs_{l} \neq \ann_{l} \\
-  1 - \psi & \mbox{otherwise}
-  \end{array}
-  \right.
-  \end{equation}
-
-  Where \(\psi\) can be either \(\psi_0\) (mislabelling a zero), or
-  \(\psi_1\) (mislabelling a one).
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}[t]{Internal node probabilities}
-
-\begin{itemize}
-\item
-  In the case of the internal nodes, the probability of a given state is
-  defined in terms of the gain/loss probabilities \pause
-
-  \[
-  \Prcond{\Ann_{n} = \ann_{lp}}{\Ann_{r(n)} = \ann_{r(n)}} = \left\{
-  \begin{array}{ll}
-  \mu & \mbox{if }\ann_{n} \neq \ann_{r(n)} \\
-  1 - \mu & \mbox{otherwise}
-  \end{array}
-  \right.
-  \]
-
-  Where \(\mu\) can be either \(\mu_0\) (gain), or \(\mu_1\) (loss).
-  \pause
-\item
-  Assuming independence accross offspring, we can write \pause
-
-  \begin{multline}
-  \label{eq:interior1}
-  \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
-  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \\
-  \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
-  \end{multline}
-
-  \pause
-
-  Notice that if \(m\) is a leaf node, then
-  \(\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\AnnObs_m = \annObs_m}{\Ann_m = \ann_m}\).
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}[t]{Likelihood of the tree}
-
-\begin{itemize}
-\item
-  Once the computation reaches the root node, \(n=0\), equations
-  \eqref{eq:leaf1} and \eqref{eq:interior1}: \pause
-
-  \tiny
-
-  \begin{align*}
-  \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
-  \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
-  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs}  
-  \Prcond{\Ann_{m} = \ann_{mp}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
-  \end{align*}
-
-  \normalsize
-
-  Allow us writing the likelihood of the entire tree
-
-  \begin{equation}
-  \label{eq:l}
-  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
-  \end{equation}
-
-  Where
-  \(\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}\)
-\end{itemize}
-
-\end{frame}
-
 \section{Peeling algorithm}\label{peeling-algorithm}
 
-\begin{frame}{Agenda}
+\begin{frame}[t]{Agenda}
 
 \tableofcontents[currentsection]s
 
 \end{frame}
 
-\begin{frame}[t]{Peeling phylogenies}
+\begin{frame}[t,label=peelingalgorithm]{Peeling phylogenies}
 
 Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood
-computation on a single function is as follows.
+computation on a single function is as follows. \pause
+
+\def\probmat{\mbox{Pr}{}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Create an matrix \(A\) of size \(2 \times |N|\),
+  Create an matrix \(\probmat\) of size \(2 \times |N|\), \pause
 \item
-  For node \(n = \{|N|, |N| - 1, \dots, 1, 0\}\) do:
+  For node \(n \in \{|N|, |N| - 1, \dots, 1, 0\}\) do: \pause
 
   \begin{enumerate}
   \def\labelenumii{\alph{enumii}.}
@@ -617,21 +521,25 @@ computation on a single function is as follows.
     \def\labelenumiii{\alph{enumiii}.}
     \item
       Set
-      \(A_{n, \ann_n} = \left\{\begin{array}{ll} \Prcond{\AnnObs_n = \annObs_n}{\Ann_n = \AnnObs_n} & \mbox{If }\)n\(\mbox{ is a leaf} \\ \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise} \end{array} \right.\)
+      \(\probmat_{n, \ann_n} = \left\{\begin{array}{ll} \Prcond{\Ann_n = \ann_n}{\AnnObs_n = \AnnObs_n} & \mbox{If }\)n\(\mbox{ is a leaf} \\ \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise} \end{array} \right.\)
     \item
       Next \(\ann_n\)
     \end{enumerate}
   \item
-    Next \(n\)
+    Next \(n\) \pause
   \end{enumerate}
 \item
-  At this point the matrix \(A\) should be completely filled, so
+  At this point the matrix \(\probmat\) should be completely filled, so
   following \eqref{eq:l}, we can compute
 
   \[
-  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}A_{0,\ann_0}
+  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\probmat_{0,\ann_0}
   \]
+
+  \pause
 \end{enumerate}
+
+Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 
 \end{frame}
 
@@ -672,78 +580,13 @@ computation on a single function is as follows.
 
 \endcols
 
-\end{frame}
-
-\begin{frame}[t]{Peeling algorithm (cont. 1)}
-
-\begincols
-
-\begincol{.28\textwidth}
-
-\includetikz{simple_tree.tex}{.6}
-
-\endcol
-
-\begincol{.68\textwidth}
-
 \footnotesize
 
 \normalsize
 
-\pause
-
-\begin{itemize}
-\item
-  Essentially we need to get from here: An empty Probability Matrix
-
-  \footnotesize
-
-  \begin{longtable}[]{@{}lll@{}}
-  \toprule
-  & State 0 & State 1\tabularnewline
-  \midrule
-  \endhead
-  0 & &\tabularnewline
-  1 & &\tabularnewline
-  2 & &\tabularnewline
-  3 & &\tabularnewline
-  4 & &\tabularnewline
-  5 & &\tabularnewline
-  \bottomrule
-  \end{longtable}
-
-  \normalsize
-
-  \pause
-\item
-  To here: Filled probabilty Matrix
-
-  \footnotesize
-
-  \begin{longtable}[]{@{}lrr@{}}
-  \toprule
-  & State 0 & State 1\tabularnewline
-  \midrule
-  \endhead
-  0 & 0.0947 & 0.0037\tabularnewline
-  1 & 0.8660 & 0.0585\tabularnewline
-  2 & 0.9000 & 0.0500\tabularnewline
-  3 & 0.1160 & 0.0551\tabularnewline
-  4 & 0.1000 & 0.9500\tabularnewline
-  5 & 0.9000 & 0.0500\tabularnewline
-  \bottomrule
-  \end{longtable}
-
-  \normalsize
-\end{itemize}
-
-\endcol
-
-\endcols
-
 \end{frame}
 
-\begin{frame}[t]{Peeling algorithm (cont. 2)}
+\begin{frame}[t]{Peeling algorithm (cont. 1)}
 
 \begincols
 
@@ -805,7 +648,7 @@ computation on a single function is as follows.
 
 \end{frame}
 
-\begin{frame}[t]{Peeling algorithm (cont. 3)}
+\begin{frame}[t]{Peeling algorithm (cont. 2)}
 
 \begincols
 
@@ -814,7 +657,67 @@ computation on a single function is as follows.
 \mode<beamer>{
   \only<1>{\includetikz{simple_tree.tex}{.6}}
   \only<2-5>{\includetikz{simple_tree_node1.tex}{.6}}
-  \only<6>{\includetikz{simple_tree_node3.tex}{.6}}
+}
+
+\mode<handout>{
+  \includetikz{simple_tree.tex}{.6}
+}
+
+\endcol
+
+\begincol{.68\textwidth}
+
+\footnotesize
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rll}
+  \hline
+ & State 0 & State 1 \\ 
+  \hline
+0 &  &  \\ 
+  1 & \onslide<3->{\color{red}{0.8660}} & \onslide<5->{\color{blue}{0.0585}} \\ 
+  2 & 0.9000 & 0.0500 \\ 
+  3 &  &  \\ 
+  4 & 0.1000 & 0.9500 \\ 
+  5 & 0.9000 & 0.0500 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\footnotesize
+
+\[
+\begin{aligned}
+\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 0} +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 0}} \\
+\onslide<3->{& = 0.9000\times 0.96 + 0.0500\times 0.04 = \color{red}{0.866}}\\\\
+%
+\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 1} +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 1}} \\
+\onslide<5->{& = 0.9000\times 0.01 + 0.0500\times 0.99 = \color{blue}{0.0585}}
+\end{aligned}
+\]
+
+\normalsize
+
+\endcol
+
+\endcols
+
+\end{frame}
+
+\begin{frame}[t]{Peeling algorithm (cont. 3)}
+
+\begincols
+
+\begincol{.28\textwidth}
+
+\mode<beamer>{
+  \only<1>{\includetikz{simple_tree.tex}{.6}}
+  \only<2-6>{\includetikz{simple_tree_node3.tex}{.6}}
   \only<7>{\includetikz{simple_tree_node0.tex}{.6}}
   \only<8->{\includetikz{simple_tree_likelihood.tex}{.6}}
 }
@@ -835,10 +738,10 @@ computation on a single function is as follows.
   \hline
  & State 0 & State 1 \\ 
   \hline
-0 & \onslide<7->{0.0947} & \onslide<7->{0.0037} \\ 
-  1 & \onslide<3->{0.8660} & \onslide<5->{0.0585} \\ 
+0 & \onslide<7->{\color{orange}{0.0947}} & \onslide<7->{\color{blue}{0.0037}} \\ 
+  1 & 0.8660 & 0.0585 \\ 
   2 & 0.9000 & 0.0500 \\ 
-  3 & \onslide<6->{0.1160} & \onslide<6->{0.0551} \\ 
+  3 & \onslide<5->{\color{red}{0.1160}} & \onslide<6->{0.0551} \\ 
   4 & 0.1000 & 0.9500 \\ 
   5 & 0.9000 & 0.0500 \\ 
    \hline
@@ -847,19 +750,26 @@ computation on a single function is as follows.
 
 \normalsize
 
-\footnotesize
+\tiny
 
 \[
 \begin{aligned}
-\onslide<2->{\Prcond{\Ann_1=0}{O(1)} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 0} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 0}} \\
-\onslide<3->{& = 0.9000\times 0.96 + 0.0500\times 0.04 = 0.866}\\\\
-%
-\onslide<4->{\Prcond{\Ann_1=1}{O(1)} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 1} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 1}} \\
-\onslide<5->{& = 0.9000\times 0.01 + 0.0500\times 0.99 = 0.0585}\\\\
-\onslide<8->{\likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs} + \pi\Prcond{\Ann_0=1}{\aphyloObs}} \\
-\onslide<9->{& = (1 - 0.5)\times 0.0947 + 0.5\times 0.0037 = 0.0492}
+\onslide<2->{\Prcond{\Ann_3 = 0}{\aphyloObs_3} & = %
+  \prod_{m \in \{4,5\}} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \Prcond{\Ann_{m} = \ann_{m}}{\Ann_3 = 0}} \\
+\onslide<3->{& = \left(%
+    0.1 (1 - \mu_0) + 0.95\times \mu_0
+  \right)\times\left(%
+    0.9 (1 - \mu_0) + 0.05\times \mu_0
+  \right) \\}
+\onslide<4->{& = \left(%
+    0.1 (1 - 0.04) + 0.95\times 0.04
+  \right)\times\left(%
+    0.9 (1 - 0.04) + 0.05\times 0.04
+  \right) \\}
+\onslide<5->{& = \color{red}{0.116} \\\\} 
+\onslide<8->{ & \mbox{\normalsize Finally, the likelihood of this tree is:} \\\\
+\likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs_0} + \pi\Prcond{\Ann_0=1}{\aphyloObs_0}} \\
+\onslide<9->{& = (1 - 0.5)\times \color{orange} 0.0947 \color{black} + 0.5\times \color{blue} 0.0037 \color{black} = 0.0492}
 \end{aligned}
 \]
 
@@ -871,20 +781,10 @@ computation on a single function is as follows.
 
 \end{frame}
 
-\begin{frame}[fragile]{Prediction}
-
-\begin{itemize}
-\tightlist
-\item
-  We implemented this in the \texttt{aphylo} R package\ldots{}
-\end{itemize}
-
-\end{frame}
-
 \section{\texorpdfstring{The \texttt{aphylo} R
 package}{The aphylo R package}}\label{the-aphylo-r-package}
 
-\begin{frame}{Agenda}
+\begin{frame}[t]{Agenda}
 
 \tableofcontents[currentsection]
 
@@ -909,7 +809,7 @@ With \texttt{C++} (\texttt{RcppArmadillo}) under-the-hood,
 \item
   Includes functions for converting from and to \texttt{phylo} class
   objects from the \texttt{ape} package (most used/cited package in
-  Phylogenetics in R)
+  Phylogenetics in R with \textasciitilde{}25K downloads/month)
 \item
   Implements the loglikelihood calculation of our model.
 \end{enumerate}
@@ -959,7 +859,11 @@ We'll talk about estimation later\ldots{}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{atree <-}\StringTok{ }\KeywordTok{sim_annotated_tree}\NormalTok{(}
-  \DataTypeTok{tree =}\NormalTok{ tree, }\DataTypeTok{P =} \DecValTok{2}\NormalTok{, }\DataTypeTok{Pi=}\NormalTok{.}\DecValTok{01}\NormalTok{, }\DataTypeTok{mu=}\KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
+  \DataTypeTok{tree =}\NormalTok{ tree, }\DataTypeTok{P =} \DecValTok{2}\NormalTok{,}
+  \DataTypeTok{psi  =} \KeywordTok{c}\NormalTok{(.}\DecValTok{05}\NormalTok{, .}\DecValTok{05}\NormalTok{),}
+  \DataTypeTok{mu   =} \KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, .}\DecValTok{1}\NormalTok{),}
+  \DataTypeTok{Pi   =}\NormalTok{ .}\DecValTok{01}\NormalTok{)}
+
 \NormalTok{atree}
 \end{Highlighting}
 \end{Shaded}
@@ -1076,23 +980,6 @@ We'll talk about estimation later\ldots{}
 
 \end{frame}
 
-\begin{frame}[t]{Example: Interaction with ape (cont.)}
-
-\footnotesize
-
-\begin{figure}
-
-{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/plotting-ape-1} 
-
-}
-
-\caption{These should be identical. as conversion between classes preserves all the information.}\label{fig:plotting-ape}
-\end{figure}
-
-\normalsize
-
-\end{frame}
-
 \begin{frame}[t]{Example: Tree pruning}
 
 \footnotesize
@@ -1130,7 +1017,7 @@ We'll talk about estimation later\ldots{}
 \section{\texorpdfstring{The \texttt{amcmc} R
 package}{The amcmc R package}}\label{the-amcmc-r-package}
 
-\begin{frame}{Agenda}
+\begin{frame}[t]{Agenda}
 
 \tableofcontents[currentsection]
 
@@ -1143,13 +1030,13 @@ You may be wondering why, well:
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Implements reflective boundaries random-walk kernel
-\item
   Allows running multiple chains simultaneously (parallel)
 \item
   Overall faster than other Metrop MCMC algorithms (from our experience)
 \item
   Planning to include other types of kernels (the Handbook of MCMC)
+\item
+  Implements reflective boundaries random-walk kernel
 \end{enumerate}
 
 \end{frame}
@@ -1178,7 +1065,7 @@ You may be wondering why, well:
   \CommentTok{# Ll function and the starting parameters}
 \NormalTok{  ll, }\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{1}\NormalTok{, }\DataTypeTok{sigma=}\DecValTok{1}\NormalTok{),}
   \CommentTok{# How many steps, thinning, and burn-in}
-  \DataTypeTok{nbatch =} \FloatTok{1e5}\NormalTok{, }\DataTypeTok{thin=}\DecValTok{10}\NormalTok{, }\DataTypeTok{burnin =} \DecValTok{100}\NormalTok{,}
+  \DataTypeTok{nbatch =} \FloatTok{1e5}\NormalTok{, }\DataTypeTok{thin=}\DecValTok{10}\NormalTok{, }\DataTypeTok{burnin =} \FloatTok{1e4}\NormalTok{,}
   \CommentTok{# Kernel parameters}
   \DataTypeTok{scale =}\NormalTok{ .}\DecValTok{1}\NormalTok{, }\DataTypeTok{ub =} \DecValTok{10}\NormalTok{, }\DataTypeTok{lb =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{10}\NormalTok{, }\DecValTok{0}\NormalTok{),}
   \CommentTok{# How many parallel chains}
@@ -1207,17 +1094,17 @@ You may be wondering why, well:
 
 \begin{verbatim}
 ## 
-## Iterations = 110:1e+05
+## Iterations = 10010:1e+05
 ## Thinning interval = 10 
 ## Number of chains = 4 
-## Sample size per chain = 9990 
+## Sample size per chain = 9000 
 ## 
 ## 1. Empirical mean and standard deviation for each variable,
 ##    plus standard error of the mean:
 ## 
 ##       Mean     SD Naive SE Time-series SE
-## mu    2.51 0.0935 0.000468       0.000551
-## sigma 2.96 0.0668 0.000334       0.000354
+## mu    2.51 0.0935 0.000493       0.000579
+## sigma 2.96 0.0668 0.000352       0.000373
 ## 
 ## 2. Quantiles for each variable:
 ## 
@@ -1267,9 +1154,67 @@ You may be wondering why, well:
 \section{Bayesian Estimation of the
 parameters}\label{bayesian-estimation-of-the-parameters}
 
-\begin{frame}{Agenda}
+\begin{frame}[t]{Agenda}
 
 \tableofcontents[currentsection]
+
+\end{frame}
+
+\begin{frame}[fragile]{Putting all together}
+
+Let's start by reading some data
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Reading the data}
+\NormalTok{path <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"tree.tree"}\NormalTok{, }\DataTypeTok{package=}\StringTok{"aphylo"}\NormalTok{)}
+\NormalTok{dat <-}\StringTok{ }\KeywordTok{read_panther}\NormalTok{(path)}
+
+\CommentTok{# The tree}
+\NormalTok{dat}\OperatorTok{$}\NormalTok{tree}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Phylogenetic tree with 145 tips and 107 internal nodes.
+## 
+## Tip labels:
+##  AN5:MONBE|Gene=28576|UniProtKB=A9V8K6, AN7:SCHPO|PomBase=SPAC25B8.12c|UniProtKB=Q9UTA6, AN8:SCHPO|PomBase=SPBC215.10|UniProtKB=O94314, AN11:ENTHI|EnsemblGenome=EHI_168190|UniProtKB=C4M4Q5, AN12:ENTHI|EnsemblGenome=EHI_151930|UniProtKB=C4LSN2, AN13:ENTHI|EnsemblGenome=EHI_149870|UniProtKB=C4M9D2, ...
+## Node labels:
+##  AN0, AN1, AN2, AN3, AN4, AN6, ...
+## 
+## Rooted; includes branch lengths.
+\end{verbatim}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]{Putting all together (cont.)}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Extra annotations}
+\KeywordTok{head}\NormalTok{(dat}\OperatorTok{$}\NormalTok{internal_nodes_annotations)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     branch_length type          ancestor duplication
+## AN0            NA    S              LUCA       FALSE
+## AN1         0.057    S Archaea-Eukaryota       FALSE
+## AN2         0.244    S         Eukaryota       FALSE
+## AN3         0.436    S          Unikonts       FALSE
+## AN4         0.417    S      Opisthokonts       FALSE
+## AN6         0.684    D              <NA>        TRUE
+\end{verbatim}
+
+\normalsize
 
 \end{frame}
 
@@ -1283,9 +1228,7 @@ parameter estimates
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Reading the data}
-\NormalTok{path <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"tree.tree"}\NormalTok{, }\DataTypeTok{package=}\StringTok{"aphylo"}\NormalTok{)}
-\NormalTok{tree <-}\StringTok{ }\KeywordTok{read_panther}\NormalTok{(path)}\OperatorTok{$}\NormalTok{tree}
+\NormalTok{tree <-}\StringTok{ }\NormalTok{dat}\OperatorTok{$}\NormalTok{tree}
 
 \CommentTok{# Simulating a function}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
@@ -1428,6 +1371,147 @@ parameter estimates
   For the next steps, we are evaluating ways of solving the sparseness
   issue: either by imposing correlation structures accross functions, or
   jumping into another model.\pause
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{center}
+\Huge
+\color{USCCardinal}{\textbf{Thank you!}}
+\end{center}
+
+\maketitle
+
+\appendix
+
+\end{frame}
+
+\begin{frame}[t,label=formaldef]{Formal definitions}
+
+\framesubtitle{\hyperlink{definitions}{\beamerbutton{go back}}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Phylogenetic tree: In our case, we talk about
+  \textcolor{red}{partially ordered} phylogenetic tree, in particular,
+  \(\phylo\equiv (N,E)\) is a tuple of nodes \(N\), and edges
+
+  \[
+  E\equiv \{(n, m) \in N\times N: n\mapsto m, \textcolor{red}{n < m}\}
+  \]
+\item
+  Offspring of \(n\): \(O(n)\equiv\{m\in N: (n, m) \in E, n\in N\}\)
+\item
+  Parent node of \(m\): \(r(m) \equiv\{n \in N: (n, m) \in E, m\in N\}\)
+\item
+  Leaf nodes: \(\Leaf(\phylo)\equiv \{m \in N: O(m)=\{\emptyset\}\}\)
+\item
+  Annotations: Given \(P\) functions,
+  \(\Ann \equiv \{\ann_n \in \{0,1\}^P: n\in \Leaf(\phylo)\}\)
+\item
+  Annotated Phylogenetic Tree \(\aphylo \equiv(\phylo, \Ann)\)
+\item
+  Observed Annotated Annotations
+  \(\AnnObs = \{\annObs_l\}_{l\in \Leaf(\phylo)}\),
+\item
+  Experimentally Annotated Phylogenetic Tree
+  \(\aphyloObs\equiv(\phylo, \AnnObs)\)
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}[t,label=leafnodesprob]{Leaf node probabilities}
+
+\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+
+\begin{itemize}
+\item
+  The probability of the leaf nodes having annotations \(\ann_l\)
+  conditional on the observed annotation is
+
+  \begin{equation}
+  \label{eq:leaf1}
+  \Prcond{\Ann_{l} = \ann_{l}}{\AnnObs_{l} = \annObs_{l}} = \left\{
+  \begin{array}{ll}
+  \psi &\mbox{if }\annObs_{l} \neq \ann_{l} \\
+  1 - \psi & \mbox{otherwise}
+  \end{array}
+  \right.
+  \end{equation}
+
+  Where \(\psi\) can be either \(\psi_0\) (mislabelling a zero), or
+  \(\psi_1\) (mislabelling a one).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[t,label=internalnodeprob]{Internal node probabilities}
+
+\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+
+\begin{itemize}
+\item
+  In the case of the internal nodes, the probability of a given state is
+  defined in terms of the gain/loss probabilities
+
+  \[
+  \Prcond{\Ann_{n} = \ann_{lp}}{\Ann_{r(n)} = \ann_{r(n)}} = \left\{
+  \begin{array}{ll}
+  \mu & \mbox{if }\ann_{n} \neq \ann_{r(n)} \\
+  1 - \mu & \mbox{otherwise}
+  \end{array}
+  \right.
+  \]
+
+  Where \(\mu\) can be either \(\mu_0\) (gain), or \(\mu_1\) (loss).
+\item
+  Assuming independence accross offspring, we can write
+
+  \begin{multline}
+  \label{eq:interior1}
+  \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
+  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \\
+  \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
+  \end{multline}
+
+  Notice that if \(m\) is a leaf node, then
+  \(\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\AnnObs_m = \annObs_m}{\Ann_m = \ann_m}\).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[t,label=likelihood]{Likelihood of the tree}
+
+\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+
+\begin{itemize}
+\item
+  Once the computation reaches the root node, \(n=0\), equations
+  \eqref{eq:leaf1} and \eqref{eq:interior1}:
+
+  \tiny
+
+  \begin{align*}
+  \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
+  \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
+  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs}  
+  \Prcond{\Ann_{m} = \ann_{mp}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
+  \end{align*}
+
+  \normalsize
+
+  Allow us writing the likelihood of the entire tree
+
+  \begin{equation}
+  \label{eq:l}
+  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
+  \end{equation}
+
+  Where
+  \(\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}\)
 \end{itemize}
 
 \end{frame}

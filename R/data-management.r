@@ -708,16 +708,24 @@ plot.aphylo <- function(
   
   if (!("width" %in% names(gheatmap.args))) gheatmap.args$width <- .25
   if (!("color" %in% names(gheatmap.args))) gheatmap.args$color <- "transparent"
+  if (!("colnames_angle" %in% names(gheatmap.args))) gheatmap.args$colnames_angle <- 45
   
   if (!("breaks" %in% names(scale.fill.args))) scale.fill.args$breaks <- c("0", "1", "9")
   if (!("values" %in% names(scale.fill.args))) scale.fill.args$values <- c("gray", "steelblue", "white")
   if (!("labels" %in% names(scale.fill.args))) scale.fill.args$labels <- c("No function", "Function", "N/A")
   
+  # Coercing into a tree
+  tree <- as.apephylo(x$edges)
+  
   # Retrieving the annotations
-  A <- as.data.frame(apply(x$annotations,2,as.character))
+  A   <- x$annotations
+  A[] <- as.character(A)
+  
+  # Matching positions
+  A   <- A[match(tree$tip.label, rownames(A)),,drop=FALSE]
   
   # Creating the mapping
-  p <- ggtree::ggtree(as.apephylo(x$edges)) +
+  p <- ggtree::ggtree(tree) +
     do.call(ggtree::geom_tiplab, geom.tiplab.args)
   
   # Adding the functions
@@ -821,6 +829,7 @@ default.plot.phylo.params <- list(
 
 # This is the actual function that does all the job setting the defaults.
 set.default.plot.phylo.params <- function(dots) {
+  dots <- as.character(match.call()$dots)
   env <- parent.frame()
   
   for (p in names(default.plot.phylo.params)) 
@@ -837,7 +846,7 @@ plot.po_tree <- function(
   x, y=NULL, ...) {
 
   dots <- list(...)
-  set.default.plot.phylo.params("dots")
+  set.default.plot.phylo.params(dots)
   do.call(ape::plot.phylo, c(list(as.apephylo(x)), dots))
   
 }

@@ -1,3 +1,9 @@
+2017-10-18  George G. Vega Yon <g.vegayon@gmail.com>
+	* R/data-management.r: Fixing bug in plot.aphylo.
+
+	* playground/presentations: Working on EAC presentation.
+
+
 2017-10-04  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Working in a standard method to point to 
 	  nodes ids.
