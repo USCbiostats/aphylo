@@ -17,7 +17,7 @@ output:
     keep_tex: true
 section-titles: false
 fontsize: 9pt
-handout: false
+handout: true
 page-number: true
 ---
 
@@ -277,6 +277,14 @@ dimnames(LL$Pr) <- list(0:5, paste("State", 0:1))
 
 ## Peeling algorithm (cont. 1) {.t}
 
+\footnotesize
+
+$$
+\psi_0 = `r psi0` \qquad \psi_1 = `r psi1` \qquad \mu_0 = `r mu0` \qquad \mu_1 = `r mu1` \qquad \pi = `r Pi`
+$$
+
+\normalsize
+
 \begincols
 
 \begincol{.28\textwidth}
@@ -334,6 +342,15 @@ $$
 
 ## Peeling algorithm (cont. 2) {.t}
 
+\footnotesize
+
+$$
+\psi_0 = `r psi0` \qquad \psi_1 = `r psi1` \qquad \mu_0 = `r mu0` \qquad \mu_1 = `r mu1` \qquad \pi = `r Pi`
+$$
+
+\normalsize
+
+
 \begincols
 
 \begincol{.28\textwidth}
@@ -357,8 +374,10 @@ Pr <- LL$Pr
 Pr[] <- sprintf("%.4f",Pr[])
 Pr[c(1,4),] <- ""
 
-Pr[2, 1] <- paste0("\\onslide<3->{\\color{red}{", Pr[2, 1],"}}")
-Pr[2, 2] <- paste0("\\onslide<5->{\\color{blue}{", Pr[2, 2],"}}")
+Pr[3,1] <- paste0("{\\color{blue}", Pr[3,1], "}")
+Pr[3,2] <- paste0("{\\color{red}", Pr[3,2], "}")
+Pr[2, 1] <- paste0("\\onslide<3->{\\color{violet}{", Pr[2, 1],"}}")
+Pr[2, 2] <- paste0("\\onslide<5->{\\color{purple}{", Pr[2, 2],"}}")
 
 print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 ```
@@ -368,13 +387,13 @@ print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 
 $$
 \begin{aligned}
-\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 0} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 0}} \\
-\onslide<3->{& = `r Pr[3, 1]`\times `r 1-mu0` + `r Pr[3, 2]`\times `r mu0` = \color{red}{`r LL$Pr[3, 1]* (1-mu0) +  LL$Pr[3, 2]*mu0`}}\\\\
+\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}(1 - \mu_0) +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\mu_0} \\
+\onslide<3->{& = {\color{blue} `r Pr[3, 1]`}\times `r 1-mu0` + {\color{red} `r Pr[3, 2]`}\times `r mu0` = \color{violet}{`r LL$Pr[3, 1]* (1-mu0) +  LL$Pr[3, 2]*mu0`}}\\\\
 %
-\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 1} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 1}} \\
-\onslide<5->{& = `r Pr[3, 1]`\times `r mu1` + `r Pr[3, 2]`\times `r 1-mu1` = \color{blue}{`r LL$Pr[3, 1]* mu1 +  LL$Pr[3, 2]*(1-mu1)`}}
+\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\mu_1 +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}(1-\mu_1)} \\
+\onslide<5->{& = `r Pr[3, 1]`\times `r mu1` + `r Pr[3, 2]`\times `r 1-mu1` = \color{purple}{`r LL$Pr[3, 1]* mu1 +  LL$Pr[3, 2]*(1-mu1)`}}
 \end{aligned}
 $$
 
@@ -387,6 +406,15 @@ $$
 
 
 ## Peeling algorithm (cont. 3) {.t}
+
+\footnotesize
+
+$$
+\psi_0 = `r psi0` \qquad \psi_1 = `r psi1` \qquad \mu_0 = `r mu0` \qquad \mu_1 = `r mu1` \qquad \pi = `r Pi`
+$$
+
+\normalsize
+
 
 \begincols
 
@@ -412,9 +440,15 @@ $$
 Pr <- LL$Pr
 Pr[] <- sprintf("%.4f",Pr[])
 
+Pr[5,1] <- paste0("{\\color{orange}", Pr[5,1], "}")
+Pr[5,2] <- paste0("{\\color{olive}", Pr[5,2], "}")
+
+Pr[6,1] <- paste0("{\\color{brown}", Pr[6,1], "}")
+Pr[6,2] <- paste0("{\\color{gray}", Pr[6,2], "}")
+
 Pr[4, 1] <- paste0("\\onslide<5->{\\color{red}{", Pr[4, 1],"}}")
 Pr[4, 2] <- paste0("\\onslide<6->{", Pr[4, 2],"}")
-Pr[1, 1] <- paste0("\\onslide<7->{\\color{orange}{", Pr[1, 1],"}}")
+Pr[1, 1] <- paste0("\\onslide<7->{\\color{cyan}{", Pr[1, 1],"}}")
 Pr[1, 2] <- paste0("\\onslide<7->{\\color{blue}{", Pr[1, 2],"}}")
 
 print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
@@ -422,25 +456,24 @@ print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 
 \tiny
 
-
 $$
 \begin{aligned}
 \onslide<2->{\Prcond{\Ann_3 = 0}{\aphyloObs_3} & = %
   \prod_{m \in \{4,5\}} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \Prcond{\Ann_{m} = \ann_{m}}{\Ann_3 = 0}} \\
 \onslide<3->{& = \left(%
-    `r LL$Pr[5,1]` (1 - \mu_0) + `r LL$Pr[5,2]`\times \mu_0
+    {\color{orange} `r LL$Pr[5,1]`} (1 - \mu_0) + {\color{olive} `r LL$Pr[5,2]` }\times \mu_0
   \right)\times\left(%
-    `r LL$Pr[6,1]` (1 - \mu_0) + `r LL$Pr[6,2]`\times \mu_0
+    {\color{brown} `r LL$Pr[6,1]`} (1 - \mu_0) + {\color{gray} `r LL$Pr[6,2]` }\times \mu_0
   \right) \\}
 \onslide<4->{& = \left(%
-    `r LL$Pr[5,1]` (1 - `r mu0`) + `r LL$Pr[5,2]`\times `r mu0`
+    {\color{orange} `r LL$Pr[5,1]`} (1 - `r mu0`) + {\color{olive} `r LL$Pr[5,2]`}\times `r mu0`
   \right)\times\left(%
-    `r LL$Pr[6,1]` (1 - `r mu0`) + `r LL$Pr[6,2]`\times `r mu0`
+    {\color{brown} `r LL$Pr[6,1]`} (1 - `r mu0`) + {\color{gray} `r LL$Pr[6,2]` }\times `r mu0`
   \right) \\}
-\onslide<5->{& = \color{red}{`r (LL$Pr[5,1]*(1 - mu0) + LL$Pr[5,2]*mu0) * (LL$Pr[6,1]*(1 - mu0) + LL$Pr[6,2]*mu0)`} \\\\} 
-\onslide<8->{ & \mbox{\normalsize Finally, the likelihood of this tree is:} \\\\
+\onslide<5->{& = \color{red}{`r (LL$Pr[5,1]*(1 - mu0) + LL$Pr[5,2]*mu0) * (LL$Pr[6,1]*(1 - mu0) + LL$Pr[6,2]*mu0)`} \\} 
+\onslide<8->{ & \mbox{Finally, the likelihood of this tree is:} \\
 \likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs_0} + \pi\Prcond{\Ann_0=1}{\aphyloObs_0}} \\
-\onslide<9->{& = (1 - `r Pi`)\times \color{orange} `r LL$Pr[1,1]` \color{black} + `r Pi`\times \color{blue} `r LL$Pr[1,2]` \color{black} = `r exp(LL$ll)`}
+\onslide<9->{& = (1 - `r Pi`)\times {\color{cyan} `r LL$Pr[1,1]` } + `r Pi`\times {\color{blue} `r LL$Pr[1,2]` } = \mbox{\normalsize `r exp(LL$ll)`}}
 \end{aligned}
 $$
 
@@ -462,19 +495,12 @@ $$
 
 ## `aphylo` in a nutshell
 
-With `C++` (`RcppArmadillo`) under-the-hood, `aphylo`:
+*   Provides a representation of _annotated_ partially ordered trees. \pause
 
-1.  Defines an S3 class for representing partially ordered trees, including validation of it.
+*   Interacts with the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
+    
+*   Implements the loglikelihood calculation of our model (with C++ under-the-hood).
 
-2.  Includes from the basic methods: `print`, `plot`, and `summary`; to more advanced such as `prune`.
-
-3.  Defines an S3 class for representing _annotated_ partially ordered trees.
-
-4.  Includes functions for converting from and to `phylo` class objects from the `ape` package (most used/cited package in Phylogenetics in R with ~25K downloads/month)
-
-5.  Implements the loglikelihood calculation of our model.
-
-We'll talk about estimation later...
 
 ## Examples: Simulating Trees {.t}
 
@@ -497,7 +523,8 @@ atree <- sim_annotated_tree(
   tree = tree, P = 2,
   psi  = c(.05, .05),
   mu   = c(.2, .1),
-  Pi   = .01)
+  Pi   = .01
+  )
 
 atree
 ```
@@ -529,47 +556,38 @@ plot_LogLike(atree)
 
 \endcols
 
-## Example: Interaction with ape {.t}
-
-```{r as-apephylo, echo=TRUE}
-as.apephylo(atree)
-# we can go back using:
-# as.po_tree(as.apephylo(atree))
-```
-
 ## Example: Tree pruning {.t}
 
-```{r tree-pruning1, fig.cap="Pruning trees"}
-set.seed(1213)
-x <- sim_tree(4)
+*   The peeling algorithm requires visiting all nodes in a tree.\pause
+    
+*   The fact is, we don't need to go through branches with no annotations, as these are uninformative. \pause So we can prune them, e.g.:\pause
 
-# Setting up the plot envir
-oldpar <- par(no.readonly = TRUE)
-par(mfrow = c(2,3), mar=c(.5,0,2,0), cex=1, xpd=NA, omi=c(0,0,0,0))
-# Plotting 
-plot(x, main = "x", show.node.label = TRUE)
-plot(prune(x, c(2,6)), main="prune(x, c(2,6))", show.node.label = TRUE)
-plot(z<-prune(x, 6), main="prune(x, 6)", show.node.label = TRUE)
-plot(prune(x, 4), main="prune(x, 4)", show.node.label = TRUE)
-plot(prune(x, 3), main="prune(x, 3)", show.node.label = TRUE)
-plot(prune(x, c(4,6,3)), main="prune(x, c(4,6,3))", show.node.label = TRUE)
-par(oldpar)
-
+```{r tree-pruning1}
+set.seed(1)
+x <- sim_tree(25)
 ```
 
 
-## Example: Tree pruning (cont.) {.t}
+```{r tree-pruning2, fig.cap=paste("Pruning trees. In the original none of the leaf nodes under 3 and 9 have annotations. After pruning those branches, we go from having", length(attr(x, "labels"))," nodes, to have", length(attr(prune(x,c(3,9)), "labels"))), out.width=".55\\linewidth"}
+# What am I pruning
+x_pruned <- prune(x, c(3, 19))
 
+ids        <- attr(x, "labels")
+ids_pruned <- attr(x_pruned, "labels")
 
-```{r tree-pruning2, fig.cap="Pruning trees recursively"}
-set.seed(1)
-x <- sim_tree(25)
+z   <- `attributes<-`(x, list(dim=dim(x)))
+z[] <- ids[z[]+1]
+
+z_pruned   <- `attributes<-`(x_pruned, list(dim=dim(x_pruned)))
+z_pruned[] <- ids_pruned[z_pruned[]+1]
+
+cols <- apply(z, 1, function(w) any(w[1] == z_pruned[,1] & w[2] == z_pruned[,2]))
+cols <- c("tomato", "steelblue")[cols + 1L]
+
 oldpar <- par(no.readonly=TRUE)
-par(mfrow=c(2,2), cex=.75, xpd=NA, mar=c(1,0,2,0))
-plot(x, main="x")
-plot(prune(x, "leafs"), main = "prune(x, \"leafs\")")
-plot(prune(prune(x, "leafs"), "leafs"), main = "prune(prune(x, \"leafs\"), \"leafs\")")
-plot(prune(prune(prune(x, "leafs"), "leafs"), "leafs"), main = "prune(prune(prune(x, \"leafs\"), \"leafs\"), \"leafs\")")
+par(mfrow=c(1,2), cex=.9, xpd=NA, mar=c(1,0,2,0))
+plot(x, main="Full tree\n x", edge.color = cols, edge.width=2)
+plot(x_pruned, main="Pruned tree\n prune(x, c(3, 19))", edge.color = "steelblue", edge.width=2)
 par(oldpar)
 
 ```
@@ -633,14 +651,6 @@ ans <- MCMC(
 
 ## Example: MCMC (cont. 1) {.t}
 
-`ans` is of class `mcmc` from the coda package
-
-```{r amcmc-summary, echo=TRUE}
-summary(ans)
-```
-
-## Example: MCMC (cont. 2) {.t}
-
 ```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.', cache=TRUE}
 coda::gelman.plot(ans)
 ```
@@ -650,7 +660,7 @@ coda::gelman.plot(ans)
 
 <!-- where d̂  is the degrees of freedom estimate of a t distribution. -->
 
-## Example: MCMC (cont. 3) {.t}
+## Example: MCMC (cont. 2) {.t}
 
 ```{r amcmc-plot, fig.cap='Posterior distribution', cache=TRUE}
 oldpar <- par(no.readonly = TRUE)
@@ -735,17 +745,27 @@ prediction_score(ans)
 plot(prediction_score(ans), main="")
 ```
 
-## A simulation study {.t}
+## A simulation study {.t label=sim-setup}
 
 \framesubtitle{Setup}
 
--   Simulation study using ~13,000 families from the panther database
+-   Simulation study using ~13,000 families from PantherDB
 
--   For each one of the trees, we draw a set of the parameters $\{\psi_0,\psi_1, ,\mu_0, \mu_1,\pi\}$, and simulated annotations using our model's Data Generating Process, in particular, a Bate distribution with parameters 1/20.
+-   Using a Beta 1/20 prior, we simulated annotations:
+    
+    *   Draw a set of the parameters $\{\psi_0,\psi_1 ,\mu_0, \mu_1,\pi\}$, 
+    
+    *   Simulated annotations using our model's Data Generating Process,
+    
+    *   Randomly removed $p\in [.1, .5]$ proportion of annotations.
 
--   Once we had a fully annotated tree, we randomly removed annotations, with "0" annotations (no function) having a higher chance of been removed.
+-   With that data, we did parameter estimation and computed prediction scores using
+    
+    *   MLE
+    *   MCMC with the right prior (Beta 1/20), and
+    *   MCMC with the wrong prior (Beta 1/10, twice the mean as the right prior).
 
--   With that data, we did parameter estimation and computed prediction scores using an MLE, MCMC with the right prior (using the same DGP), and a wrong prior (same Beta distribution, but with parameters 1/10 (twice the mean as the DGP).
+\hyperlink{sim-convergence}{\beamerbutton{Convergence}}
 
 ## A simulation study {.t}
 
@@ -758,22 +778,12 @@ plot(prediction_score(ans), main="")
 
 ## A simulation study {.t}
 
-\framesubtitle{Convergence}
-
-\begin{figure}
-\centering
-\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
-\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
-\end{figure}
-
-## A simulation study {.t}
-
 \framesubtitle{Prediction scores}
 
 \begin{figure}
 \centering
 \includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
-\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting form the DGP).}
+\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting from the DGP).}
 \end{figure}
 
 
@@ -785,7 +795,6 @@ plot(prediction_score(ans), main="")
 
 -   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
 
--   Unfortunately, since annotation data is so sparse, we lack of a significant number of useful datasets on which we can test our method.\pause
 
 -   For the next steps, we are evaluating whether to include or how to include:\pause
     
@@ -796,6 +805,8 @@ plot(prediction_score(ans), main="")
     *   Correlation structure between functions
     
     *   Using Taxon Constraints to improve predictions
+    
+    *   Hierarchical model: Use fully annotated trees by curators as prior information.
 
 ##
 
@@ -836,7 +847,7 @@ plot(prediction_score(ans), main="")
 
 ## Leaf node probabilities {.t label=leafnodesprob}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 -   The probability of the leaf nodes having annotations $\ann_l$ conditional on the observed annotation is 
     
@@ -855,7 +866,7 @@ plot(prediction_score(ans), main="")
 
 ## Internal node probabilities {.t label=internalnodeprob}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 -   In the case of the internal nodes, the probability of a given state is defined in terms of the gain/loss probabilities
     
@@ -875,12 +886,12 @@ plot(prediction_score(ans), main="")
     
     \begin{multline}
     \label{eq:interior1}
-    \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \\
+    \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} = %
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \\
     \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
     \end{multline}
     
-    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\AnnObs_m = \annObs_m}{\Ann_m = \ann_m}$.
+    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs_m} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}$.
 
 ## Likelihood of the tree {.t label=likelihood}
 
@@ -891,10 +902,10 @@ plot(prediction_score(ans), main="")
     \tiny
     
     \begin{align*}
-    \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
-    \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs}  
-    \Prcond{\Ann_{m} = \ann_{mp}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
+    \Prcond{\Ann_l = \ann_l}{\aphyloObs_l} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
+    \Prcond{\Ann_n = \ann_n}{\aphyloObs_n}  & = 
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m}  
+    \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
     \end{align*}
     
     
@@ -904,9 +915,17 @@ plot(prediction_score(ans), main="")
     
     \begin{equation}
     \label{eq:l}
-    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs_0}
     \end{equation}
     
     Where $\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}$
 
+## A simulation study {.t label=sim-convergence}
 
+\framesubtitle{Convergence \hyperlink{sim-setup}{\beamerbutton{go back}}}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\end{figure}

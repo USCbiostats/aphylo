@@ -1,4 +1,4 @@
-\documentclass[9pt,ignorenonframetext,]{beamer}
+\documentclass[9pt,handout,ignorenonframetext,]{beamer}
 
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -386,8 +386,7 @@ Vega Yon
 \item
   \textbf{PANTHER Classification System} (PantherDB), part of the Gene
   Ontology Consortium, consists on a database of \(\sim\) 15,000
-  phylogenetic trees (gene families), and can be linked to the GO
-  terms.\pause
+  phylogenetic trees (gene families), and can be linked to the GO terms.
 \end{itemize}
 
 \end{frame}
@@ -403,10 +402,10 @@ Vega Yon
   Today, we present a model that uses both: (1) existing gene functional
   annotations, and (2) phylogenetic trees to infer annotations on
   un-annotated genes in a \emph{probabilistic way} (so it is not a 0/1
-  prediction).
+  prediction).\pause
 \item
   This predicted functional information will serve as prior covariates
-  in Projects 1 and 3. \pause
+  in Projects 1 and 3.
 \end{itemize}
 
 \end{frame}
@@ -609,6 +608,14 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 
 \begin{frame}[t]{Peeling algorithm (cont. 1)}
 
+\footnotesize
+
+\[
+\psi_0 = 0.1 \qquad \psi_1 = 0.05 \qquad \mu_0 = 0.04 \qquad \mu_1 = 0.01 \qquad \pi = 0.5
+\]
+
+\normalsize
+
 \begincols
 
 \begincol{.28\textwidth}
@@ -671,6 +678,14 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 
 \begin{frame}[t]{Peeling algorithm (cont. 2)}
 
+\footnotesize
+
+\[
+\psi_0 = 0.1 \qquad \psi_1 = 0.05 \qquad \mu_0 = 0.04 \qquad \mu_1 = 0.01 \qquad \pi = 0.5
+\]
+
+\normalsize
+
 \begincols
 
 \begincol{.28\textwidth}
@@ -697,8 +712,8 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
  & State 0 & State 1 \\ 
   \hline
 0 &  &  \\ 
-  1 & \onslide<3->{\color{red}{0.8660}} & \onslide<5->{\color{blue}{0.0585}} \\ 
-  2 & 0.9000 & 0.0500 \\ 
+  1 & \onslide<3->{\color{violet}{0.8660}} & \onslide<5->{\color{purple}{0.0585}} \\ 
+  2 & {\color{blue}0.9000} & {\color{red}0.0500} \\ 
   3 &  &  \\ 
   4 & 0.1000 & 0.9500 \\ 
   5 & 0.9000 & 0.0500 \\ 
@@ -712,13 +727,13 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 
 \[
 \begin{aligned}
-\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 0} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 0}} \\
-\onslide<3->{& = 0.9000\times 0.96 + 0.0500\times 0.04 = \color{red}{0.866}}\\\\
+\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}(1 - \mu_0) +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\mu_0} \\
+\onslide<3->{& = {\color{blue} {\color{blue}0.9000}}\times 0.96 + {\color{red} {\color{red}0.0500}}\times 0.04 = \color{violet}{0.866}}\\\\
 %
-\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\Prcond{\Ann_2 = 0}{\Ann_1 = 1} +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\Prcond{\Ann_2 = 1}{\Ann_1 = 1}} \\
-\onslide<5->{& = 0.9000\times 0.01 + 0.0500\times 0.99 = \color{blue}{0.0585}}
+\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\mu_1 +\\
+  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}(1-\mu_1)} \\
+\onslide<5->{& = {\color{blue}0.9000}\times 0.01 + {\color{red}0.0500}\times 0.99 = \color{purple}{0.0585}}
 \end{aligned}
 \]
 
@@ -731,6 +746,14 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 \end{frame}
 
 \begin{frame}[t]{Peeling algorithm (cont. 3)}
+
+\footnotesize
+
+\[
+\psi_0 = 0.1 \qquad \psi_1 = 0.05 \qquad \mu_0 = 0.04 \qquad \mu_1 = 0.01 \qquad \pi = 0.5
+\]
+
+\normalsize
 
 \begincols
 
@@ -759,12 +782,12 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
   \hline
  & State 0 & State 1 \\ 
   \hline
-0 & \onslide<7->{\color{orange}{0.0947}} & \onslide<7->{\color{blue}{0.0037}} \\ 
+0 & \onslide<7->{\color{cyan}{0.0947}} & \onslide<7->{\color{blue}{0.0037}} \\ 
   1 & 0.8660 & 0.0585 \\ 
   2 & 0.9000 & 0.0500 \\ 
   3 & \onslide<5->{\color{red}{0.1160}} & \onslide<6->{0.0551} \\ 
-  4 & 0.1000 & 0.9500 \\ 
-  5 & 0.9000 & 0.0500 \\ 
+  4 & {\color{orange}0.1000} & {\color{olive}0.9500} \\ 
+  5 & {\color{brown}0.9000} & {\color{gray}0.0500} \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -778,19 +801,19 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 \onslide<2->{\Prcond{\Ann_3 = 0}{\aphyloObs_3} & = %
   \prod_{m \in \{4,5\}} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \Prcond{\Ann_{m} = \ann_{m}}{\Ann_3 = 0}} \\
 \onslide<3->{& = \left(%
-    0.1 (1 - \mu_0) + 0.95\times \mu_0
+    {\color{orange} 0.1} (1 - \mu_0) + {\color{olive} 0.95 }\times \mu_0
   \right)\times\left(%
-    0.9 (1 - \mu_0) + 0.05\times \mu_0
+    {\color{brown} 0.9} (1 - \mu_0) + {\color{gray} 0.05 }\times \mu_0
   \right) \\}
 \onslide<4->{& = \left(%
-    0.1 (1 - 0.04) + 0.95\times 0.04
+    {\color{orange} 0.1} (1 - 0.04) + {\color{olive} 0.95}\times 0.04
   \right)\times\left(%
-    0.9 (1 - 0.04) + 0.05\times 0.04
+    {\color{brown} 0.9} (1 - 0.04) + {\color{gray} 0.05 }\times 0.04
   \right) \\}
-\onslide<5->{& = \color{red}{0.116} \\\\} 
-\onslide<8->{ & \mbox{\normalsize Finally, the likelihood of this tree is:} \\\\
+\onslide<5->{& = \color{red}{0.116} \\} 
+\onslide<8->{ & \mbox{Finally, the likelihood of this tree is:} \\
 \likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs_0} + \pi\Prcond{\Ann_0=1}{\aphyloObs_0}} \\
-\onslide<9->{& = (1 - 0.5)\times \color{orange} 0.0947 \color{black} + 0.5\times \color{blue} 0.0037 \color{black} = 0.0492}
+\onslide<9->{& = (1 - 0.5)\times {\color{cyan} 0.0947 } + 0.5\times {\color{blue} 0.0037 } = \mbox{\normalsize 0.0492}}
 \end{aligned}
 \]
 
@@ -813,29 +836,17 @@ package}{The aphylo R package}}\label{the-aphylo-r-package}
 
 \begin{frame}[fragile]{\texttt{aphylo} in a nutshell}
 
-With \texttt{C++} (\texttt{RcppArmadillo}) under-the-hood,
-\texttt{aphylo}:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
 \item
-  Defines an S3 class for representing partially ordered trees,
-  including validation of it.
+  Provides a representation of \emph{annotated} partially ordered trees.
+  \pause
 \item
-  Includes from the basic methods: \texttt{print}, \texttt{plot}, and
-  \texttt{summary}; to more advanced such as \texttt{prune}.
+  Interacts with the \texttt{ape} package (most used Phylogenetics R
+  package with \textasciitilde{}25K downloads/month) \pause
 \item
-  Defines an S3 class for representing \emph{annotated} partially
-  ordered trees.
-\item
-  Includes functions for converting from and to \texttt{phylo} class
-  objects from the \texttt{ape} package (most used/cited package in
-  Phylogenetics in R with \textasciitilde{}25K downloads/month)
-\item
-  Implements the loglikelihood calculation of our model.
-\end{enumerate}
-
-We'll talk about estimation later\ldots{}
+  Implements the loglikelihood calculation of our model (with C++
+  under-the-hood).
+\end{itemize}
 
 \end{frame}
 
@@ -883,7 +894,8 @@ We'll talk about estimation later\ldots{}
   \DataTypeTok{tree =}\NormalTok{ tree, }\DataTypeTok{P =} \DecValTok{2}\NormalTok{,}
   \DataTypeTok{psi  =} \KeywordTok{c}\NormalTok{(.}\DecValTok{05}\NormalTok{, .}\DecValTok{05}\NormalTok{),}
   \DataTypeTok{mu   =} \KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, .}\DecValTok{1}\NormalTok{),}
-  \DataTypeTok{Pi   =}\NormalTok{ .}\DecValTok{01}\NormalTok{)}
+  \DataTypeTok{Pi   =}\NormalTok{ .}\DecValTok{01}
+\NormalTok{  )}
 
 \NormalTok{atree}
 \end{Highlighting}
@@ -968,67 +980,29 @@ We'll talk about estimation later\ldots{}
 
 \end{frame}
 
-\begin{frame}[fragile,t]{Example: Interaction with ape}
-
-\footnotesize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{as.apephylo}\NormalTok{(atree)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Phylogenetic tree with 5 tips and 4 internal nodes.
-## 
-## Tip labels:
-## [1] "6" "7" "8" "4" "5"
-## Node labels:
-## [1] "0" "3" "2" "1"
-## 
-## Rooted; includes branch lengths.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# we can go back using:}
-\CommentTok{# as.po_tree(as.apephylo(atree))}
-\end{Highlighting}
-\end{Shaded}
-
-\normalsize
-
-\end{frame}
-
 \begin{frame}[t]{Example: Tree pruning}
 
+\begin{itemize}
+\item
+  The peeling algorithm requires visiting all nodes in a tree.\pause
+\item
+  The fact is, we don't need to go through branches with no annotations,
+  as these are uninformative. \pause So we can prune them, e.g.:\pause
+\end{itemize}
+
 \footnotesize
-
-\begin{figure}
-
-{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/tree-pruning1-1} 
-
-}
-
-\caption{Pruning trees}\label{fig:tree-pruning1}
-\end{figure}
 
 \normalsize
 
-\end{frame}
-
-\begin{frame}[t]{Example: Tree pruning (cont.)}
-
 \footnotesize
 
 \begin{figure}
 
-{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/tree-pruning2-1} 
+{\centering \includegraphics[width=.55\linewidth]{aphylo_files/figure-beamer/tree-pruning2-1} 
 
 }
 
-\caption{Pruning trees recursively}\label{fig:tree-pruning2}
+\caption{Pruning trees. In the original none of the leaf nodes under 3 and 9 have annotations. After pruning those branches, we go from having 49  nodes, to have 21}\label{fig:tree-pruning2}
 \end{figure}
 
 \normalsize
@@ -1101,44 +1075,7 @@ You may be wondering why, well:
 
 \end{frame}
 
-\begin{frame}[fragile,t]{Example: MCMC (cont. 1)}
-
-\texttt{ans} is of class \texttt{mcmc} from the coda package
-
-\footnotesize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(ans)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Iterations = 10010:1e+05
-## Thinning interval = 10 
-## Number of chains = 4 
-## Sample size per chain = 9000 
-## 
-## 1. Empirical mean and standard deviation for each variable,
-##    plus standard error of the mean:
-## 
-##       Mean     SD Naive SE Time-series SE
-## mu    2.51 0.0935 0.000493       0.000579
-## sigma 2.96 0.0668 0.000352       0.000373
-## 
-## 2. Quantiles for each variable:
-## 
-##       2.5%  25%  50%  75% 97.5%
-## mu    2.33 2.45 2.51 2.58  2.70
-## sigma 2.83 2.91 2.96 3.00  3.09
-\end{verbatim}
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}[t]{Example: MCMC (cont. 2)}
+\begin{frame}[t]{Example: MCMC (cont. 1)}
 
 \footnotesize
 
@@ -1155,7 +1092,7 @@ You may be wondering why, well:
 
 \end{frame}
 
-\begin{frame}[t]{Example: MCMC (cont. 3)}
+\begin{frame}[t]{Example: MCMC (cont. 2)}
 
 \footnotesize
 
@@ -1372,29 +1309,42 @@ parameter estimates
 
 \end{frame}
 
-\begin{frame}[t]{A simulation study}
+\begin{frame}[t,label=sim-setup]{A simulation study}
 
 \framesubtitle{Setup}
 
 \begin{itemize}
 \item
-  Simulation study using \textasciitilde{}13,000 families from the
-  panther database
+  Simulation study using \textasciitilde{}13,000 families from PantherDB
 \item
-  For each one of the trees, we draw a set of the parameters
-  \(\{\psi_0,\psi_1, ,\mu_0, \mu_1,\pi\}\), and simulated annotations
-  using our model's Data Generating Process, in particular, a Bate
-  distribution with parameters 1/20.
-\item
-  Once we had a fully annotated tree, we randomly removed annotations,
-  with ``0'' annotations (no function) having a higher chance of been
-  removed.
+  Using a Beta 1/20 prior, we simulated annotations:
+
+  \begin{itemize}
+  \item
+    Draw a set of the parameters
+    \(\{\psi_0,\psi_1 ,\mu_0, \mu_1,\pi\}\),
+  \item
+    Simulated annotations using our model's Data Generating Process,
+  \item
+    Randomly removed \(p\in [.1, .5]\) proportion of annotations.
+  \end{itemize}
 \item
   With that data, we did parameter estimation and computed prediction
-  scores using an MLE, MCMC with the right prior (using the same DGP),
-  and a wrong prior (same Beta distribution, but with parameters 1/10
-  (twice the mean as the DGP).
+  scores using
+
+  \begin{itemize}
+  \tightlist
+  \item
+    MLE
+  \item
+    MCMC with the right prior (Beta 1/20), and
+  \item
+    MCMC with the wrong prior (Beta 1/10, twice the mean as the right
+    prior).
+  \end{itemize}
 \end{itemize}
+
+\hyperlink{sim-convergence}{\beamerbutton{Convergence}}
 
 \end{frame}
 
@@ -1411,24 +1361,12 @@ parameter estimates
 
 \begin{frame}[t]{A simulation study}
 
-\framesubtitle{Convergence}
-
-\begin{figure}
-\centering
-\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
-\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
-\end{figure}
-
-\end{frame}
-
-\begin{frame}[t]{A simulation study}
-
 \framesubtitle{Prediction scores}
 
 \begin{figure}
 \centering
 \includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
-\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting form the DGP).}
+\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting from the DGP).}
 \end{figure}
 
 \end{frame}
@@ -1446,10 +1384,6 @@ parameter estimates
   Already implemented, we are currently in the stage of writing the
   paper and setting up the simulation study.\pause
 \item
-  Unfortunately, since annotation data is so sparse, we lack of a
-  significant number of useful datasets on which we can test our
-  method.\pause
-\item
   For the next steps, we are evaluating whether to include or how to
   include:\pause
 
@@ -1462,6 +1396,9 @@ parameter estimates
     Correlation structure between functions
   \item
     Using Taxon Constraints to improve predictions
+  \item
+    Hierarchical model: Use fully annotated trees by curators as prior
+    information.
   \end{itemize}
 \end{itemize}
 
@@ -1517,7 +1454,7 @@ parameter estimates
 
 \begin{frame}[t,label=leafnodesprob]{Leaf node probabilities}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 \begin{itemize}
 \item
@@ -1542,7 +1479,7 @@ parameter estimates
 
 \begin{frame}[t,label=internalnodeprob]{Internal node probabilities}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 \begin{itemize}
 \item
@@ -1564,13 +1501,13 @@ parameter estimates
 
   \begin{multline}
   \label{eq:interior1}
-  \Prcond{\Ann_n = \ann_n}{\aphyloObs} = %
-  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs} \\
+  \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} = %
+  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \\
   \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
   \end{multline}
 
   Notice that if \(m\) is a leaf node, then
-  \(\Prcond{\Ann_m = \ann_m}{\aphyloObs} = \Prcond{\AnnObs_m = \annObs_m}{\Ann_m = \ann_m}\).
+  \(\Prcond{\Ann_m = \ann_m}{\aphyloObs_m} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}\).
 \end{itemize}
 
 \end{frame}
@@ -1587,10 +1524,10 @@ parameter estimates
   \tiny
 
   \begin{align*}
-  \Prcond{\Ann_l = \ann_l}{\aphyloObs} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
-  \Prcond{\Ann_n = \ann_n}{\aphyloObs}  & = 
-  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs}  
-  \Prcond{\Ann_{m} = \ann_{mp}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
+  \Prcond{\Ann_l = \ann_l}{\aphyloObs_l} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
+  \Prcond{\Ann_n = \ann_n}{\aphyloObs_n}  & = 
+  \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m}  
+  \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
   \end{align*}
 
   \normalsize
@@ -1599,12 +1536,24 @@ parameter estimates
 
   \begin{equation}
   \label{eq:l}
-  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs}
+  \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs_0}
   \end{equation}
 
   Where
   \(\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}\)
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}[t,label=sim-convergence]{A simulation study}
+
+\framesubtitle{Convergence \hyperlink{sim-setup}{\beamerbutton{go back}}}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\end{figure}
 
 \end{frame}
 
