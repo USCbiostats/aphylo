@@ -17,7 +17,7 @@ output:
     keep_tex: true
 section-titles: false
 fontsize: 9pt
-handout: true
+handout: false
 page-number: true
 ---
 
@@ -45,20 +45,29 @@ library(aphylo)
 
 \tableofcontents{}
 
-# Gene Functions
+# On Genes and Trees
 
 ## Agenda
 
 \tableofcontents[currentsection]
 
-## Introduction
+## Overview  
 
--   Manual Curation (GO): Good but infeasible \pause
--   Sparse gene functional annotation \pause
--   Take advantage of the phylogenetic information to make inference of  \pause
--   This predicted functional information will
-serve as prior covariates (and prior gene-gene connections) in the second level of the hierarchical models in Projects 1 and 3. In particular, this project is the first to make predictions at large scale in a probabilistic
-manner.
+-   A __GO annotation__ is an association between a gene and a GO (Gene Ontology) term describing its function, e.g: A gene can be annotated with the GO term `GO:0016049`, which denotes _cellular growth_.\pause
+
+-   __Phylogenetic Tree__ represents "inferred evolutionary relationships among various biological species or other entities" (wiki), in this context, our entities are genes.\pause
+
+-   __PANTHER Classification System__ (PantherDB), part of the Gene Ontology Consortium, consists on a database of $\sim$ 15,000 phylogenetic trees (gene families), and can be linked to the GO terms.
+
+## Overview (cont.)
+
+-   Manual Curation of GO terms is good but infeasible: \pause Out of all the genes present in PantherDB, only ~9% has been annotated (17 years of work)\pause
+
+-   Today, we present a model that uses both: (1) existing gene functional annotations, and (2) phylogenetic trees to infer annotations on un-annotated genes in a _probabilistic way_ (so it is not a 0/1 prediction).\pause
+
+-   This predicted functional information will serve as prior covariates in Projects 1 and 3. 
+
+<!-- -   This project is the first to make predictions at large scale in a probabilistic manner. -->
 
 # Model
 
@@ -141,15 +150,15 @@ Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood computa
 
 1.  Create an matrix $\probmat$ of size $2 \times |N|$, \pause
 
-2.  For node $n \in \{|N|, |N| - 1, \dots, 1, 0\}$ do: \pause
+2.  For node $n \in \{|N|, |N| - 1, \dots, 1, 0\}$ (the peeling sequence) do: \pause
     
     a.  For $\ann_n\in \{0,1\}$ do: 
         
-        a.  Set $\probmat_{n, \ann_n} = \left\{\begin{array}{ll}
+        a.  Set \color{teal} $\probmat_{n, \ann_n} = \left\{\begin{array}{ll}
         \Prcond{\Ann_n = \ann_n}{\AnnObs_n = \AnnObs_n} & \mbox{If }$n$\mbox{ is a leaf} \\
         \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise}
-        \end{array}
-        \right.$
+        \end{array} 
+        \right.$ \color{black}
         
         b.  Next $\ann_n$
     
@@ -295,11 +304,11 @@ Pr[c(1,2,4),] <- ""
 
 Pr[3,1] <- paste0("\\onslide<2->{\\color{blue}", Pr[3,1], "}")
 Pr[3,2] <- paste0("\\onslide<3->{\\color{red}", Pr[3,2], "}")
-Pr[5,1] <- paste0("\\onslide<4->{\\color{red}", Pr[5,1], "}")
-Pr[5,2] <- paste0("\\onslide<5->{\\color{blue}", Pr[5,2], "}")
+Pr[5,1] <- paste0("\\onslide<4->{\\color{orange}", Pr[5,1], "}")
+Pr[5,2] <- paste0("\\onslide<5->{\\color{olive}", Pr[5,2], "}")
 
-Pr[6,1] <- paste0("\\onslide<6->{\\color{blue}", Pr[6,1], "}")
-Pr[6,2] <- paste0("\\onslide<7->{\\color{red}", Pr[6,2], "}")
+Pr[6,1] <- paste0("\\onslide<6->{\\color{brown}", Pr[6,1], "}")
+Pr[6,2] <- paste0("\\onslide<7->{\\color{gray}", Pr[6,2], "}")
 
 print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 ```
@@ -310,10 +319,10 @@ $$
 \begin{aligned}
 \onslide<2->{\Prcond{Z_2=0}{X_2=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
 \onslide<3->{\Prcond{Z_2=1}{X_2=0} & = \psi_1 &= \color{red}{`r psi1`}} \\\\
-\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{red}{`r psi0`}} \\
-\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{blue}{`r 1-psi1`}} \\ \\
-\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
-\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{red}{`r psi1`}}
+\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{orange}{`r psi0`}} \\
+\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{olive}{`r 1-psi1`}} \\ \\
+\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{brown}{`r 1-psi0`}} \\
+\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{gray}{`r psi1`}}
 \end{aligned}
 $$
 
@@ -504,7 +513,7 @@ atree
 
 \begincol{.49\textwidth}
 
-```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=FALSE}
+```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
 plot(atree)
 ```
 
@@ -632,9 +641,14 @@ summary(ans)
 
 ## Example: MCMC (cont. 2) {.t}
 
-```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence', cache=TRUE}
+```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.', cache=TRUE}
 coda::gelman.plot(ans)
 ```
+
+<!-- is an unbiased estimator of the marginal posterior variance of θ (Gelman and Rubin 1992). The potential scale reduction factor (PSRF) is defined to be the ratio of Vˆ and W. If the M chains have converged to the target posterior distribution, then PSRF should be close to 1. Brooks and Gelman (1997) corrected the original PSRF by accounting for sampling variability as follows: -->
+<!-- Rc=d̂ +3d̂ +1VˆW‾‾‾‾‾‾‾‾‾√ -->
+
+<!-- where d̂  is the degrees of freedom estimate of a t distribution. -->
 
 ## Example: MCMC (cont. 3) {.t}
 
@@ -715,12 +729,53 @@ head(predict(ans, what="leafs"))
 prediction_score(ans)
 ```
 
-
-## How good is our prediction (cont.) {.t}
+## How good is our prediction (cont. 1) {.t}
 
 ```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".6\\linewidth", echo=TRUE}
 plot(prediction_score(ans), main="")
 ```
+
+## A simulation study {.t}
+
+\framesubtitle{Setup}
+
+-   Simulation study using ~13,000 families from the panther database
+
+-   For each one of the trees, we draw a set of the parameters $\{\psi_0,\psi_1, ,\mu_0, \mu_1,\pi\}$, and simulated annotations using our model's Data Generating Process, in particular, a Bate distribution with parameters 1/20.
+
+-   Once we had a fully annotated tree, we randomly removed annotations, with "0" annotations (no function) having a higher chance of been removed.
+
+-   With that data, we did parameter estimation and computed prediction scores using an MLE, MCMC with the right prior (using the same DGP), and a wrong prior (same Beta distribution, but with parameters 1/10 (twice the mean as the DGP).
+
+## A simulation study {.t}
+
+\framesubtitle{Bias}
+
+\begin{figure}
+\centering
+\includegraphics[width=.68\linewidth]{bias_trees_of_size_[57,138).pdf}
+\end{figure}
+
+## A simulation study {.t}
+
+\framesubtitle{Convergence}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\end{figure}
+
+## A simulation study {.t}
+
+\framesubtitle{Prediction scores}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
+\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting form the DGP).}
+\end{figure}
+
 
 # Concluding Remarks
 
@@ -732,7 +787,15 @@ plot(prediction_score(ans), main="")
 
 -   Unfortunately, since annotation data is so sparse, we lack of a significant number of useful datasets on which we can test our method.\pause
 
--   For the next steps, we are evaluating ways of solving the sparseness issue: either by imposing correlation structures accross functions, or jumping into another model.\pause
+-   For the next steps, we are evaluating whether to include or how to include:\pause
+    
+    *   Type of node: speciation, duplication, horizontal transfer.
+    
+    *   Branch lengths
+    
+    *   Correlation structure between functions
+    
+    *   Using Taxon Constraints to improve predictions
 
 ##
 
@@ -821,7 +884,7 @@ plot(prediction_score(ans), main="")
 
 ## Likelihood of the tree {.t label=likelihood}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 -   Once the computation reaches the root node, $n=0$, equations \eqref{eq:leaf1} and \eqref{eq:interior1}: 
     

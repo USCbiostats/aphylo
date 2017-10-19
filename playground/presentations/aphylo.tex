@@ -1,4 +1,4 @@
-\documentclass[9pt,handout,ignorenonframetext,]{beamer}
+\documentclass[9pt,ignorenonframetext,]{beamer}
 
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -363,7 +363,7 @@ Vega Yon
 
 \end{frame}
 
-\section{Gene Functions}\label{gene-functions}
+\section{On Genes and Trees}\label{on-genes-and-trees}
 
 \begin{frame}{Agenda}
 
@@ -371,23 +371,42 @@ Vega Yon
 
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}[fragile]{Overview}
 
 \begin{itemize}
-\tightlist
 \item
-  Manual Curation (GO): Good but infeasible \pause
+  A \textbf{GO annotation} is an association between a gene and a GO
+  (Gene Ontology) term describing its function, e.g: A gene can be
+  annotated with the GO term \texttt{GO:0016049}, which denotes
+  \emph{cellular growth}.\pause
 \item
-  Sparse gene functional annotation \pause
+  \textbf{Phylogenetic Tree} represents ``inferred evolutionary
+  relationships among various biological species or other entities''
+  (wiki), in this context, our entities are genes.\pause
 \item
-  Take advantage of the phylogenetic information to make inference of
-  \pause
+  \textbf{PANTHER Classification System} (PantherDB), part of the Gene
+  Ontology Consortium, consists on a database of \(\sim\) 15,000
+  phylogenetic trees (gene families), and can be linked to the GO
+  terms.\pause
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Overview (cont.)}
+
+\begin{itemize}
+\item
+  Manual Curation of GO terms is good but infeasible: \pause Out of all
+  the genes present in PantherDB, only \textasciitilde{}9\% has been
+  annotated (17 years of work)\pause
+\item
+  Today, we present a model that uses both: (1) existing gene functional
+  annotations, and (2) phylogenetic trees to infer annotations on
+  un-annotated genes in a \emph{probabilistic way} (so it is not a 0/1
+  prediction).
 \item
   This predicted functional information will serve as prior covariates
-  (and prior gene-gene connections) in the second level of the
-  hierarchical models in Projects 1 and 3. In particular, this project
-  is the first to make predictions at large scale in a probabilistic
-  manner.
+  in Projects 1 and 3. \pause
 \end{itemize}
 
 \end{frame}
@@ -510,7 +529,8 @@ computation on a single function is as follows. \pause
 \item
   Create an matrix \(\probmat\) of size \(2 \times |N|\), \pause
 \item
-  For node \(n \in \{|N|, |N| - 1, \dots, 1, 0\}\) do: \pause
+  For node \(n \in \{|N|, |N| - 1, \dots, 1, 0\}\) (the peeling
+  sequence) do: \pause
 
   \begin{enumerate}
   \def\labelenumii{\alph{enumii}.}
@@ -520,8 +540,9 @@ computation on a single function is as follows. \pause
     \begin{enumerate}
     \def\labelenumiii{\alph{enumiii}.}
     \item
-      Set
+      Set \color{teal}
       \(\probmat_{n, \ann_n} = \left\{\begin{array}{ll} \Prcond{\Ann_n = \ann_n}{\AnnObs_n = \AnnObs_n} & \mbox{If }\)n\(\mbox{ is a leaf} \\ \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise} \end{array} \right.\)
+      \color{black}
     \item
       Next \(\ann_n\)
     \end{enumerate}
@@ -619,8 +640,8 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
   1 &  &  \\ 
   2 & \onslide<2->{\color{blue}0.9000} & \onslide<3->{\color{red}0.0500} \\ 
   3 &  &  \\ 
-  4 & \onslide<4->{\color{red}0.1000} & \onslide<5->{\color{blue}0.9500} \\ 
-  5 & \onslide<6->{\color{blue}0.9000} & \onslide<7->{\color{red}0.0500} \\ 
+  4 & \onslide<4->{\color{orange}0.1000} & \onslide<5->{\color{olive}0.9500} \\ 
+  5 & \onslide<6->{\color{brown}0.9000} & \onslide<7->{\color{gray}0.0500} \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -633,10 +654,10 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 \begin{aligned}
 \onslide<2->{\Prcond{Z_2=0}{X_2=0} & = 1 - \psi_0 & = \color{blue}{0.9}} \\
 \onslide<3->{\Prcond{Z_2=1}{X_2=0} & = \psi_1 &= \color{red}{0.05}} \\\\
-\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{red}{0.1}} \\
-\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{blue}{0.95}} \\ \\
-\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{blue}{0.9}} \\
-\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{red}{0.05}}
+\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{orange}{0.1}} \\
+\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{olive}{0.95}} \\ \\
+\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{brown}{0.9}} \\
+\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{gray}{0.05}}
 \end{aligned}
 \]
 
@@ -1127,7 +1148,7 @@ You may be wondering why, well:
 
 }
 
-\caption{Gelman diagnostic for convergence}\label{fig:amcmc-gelmanplot}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}\label{fig:amcmc-gelmanplot}
 \end{figure}
 
 \normalsize
@@ -1328,7 +1349,7 @@ parameter estimates
 
 \end{frame}
 
-\begin{frame}[fragile,t]{How good is our prediction (cont.)}
+\begin{frame}[fragile,t]{How good is our prediction (cont. 1)}
 
 \footnotesize
 
@@ -1351,6 +1372,67 @@ parameter estimates
 
 \end{frame}
 
+\begin{frame}[t]{A simulation study}
+
+\framesubtitle{Setup}
+
+\begin{itemize}
+\item
+  Simulation study using \textasciitilde{}13,000 families from the
+  panther database
+\item
+  For each one of the trees, we draw a set of the parameters
+  \(\{\psi_0,\psi_1, ,\mu_0, \mu_1,\pi\}\), and simulated annotations
+  using our model's Data Generating Process, in particular, a Bate
+  distribution with parameters 1/20.
+\item
+  Once we had a fully annotated tree, we randomly removed annotations,
+  with ``0'' annotations (no function) having a higher chance of been
+  removed.
+\item
+  With that data, we did parameter estimation and computed prediction
+  scores using an MLE, MCMC with the right prior (using the same DGP),
+  and a wrong prior (same Beta distribution, but with parameters 1/10
+  (twice the mean as the DGP).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[t]{A simulation study}
+
+\framesubtitle{Bias}
+
+\begin{figure}
+\centering
+\includegraphics[width=.68\linewidth]{bias_trees_of_size_[57,138).pdf}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[t]{A simulation study}
+
+\framesubtitle{Convergence}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[t]{A simulation study}
+
+\framesubtitle{Prediction scores}
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
+\caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting form the DGP).}
+\end{figure}
+
+\end{frame}
+
 \section{Concluding Remarks}\label{concluding-remarks}
 
 \begin{frame}{Concluding Remarks}
@@ -1368,9 +1450,19 @@ parameter estimates
   significant number of useful datasets on which we can test our
   method.\pause
 \item
-  For the next steps, we are evaluating ways of solving the sparseness
-  issue: either by imposing correlation structures accross functions, or
-  jumping into another model.\pause
+  For the next steps, we are evaluating whether to include or how to
+  include:\pause
+
+  \begin{itemize}
+  \item
+    Type of node: speciation, duplication, horizontal transfer.
+  \item
+    Branch lengths
+  \item
+    Correlation structure between functions
+  \item
+    Using Taxon Constraints to improve predictions
+  \end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -1485,7 +1577,7 @@ parameter estimates
 
 \begin{frame}[t,label=likelihood]{Likelihood of the tree}
 
-\framesubtitle{\hyperlink{peelingalgorithm<2>}{\beamerbutton{go back}}}
+\framesubtitle{\hyperlink{peelingalgorithm}{\beamerbutton{go back}}}
 
 \begin{itemize}
 \item
