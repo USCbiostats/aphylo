@@ -581,12 +581,13 @@ z[] <- ids[z[]+1]
 z_pruned   <- `attributes<-`(x_pruned, list(dim=dim(x_pruned)))
 z_pruned[] <- ids_pruned[z_pruned[]+1]
 
-cols <- apply(z, 1, function(w) any(w[1] == z_pruned[,1] & w[2] == z_pruned[,2]))
-cols <- c("tomato", "steelblue")[cols + 1L]
+cols  <- apply(z, 1, function(w) any(w[1] == z_pruned[,1] & w[2] == z_pruned[,2]))
+ltype <- c(2, 1)[cols + 1L] 
+cols  <- c("tomato", "steelblue")[cols + 1L]
 
 oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1,2), cex=.9, xpd=NA, mar=c(1,0,2,0))
-plot(x, main="Full tree\n x", edge.color = cols, edge.width=2)
+plot(x, main="Full tree\n x", edge.color = cols, edge.width=2, edge.lty=ltype)
 plot(x_pruned, main="Pruned tree\n prune(x, c(3, 19))", edge.color = "steelblue", edge.width=2)
 par(oldpar)
 
@@ -729,15 +730,61 @@ ans <- aphylo_mcmc(
 ans
 ```
 
+## Predictions of the model {.t}
+
+*   Posterior probability\pause
+    
+    $$
+    \Pr{\ann_{n} = 1} = %
+    \pi \Prcond{\ann_{n} = 1}{\ann_{0p} = 1} + 
+    (1 - \pi) \Prcond{\ann_{n} = 1}{\ann_{0} = 0}
+    $$
+    
+    \pause
+    
+    $$
+    \left[\begin{array}{cc}
+    1 - \hat\mu_0 &  \hat\mu_0 \\
+    \hat\mu_1 &  1 - \hat\mu_1
+    \end{array}
+    \right]^{\geodesic_{0n}}
+    \approx 
+    \left[\begin{array}{cc}
+    \Prcond{\ann_n = 0}{\ann_0 = 0} & \Prcond{\ann_n = 1}{\ann_0 = 0} \\
+    \Prcond{\ann_n = 0}{\ann_0 = 1} & \Prcond{\ann_n = 1}{\ann_0 = 1}
+    \end{array}
+    \right]
+    $$
+
+    \pause
+    
+    ```{r print-pred-score, echo=TRUE}
+    head(predict(ans, what="leafs"))
+    ```
+
 ## How good is our prediction {.t}
 
-```{r print-pred-score, echo=TRUE}
-# Looking at the posterior probabilities
-head(predict(ans, what="leafs"))
+*   Quality of the prediction\pause
+    
+    $$
+    \label{eq:delta1}
+    \delta\left(\AnnObs_H, \AnnPred_H\right) = 
+    \sum_{h, u \in H}\left[(\annObs_{h} - \annPred_{h})^2(\annObs_{u} - \annPred_{u})^2\right]^{1/2}w_{hu}
+    $$
+    
+    \pause
+    
+    Which, assuming $\annPred\sim \mbox{Bernoulli}(\alpha)$, has expected value
+    
+    $$
+    \Expected{\delta} = 
+    \sum_{h, u \in H}w_{hu}\sum_{\annPred_h, \annPred_u \in \{0,1\}}\Pr{\annPred_h}\Pr{\annPred_u}\left[
+    (\annObs_{h} - \annPred_{h})^2(\annObs_{u} - \annPred_{u})^2\right]^{1/2}
+    $$
 
-# And to the prediction score
-prediction_score(ans)
-```
+    ```{r pred-score, echo=TRUE}
+    prediction_score(ans)
+    ```
 
 ## How good is our prediction (cont. 1) {.t}
 

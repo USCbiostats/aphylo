@@ -109,7 +109,7 @@
 \newcommand{\f}[1]{{f\left(#1\right) }}
 \newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
 \newcommand{\fcond}[2]{{f\left(#1|#2\right) }}
-\newcommand{\Expected}[1]{{\mathbb{E}\left\{#1\right\}}}
+\newcommand{\Expected}[1]{{\mbox{E}\left(#1\right)}}
 \newcommand{\likelihood}[2]{\mbox{L}\left(#1\vphantom{#2}\right|\left.\vphantom{#1}#2\right)}
 
 % Mathematical Annotation -------------------------------
@@ -1244,13 +1244,40 @@ parameter estimates
 
 \end{frame}
 
-\begin{frame}[fragile,t]{How good is our prediction}
+\begin{frame}[fragile,t]{Predictions of the model}
 
-\footnotesize
+\begin{itemize}
+\item
+  Posterior probability\pause
+
+  \[
+  \Pr{\ann_{n} = 1} = %
+  \pi \Prcond{\ann_{n} = 1}{\ann_{0p} = 1} + 
+  (1 - \pi) \Prcond{\ann_{n} = 1}{\ann_{0} = 0}
+  \]
+
+  \pause
+
+  \[
+  \left[\begin{array}{cc}
+  1 - \hat\mu_0 &  \hat\mu_0 \\
+  \hat\mu_1 &  1 - \hat\mu_1
+  \end{array}
+  \right]^{\geodesic_{0n}}
+  \approx 
+  \left[\begin{array}{cc}
+  \Prcond{\ann_n = 0}{\ann_0 = 0} & \Prcond{\ann_n = 1}{\ann_0 = 0} \\
+  \Prcond{\ann_n = 0}{\ann_0 = 1} & \Prcond{\ann_n = 1}{\ann_0 = 1}
+  \end{array}
+  \right]
+  \]
+
+  \pause
+
+  \footnotesize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Looking at the posterior probabilities}
 \KeywordTok{head}\NormalTok{(}\KeywordTok{predict}\NormalTok{(ans, }\DataTypeTok{what=}\StringTok{"leafs"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1265,24 +1292,54 @@ parameter estimates
 ## AN65:PYRAE|EnsemblGenome=PAE3495|UniProtKB=Q8ZT04           0.10611
 \end{verbatim}
 
+  \normalsize
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile,t]{How good is our prediction}
+
+\begin{itemize}
+\item
+  Quality of the prediction\pause
+
+  \[
+  \label{eq:delta1}
+  \delta\left(\AnnObs_H, \AnnPred_H\right) = 
+  \sum_{h, u \in H}\left[(\annObs_{h} - \annPred_{h})^2(\annObs_{u} - \annPred_{u})^2\right]^{1/2}w_{hu}
+  \]
+
+  \pause
+
+  Which, assuming \(\annPred\sim \mbox{Bernoulli}(\alpha)\), has
+  expected value
+
+  \[
+  \Expected{\delta} = 
+  \sum_{h, u \in H}w_{hu}\sum_{\annPred_h, \annPred_u \in \{0,1\}}\Pr{\annPred_h}\Pr{\annPred_u}\left[
+  (\annObs_{h} - \annPred_{h})^2(\annObs_{u} - \annPred_{u})^2\right]^{1/2}
+  \]
+
+  \footnotesize
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# And to the prediction score}
 \KeywordTok{prediction_score}\NormalTok{(ans)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-## Observed : 0.06 (146.89)
-## Random   : 0.25 (591.44)
-## Best     : 0.00 (0.00)
-## Worse    : 1.00 (2365.77)
+## Observed : 0.06 
+## Random   : 0.25 
+## Best     : 0.00 
+## Worse    : 1.00 
 ## ---------------------------------------------------------------------------
-## Values between 0 and 1, 0 being best. Absolute scores in parenthesis.
+## Values standarized to range between 0 and 1, 0 being best.
 \end{verbatim}
 
-\normalsize
+  \normalsize
+\end{itemize}
 
 \end{frame}
 

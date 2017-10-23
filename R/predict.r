@@ -136,12 +136,12 @@ predict_random <- function(P, A, G_inv) {
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
   with(x, cat(
-    sprintf("Observed : %-.2f (%.2f)", obs/worse, obs),
-    sprintf("Random   : %-.2f (%.2f)", random/worse, random),
-    sprintf("Best     : 0.00 (0.00)"),
-    sprintf("Worse    : 1.00 (%.2f)", worse),
+    sprintf("Observed : %-.2f ", obs/worse),
+    sprintf("Random   : %-.2f ", random/worse),
+    sprintf("Best     : 0.00 "),
+    sprintf("Worse    : 1.00 "),
     paste0(rep("-", getOption("width")), collapse=""),
-    "Values between 0 and 1, 0 being best. Absolute scores in parenthesis.",
+    "Values standarized to range between 0 and 1, 0 being best.",
     sep ="\n"
   ))
   invisible(x)
