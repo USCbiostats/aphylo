@@ -14,6 +14,9 @@
 \renewcommand{\Pr}[1]{{\mbox{Pr}\left(#1\right) }}
 \newcommand{\f}[1]{{f\left(#1\right) }}
 \newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
+
+\newcommand{\Like}[1]{{\mbox{L}\left(#1\right) }}
+\newcommand{\Likecond}[2]{{\mbox{L}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
 \newcommand{\fcond}[2]{{f\left(#1|#2\right) }}
 \newcommand{\Expected}[1]{{\mbox{E}\left(#1\right)}}
 \newcommand{\likelihood}[2]{\mbox{L}\left(#1\vphantom{#2}\right|\left.\vphantom{#1}#2\right)}
@@ -27,16 +30,16 @@
 \newcommand{\aphyloObs}{\tilde \aphylo{}} % The observed annotated phylogenetic tree
 
 % Annotations
-\newcommand{\Ann}{Z{}} % Matrix of "real" annotations
-\newcommand{\ann}{z{}} % single element of "real" annotations
+\newcommand{\Ann}{X{}} % Matrix of "real" annotations
+\newcommand{\ann}{x{}} % single element of "real" annotations
 
 % Obs Annotations
-\newcommand{\AnnObs}{X{}}
-\newcommand{\annObs}{x{}}
+\newcommand{\AnnObs}{{X_{obs}}{}}%{Z{}}
+\newcommand{\annObs}{{x_{obs}}{}}%{z{}}
 
 % Pred. Annotations
-\newcommand{\AnnPred}{\hat Z{}}
-\newcommand{\annPred}{\hat z{}}
+\newcommand{\AnnPred}{\hat X{}}
+\newcommand{\annPred}{\hat x{}}
 
 % Leaf nodes
 \newcommand{\Leaf}{L{}}

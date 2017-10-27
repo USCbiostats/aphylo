@@ -1,11 +1,9 @@
 ---
 title: "Project 2: Augmenting functional information about human genes using probabilistic phylogenetic modeling"
 short_title: 
-author: "George G. Vega Yon \\linebreak[4] vegayon@usc.edu"
-date: "October 5, 2017"
-institute:
-  - Department of Preventive Medicine
-  - University of Southern California
+author: "George G. Vega Yon \\linebreak[4] vegayon@usc.edu \\linebreak[4] \\footnotesize Duncan Thomas \\and Paul D. Thomas \\and Paul Marjoram \\and Huaiyu Mi \\and John Morrison \\normalsize"
+date: "October 27, 2017"
+institute: "Department of Preventive Medicine \\linebreak[4] University of Southern California"
 short_institute: USC
 short_author: Vega Yon
 output: 
@@ -17,7 +15,7 @@ output:
     keep_tex: true
 section-titles: false
 fontsize: 9pt
-handout: true
+handout: false
 page-number: true
 ---
 
@@ -51,19 +49,38 @@ library(aphylo)
 
 \tableofcontents[currentsection]
 
-## Overview  
+<!-- ## The basics   -->
 
--   A __GO annotation__ is an association between a gene and a GO (Gene Ontology) term describing its function, e.g: A gene can be annotated with the GO term `GO:0016049`, which denotes _cellular growth_.\pause
+<!-- -   A __GO annotation__ is an association between a gene and a GO (Gene Ontology) term describing its function, e.g: A gene can be annotated with the GO term `GO:0016049`, which denotes _cellular growth_.\pause -->
 
--   __Phylogenetic Tree__ represents "inferred evolutionary relationships among various biological species or other entities" (wiki), in this context, our entities are genes.\pause
+<!-- -   __Phylogenetic Tree__ represents "inferred evolutionary relationships among various biological species or other entities" (wiki), in this context, our entities are genes.\pause -->
 
--   __PANTHER Classification System__ (PantherDB), part of the Gene Ontology Consortium, consists on a database of $\sim$ 15,000 phylogenetic trees (gene families), and can be linked to the GO terms.
+<!-- -   __PANTHER Classification System__ (PantherDB), part of the Gene Ontology Consortium, consists on a database of $\sim$ 15,000 phylogenetic trees (gene families), and can be linked to the GO terms.\pause -->
+
+<!-- -   Of 115,000 annotations, less than $~$20% is on human genes! -->
+
+## Overview 
+
+-   A GO annotation is an association between a gene and a GO (Gene Ontology) term describing its function, e.g: A gene can be annotated with the GO term `GO:0016049`, which denotes _cellular growth_.\pause
+
+-   Functional knowledge (e.g. Gene Ontology (GO) terms annotations) for human genes is very incomplete.\pause
+
+-   Increase in association detection power using prior biological knowledge depends strongly on annotation completeness.\pause
+
+-   Phylogenetic inference of annotations (i.e. using evolutionary trees) allows vast experimental knowledge in model systems (e.g. mouse, fruit fly, yeast) to augment human gene annotations.
+
 
 ## Overview (cont.)
 
--   Manual Curation of GO terms is good but infeasible: \pause Out of all the genes present in PantherDB, only ~9% has been annotated (17 years of work)\pause
+-   Manual curation of GO terms is good but infeasible, e.g.: \pause 1 to 2 people annotating ~4,000 families took roughly 4 years (6 years of FTE).\pause
 
--   Today, we present a model that uses both: (1) existing gene functional annotations, and (2) phylogenetic trees to infer annotations on un-annotated genes in a _probabilistic way_ (so it is not a 0/1 prediction).\pause
+-   Today, we present a model that uses both: \pause
+    
+    *   Existing gene functional annotations, and 
+    
+    *   Phylogenetic trees
+    
+    to infer annotations on un-annotated genes in a _probabilistic way_ (so it is not a 0/1 prediction). \pause
 
 -   This predicted functional information will serve as prior covariates in Projects 1 and 3. 
 
@@ -96,6 +113,7 @@ $\aphyloObs$ | Observed Annotated Tree |
 $\phylo$ | Partially ordered phylogenetic tree (PO tree) |
 $O(n)$ | Offspring of node $n$ |
 $\aphyloObs_n$ | $n$-induced Annotated Sub-tree |
+$\Ann$ | True Annotation |
 $\AnnObs$ | Experimental annotation |
 
 Where 
@@ -103,15 +121,15 @@ Where
 $$
 \annObs_{lp} = \left\{
 \begin{array}{ll}
-1 & \mbox{if the function }p\mbox{ is believed to be present}\\
-0 & \mbox{if the function }p\mbox{ is believed to be absent}\\
+1 & \mbox{if the function }\mbox{ is believed to be present}\\
+0 & \mbox{if the function }\mbox{ is believed to be absent}\\
 9 & \mbox{if we don't have information for this node }
 \end{array}\right.
 $$
 
 \normalsize
 
-\hyperlink{formaldef}{\beamerbutton{Formal definitions}}
+\hyperlink{formaldef}{\beamerbutton{more details}}
 
 \endcol
 
@@ -132,7 +150,7 @@ $$
 
     All five parameters are assumed to be equal across functions, this is, $\pi, \mu_0, \mu_1, \psi_0$, and $\psi_1$ are assumed to be independent of the functions that are analyzed.\pause
     
-3.  In this presentation, we will focus on the case that $P = 1$.
+3.  In this presentation, we will focus on the case that we are dealing with a single function.
 
 
 # Peeling algorithm
@@ -142,37 +160,35 @@ $$
 \tableofcontents[currentsection]s
 
 
-## Peeling phylogenies {.t label=peelingalgorithm}
+## Peeling (pruning) phylogenies (Felsenstein, 1973, 1981) {.t label=peelingalgorithm}
 
-Given an Experimentally Annotated (PO) Phylogenetic Tree, the likelihood computation on a single function is as follows. \pause
+Given an experimentally annotated phylogenetic tree, the likelihood computation on a single function is as follows. \pause
 
-\def\probmat{\mbox{Pr}{}}
+\def\probmat{\mbox{P}{}}
 
-1.  Create an matrix $\probmat$ of size $2 \times |N|$, \pause
+1.  Create an matrix $\probmat$ of size $|N|\times 2$, \pause
 
-2.  For node $n \in \{|N|, |N| - 1, \dots, 1, 0\}$ (the peeling sequence) do: \pause
+2.  For node $n \in \{\mbox{peeling sequence}\}$ (from leafs to root) do: \pause
     
     a.  For $\ann_n\in \{0,1\}$ do: 
         
-        a.  Set \color{teal} $\probmat_{n, \ann_n} = \left\{\begin{array}{ll}
+        Set \color{teal} $\probmat_{n, \ann_n} = \left\{\begin{array}{ll}
         \Prcond{\Ann_n = \ann_n}{\AnnObs_n = \AnnObs_n} & \mbox{If }$n$\mbox{ is a leaf} \\
-        \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise}
+        \Likecond{\Ann_n = \ann_n}{\aphyloObs_n} & \mbox{otherwise}
         \end{array} 
         \right.$ \color{black}
-        
-        b.  Next $\ann_n$
     
     b.  Next $n$ \pause
     
-3.  At this point the matrix $\probmat$ should be completely filled, so following \eqref{eq:l}, we can compute
+3.  At this point the matrix $\probmat$ should be completely filled, we can compute
     
     $$
-    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\probmat_{0,\ann_0}
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \pi\Likecond{\Ann_0=1}{\aphyloObs_0} + (1 - \pi)\Likecond{\Ann_0=0}{\aphyloObs_0}
     $$
     
     \pause
 
-Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
+Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{more details}}
 
 ## Peeling algorithm {.t}
 
@@ -189,21 +205,21 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{details}}
 *   Let's calculate the likelihood of observing this tree with the following parameters:
 
 ```{r example-parameters}
-psi0 <- .1
-psi1 <- .05
+psi0 <- .05
+psi1 <- .01
 mu0  <- .04
 mu1  <- .01
-Pi   <- .5
+Pi   <- .05
 ```
 
 
 $$
 \begin{aligned}
-\psi_0 &= `r psi0` \\
-\psi_1 &= `r psi1` \\
-\mu_0  &= `r mu0`  \\
-\mu_1  &= `r mu1`  \\
-\pi    &= `r Pi`  \\
+\mbox{Mislabeling a 0} &: \psi_0 &= `r psi0` \\
+\mbox{Mislabeling a 1} &:\psi_1 &= `r psi1` \\
+\mbox{Functional gain} &:\mu_0  &= `r mu0`  \\
+\mbox{Functional loss} &:\mu_1  &= `r mu1`  \\
+\mbox{Root node has the function} &: \pi    &= `r Pi`  \\
 \end{aligned}
 $$
 
@@ -325,12 +341,12 @@ print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 
 $$
 \begin{aligned}
-\onslide<2->{\Prcond{Z_2=0}{X_2=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
-\onslide<3->{\Prcond{Z_2=1}{X_2=0} & = \psi_1 &= \color{red}{`r psi1`}} \\\\
-\onslide<4->{\Prcond{Z_4=0}{X_4=1} & = \psi_0 & = \color{orange}{`r psi0`}} \\
-\onslide<5->{\Prcond{Z_4=1}{X_4=1} & = 1 - \psi_1 &= \color{olive}{`r 1-psi1`}} \\ \\
-\onslide<6->{\Prcond{Z_5=0}{X_5=0} & = 1 - \psi_0 & = \color{brown}{`r 1-psi0`}} \\
-\onslide<7->{\Prcond{Z_5=1}{X_5=0} & = \psi_1 &= \color{gray}{`r psi1`}}
+\onslide<2->{\Prcond{\AnnObs_2=0}{\Ann_2=0} & = 1 - \psi_0 & = \color{blue}{`r 1-psi0`}} \\
+\onslide<3->{\Prcond{\AnnObs_2=0}{\Ann_2=1} & = \psi_1 &= \color{red}{`r psi1`}} \\\\
+\onslide<4->{\Prcond{\AnnObs_4=1}{\Ann_4=0} & = \psi_0 & = \color{orange}{`r psi0`}} \\
+\onslide<5->{\Prcond{\AnnObs_4=1}{\Ann_4=1} & = 1 - \psi_1 &= \color{olive}{`r 1-psi1`}} \\ \\
+\onslide<6->{\Prcond{\AnnObs_5=0}{\Ann_5=0} & = 1 - \psi_0 & = \color{brown}{`r 1-psi0`}} \\
+\onslide<7->{\Prcond{\AnnObs_5=0}{\Ann_5=1} & = \psi_1 &= \color{gray}{`r psi1`}}
 \end{aligned}
 $$
 
@@ -353,20 +369,20 @@ $$
 
 \begincols
 
-\begincol{.28\textwidth}
+\begincol{.18\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.6}}
-  \only<2-5>{\includetikz{simple_tree_node1.tex}{.6}}
+  \only<1>{\includetikz{simple_tree.tex}{.4}}
+  \only<2-5>{\includetikz{simple_tree_node1.tex}{.4}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.6}
+  \includetikz{simple_tree.tex}{.4}
 }
 
 \endcol
 
-\begincol{.68\textwidth}
+\begincol{.78\textwidth}
 
 ```{r prob-mat-3, results='asis'}
 # Printing the colored version of the matrix
@@ -382,17 +398,15 @@ Pr[2, 2] <- paste0("\\onslide<5->{\\color{purple}{", Pr[2, 2],"}}")
 print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 ```
 
-\footnotesize
+\tiny
 
 
 $$
 \begin{aligned}
-\onslide<2->{\Prcond{\Ann_1=0}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}(1 - \mu_0) +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}\mu_0} \\
+\onslide<2->{\Likecond{\Ann_1=0}{\aphyloObs_1} & = {\color{blue} \Prcond{\AnnObs_2 = 0}{\Ann_2=0}}(1 - \mu_0) + {\color{red}\Prcond{\AnnObs_2 = 0}{\Ann_2=1}}\mu_0} \\
 \onslide<3->{& = {\color{blue} `r Pr[3, 1]`}\times `r 1-mu0` + {\color{red} `r Pr[3, 2]`}\times `r mu0` = \color{violet}{`r LL$Pr[3, 1]* (1-mu0) +  LL$Pr[3, 2]*mu0`}}\\\\
 %
-\onslide<4->{\Prcond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\mu_1 +\\
-  &\qquad \Prcond{\Ann_2 = 1}{\AnnObs_2=0}(1-\mu_1)} \\
+\onslide<4->{\Likecond{\Ann_1=1}{\aphyloObs_1} & = \Prcond{\Ann_2 = 0}{\AnnObs_2=0}\mu_1 + \Prcond{\Ann_2 = 1}{\AnnObs_2=0}(1-\mu_1)} \\
 \onslide<5->{& = `r Pr[3, 1]`\times `r mu1` + `r Pr[3, 2]`\times `r 1-mu1` = \color{purple}{`r LL$Pr[3, 1]* mu1 +  LL$Pr[3, 2]*(1-mu1)`}}
 \end{aligned}
 $$
@@ -418,22 +432,22 @@ $$
 
 \begincols
 
-\begincol{.28\textwidth}
+\begincol{.18\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.6}}
-  \only<2-6>{\includetikz{simple_tree_node3.tex}{.6}}
-  \only<7>{\includetikz{simple_tree_node0.tex}{.6}}
-  \only<8->{\includetikz{simple_tree_likelihood.tex}{.6}}
+  \only<1>{\includetikz{simple_tree.tex}{.4}}
+  \only<2-6>{\includetikz{simple_tree_node3.tex}{.4}}
+  \only<7>{\includetikz{simple_tree_node0.tex}{.4}}
+  \only<8->{\includetikz{simple_tree_likelihood.tex}{.4}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.6}
+  \includetikz{simple_tree.tex}{.4}
 }
 
 \endcol
 
-\begincol{.68\textwidth}
+\begincol{.78\textwidth}
 
 ```{r prob-mat-4, results='asis'}
 # Printing the colored version of the matrix
@@ -458,8 +472,8 @@ print(xtable::xtable(Pr), sanitize.text.function=function(x) x, comment=FALSE)
 
 $$
 \begin{aligned}
-\onslide<2->{\Prcond{\Ann_3 = 0}{\aphyloObs_3} & = %
-  \prod_{m \in \{4,5\}} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \Prcond{\Ann_{m} = \ann_{m}}{\Ann_3 = 0}} \\
+\onslide<2->{\Likecond{\Ann_3 = 0}{\aphyloObs_3} & = %
+  \prod_{m \in \{4,5\}} \sum_{\ann_m \in \{0,1\}} \Likecond{\Ann_m = \ann_m}{\aphyloObs_m} \Prcond{\Ann_{m} = \ann_{m}}{\Ann_3 = 0}} \\
 \onslide<3->{& = \left(%
     {\color{orange} `r LL$Pr[5,1]`} (1 - \mu_0) + {\color{olive} `r LL$Pr[5,2]` }\times \mu_0
   \right)\times\left(%
@@ -472,7 +486,7 @@ $$
   \right) \\}
 \onslide<5->{& = \color{red}{`r (LL$Pr[5,1]*(1 - mu0) + LL$Pr[5,2]*mu0) * (LL$Pr[6,1]*(1 - mu0) + LL$Pr[6,2]*mu0)`} \\} 
 \onslide<8->{ & \mbox{Finally, the likelihood of this tree is:} \\
-\likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi)\Prcond{\Ann_0=0}{\aphyloObs_0} + \pi\Prcond{\Ann_0=1}{\aphyloObs_0}} \\
+\likelihood{\psi, \mu, \Pi}{\aphyloObs} & = (1-\pi){\color{cyan}\Likecond{\Ann_0=0}{\aphyloObs_0}} + \pi{\color{blue}\Likecond{\Ann_0=1}{\aphyloObs_0}}} \\
 \onslide<9->{& = (1 - `r Pi`)\times {\color{cyan} `r LL$Pr[1,1]` } + `r Pi`\times {\color{blue} `r LL$Pr[1,2]` } = \mbox{\normalsize `r exp(LL$ll)`}}
 \end{aligned}
 $$
@@ -486,112 +500,6 @@ $$
 
 \endcols
 
-
-# The `aphylo` R package
-
-## Agenda {.t}
-
-\tableofcontents[currentsection]
-
-## `aphylo` in a nutshell
-
-*   Provides a representation of _annotated_ partially ordered trees. \pause
-
-*   Interacts with the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
-    
-*   Implements the loglikelihood calculation of our model (with C++ under-the-hood).
-
-
-## Examples: Simulating Trees {.t}
-
-\begincols
-
-\begincol{.48\textwidth}
-
-```{r example_sim_tree, echo=TRUE}
-set.seed(80)
-tree <- sim_tree(5)
-tree
-```
-
-\endcol
-
-\begincol{.48\textwidth}
-
-```{r example_sim_ann_tree, echo=TRUE}
-atree <- sim_annotated_tree(
-  tree = tree, P = 2,
-  psi  = c(.05, .05),
-  mu   = c(.2, .1),
-  Pi   = .01
-  )
-
-atree
-```
-
-\endcol
-
-\endcols
-
-
-## Examples: Visualizing annotated data {.c}
-
-\begincols
-
-\begincol{.49\textwidth}
-
-```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
-plot(atree)
-```
-
-\endcol
-
-\begincol{.49\textwidth}
-
-```{r likelihood-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="LogLikelihood surface of the simulated data"}
-plot_LogLike(atree)
-```
-
-\endcol
-
-\endcols
-
-## Example: Tree pruning {.t}
-
-*   The peeling algorithm requires visiting all nodes in a tree.\pause
-    
-*   The fact is, we don't need to go through branches with no annotations, as these are uninformative. \pause So we can prune them, e.g.:\pause
-
-```{r tree-pruning1}
-set.seed(1)
-x <- sim_tree(25)
-```
-
-
-```{r tree-pruning2, fig.cap=paste("Pruning trees. In the original none of the leaf nodes under 3 and 9 have annotations. After pruning those branches, we go from having", length(attr(x, "labels"))," nodes, to have", length(attr(prune(x,c(3,9)), "labels"))), out.width=".55\\linewidth"}
-# What am I pruning
-x_pruned <- prune(x, c(3, 19))
-
-ids        <- attr(x, "labels")
-ids_pruned <- attr(x_pruned, "labels")
-
-z   <- `attributes<-`(x, list(dim=dim(x)))
-z[] <- ids[z[]+1]
-
-z_pruned   <- `attributes<-`(x_pruned, list(dim=dim(x_pruned)))
-z_pruned[] <- ids_pruned[z_pruned[]+1]
-
-cols  <- apply(z, 1, function(w) any(w[1] == z_pruned[,1] & w[2] == z_pruned[,2]))
-ltype <- c(2, 1)[cols + 1L] 
-cols  <- c("tomato", "steelblue")[cols + 1L]
-
-oldpar <- par(no.readonly=TRUE)
-par(mfrow=c(1,2), cex=.9, xpd=NA, mar=c(1,0,2,0))
-plot(x, main="Full tree\n x", edge.color = cols, edge.width=2, edge.lty=ltype)
-plot(x_pruned, main="Pruned tree\n prune(x, c(3, 19))", edge.color = "steelblue", edge.width=2)
-par(oldpar)
-
-```
 
 # The `amcmc` R package
 
@@ -627,7 +535,7 @@ D <- rnorm(n, pars[1], pars[2])
 ```{r amcm-example, echo=TRUE, cache=TRUE}
 # Loading the packages
 library(amcmc)
-library(coda)
+library(coda) # coda: Output Analysis and Diagnostics for MCMC
 
 # Defining the ll function (data was already defined)
 ll <- function(x, D) {
@@ -639,7 +547,7 @@ ans <- MCMC(
   # Ll function and the starting parameters
   ll, c(mu=1, sigma=1),
   # How many steps, thinning, and burn-in
-  nbatch = 1e5, thin=10, burnin = 1e4,
+  nbatch = 1e4, thin=10, burnin = 1e3,
   # Kernel parameters
   scale = .1, ub = 10, lb = c(-10, 0),
   # How many parallel chains
@@ -665,20 +573,121 @@ coda::gelman.plot(ans)
 
 ```{r amcmc-plot, fig.cap='Posterior distribution', cache=TRUE}
 oldpar <- par(no.readonly = TRUE)
-# par(mar = c(2.2,2.2,2,2), las=1, xpd=NA)
 plot(ans)
 par(oldpar)
 ```
 
-# Bayesian Estimation of the parameters
+
+
+
+# The `aphylo` R package
 
 ## Agenda {.t}
 
 \tableofcontents[currentsection]
 
-## Putting all together 
+## `aphylo` in a nutshell
 
-Let's start by reading some data 
+*   Provides a representation of _annotated_ partially ordered trees. \pause
+
+*   Interacts with the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
+    
+*   Implements the loglikelihood calculation of our model (with C++ under-the-hood).
+
+
+## `aphylo`: Simulating Trees {.t}
+
+\begincols
+
+\begincol{.48\textwidth}
+
+```{r example_sim_tree, echo=TRUE}
+set.seed(80)
+tree <- sim_tree(5)
+tree
+```
+
+\endcol
+
+\begincol{.48\textwidth}
+
+```{r example_sim_ann_tree, echo=TRUE}
+atree <- sim_annotated_tree(
+  tree = tree, P = 2,
+  psi  = c(.05, .05),
+  mu   = c(.2, .1),
+  Pi   = .01
+  )
+
+atree
+```
+
+\endcol
+
+\endcols
+
+
+## `aphylo`: Visualizing annotated data {.c}
+
+\begincols
+
+\begincol{.49\textwidth}
+
+```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
+plot(atree)
+```
+
+\endcol
+
+\begincol{.49\textwidth}
+
+```{r likelihood-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="LogLikelihood surface of the simulated data"}
+plot_LogLike(atree)
+```
+
+\endcol
+
+\endcols
+
+## `aphylo`: Tree peeling {.t}
+
+*   The peeling algorithm requires visiting all nodes in a tree.\pause
+    
+*   The fact is, we don't need to go through branches with no annotations, as these are uninformative. \pause So we can prune them, e.g.:\pause
+
+```{r tree-peeling1}
+set.seed(1)
+x <- sim_tree(25)
+```
+
+
+```{r tree-peeling2, fig.cap=paste("Peeling trees. In the original none of the leaf nodes under 3 and 9 have annotations. After peeling those branches, we go from having", length(attr(x, "labels"))," nodes, to have", length(attr(prune(x,c(3,9)), "labels"))), out.width=".55\\linewidth"}
+# What am I peeling
+x_pruned <- prune(x, c(3, 19))
+
+ids        <- attr(x, "labels")
+ids_pruned <- attr(x_pruned, "labels")
+
+z   <- `attributes<-`(x, list(dim=dim(x)))
+z[] <- ids[z[]+1]
+
+z_pruned   <- `attributes<-`(x_pruned, list(dim=dim(x_pruned)))
+z_pruned[] <- ids_pruned[z_pruned[]+1]
+
+cols  <- apply(z, 1, function(w) any(w[1] == z_pruned[,1] & w[2] == z_pruned[,2]))
+ltype <- c(2, 1)[cols + 1L] 
+cols  <- c("tomato", "steelblue")[cols + 1L]
+
+oldpar <- par(no.readonly=TRUE)
+par(mfrow=c(1,2), cex=.9, xpd=NA, mar=c(1,0,2,0))
+plot(x, main="Full tree\n x", edge.color = cols, edge.width=2, edge.lty=ltype)
+plot(x_pruned, main="Pruned tree\n prune(x, c(3, 19))", edge.color = "steelblue", edge.width=2)
+par(oldpar)
+
+```
+
+
+## `aphylo`: Reading PantherDB data
 
 ```{r read-panther, echo=TRUE}
 # Reading the data
@@ -689,19 +698,14 @@ dat <- read_panther(path)
 dat$tree
 ```
 
-## Putting all together (cont.)
+## `aphylo`: Reading PantherDB data (cont.)
 
 ```{r printing-panther, echo=TRUE}
 # Extra annotations
 head(dat$internal_nodes_annotations)
 ```
 
-
-## Putting all together: MCMC of the model {.t}
-
-In this example, using data from PANTHERDB, we will simulate a single function and use the `aphylo_mcmc` function for obtaining parameter estimates
-
-```{r sim-w-panther, echo=TRUE, cache=TRUE}
+```{r sim-w-panther, echo=FALSE, cache=TRUE}
 tree <- dat$tree
 
 # Simulating a function
@@ -723,46 +727,52 @@ ans <- aphylo_mcmc(
 ```
 
 
+## `aphylo`: Predictions of the model {.t}
 
-## Putting all together: MCMC of the model (cont. 1) {.t}
-
-```{r panther-output, echo=TRUE}
-ans
-```
-
-## Predictions of the model {.t}
-
-*   Posterior probability\pause
+*   Posterior probability:
+    
+    \begin{equation}
+    \label{eq:impute2}
+    \Prcond{\ann_{n} = 1}{\aphyloObs} = 
+    \frac{\Prcond{\aphyloObs}{\ann_{n} = 1}}{
+    \Prcond{\aphyloObs}{\ann_{n} = 1} + \Prcond{\aphyloObs}{\ann_{n} = 0} \frac{\left(1 - \Pr{\ann_{n} = 1}\right)}{\Pr{\ann_{n} = 1}}
+    }
+    \end{equation} \pause
+    
+    Where
     
     $$
     \Pr{\ann_{n} = 1} = %
-    \pi \Prcond{\ann_{n} = 1}{\ann_{0p} = 1} + 
+    \pi \Prcond{\ann_{n} = 1}{\ann_{0} = 1} + 
     (1 - \pi) \Prcond{\ann_{n} = 1}{\ann_{0} = 0}
     $$
     
-    \pause
+    \pause And 
     
     $$
-    \left[\begin{array}{cc}
-    1 - \hat\mu_0 &  \hat\mu_0 \\
-    \hat\mu_1 &  1 - \hat\mu_1
-    \end{array}
-    \right]^{\geodesic_{0n}}
-    \approx 
     \left[\begin{array}{cc}
     \Prcond{\ann_n = 0}{\ann_0 = 0} & \Prcond{\ann_n = 1}{\ann_0 = 0} \\
     \Prcond{\ann_n = 0}{\ann_0 = 1} & \Prcond{\ann_n = 1}{\ann_0 = 1}
     \end{array}
-    \right]
+    \right] \approx
+    \left[\begin{array}{cc}
+    1 - \hat\mu_0 &  \hat\mu_0 \\
+    \hat\mu_1 &  1 - \hat\mu_1
+    \end{array}
+    \right]^{dist_{0n}}
     $$
 
-    \pause
+## `aphylo`: Predictions of the model (cont.) {.t}
     
-    ```{r print-pred-score, echo=TRUE}
-    head(predict(ans, what="leafs"))
-    ```
+```{r print-pred-score2, echo=FALSE, results='asis'}
+pred <- predict(ans, what="leafs")
+set.seed(8);pred <- head(pred[order(runif(nrow(pred))),,drop=FALSE])
+pred <- data.frame(Gene = rownames(pred), `Posterior Prob` = unname(pred), check.names = FALSE)
+print(xtable::xtable(pred, caption="Predicted probabilities for a subset of leafs of a phylogenetic tree using the {\\tt predict()} function after estimating the model parameters. The function analized was simulated on a phylogenetic tree from PantherDB."), type="latex", comment = FALSE, include.rownames = FALSE)
+```
+    
 
-## How good is our prediction {.t}
+## `aphylo`: How good is our prediction {.t}
 
 *   Quality of the prediction\pause
     
@@ -786,11 +796,17 @@ ans
     prediction_score(ans)
     ```
 
-## How good is our prediction (cont. 1) {.t}
+## `aphylo`: How good is our prediction (cont. 1) {.t}
 
 ```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".6\\linewidth", echo=TRUE}
 plot(prediction_score(ans), main="")
 ```
+
+# Preliminary Results
+
+## Agenda {.t}
+
+\tableofcontents[currentsection]
 
 ## A simulation study {.t label=sim-setup}
 
@@ -811,8 +827,10 @@ plot(prediction_score(ans), main="")
     *   MLE
     *   MCMC with the right prior (Beta 1/20), and
     *   MCMC with the wrong prior (Beta 1/10, twice the mean as the right prior).
+    
+    Both MCMC algorithms ran for $5\times 10^5$ iterations, burn-in of $1\times 10^4$, thinning of 100, and 5 chains.
 
-\hyperlink{sim-convergence}{\beamerbutton{Convergence}}
+\hyperlink{sim-convergence}{\beamerbutton{more details}}
 
 ## A simulation study {.t}
 
@@ -838,7 +856,7 @@ plot(prediction_score(ans), main="")
 
 ## Concluding Remarks
 
--   A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 14,000 trees from the Panther DB).\pause
+-   A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 week with 10 processors only).\pause 
 
 -   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
 
@@ -858,12 +876,11 @@ plot(prediction_score(ans), main="")
 ##
 
 \begin{center}
-\Huge
+\huge
 \color{USCCardinal}{\textbf{Thank you!}}
 \end{center}
 
 \maketitle
-
 
 \appendix
 
@@ -900,7 +917,7 @@ plot(prediction_score(ans), main="")
     
     \begin{equation}
     \label{eq:leaf1}
-    \Prcond{\Ann_{l} = \ann_{l}}{\AnnObs_{l} = \annObs_{l}} = \left\{
+    \Prcond{\AnnObs_{l} = \annObs_{l}}{\Ann_{l} = \ann_{l}} = \left\{
     \begin{array}{ll}
     \psi &\mbox{if }\annObs_{l} \neq \ann_{l} \\
     1 - \psi & \mbox{otherwise}
@@ -918,7 +935,7 @@ plot(prediction_score(ans), main="")
 -   In the case of the internal nodes, the probability of a given state is defined in terms of the gain/loss probabilities
     
     $$
-    \Prcond{\Ann_{n} = \ann_{lp}}{\Ann_{r(n)} = \ann_{r(n)}} = \left\{
+    \Prcond{\Ann_{n} = \ann_{l}}{\Ann_{r(n)} = \ann_{r(n)}} = \left\{
     \begin{array}{ll}
     \mu & \mbox{if }\ann_{n} \neq \ann_{r(n)} \\
     1 - \mu & \mbox{otherwise}
@@ -933,12 +950,12 @@ plot(prediction_score(ans), main="")
     
     \begin{multline}
     \label{eq:interior1}
-    \Prcond{\Ann_n = \ann_n}{\aphyloObs_n} = %
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m} \\
+    \Likecond{\Ann_n = \ann_n}{\aphyloObs_n} = %
+    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Likecond{\Ann_m = \ann_m}{\aphyloObs_m} \\
     \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}}
     \end{multline}
     
-    Notice that if $m$ is a leaf node, then $\Prcond{\Ann_m = \ann_m}{\aphyloObs_m} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}$.
+    Notice that if $m$ is a leaf node, then $\Likecond{\Ann_m = \ann_m}{\aphyloObs_m} = \Prcond{\Ann_m = \ann_m}{\AnnObs_m = \annObs_m}$.
 
 ## Likelihood of the tree {.t label=likelihood}
 
@@ -946,26 +963,25 @@ plot(prediction_score(ans), main="")
 
 -   Once the computation reaches the root node, $n=0$, equations \eqref{eq:leaf1} and \eqref{eq:interior1}: 
     
-    \tiny
-    
-    \begin{align*}
-    \Prcond{\Ann_l = \ann_l}{\aphyloObs_l} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\
-    \Prcond{\Ann_n = \ann_n}{\aphyloObs_n}  & = 
-    \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Prcond{\Ann_m = \ann_m}{\aphyloObs_m}  
-    \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}}
-    \end{align*}
-    
-    
-    \normalsize
+    <!-- \tiny -->
+
+    <!-- \begin{align*} -->
+    <!-- \Prcond{\Ann_l = \ann_l}{\aphyloObs_l} & = \Prcond{\Ann_{l} = \ann_{lp}}{\AnnObs_{l} = \annObs_{l}} \tag{\ref{eq:leaf1}}\\ -->
+    <!-- \Likecond{\Ann_n = \ann_n}{\aphyloObs_n}  & =  -->
+    <!-- \prod_{m \in O(n)} \sum_{\ann_m \in \{0,1\}} \Likecond{\Ann_m = \ann_m}{\aphyloObs_m}   -->
+    <!-- \Prcond{\Ann_{m} = \ann_{m}}{\Ann_{n} = \ann_{n}} \tag{\ref{eq:interior1}} -->
+    <!-- \end{align*} -->
+
+
+    <!-- \normalsize -->
     
     Allow us writing the likelihood of the entire tree
     
     \begin{equation}
     \label{eq:l}
-    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \sum_{\ann_0\in\{0,1\}}\Prcond{\Ann_0=\ann_0}{\pi}\Prcond{\Ann_0=\ann_0}{\aphyloObs_0}
+    \likelihood{\psi, \mu, \pi}{\aphyloObs} = \pi\Likecond{\Ann_0=1}{\aphyloObs_0} + (1 - \pi)\Likecond{\Ann_0=0}{\aphyloObs_0}
     \end{equation}
-    
-    Where $\Prcond{\Ann_0=\ann_0}{\pi} = \pi^{\ann_{0}}\left(1 - \pi\right)^{1 - \ann_{0}}$
+
 
 ## A simulation study {.t label=sim-convergence}
 
