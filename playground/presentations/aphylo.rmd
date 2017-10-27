@@ -17,6 +17,7 @@ section-titles: false
 fontsize: 9pt
 handout: false
 page-number: true
+classoption: aspectratio=169
 ---
 
 
@@ -32,7 +33,7 @@ knitr::knit_hooks$set(smallsize = function(before, options, envir) {
 options(digits = 4)
 
 knitr::opts_chunk$set(echo = FALSE, smallsize=TRUE,
-                      out.width = ".8\\linewidth",
+                      out.width = ".4\\linewidth",
                       fig.width = 7, fig.height = 5, fig.align = 'center'
                       )
 
@@ -196,7 +197,7 @@ Let's see an example! \hyperlink{leafnodesprob}{\beamerbutton{more details}}
 
 \begincol{.28\textwidth}
 
-\includetikz{simple_tree.tex}{.6}
+\includetikz{simple_tree.tex}{.5}
 
 \endcol
 
@@ -306,14 +307,14 @@ $$
 \begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.6}}
-  \only<2-3>{\includetikz{simple_tree_leaf2.tex}{.6}}
-  \only<4-5>{\includetikz{simple_tree_leaf4.tex}{.6}}
-  \only<6-7>{\includetikz{simple_tree_leaf5.tex}{.6}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-3>{\includetikz{simple_tree_leaf2.tex}{.5}}
+  \only<4-5>{\includetikz{simple_tree_leaf4.tex}{.5}}
+  \only<6-7>{\includetikz{simple_tree_leaf5.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.6}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
@@ -369,20 +370,20 @@ $$
 
 \begincols
 
-\begincol{.18\textwidth}
+\begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.4}}
-  \only<2-5>{\includetikz{simple_tree_node1.tex}{.4}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-5>{\includetikz{simple_tree_node1.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.4}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
 
-\begincol{.78\textwidth}
+\begincol{.68\textwidth}
 
 ```{r prob-mat-3, results='asis'}
 # Printing the colored version of the matrix
@@ -432,22 +433,22 @@ $$
 
 \begincols
 
-\begincol{.18\textwidth}
+\begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.4}}
-  \only<2-6>{\includetikz{simple_tree_node3.tex}{.4}}
-  \only<7>{\includetikz{simple_tree_node0.tex}{.4}}
-  \only<8->{\includetikz{simple_tree_likelihood.tex}{.4}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-6>{\includetikz{simple_tree_node3.tex}{.5}}
+  \only<7>{\includetikz{simple_tree_node0.tex}{.5}}
+  \only<8->{\includetikz{simple_tree_likelihood.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.4}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
 
-\begincol{.78\textwidth}
+\begincol{.68\textwidth}
 
 ```{r prob-mat-4, results='asis'}
 # Printing the colored version of the matrix
@@ -560,7 +561,7 @@ ans <- MCMC(
 
 ## Example: MCMC (cont. 1) {.t}
 
-```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.', cache=TRUE}
+```{r amcmc-gelmanplot, fig.cap='Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.10.', cache=TRUE, out.width=".55\\linewidth"}
 coda::gelman.plot(ans)
 ```
 
@@ -571,7 +572,7 @@ coda::gelman.plot(ans)
 
 ## Example: MCMC (cont. 2) {.t}
 
-```{r amcmc-plot, fig.cap='Posterior distribution', cache=TRUE}
+```{r amcmc-plot, fig.cap='Posterior distribution', cache=TRUE, out.width=".55\\linewidth"}
 oldpar <- par(no.readonly = TRUE)
 plot(ans)
 par(oldpar)
@@ -600,6 +601,7 @@ par(oldpar)
 \begincols
 
 \begincol{.48\textwidth}
+
 
 ```{r example_sim_tree, echo=TRUE}
 set.seed(80)
@@ -633,7 +635,7 @@ atree
 
 \begincol{.49\textwidth}
 
-```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
+```{r annotated-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width=".8\\linewidth", fig.cap="Visualization of annotations and tree structure.", cache=TRUE}
 plot(atree)
 ```
 
@@ -641,7 +643,7 @@ plot(atree)
 
 \begincol{.49\textwidth}
 
-```{r likelihood-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width="1\\linewidth", fig.cap="LogLikelihood surface of the simulated data"}
+```{r likelihood-viz, echo=TRUE, message=FALSE, warning=FALSE, out.width=".8\\linewidth", fig.cap="LogLikelihood surface of the simulated data"}
 plot_LogLike(atree)
 ```
 
@@ -661,7 +663,7 @@ x <- sim_tree(25)
 ```
 
 
-```{r tree-peeling2, fig.cap=paste("Peeling trees. In the original none of the leaf nodes under 3 and 9 have annotations. After peeling those branches, we go from having", length(attr(x, "labels"))," nodes, to have", length(attr(prune(x,c(3,9)), "labels"))), out.width=".55\\linewidth"}
+```{r tree-peeling2, fig.cap=paste("Peeling trees. In the original none of the leaf nodes under 3 and 9 have annotations. After peeling those branches, we go from having", length(attr(x, "labels"))," nodes, to have", length(attr(prune(x,c(3,9)), "labels"))), out.width=".35\\linewidth"}
 # What am I peeling
 x_pruned <- prune(x, c(3, 19))
 
@@ -679,7 +681,7 @@ ltype <- c(2, 1)[cols + 1L]
 cols  <- c("tomato", "steelblue")[cols + 1L]
 
 oldpar <- par(no.readonly=TRUE)
-par(mfrow=c(1,2), cex=.9, xpd=NA, mar=c(1,0,2,0))
+par(mfrow=c(1,2), cex=1, xpd=NA, mar=c(1,0,2,0))
 plot(x, main="Full tree\n x", edge.color = cols, edge.width=2, edge.lty=ltype)
 plot(x_pruned, main="Pruned tree\n prune(x, c(3, 19))", edge.color = "steelblue", edge.width=2)
 par(oldpar)
@@ -798,7 +800,7 @@ print(xtable::xtable(pred, caption="Predicted probabilities for a subset of leaf
 
 ## `aphylo`: How good is our prediction (cont. 1) {.t}
 
-```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".6\\linewidth", echo=TRUE}
+```{r plot-pred-score, fig.cap="Predicted versus Observed values. Each slice of the pie represents a gene, the outer half of a slice is the predicted value, while the inner half is the observed value. Good predictions will coincide in color and show the slice closer to the center of the plot.", out.width=".4\\linewidth", echo=TRUE}
 plot(prediction_score(ans), main="")
 ```
 
@@ -838,7 +840,7 @@ plot(prediction_score(ans), main="")
 
 \begin{figure}
 \centering
-\includegraphics[width=.68\linewidth]{bias_trees_of_size_[57,138).pdf}
+\includegraphics[width=.5\linewidth]{bias_trees_of_size_[57,138).pdf}
 \end{figure}
 
 ## A simulation study {.t}
@@ -847,8 +849,8 @@ plot(prediction_score(ans), main="")
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
 \caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting from the DGP).}
+\includegraphics[width=.45\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
 \end{figure}
 
 
@@ -989,6 +991,6 @@ plot(prediction_score(ans), main="")
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
-\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\includegraphics[width=.4\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.10.}
 \end{figure}

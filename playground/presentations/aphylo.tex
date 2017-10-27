@@ -1,4 +1,4 @@
-\documentclass[9pt,ignorenonframetext,]{beamer}
+\documentclass[9pt,ignorenonframetext,aspectratio=169]{beamer}
 
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -348,22 +348,23 @@ California}
 \addtobeamertemplate{navigation symbols}{}{%
     \usebeamerfont{footline}%
     \usebeamercolor[fg]{white}%
-    \hspace{2em}%
-    \insertpagenumber/\insertpresentationendpage
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
 
     \vspace{1cm}
 }
 
 \begin{document}
 
-
+% Definition of title page
 {
-\setbeamertemplate{footline}{}
 
+\setbeamertemplate{footline}{}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
 }
 
 \begin{frame}{Agenda}
@@ -585,7 +586,7 @@ Let's see an example!
 
 \begincol{.28\textwidth}
 
-\includetikz{simple_tree.tex}{.6}
+\includetikz{simple_tree.tex}{.5}
 
 \endcol
 
@@ -637,14 +638,14 @@ Let's see an example!
 \begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.6}}
-  \only<2-3>{\includetikz{simple_tree_leaf2.tex}{.6}}
-  \only<4-5>{\includetikz{simple_tree_leaf4.tex}{.6}}
-  \only<6-7>{\includetikz{simple_tree_leaf5.tex}{.6}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-3>{\includetikz{simple_tree_leaf2.tex}{.5}}
+  \only<4-5>{\includetikz{simple_tree_leaf4.tex}{.5}}
+  \only<6-7>{\includetikz{simple_tree_leaf5.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.6}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
@@ -704,20 +705,20 @@ Let's see an example!
 
 \begincols
 
-\begincol{.18\textwidth}
+\begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.4}}
-  \only<2-5>{\includetikz{simple_tree_node1.tex}{.4}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-5>{\includetikz{simple_tree_node1.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.4}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
 
-\begincol{.78\textwidth}
+\begincol{.68\textwidth}
 
 \footnotesize
 
@@ -771,22 +772,22 @@ Let's see an example!
 
 \begincols
 
-\begincol{.18\textwidth}
+\begincol{.28\textwidth}
 
 \mode<beamer>{
-  \only<1>{\includetikz{simple_tree.tex}{.4}}
-  \only<2-6>{\includetikz{simple_tree_node3.tex}{.4}}
-  \only<7>{\includetikz{simple_tree_node0.tex}{.4}}
-  \only<8->{\includetikz{simple_tree_likelihood.tex}{.4}}
+  \only<1>{\includetikz{simple_tree.tex}{.5}}
+  \only<2-6>{\includetikz{simple_tree_node3.tex}{.5}}
+  \only<7>{\includetikz{simple_tree_node0.tex}{.5}}
+  \only<8->{\includetikz{simple_tree_likelihood.tex}{.5}}
 }
 
 \mode<handout>{
-  \includetikz{simple_tree.tex}{.4}
+  \includetikz{simple_tree.tex}{.5}
 }
 
 \endcol
 
-\begincol{.78\textwidth}
+\begincol{.68\textwidth}
 
 \footnotesize
 
@@ -911,11 +912,11 @@ You may be wondering why, well:
 
 \begin{figure}
 
-{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/amcmc-gelmanplot-1} 
+{\centering \includegraphics[width=.55\linewidth]{aphylo_files/figure-beamer/amcmc-gelmanplot-1} 
 
 }
 
-\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}\label{fig:amcmc-gelmanplot}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.10.}\label{fig:amcmc-gelmanplot}
 \end{figure}
 
 \normalsize
@@ -928,7 +929,7 @@ You may be wondering why, well:
 
 \begin{figure}
 
-{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/amcmc-plot-1} 
+{\centering \includegraphics[width=.55\linewidth]{aphylo_files/figure-beamer/amcmc-plot-1} 
 
 }
 
@@ -1056,7 +1057,7 @@ package}{The aphylo R package}}\label{the-aphylo-r-package}
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{aphylo_files/figure-beamer/annotated-viz-1} 
+{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/annotated-viz-1} 
 
 }
 
@@ -1079,7 +1080,7 @@ package}{The aphylo R package}}\label{the-aphylo-r-package}
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{aphylo_files/figure-beamer/likelihood-viz-1} 
+{\centering \includegraphics[width=.8\linewidth]{aphylo_files/figure-beamer/likelihood-viz-1} 
 
 }
 
@@ -1112,7 +1113,7 @@ package}{The aphylo R package}}\label{the-aphylo-r-package}
 
 \begin{figure}
 
-{\centering \includegraphics[width=.55\linewidth]{aphylo_files/figure-beamer/tree-peeling2-1} 
+{\centering \includegraphics[width=.35\linewidth]{aphylo_files/figure-beamer/tree-peeling2-1} 
 
 }
 
@@ -1307,7 +1308,7 @@ AN208:THEMA$|$EnsemblGenome=TM\_0651$|$UniProtKB=Q9WZB9 & 0.10 \\
 
 \begin{figure}
 
-{\centering \includegraphics[width=.6\linewidth]{aphylo_files/figure-beamer/plot-pred-score-1} 
+{\centering \includegraphics[width=.4\linewidth]{aphylo_files/figure-beamer/plot-pred-score-1} 
 
 }
 
@@ -1374,7 +1375,7 @@ AN208:THEMA$|$EnsemblGenome=TM\_0651$|$UniProtKB=Q9WZB9 & 0.10 \\
 
 \begin{figure}
 \centering
-\includegraphics[width=.68\linewidth]{bias_trees_of_size_[57,138).pdf}
+\includegraphics[width=.5\linewidth]{bias_trees_of_size_[57,138).pdf}
 \end{figure}
 
 \end{frame}
@@ -1385,8 +1386,8 @@ AN208:THEMA$|$EnsemblGenome=TM\_0651$|$UniProtKB=Q9WZB9 & 0.10 \\
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
 \caption{Distribution of prediction scores. The random prediction scores were computed analytically with parameter $p=0.3$ (as resulting from the DGP).}
+\includegraphics[width=.45\linewidth, trim = {0 1cm 0 2cm}, clip]{mcmc_right_prior_prediction.pdf}
 \end{figure}
 
 \end{frame}
@@ -1558,8 +1559,8 @@ AN208:THEMA$|$EnsemblGenome=TM\_0651$|$UniProtKB=Q9WZB9 & 0.10 \\
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
-\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.15.}
+\includegraphics[width=.4\linewidth, trim={0 1.5cm 0 2cm},clip]{gelmans_right_prior.pdf}
+\caption{Gelman diagnostic for convergence. The closer to 1, the better the convergence. Rule of thumb: A chain has a reasonable convergence if it has a Potential Scale Reduction Factor (PSRF) below 1.10.}
 \end{figure}
 
 \end{frame}
