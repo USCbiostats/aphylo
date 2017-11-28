@@ -123,6 +123,8 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 #' by \code{\link{mapply}} so that are specified one per slice. The coordinates
 #' of the slices are computed internally.
 #' 
+#' 
+#' @seealso https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg
 #' @export
 #' @examples
 #'  
