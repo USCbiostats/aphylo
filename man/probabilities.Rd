@@ -25,6 +25,4 @@ probabilities for each node.
 Compute the state probabilities for each node in the tree using the peeling
 algorithm. This function is the horse-power of the function \code{\link{LogLike}}
 so it is not intended to be used directly.
-
-\code{}
 }

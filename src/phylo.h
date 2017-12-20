@@ -35,6 +35,7 @@ arma::mat internal_prob(
 List LogLike(
     const arma::imat & Z,
     const List       & offspring,
+    const arma::imat & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi,

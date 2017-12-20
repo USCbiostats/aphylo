@@ -19,14 +19,13 @@ annotations. These can be either 0, 1, or 9 indicating no function, function, an
 no information respectively.}
 \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 \code{\link{as_po_tree}}).}
+\item{pseq}{Integer vector. The pruning (peeling) sequence.}
 }
 \description{
 The \code{aphylo} class tree holds both the tree structure represented as a
 partially ordered phylogenetic tree, and node annotations. While annotations
 are included for both leafs and inner nodes, the algorithms included in this
 package only uses the leaf annotations.
-
-\code{}
 }
 \details{
 Plotting is done via \code{\link[ggtree:ggtree]{ggtree}} 
@@ -48,3 +47,5 @@ Other Data management functions: \code{\link{as.apephylo}},
 
 Other aphylo methods: \code{\link{aphylo-methods}}
 }
+\concept{Data management functions}
+\concept{aphylo methods}

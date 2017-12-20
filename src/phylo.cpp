@@ -167,6 +167,7 @@ arma::mat probabilities(
 List LogLike(
     const arma::imat & annotations,
     const List       & offspring,
+    const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
     double Pi,
@@ -253,6 +254,7 @@ double predict_fun(
   unsigned int di0,
   const arma::imat & annotations,
   const List       & offspring,
+  const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
   double Pi
@@ -264,13 +266,13 @@ double predict_fun(
   // Compute likelihood of a_i = 0
   annotations_filled.at(i, p) = 0;
   double likelihood_given_ai_0 = exp(
-    as< double >(LogLike(annotations_filled, offspring, psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq, psi, mu, Pi, false)["ll"])
     );
   
   // Compute likelihood of a_i = 1
   annotations_filled.at(i, p) = 1;
   double likelihood_given_ai_1 = exp(
-    as< double >(LogLike(annotations_filled, offspring, psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq,  psi, mu, Pi, false)["ll"])
     );
   
   // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
@@ -294,6 +296,7 @@ arma::mat predict_funs(
   const arma::umat & edges,
   const arma::imat & annotations,
   const List       & offspring,
+  const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
   double Pi
@@ -309,7 +312,7 @@ arma::mat predict_funs(
   for (i = 0u; i < n; i++)
     for (p = 0u; p < P; p++) {
       ans.at(i, p) = predict_fun(
-        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, psi, mu, Pi
+        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, pseq, psi, mu, Pi
       );
     }
       

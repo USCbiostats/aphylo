@@ -4,7 +4,7 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(annotations, offspring, psi, mu, Pi, verb_ans = FALSE,
+LogLike(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE,
   check_dims = TRUE)
 }
 \arguments{
@@ -38,8 +38,6 @@ This function computes the log-likelihood of the chosen parameters given
 a particular dataset. The arguments \code{annotations}, and \code{offspring}
 should be as those returned by \code{\link{new_aphylo}}.
 For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
-
-\code{}
 }
 \details{
 The parameters to estimate are described as follows:

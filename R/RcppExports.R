@@ -109,16 +109,16 @@ probabilities <- function(annotations, mu, psi, S, offspring) {
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(annotations, offspring, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, psi, mu, Pi, verb_ans, check_dims)
+LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
+    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, Pi, verb_ans, check_dims)
 }
 
-predict_fun <- function(i, p, di0, annotations, offspring, psi, mu, Pi) {
-    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, psi, mu, Pi)
+predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, Pi) {
+    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, Pi)
 }
 
-predict_funs <- function(ids, edges, annotations, offspring, psi, mu, Pi) {
-    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, psi, mu, Pi)
+predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, Pi) {
+    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, Pi)
 }
 
 prediction_score_rand <- function(A, W, alpha) {

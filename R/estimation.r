@@ -166,6 +166,7 @@ aphylo_mle <- function(
       ll <- LogLike(
         annotations = dat$annotations, 
         offspring   = attr(dat$edges, "offspring"),
+        pseq        = dat$pseq,
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -183,6 +184,7 @@ aphylo_mle <- function(
       ll <- LogLike(
         annotations = dat$annotations, 
         offspring   = attr(dat$edges, "offspring"),
+        pseq        = dat$pseq,
         psi         = params[1:2], 
         mu          = params[3:4], 
         Pi          = params[5], 
@@ -345,6 +347,7 @@ aphylo_mcmc <- function(
       LogLike(
         annotations = dat$annotations,
         offspring   = attr(dat$edges, "offspring"),
+        pseq        = dat$pseq,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],
@@ -359,6 +362,7 @@ aphylo_mcmc <- function(
       LogLike(
         annotations = dat$annotations,
         offspring   = attr(dat$edges, "offspring"),
+        pseq        = dat$pseq,
         psi         = params[1:2] ,
         mu          = params[3:4] ,
         Pi          = params[5],

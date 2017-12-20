@@ -175,7 +175,7 @@ test_that("Internal Probabilities", {
 # Likelihood of Rootnode -------------------------------------------------------
 
 test_that("Log-Likelihood", {
-  ll0 <- LogLike(O$annotations, attr(O$edges, "offspring"), psi, mu, Pi)$ll
+  ll0 <- LogLike(O$annotations, attr(O$edges, "offspring"), O$pseq, psi, mu, Pi)$ll
   
   PI  <- aphylo:::root_node_prob(Pi, S)
   ll1 <- log(sum(Pr[1, , drop = TRUE] * PI))

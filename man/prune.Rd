@@ -2,7 +2,6 @@
 % Please edit documentation in R/prune.r
 \name{prune}
 \alias{prune}
-\alias{prune}
 \alias{prune.po_tree}
 \alias{prune.phylo}
 \title{Removing leafs and nodes from a tree}
@@ -90,3 +89,4 @@ par(oldpar)
 Other Data management functions: \code{\link{aphylo-class}},
   \code{\link{as.apephylo}}, \code{\link{as_po_tree}}
 }
+\concept{Data management functions}

@@ -41,8 +41,6 @@ methods that can be useful.
 This function takes an edgelist and recodes (relabels) the nodes following
 \CRANpkg{ape}'s coding convention. \code{as_ape_tree} is the powerhorse of
 \code{\link{as.apephylo}}.
-
-\code{}
 }
 \examples{
 
@@ -72,3 +70,4 @@ head(edges_org)
 Other Data management functions: \code{\link{aphylo-class}},
   \code{\link{as_po_tree}}, \code{\link{prune}}
 }
+\concept{Data management functions}

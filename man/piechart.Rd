@@ -102,3 +102,6 @@ piechart(1:10, density=(1:10)^2/2, slice.off = (1:10)/30, doughnut = .5,
   )
 
 }
+\seealso{
+https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg
+}

@@ -51,3 +51,4 @@ that creates a visualization as follows:
 \seealso{
 Other aphylo methods: \code{\link{aphylo-class}}
 }
+\concept{aphylo methods}

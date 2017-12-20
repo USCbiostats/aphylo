@@ -55,8 +55,6 @@ The function \code{\link{new_aphylo}} uses this function to make sure that
 the edgelist that is passed makes a partial order. This is a requirement
 for the peeling algorithm, which is used explicitly in the \code{LogLike}
 function.
-
-\code{}
 }
 \details{
 The recoded edgelist is such that in all rows the first element, parent
@@ -82,3 +80,4 @@ as.apephylo(potree)
 Other Data management functions: \code{\link{aphylo-class}},
   \code{\link{as.apephylo}}, \code{\link{prune}}
 }
+\concept{Data management functions}

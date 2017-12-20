@@ -457,6 +457,7 @@ as_po_tree.default <- function(edges, edge.length=NULL, ...) {
 #' no information respectively.}
 #' \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
 #' \code{\link{as_po_tree}}).}
+#' \item{pseq}{Integer vector. The pruning (peeling) sequence.}
 #' 
 #' @examples 
 #' # A simple example ----------------------------------------------------------
@@ -491,6 +492,19 @@ duplicate_check <- function(x, what) {
   invisible(0)
 }
 
+#' Checks whether the annotations are in the correct format.
+#' @param x Some node level annotations
+#' @details 
+#' The criteria is:
+#' - Either a matrix or a data frame
+#' - Checks the length
+#' - Should have at least 2 columns
+#' - No duplicates
+#' - Should be numeric
+#' - 0, 1, 9, or NA.
+#' - NAs are replaces with 9s
+#' - Set colnames
+#' @noRd
 check_annotations <- function(x) {
   
   # Checking class
@@ -552,19 +566,18 @@ new_aphylo <- function(
   # Basic checks ---------------------------------------------------------------
   
   # Checking annotations
-  A <- check_annotations(annotations)
-  
-  # Checking edgelist
-  E <- as_po_tree(edges)
+  A       <- check_annotations(annotations)
+  alabels <- rownames(A)
+  nlabels <- unique(sort(as.vector(edges)))
   
   # Are all annotations in the edgelist
-  test <- which( !(rownames(A) %in% attr(E, "labels")) )
+  test <- which( !(alabels %in% nlabels) )
   if (length(test))
     stop("The following -nodes- (annotations) are not in present in -edges-:\n",
-         paste(rownames(A)[test], collapse=", "))
+         paste(alabels[test], collapse=", "))
   
   # Filling the gaps in A ------------------------------------------------------
-  test  <- which( !(attr(E, "labels") %in% rownames(A)))
+  test  <- which( !(nlabels %in% alabels) )
   added <- NULL
   if (length(test)) {
     
@@ -573,25 +586,25 @@ new_aphylo <- function(
       A,
       matrix(9, nrow = length(test), ncol = ncol(A),
              dimnames = list(
-               attr(E, "labels")[test],
+               nlabels[test],
                colnames(A)
              ))
     )
     
     # And declaring which ones where added
-    added <- attr(E, "labels")[test]
+    added <- nlabels[test]
   }
   
   # Sorting the data
-  A <- A[attr(E, "labels"), ,drop=FALSE]
+  A <- A[nlabels, ,drop=FALSE]
   
   # Listing offsprings
-  O <- list_offspring(E)
+  O <- list_offspring(edges)
   
   # Returning
   as_aphylo(
     annotations = A,
-    edges       = E
+    edges       = edges
   )
   
 }
@@ -617,7 +630,8 @@ as_aphylo <- function(
   structure(
     list(
       annotations = annotations,
-      edges       = edges
+      edges       = edges,
+      pseq        = ape::postorder(as.apephylo(edges))
     ),
     class = "aphylo"
   )
