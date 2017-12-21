@@ -12,7 +12,7 @@ List ape_recode(
   // Defining variables
   arma::imat ans;
   ans.copy_size(x);
-  int m          = ans.n_rows;
+  int m = ans.n_rows;
   arma::ivec I(n, arma::fill::zeros);
   
   int o = 0, p = 0;
@@ -61,10 +61,15 @@ List ape_recode(
 
 /***R
 set.seed(1)
-x <- ape::rtree(2000)
+x10 <- ape::rtree(10)
+x100 <- ape::rtree(100)
+x1000 <- ape::rtree(1000)
 
 microbenchmark::microbenchmark(
-  ape_recode(x$edge, max(x$edge)), unit = "s"
+  `  10` = ape_recode(x10$edge, max(x10$edge)),
+  ` 100` = ape_recode(x100$edge, max(x100$edge)),
+  `1000` = ape_recode(x1000$edge, max(x1000$edge)),
+  unit = "s", times=1e3
 ) 
 
 */

@@ -1,3 +1,10 @@
+2017-12-20  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* playground/*: Working on functions to prune trees using po traversal
+	  or pre-order traversal. Algorithms working and good exercise to have
+	  a better understanding of the pruning algorithm.
+
+
 2017-10-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Fixing bug in plot.aphylo.
 
