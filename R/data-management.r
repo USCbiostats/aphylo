@@ -630,9 +630,20 @@ as_aphylo <- function(
     if (length(node.annotation)) {
       stopifnot(is.matrix(node.annotation))
       stopifnot(nrow(node.annotation) == tree$Nnode)
-    }
+    } 
       
   }
+  
+  # PATCH FIX: FOR NOW WE NEED TO HAVE SOMETHING FOR NODES!
+  if (!length(node.annotation))
+    node.annotation <- matrix(
+      9L, nrow = tree$Nnode,
+      ncol = ncol(tip.annotation),
+      dimnames = list(
+        (nrow(tip.annotation) + 1):(nrow(tip.annotation) + tree$Nnode),
+        colnames(tip.annotation)
+      )
+    )
   
   # Calculating the pruning sequence
   pseq <- ape::postorder(tree)
@@ -642,10 +653,7 @@ as_aphylo <- function(
     c(
       list(tree = tree),
       list(tip.annotation = tip.annotation),
-      if (length(node.annotation))
-        list(node.annotation = node.annotation)
-      else 
-        NULL,
+      list(node.annotation = node.annotation),
       list(offspring = list_offspring(tree)),
       list(pseq      = pseq)
     ),

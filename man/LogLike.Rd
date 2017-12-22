@@ -4,10 +4,16 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, ...)
+LogLike(tree, ..., verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link[ape:phylo]{ape::phylo}.}
+
+\item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
+returns a list with a single scalar (the log-likelihood).}
+
+\item{check_dims}{Logical scalar. When \code{TRUE} (default) the function
+checks the dimmension of the passed parameters.}
 
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
 
@@ -18,12 +24,6 @@ LogLike(tree, ...)
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
-
-\item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
-returns a list with a single scalar (the log-likelihood).}
-
-\item{check_dims}{Logical scalar. When \code{TRUE} (default) the function
-checks the dimmension of the passed parameters.}
 }
 \value{
 A list of class \code{phylo_LogLik} with the following elements:

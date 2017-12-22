@@ -9,13 +9,12 @@ mu     <- c(.05, .1)
 Pi     <- 1 - .3
 errtol <- 1e-15
 
-O  <- new_aphylo(fakeexperiment, faketree)
+O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = faketree)
 
 S  <- states(2)
-Pr <- probabilities(O$annotations, mu, psi, S, attr(O$edges, "offspring"))
-
-# Sorting
-Pr <- Pr[order(rownames(O$annotations)),]
+Pr <- probabilities(
+  with(O, rbind(tip.annotation, node.annotation)),
+  O$pseq, mu, psi, S, O$offspring)
 
 # Checking Leaf Probabilities --------------------------------------------------
 
@@ -49,7 +48,7 @@ test_that("Leaf Probabilities", {
   PrRaw[7, 4] <- (1 - psi[2]) ^ 2
   
   # These should be identical
-  expect_equivalent(PrRaw[4:7,], Pr[4:7,])
+  expect_equivalent(PrRaw[4:7,], Pr[c(5:7, 1:4),][4:7,])
 })
 
 
@@ -59,7 +58,7 @@ test_that("Internal Probabilities", {
   # Checking cases compared to the states (0,0) (1,0) (0,1) (1,1)
   
   PrRaw <- Pr
-  PrRaw[1:3,] <- 1
+  PrRaw[4:7,] <- 1
   
   # Node 1 (0,0)
   of1 <- 
@@ -169,13 +168,13 @@ test_that("Internal Probabilities", {
   
   PrRaw[1,4] <- prod(of1)
   
-  expect_equal(Pr, PrRaw)
+  expect_equal(Pr[c(5:7, 1:4),], PrRaw)
 })
 
 # Likelihood of Rootnode -------------------------------------------------------
 
 test_that("Log-Likelihood", {
-  ll0 <- LogLike(O$annotations, attr(O$edges, "offspring"), O$pseq, psi, mu, Pi)$ll
+  ll0 <- LogLike(O, psi, mu, Pi)$ll
   
   PI  <- aphylo:::root_node_prob(Pi, S)
   ll1 <- log(sum(Pr[1, , drop = TRUE] * PI))

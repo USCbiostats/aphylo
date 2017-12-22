@@ -38,7 +38,7 @@
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(tree, ...) UseMethod("LogLike")
+LogLike <- function(tree, ..., verb_ans = TRUE, check_dims=TRUE) UseMethod("LogLike")
 
 #' @export
 LogLike.aphylo <- function(
@@ -46,8 +46,9 @@ LogLike.aphylo <- function(
   psi,
   mu,
   Pi, 
-  verb_ans,
-  check_dims
+  verb_ans = TRUE,
+  check_dims = TRUE,
+  ...
 ) {
   
   .LogLike(
@@ -58,7 +59,8 @@ LogLike.aphylo <- function(
     mu          = mu,
     Pi          = Pi,
     verb_ans    = verb_ans,
-    check_dims  = check_dims
+    check_dims  = check_dims,
+    ...
   )
 }
 
@@ -72,8 +74,8 @@ LogLike.default <- function(
   psi,
   mu,
   Pi, 
-  verb_ans,
-  check_dims
+  verb_ans = TRUE,
+  check_dims = TRUE
 ) {
   
   .LogLike(
