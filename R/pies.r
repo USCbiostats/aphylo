@@ -78,49 +78,49 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 
 #' A flexible piechart.
 #' 
-#' While similar to \code{\link[graphics:pie]{pie}}, this function is much more
+#' While similar to [graphics:pie::pie()], this function is much more
 #' flexible as it allows providing different parameters for each slice of the pie.
 #' Furthermore, it allows adding the plot to the current device, making it possible
 #' to create compound piecharts.
 #' 
 #' @param x Numeric vector. Values that specify the area of the slices.
-#' @param add Logical scalar. When \code{TRUE} it is added to the current device.
+#' @param add Logical scalar. When `TRUE` it is added to the current device.
 #' @param radius Numeric vector. Radious of each slice (can be a scalar).
 #' @param doughnut Numeric scalar. Radious of each inner circle (doughnut) (can be a scalar).
 #' @param origin Numeric vector of length 2. Coordinates of the origin.
 #' @param edges Numeric scalar. Smoothness of the slices curve (can be a vector).
-#' @param slice.off Numeric vector. When \code{!=0}, specifies how much to
+#' @param slice.off Numeric vector. When `!=0`, specifies how much to
 #' move the slice away from the origin. When scalar is recycled.
-#' @param labels Character vector of length \code{length(x)}. Passed to
-#' \code{\link[graphics:text]{text}}.
+#' @param labels Character vector of length `length(x)`. Passed to
+#' [graphics:text::text()].
 #' @param tick.len Numeric scalar. Size of the tick marks as proportion of the radius.
-#' @param text.args List. Further arguments passed to \code{\link[graphics:text]{text}}.
-#' @param segments.args List. Further arguments passed to \code{\link[graphics:segments]{segments}}
+#' @param text.args List. Further arguments passed to [graphics:text::text()].
+#' @param segments.args List. Further arguments passed to [graphics:segments::segments()]
 #' when drawing the tickmarks.
 #' @param init.angle Numeric scalar. Angle from where to start drawing in degrees.
 #' @param last.angle Numeric scalar. Angle where to finish drawing in degrees.
-#' @param skip.plot.slices Logical scalar. When \code{FALSE}, slices are not drawn.
+#' @param skip.plot.slices Logical scalar. When `FALSE`, slices are not drawn.
 #' This can be useful if, for example, the user only wants to draw the labels.
-#' @param rescale Logical scalar. When \code{TRUE} (default), the y-coordinates of
+#' @param rescale Logical scalar. When `TRUE` (default), the y-coordinates of
 #' the polygons (slices), text and tickmarks will be rescaled such that the
 #' aspect ratio is preserved, i.e. looks like a circle.
-#' @param ... Further arguments passed to \code{\link[graphics:polygon]{polygon}}
+#' @param ... Further arguments passed to [graphics:polygon::polygon()]
 #' (see details).
 #' 
 #' @return 
 #' A list with the following elements:
-#' \item{slices}{A list of length \code{length(x)} with the coordinates of each
+#' \item{slices}{A list of length `length(x)` with the coordinates of each
 #'   slice.}
-#' \item{textcoords}{A numeric matrix of size \code{length(x)*2} with 
+#' \item{textcoords}{A numeric matrix of size `length(x)*2` with 
 #'   coordinates where the labels can be put at.}
-#' \item{alpha0}{A numeric vector of size \code{length(x)} with the starting
+#' \item{alpha0}{A numeric vector of size `length(x)` with the starting
 #' degree in radians of the slice.}
-#' \item{alpha1}{A numeric vector of size \code{length(x)} with the ending
+#' \item{alpha1}{A numeric vector of size `length(x)` with the ending
 #' degree in radians of the slice.}
 #' 
-#' @details The function is a wrapper of \code{\link[graphics:polygon]{polygon}},
+#' @details The function is a wrapper of [graphics:polygon::polygon()],
 #' so all parameters such as color, density, border, etc. are passed directly
-#' by \code{\link{mapply}} so that are specified one per slice. The coordinates
+#' by [mapply()] so that are specified one per slice. The coordinates
 #' of the slices are computed internally.
 #' 
 #' 

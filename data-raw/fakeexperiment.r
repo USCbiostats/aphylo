@@ -1,4 +1,3 @@
-rm(list = ls())
+fakeexperiment <- as.matrix(readr::read_csv2("data-raw/fakeexperiment.csv"))
+devtools::use_data(fakeexperiment, overwrite = TRUE)
 
-file.copy("data-raw/fakeexperiment.csv", "data/fakeexperiment.csv",
-          overwrite = TRUE)

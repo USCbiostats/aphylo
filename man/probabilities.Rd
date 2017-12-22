@@ -4,7 +4,7 @@
 \alias{probabilities}
 \title{State probabilities}
 \usage{
-probabilities(annotations, mu, psi, S, offspring)
+probabilities(annotations, pseq, mu, psi, S, offspring)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P}{n*P}. Annotation data, each column is a functional annotation coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}

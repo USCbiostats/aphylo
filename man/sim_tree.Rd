@@ -19,7 +19,7 @@ With the following additional attributes:
 }
 \description{
 By randomly choosing pairs of vertices, this function generates random
-trees from bottom to top such that the labels of the nodes follow a 
+trees from bottom to top such that the labels of the nodes follow a
 partial order in their parent-offspring relation, with the parent
 always having a lower idlabel than the offspring.
 }
@@ -27,22 +27,22 @@ always having a lower idlabel than the offspring.
 The algorithm was implemented as follows
 
 \enumerate{
-  \item Initialize \code{left =[n*2 - 2,...,(n-1)]} and \code{m = n*2 - 2}, and
-        initialize the vectors \code{parent} and \code{offspring} to be
-        empty.
-  \item While \code{length(left) > 1} do:
-  \enumerate{
-    \item Randomly choose a pair \code{(i, j)} from \code{left}
-    \item Add \code{leaf(i)}, \code{leaf(j)} to the tail of \code{offspring},
-    \item Decrease \code{m} by 1, and add it two times to the tail of
-    \code{parent}.
-    \item Remove \code{(i,j)} from \code{leaf} and add \code{m} to its tail.
-    \item next
-  }
-  
+\item Initialize \code{left =[n*2 - 2,...,(n-1)]} and \code{m = n*2 - 2}, and
+initialize the vectors \code{parent} and \code{offspring} to be
+empty.
+\item While \code{length(left) &gt; 1} do:
+\enumerate{
+\item Randomly choose a pair \code{(i, j)} from \code{left}
+\item Add \code{leaf(i)}, \code{leaf(j)} to the tail of \code{offspring},
+\item Decrease \code{m} by 1, and add it two times to the tail of
+\code{parent}.
+\item Remove \code{(i,j)} from \code{leaf} and add \code{m} to its tail.
+\item next
 }
 
-The \code{\link[ape:rtree]{rtree}} function in the \pkg{ape} package is similar,
+}
+
+The \code{\link[ape:rtree:rtree]{ape:rtree::rtree()}} function in the \pkg{ape} package is similar,
 although the big difference is in the way the labels are stablished. This later
 point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
 in some (most) of its routines.

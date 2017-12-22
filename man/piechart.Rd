@@ -13,7 +13,7 @@ piechart(x, labels = names(x), radius = 1, doughnut = 0, origin = c(0,
 \item{x}{Numeric vector. Values that specify the area of the slices.}
 
 \item{labels}{Character vector of length \code{length(x)}. Passed to
-\code{\link[graphics:text]{text}}.}
+\code{\link[graphics:text:text]{graphics:text::text()}}.}
 
 \item{radius}{Numeric vector. Radious of each slice (can be a scalar).}
 
@@ -32,9 +32,9 @@ move the slice away from the origin. When scalar is recycled.}
 
 \item{tick.len}{Numeric scalar. Size of the tick marks as proportion of the radius.}
 
-\item{text.args}{List. Further arguments passed to \code{\link[graphics:text]{text}}.}
+\item{text.args}{List. Further arguments passed to \code{\link[graphics:text:text]{graphics:text::text()}}.}
 
-\item{segments.args}{List. Further arguments passed to \code{\link[graphics:segments]{segments}}
+\item{segments.args}{List. Further arguments passed to \code{\link[graphics:segments:segments]{graphics:segments::segments()}}
 when drawing the tickmarks.}
 
 \item{skip.plot.slices}{Logical scalar. When \code{FALSE}, slices are not drawn.
@@ -46,30 +46,30 @@ This can be useful if, for example, the user only wants to draw the labels.}
 the polygons (slices), text and tickmarks will be rescaled such that the
 aspect ratio is preserved, i.e. looks like a circle.}
 
-\item{...}{Further arguments passed to \code{\link[graphics:polygon]{polygon}}
+\item{...}{Further arguments passed to \code{\link[graphics:polygon:polygon]{graphics:polygon::polygon()}}
 (see details).}
 }
 \value{
 A list with the following elements:
 \item{slices}{A list of length \code{length(x)} with the coordinates of each
-  slice.}
-\item{textcoords}{A numeric matrix of size \code{length(x)*2} with 
-  coordinates where the labels can be put at.}
+slice.}
+\item{textcoords}{A numeric matrix of size \code{length(x)*2} with
+coordinates where the labels can be put at.}
 \item{alpha0}{A numeric vector of size \code{length(x)} with the starting
 degree in radians of the slice.}
 \item{alpha1}{A numeric vector of size \code{length(x)} with the ending
 degree in radians of the slice.}
 }
 \description{
-While similar to \code{\link[graphics:pie]{pie}}, this function is much more
+While similar to \code{\link[graphics:pie:pie]{graphics:pie::pie()}}, this function is much more
 flexible as it allows providing different parameters for each slice of the pie.
 Furthermore, it allows adding the plot to the current device, making it possible
 to create compound piecharts.
 }
 \details{
-The function is a wrapper of \code{\link[graphics:polygon]{polygon}},
+The function is a wrapper of \code{\link[graphics:polygon:polygon]{graphics:polygon::polygon()}},
 so all parameters such as color, density, border, etc. are passed directly
-by \code{\link{mapply}} so that are specified one per slice. The coordinates
+by \code{\link[=mapply]{mapply()}} so that are specified one per slice. The coordinates
 of the slices are computed internally.
 }
 \examples{

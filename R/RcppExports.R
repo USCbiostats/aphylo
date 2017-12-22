@@ -67,49 +67,11 @@ root_node_prob <- function(Pi, S) {
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' 
-probabilities <- function(annotations, mu, psi, S, offspring) {
-    .Call(`_aphylo_probabilities`, annotations, mu, psi, S, offspring)
+probabilities <- function(annotations, pseq, mu, psi, S, offspring) {
+    .Call(`_aphylo_probabilities`, annotations, pseq, mu, psi, S, offspring)
 }
 
-#' Computes Log-likelihood
-#' 
-#' This function computes the log-likelihood of the chosen parameters given
-#' a particular dataset. The arguments \code{annotations}, and \code{offspring}
-#' should be as those returned by \code{\link{new_aphylo}}.
-#' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
-#' 
-#' @template parameters
-#' @templateVar annotations 1
-#' @templateVar offspring 1
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar Pi 1
-#' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
-#' returns a list with a single scalar (the log-likelihood).
-#' @param check_dims Logical scalar. When \code{TRUE} (default) the function
-#' checks the dimmension of the passed parameters.
-#' 
-#' @details
-#' The parameters to estimate are described as follows:
-#' \enumerate{
-#' \item{\code{psi}: A vector of length 2 with \eqn{\psi_0}{psi[0]} and
-#' \eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
-#' \eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
-#' respectively.}
-#' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
-#' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
-#' \item{\code{Pi}: A numeric scalar which for which equals the probability
-#' of the root node having the function.}
-#' }
-#' @return A list of class \code{phylo_LogLik} with the following elements:
-#' \item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned
-#' by \code{\link{states}}.}
-#' \item{Pr}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
-#' probabilities.}
-#' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
-#' parameters.}
-#' @export
-LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
+.LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
     .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, Pi, verb_ans, check_dims)
 }
 
@@ -142,7 +104,6 @@ prediction_score_rand <- function(A, W, alpha) {
 #' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
 #' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 #' 
-#' @export
 #' @examples
 #' # Example 1 ----------------------------------------------------------------
 #' # We need to simulate a tree
@@ -163,8 +124,9 @@ prediction_score_rand <- function(A, W, alpha) {
 #' table(ans)
 #' 
 #' 
-sim_fun_on_tree <- function(offspring, psi, mu, Pi, P = 1L) {
-    .Call(`_aphylo_sim_fun_on_tree`, offspring, psi, mu, Pi, P)
+#' @name sim_fun_on_tree
+.sim_fun_on_tree <- function(offspring, pseq, psi, mu, Pi, P = 1L) {
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, Pi, P)
 }
 
 .sim_tree <- function(n) {
@@ -181,9 +143,5 @@ fast_table_using_labels <- function(x, ids) {
 
 .recode_as_po <- function(edges) {
     .Call(`_aphylo_recode_as_po`, edges)
-}
-
-list_offspring <- function(edges) {
-    .Call(`_aphylo_list_offspring`, edges)
 }
 

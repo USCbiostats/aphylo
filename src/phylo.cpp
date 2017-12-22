@@ -51,6 +51,7 @@ arma::vec root_node_prob(
 // [[Rcpp::export]]
 arma::mat probabilities(
     const arma::imat & annotations,
+    const arma::ivec & pseq,
     const arma::vec  & mu,
     const arma::vec  & psi,
     const arma::imat & S,
@@ -67,18 +68,19 @@ arma::mat probabilities(
   arma::mat Pr(N, nstates);
   Pr.ones();
   
-  for (int n=(N-1); n>=0; n--) {
+  typedef arma::ivec::const_iterator iviter;
+  for (iviter n = pseq.begin(); n != pseq.end(); n++) {
     // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
-    if (! (bool) Rf_length(offspring.at(n))) {
+    if (! (bool) Rf_length(offspring.at(*n - 1u))) {
       for (int s=0; s<nstates; s++)
         for (int p=0; p<P; p++) {
           
           // If missing (no experimental data)
-          if (annotations.at(n,p) == 9)
+          if (annotations.at(*n - 1u,p) == 9)
             continue;
           
-          Pr.at(n, s) *= PSI.at(S.at(s, p), annotations.at(n, p));
+          Pr.at(*n - 1u, s) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p));
           
         }
         continue;
@@ -86,16 +88,15 @@ arma::mat probabilities(
       
     // Obtaining list of offspring <- this can be improved (speed)
     // can create an std vector of size n
-    IntegerVector O(offspring.at(n));
+    IntegerVector O(offspring.at(*n - 1u));
     
     // Parent node states integration
-    int N_o;
     for (int s=0; s<nstates; s++) {
       
       // Loop through offspring
       double offspring_joint_likelihood = 1.0;
-      N_o = Rf_length(offspring.at(n));
-      for (int o_n=0; o_n<N_o ; o_n++) {
+      
+      for (iviter o_n = O.begin(); o_n != O.end() ; o_n++) {
         
         // Offspring states integration
         double offspring_likelihood = 0.0;
@@ -107,7 +108,7 @@ arma::mat probabilities(
             s_n_sum *= M.at(S.at(s,p), S.at(s_n,p));
           
           // Multiplying by prob of offspring
-          offspring_likelihood += ( s_n_sum * Pr.at(O.at(o_n), s_n) );
+          offspring_likelihood += ( s_n_sum * Pr.at(*o_n - 1u, s_n) );
           
         }
         
@@ -117,7 +118,7 @@ arma::mat probabilities(
       }
       
       // Adding state probability
-      Pr.at(n, s) = offspring_joint_likelihood;
+      Pr.at(*n - 1u, s) = offspring_joint_likelihood;
       
     }
   }
@@ -125,45 +126,8 @@ arma::mat probabilities(
   return Pr;
 }
 
-//' Computes Log-likelihood
-//' 
-//' This function computes the log-likelihood of the chosen parameters given
-//' a particular dataset. The arguments \code{annotations}, and \code{offspring}
-//' should be as those returned by \code{\link{new_aphylo}}.
-//' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
-//' 
-//' @template parameters
-//' @templateVar annotations 1
-//' @templateVar offspring 1
-//' @templateVar psi 1
-//' @templateVar mu 1
-//' @templateVar Pi 1
-//' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
-//' returns a list with a single scalar (the log-likelihood).
-//' @param check_dims Logical scalar. When \code{TRUE} (default) the function
-//' checks the dimmension of the passed parameters.
-//' 
-//' @details
-//' The parameters to estimate are described as follows:
-//' \enumerate{
-//' \item{\code{psi}: A vector of length 2 with \eqn{\psi_0}{psi[0]} and
-//' \eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
-//' \eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
-//' respectively.}
-//' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
-//' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
-//' \item{\code{Pi}: A numeric scalar which for which equals the probability
-//' of the root node having the function.}
-//' }
-//' @return A list of class \code{phylo_LogLik} with the following elements:
-//' \item{S}{An integer matrix of size \eqn{2^p\times p}{2^p * p} as returned
-//' by \code{\link{states}}.}
-//' \item{Pr}{A numeric matrix of size \eqn{G\times 2^p}{G * 2^p} with node/state
-//' probabilities.}
-//' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
-//' parameters.}
-//' @export
-// [[Rcpp::export]]
+// Computes Log-likelihood
+// [[Rcpp::export(name = ".LogLike")]]
 List LogLike(
     const arma::imat & annotations,
     const List       & offspring,
@@ -215,7 +179,7 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Pr  = probabilities(annotations, mu, psi, S, offspring);
+  arma::mat Pr  = probabilities(annotations, pseq, mu, psi, S, offspring);
 
   // We only use the root node
   double ll = 0.0;

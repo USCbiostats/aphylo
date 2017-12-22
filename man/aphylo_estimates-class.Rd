@@ -41,10 +41,10 @@ prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
 }
 \arguments{
 \item{dat}{An object of class \code{new_aphylo} as returned by
-\code{\link{new_aphylo}}.}
+\code{\link[=new_aphylo]{new_aphylo()}}.}
 
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
-optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{optim}}.}
+optimization algorithm, otherwise it uses a method in \code{\link[stats:optim:optim]{stats:optim::optim()}}.}
 
 \item{priors}{A list of length 3 with functions named \code{psi}, \code{mu},
 \code{Pi}}
@@ -107,7 +107,7 @@ as the intermediate steps are not available to the user).}
 \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
 
 In the case of \code{aphylo_mcmc}, \code{hist} is an object of class
-\code{\link[coda:mcmc.list]{mcmc.list}}.
+\code{\link[coda:mcmc.list:mcmc.list]{coda:mcmc.list::mcmc.list()}}.
 
 In the case of the \code{predict} method, a two-column numeric matrix
 with values between \eqn{[0,1]} (probabilities).
@@ -116,8 +116,8 @@ with values between \eqn{[0,1]} (probabilities).
 The optimization is done via \code{optim}.
 }
 \details{
-\code{phylo_mcmc} is a wrapper of \code{\link{MCMC}}, so, instead of treating the
-problem as a maximization problem, \code{phylo_mcmc} generates a \bold{Markov Chain}.
+\code{phylo_mcmc} is a wrapper of \code{\link[=MCMC]{MCMC()}}, so, instead of treating the
+problem as a maximization problem, \code{phylo_mcmc} generates a \strong{Markov Chain}.
 The default values of \code{control} are:
 
 \tabular{ll}{
@@ -130,7 +130,7 @@ The default values of \code{control} are:
 In the case of \code{prediction_score}, \code{...} are passed to
 \code{predict.aphylo_estimates}.
 
-If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
+If \code{include.labels = NULL} and \code{ncol(x$expected) &gt; 40},
 then \code{include.labels=FALSE} by default.
 }
 \examples{

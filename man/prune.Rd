@@ -26,8 +26,8 @@ A prunned version of the tree.
 }
 \description{
 This function takes one or more nodes/leafs from a given tree and removes them
-making sure that the position indexes are updated, hence preserving the 
-\code{\link{po_tree}} structure.
+making sure that the position indexes are updated, hence preserving the
+\code{\link[=po_tree]{po_tree()}} structure.
 }
 \details{
 From now we will denote node(s) as either internal node(s) or leaf(s). Given
@@ -41,7 +41,7 @@ nodes, and if the nodes to be removed are parents of nodes not included
 in the list, these will be added (the whole branch is removed).
 
 \item Considering which nodes are been removed, a new set of positions
-is computed so that it follows \code{\link{po_tree}} convention.
+is computed so that it follows \code{\link[=po_tree]{po_tree()}} convention.
 
 \item The edgelist is updated, as well the labels.
 
@@ -87,6 +87,6 @@ par(oldpar)
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as.apephylo}}, \code{\link{as_po_tree}}
+  \code{\link{as.phylo.aphylo}}, \code{\link{as_po_tree}}
 }
 \concept{Data management functions}

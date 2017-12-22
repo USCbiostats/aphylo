@@ -18,12 +18,12 @@ read.panther(x, tree.reader = ape::read.tree, ...)
 \item{tree.reader}{Function that will be used to read the tree file.
 It can be either \code{ape::read.tree} or \code{rncl::read_newick_phylo}.}
 
-\item{...}{Further arguments passed to \code{\link[ape:read.tree]{read.tree}}.}
+\item{...}{Further arguments passed to \code{\link[ape:read.tree:read.tree]{ape:read.tree::read.tree()}}.}
 }
 \value{
 A list consisting of a data.frame and a \code{phylo} object. The
 data.frame has the following columns:
- 
+
 \item{branch_length}{Numeric vector. Length of the branch to its parent node.}
 \item{type}{Character vector. Can be either \code{"S"} (speciation), \code{"D"}
 (duplication), or \code{"T"} (horizontal transfer).}
@@ -34,7 +34,7 @@ The nodeids can be identified using the rownames.
 \description{
 The PANTHER Project handles a modified version of newick tree files which,
 besides of the tree structure, includes the type of node and ancestor
-labels. This function is a wrapper of \code{\link[ape:read.tree]{read.tree}}.
+labels. This function is a wrapper of \code{\link[ape:read.tree:read.tree]{ape:read.tree::read.tree()}}.
 }
 \examples{
 path <- system.file("tree.tree", package="aphylo")

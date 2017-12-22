@@ -22,7 +22,6 @@ int sample_int(int n) {
 //' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
 //' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 //' 
-//' @export
 //' @examples
 //' # Example 1 ----------------------------------------------------------------
 //' # We need to simulate a tree
@@ -43,9 +42,11 @@ int sample_int(int n) {
 //' table(ans)
 //' 
 //' 
-// [[Rcpp::export]]
+//' @name sim_fun_on_tree
+// [[Rcpp::export(name=".sim_fun_on_tree")]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,
+    const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & Pi,
@@ -58,41 +59,43 @@ IntegerMatrix sim_fun_on_tree(
   IntegerMatrix ans(N,P);
   ans.fill(9u);
   
+  typedef arma::ivec::const_iterator iviter;
   for (int p=0; p<P; p++) {
+    
     // Root node function
-    ans.at(0,p) = (Pi.at(0) > unif_rand())? 1u : 0u;
+    ans.at(pseq.at(0) - 1u, p) = (Pi.at(0) > unif_rand())? 1u : 0u;
     
     // Assigning probabilities to their offspring
-    for (int i=0; i<N; i++) {
+    for (iviter i = pseq.begin(); i != pseq.end(); i++) {
       
       // Leaf nodes have no offspring. So this is when we include the miss
       // classification factor
-      N_o = Rf_length(offspring.at(i));
+      N_o = Rf_length(offspring.at(*i - 1));
       if (!N_o) {
         
         // Gain Probability
-        if ((ans.at(i, p) == 0u) && (psi.at(0) > unif_rand()) ) 
-          ans.at(i, p) = 1u;
+        if ((ans.at(*i  - 1, p) == 0u) && (psi.at(0) > unif_rand()) ) 
+          ans.at(*i - 1, p) = 1u;
         // Loss probability
-        else if ((ans.at(i, p) == 1u) && (psi.at(1) > unif_rand()) ) 
-          ans.at(i, p) = 0u;
+        else if ((ans.at(*i - 1, p) == 1u) && (psi.at(1) > unif_rand()) ) 
+          ans.at(*i - 1, p) = 0u;
           
         continue;
       }
         
       // Getting the list of offspring
-      arma::ivec O = offspring.at(i);
+      arma::ivec O = offspring.at(*i - 1);
       
       // Looping through offspring
-      for (int o=0; o<N_o; o++) {
+      for (iviter o = O.begin(); o != O.end(); o++) {
         
         // If there is a function
-        if (ans.at(i,p) == 1u) 
+        if (ans.at(*i - 1, p) == 1u) 
           // Loss probabilities
-          ans.at(O.at(o),p) = (mu.at(1) > unif_rand())? 0u : 1u;
+          ans.at(*o - 1, p) = (mu.at(1) > unif_rand())? 0u : 1u;
         else 
           // Gain Probabilities
-          ans.at(O.at(o),p) = (mu.at(0) > unif_rand())? 1u : 0u;
+          ans.at(*o - 1, p) = (mu.at(0) > unif_rand())? 1u : 0u;
       }
     }
   }

@@ -1,3 +1,41 @@
+#' List each nodes' offspring
+#' 
+#' For each node in a tree, lists all its offspring.
+#' 
+#' @param x Either a matrix or an object of class `phylo`
+#' @return A named list of length `n` (total number of nodes). The names of the
+#' list correspond to the ids of the nodes in `x`.
+#' 
+#' @examples 
+#' # A simple example with phylo tree ------------------------------------------
+#' 
+#' set.seed(4)
+#' x <- ape::rtree(10)
+#' list_offspring(x)
+#' 
+#' @export
+list_offspring <- function(x) UseMethod("list_offspring")
+
+list_offspring.matrix <- function(x) {
+  ids <- sort(unique(x))
+  
+  structure(
+    lapply(ids, function(i) x[which(x[,1L] == i), 2L]),
+    names = ids
+  )
+  
+}
+
+list_offspring.phylo <- function(x) {
+  ids <- 1L:(x$Nnode + length(x$tip.label))
+  
+  structure(
+    lapply(ids, function(i) x$edge[which(x$edge[,1L] == i), 2L]),
+    names = ids
+  )
+  
+}
+
 # This function takes and edgelist and tries to find 'labels' attr on it. If
 # there are no labels, it will make some.
 # This only work for matrices (internal use only)
@@ -127,9 +165,9 @@ map_ids_to_positions.po_tree <- function(ids_name, edges_name) {
 
 #' Recodes an edgelist as a Partially Ordered Tree
 #' 
-#' The function \code{\link{new_aphylo}} uses this function to make sure that
+#' The function [new_aphylo()] uses this function to make sure that
 #' the edgelist that is passed makes a partial order. This is a requirement
-#' for the peeling algorithm, which is used explicitly in the \code{LogLike}
+#' for the peeling algorithm, which is used explicitly in the `LogLike`
 #' function.
 #' 
 #' @details
@@ -137,11 +175,11 @@ map_ids_to_positions.po_tree <- function(ids_name, edges_name) {
 #' node, as a label that is less than the second element, the offspring, a
 #' partial order.
 #' 
-#' @return A matrix of the same dimension as \code{edges}, an edgelist, recoded
-#' to form a partial order. Besides of been of class \code{matrix}, the resulting
-#' object is also of class \code{po_tree} and has an aditional attributes:
+#' @return A matrix of the same dimension as `edges`, an edgelist, recoded
+#' to form a partial order. Besides of been of class `matrix`, the resulting
+#' object is also of class `po_tree` and has an aditional attributes:
 #' \item{Nnode}{Integer scalar. Number of leaf nodes.}
-#' \item{edge.length}{Numeric vector of length \code{nrow(edges)}. Branch lengths.}
+#' \item{edge.length}{Numeric vector of length `nrow(edges)`. Branch lengths.}
 #' \item{labels}{Character vector of size n. Original labels of the edgelist.}
 #' \item{offspring}{A list of length \eqn{n} with integer vectors. List the
 #' offsprings that each node has relative to 0, where 0 is the root node.}
@@ -160,7 +198,7 @@ map_ids_to_positions.po_tree <- function(ids_name, edges_name) {
 #' potree
 #' 
 #' # Going back
-#' as.apephylo(potree)
+#' as.phylo(potree)
 #'
 #' @aliases po_tree 
 #' @export
@@ -168,7 +206,7 @@ as_po_tree <- function(edges, ...) UseMethod("as_po_tree")
 
 #' @export
 #' @rdname as_po_tree
-#' @details \code{as.po_tree} is an alias for \code{as_po_tree}
+#' @details `as.po_tree` is an alias for `as_po_tree`
 as.po_tree <- as_po_tree
 
 #' @export
@@ -192,8 +230,8 @@ as_po_tree.phylo <- function(edges, ...) {
 
 #' @rdname as_po_tree
 #' @export
-#' @return In the case of \code{is.po_tree}, \code{TRUE} if is an object of
-#' class \code{po_tree}, \code{FALSE} otherwise.
+#' @return In the case of `is.po_tree`, `TRUE` if is an object of
+#' class `po_tree`, `FALSE` otherwise.
 is.po_tree <- function(x) inherits(x, "po_tree")
 
 #' @export
@@ -381,7 +419,7 @@ recode_as_po <- function(edges) {
 }
 
 #' @export
-#' @param edge.length A numeric vector of length \code{nrow(edges)}. Branch
+#' @param edge.length A numeric vector of length `nrow(edges)`. Branch
 #' lengths.
 #' @rdname as_po_tree
 as_po_tree.default <- function(edges, edge.length=NULL, ...) {
@@ -439,7 +477,7 @@ as_po_tree.default <- function(edges, edge.length=NULL, ...) {
 
 #' Annotated Phylogenetic Tree
 #' 
-#' The \code{aphylo} class tree holds both the tree structure represented as a
+#' The `aphylo` class tree holds both the tree structure represented as a
 #' partially ordered phylogenetic tree, and node annotations. While annotations
 #' are included for both leafs and inner nodes, the algorithms included in this
 #' package only uses the leaf annotations.
@@ -448,16 +486,16 @@ as_po_tree.default <- function(edges, edge.length=NULL, ...) {
 #' @templateVar edges 1
 #' @templateVar annotationslab 1
 #' 
-#' @details Plotting is done via \code{\link[ggtree:ggtree]{ggtree}} 
+#' @details Plotting is done via [ggtree:ggtree::ggtree()] 
 #' from the \pkg{ggtree} package (Bioconductor).
 #' 
-#' @return A list of class \code{aphylo} with the following elements:
-#' \item{annotations}{A matrix of size \eqn{n\times P}{n * P} with leaf functional
-#' annotations. These can be either 0, 1, or 9 indicating no function, function, and
-#' no information respectively.}
-#' \item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
-#' \code{\link{as_po_tree}}).}
-#' \item{pseq}{Integer vector. The pruning (peeling) sequence.}
+#' @return A list of class `aphylo` with the following elements:
+#' \item{tree}{An object of class [phylo][ape::read.tree].}
+#' \item{tip.annotation}{An integer matrix. Tip (leaf) nodes annotations.}
+#' \item{node.annotation}{An integer matrix (optional). Internal nodes
+#'   annotations.}
+#' \item{offspring}{A list. List of offspring of each node.}
+#' \item{pseq}{Integer vector. The pruning sequence (postorder).}
 #' 
 #' @examples 
 #' # A simple example ----------------------------------------------------------
@@ -473,24 +511,6 @@ as_po_tree.default <- function(edges, edge.length=NULL, ...) {
 #' @name aphylo-class
 NULL
 
-# 
-# set.seed(1)
-# x <- sim_tree(5)
-# x[] <- letters[x[] + 1]
-# attr(x, "offspring") <- NULL
-# check_edgelist(as.matrix(unclass(x)));x
-
-duplicate_check <- function(x, what) {
-  f <- as.factor(x)
-  l <- levels(f)
-  d <- fast_table(as.integer(f))
-  ans <- l[d[which(d[,2] > 1),1]]
-  if (length(ans))
-    stop("The following ", what, " have repeated measures:\n  ",
-         paste(sprintf("- %s (x%i)", ans, d[which(d[,2] > 1),2]), collapse=",\n  "), ".")
-  
-  invisible(0)
-}
 
 #' Checks whether the annotations are in the correct format.
 #' @param x Some node level annotations
@@ -506,29 +526,28 @@ duplicate_check <- function(x, what) {
 #' - Set colnames
 #' @noRd
 check_annotations <- function(x) {
+
+  # Nothing to check if it is NULL
+  if (!length(x))
+    return(x)
+  
+  # If it is a vector, then coerce it into a one column matrix
+  if (is.vector(x) && !is.list(x))
+    x <- cbind(x)
+  
   
   # Checking class
   if (!inherits(x, c("data.frame", "matrix")))
     stop("-annotations- must be either an object of class -data.frame- or -matrix- (is of class ",
          class(x),").")
-  
-  # Checking size
-  P <- ncol(x) - 1L
-  if (P < 1L)
-    stop("-annotations- must have at least 2 columns (it only has ", P + 1L, ").")
-  
-  # Checking class and coercing
-  node_labels <- as.character(x[,1])
-  duplicate_check(node_labels, "genes in -annotations-")
-  
-  
-  test        <- apply(x[,-1,drop=FALSE], 2, typeof)
-  test        <- which(!sapply(test, `%in%`, table = c("integer", "double")))
+
+  test <- apply(x, 2, typeof)
+  test <- which(!sapply(test, `%in%`, table = c("integer", "double")))
   if (length(test))
     stop("All annotation columns (but the first one) must be either -integer- or -double-.",
          " The following columns are not: ", paste(test, collapse=", "), ".")
   
-  node_annotations <- apply(x[,-1,drop=FALSE], 2, as.integer)
+  node_annotations <- apply(x, 2, as.integer)
   
   # Checking values
   test <- which(apply(node_annotations, 1, function(y) any(!(y %in% c(0, 1, 9, NA)))))
@@ -537,7 +556,7 @@ check_annotations <- function(x) {
          paste(test, collapse=", "), ".")
   
   # Replacing NAs
-  node_annotations[is.na(node_annotations)] <- 9
+  node_annotations[is.na(node_annotations)] <- 9L
   
   # Checking colnames
   fun_names <- colnames(node_annotations)
@@ -547,7 +566,7 @@ check_annotations <- function(x) {
   
   # Setting dimnames
   dimnames(node_annotations) <- list(
-    unname(node_labels),
+    1L:nrow(node_annotations),
     fun_names
   )
   
@@ -559,154 +578,102 @@ check_annotations <- function(x) {
 #' @rdname aphylo-class
 #' @export
 new_aphylo <- function(
-  annotations,
-  edges
+  tip.annotation,
+  node.annotation = NULL,
+  tree
   ) {
   
-  # Basic checks ---------------------------------------------------------------
+  # Coercing tree to a phylo object
+  tree <- ape::as.phylo(tree)
   
   # Checking annotations
-  A       <- check_annotations(annotations)
-  alabels <- rownames(A)
-  nlabels <- unique(sort(as.vector(edges)))
+  tip.annotation  <- check_annotations(tip.annotation)
+  node.annotation <- check_annotations(node.annotation)
   
   # Are all annotations in the edgelist
-  test <- which( !(alabels %in% nlabels) )
-  if (length(test))
-    stop("The following -nodes- (annotations) are not in present in -edges-:\n",
-         paste(alabels[test], collapse=", "))
+  if (nrow(tip.annotation) != length(tree$tip.label))
+    stop("The number of `tip.annotation` differs with the number of tips in `tree`.",
+         call. = FALSE)
   
-  # Filling the gaps in A ------------------------------------------------------
-  test  <- which( !(nlabels %in% alabels) )
-  added <- NULL
-  if (length(test)) {
-    
-    # Filling the Annotations
-    A <- rbind(
-      A,
-      matrix(9, nrow = length(test), ncol = ncol(A),
-             dimnames = list(
-               nlabels[test],
-               colnames(A)
-             ))
-    )
-    
-    # And declaring which ones where added
-    added <- nlabels[test]
-  }
-  
-  # Sorting the data
-  A <- A[nlabels, ,drop=FALSE]
-  
-  # Listing offsprings
-  O <- list_offspring(edges)
+  if (length(node.annotation) && (nrow(node.annotation) != tree$Nnode))
+    stop("The number of `node.annotation` differs with the number of internal nodes in `tree`.",
+         call. = FALSE)
   
   # Returning
   as_aphylo(
-    annotations = A,
-    edges       = edges
+    tip.annotation  = tip.annotation,
+    node.annotation = node.annotation,
+    tree             = tree,
+    checks           = FALSE
   )
   
 }
 
+#' For internal use only: Creates the aphylo class object
+#' @noRd
+#' 
 as_aphylo <- function(
-  annotations,
-  edges,
+  tip.annotation,
+  node.annotation,
+  tree,
   checks     = TRUE
   ) {
   
   if (checks) {
     
     # Checking class
-    stopifnot(is.matrix(annotations))
-    stopifnot(is.po_tree(edges))
+    stopifnot(is.matrix(tip.annotation))
+    stopifnot(inherits(tree, "phylo"))
     
     # Checking dimmensions
-    d <- dim(annotations)
-    stopifnot(length(unique(as.vector(edges))) == d[1])
-    
+    stopifnot(nrow(tip.annotation) == length(tree$tip.label))
+    if (length(node.annotation)) {
+      stopifnot(is.matrix(node.annotation))
+      stopifnot(nrow(node.annotation) == tree$Nnode)
+    }
+      
   }
   
+  # Calculating the pruning sequence
+  pseq <- ape::postorder(tree)
+  pseq <- c(tree$edge[pseq, 2], length(tree$tip.label) + 1L)
+  
   structure(
-    list(
-      annotations = annotations,
-      edges       = edges,
-      pseq        = ape::postorder(as.apephylo(edges))
+    c(
+      list(tree = tree),
+      list(tip.annotation = tip.annotation),
+      if (length(node.annotation))
+        list(node.annotation = node.annotation)
+      else 
+        NULL,
+      list(offspring = list_offspring(tree)),
+      list(pseq      = pseq)
     ),
-    class = "aphylo"
+    class = c("aphylo")
   )
 }
 
-#' Coercing into \code{phylo} objects of the \pkg{ape} package.
-#'
-#' \code{as.apephylo} coerces objects to \code{\link[ape:as.phylo]{phylo}} objects
-#' from the \pkg{ape} package. These have several methods including visualization
-#' methods that can be useful.
-#'
-#' @param x An object of class \code{\link[=as_po_tree]{po_tree}} or
-#' \code{\link[=new_aphylo]{aphylo}}.
-#' @param ... Ignored.
-#' @return An object of class \code{\link[ape:as.phylo]{phylo}}
-#' @family Data management functions
-#' @export
-#' @aliases as.aphylo
-as.apephylo <- function(x, ...) UseMethod("as.apephylo")
 
-#' @rdname as.apephylo
-#' @export
-as.apephylo.aphylo <- function(x, ...) {
-  
-  as.apephylo(x$edges)
-}
-
-#' @rdname as.apephylo
-#' @export
-as.apephylo.po_tree <- function(x, ...) {
-  # Cleaning attributes
-  attr(x, "offspring")  <- NULL
-  
-  # Recoding edgelist
-  E <- as_ape_tree(x)
-  
-  is_leaf <- isleaf(E, from0 = FALSE)
-  
-  # Figuring out labels
-  ids <- 0L:(length(attr(x, "labels")) - 1L)
-  tiplabs <- attr(x, "labels")[match(attr(E, "labels")[which(is_leaf)], ids)]
-  nodelabs <- attr(x, "labels")[match(attr(E, "labels")[which(!is_leaf)], ids)]
-  
-  attributes(E) <- list(dim=dim(E))
-  
-  structure(list(
-    edge        = E,
-    edge.length = attr(x, "edge.length"),
-    tip.label   = as.character(unname(tiplabs)),
-    node.label  = as.character(unname(nodelabs)),
-    Nnode       = sum(!is_leaf)
-  ), class = "phylo")
-}
-
-
-#' Plot and print methods for \code{aphylo} objects
+#' Plot and print methods for `aphylo` objects
 #' 
-#' @param x An object of class \code{aphylo}.
+#' @param x An object of class `aphylo`.
 #' @param y Ignored.
-#' @param geom.tiplab.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
-#' @param gheatmap.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
-#' @param scale.fill.args Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}
+#' @param geom.tiplab.args Further arguments passed to [ggtree:ggtree::ggtree()]
+#' @param gheatmap.args Further arguments passed to [ggtree:ggtree::ggtree()]
+#' @param scale.fill.args Further arguments passed to [ggtree:ggtree::ggtree()]
 #' @param ... Further arguments passed to the method.
 #' @name aphylo-methods
-#' @details The \code{plot.aphylo} function is a wrapper of \code{\link[ggtree:ggtree]{ggtree}}
+#' @details The `plot.aphylo` function is a wrapper of [ggtree:ggtree::ggtree()]
 #' that creates a visualization as follows:
 #' \enumerate{
-#'   \item Retrieve the annotations from the \code{\link[=aphylo-class]{aphylo}} object
-#'   \item Create a \code{ggtree} map adding \code{\link[ggtree:geom_tiplab]{geom_tiplab}}s
-#'   \item Use \code{\link[ggtree:gheatmap]{gheatmap}} to add a heatmap.
-#'   \item Set the colors using \code{\link[ggplot2:scale_fill_manual]{scale_fill_manual}}
+#'   \item Retrieve the annotations from the [=aphylo-class::aphylo()] object
+#'   \item Create a `ggtree` map adding [ggtree:geom_tiplab::geom_tiplab()]s
+#'   \item Use [ggtree:gheatmap::gheatmap()] to add a heatmap.
+#'   \item Set the colors using [ggplot2:scale_fill_manual::scale_fill_manual()]
 #' }
 #' 
 #' @export
-#' @return In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
+#' @return In the case of `plot.aphylo`, an object of class `c("ggtree", "gg", "ggplot")`
 #' @family aphylo methods
 plot.aphylo <- function(
   x,
@@ -729,10 +696,10 @@ plot.aphylo <- function(
   if (!("labels" %in% names(scale.fill.args))) scale.fill.args$labels <- c("No function", "Function", "N/A")
   
   # Coercing into a tree
-  tree <- as.apephylo(x$edges)
+  tree <- as.phylo(x)
   
   # Retrieving the annotations
-  A   <- x$annotations
+  A   <- x$tip.annotation
   A[] <- as.character(A)
   
   # Matching positions
@@ -754,7 +721,7 @@ plot.aphylo <- function(
 #' Extract leaf labels 
 #' @param x A phylogenetic tree.
 #' @param ... Ignored.
-#' @return \code{leafs} returns a character vector with the names of the leafs
+#' @return `leafs` returns a character vector with the names of the leafs
 #' @examples 
 #' set.seed(1)
 #' ans <- sim_tree(10)
@@ -785,49 +752,65 @@ leafs.aphylo <- function(x, ...) {
 
 #' @export
 #' @rdname aphylo-methods
-#' @return In the case of \code{print.aphylo}, the same \code{aphylo} object
+#' @return In the case of `print.aphylo`, the same `aphylo` object
 #' invisible.
 print.aphylo <- function(x, ...) {
   
-  print(x$edges)
+  print(x$tree)
   
-  cat("ANNOTATIONS:\n")
+  cat("\n Tip (leafs) annotations:\n")
   
-  ids <- leafs(x)
-  print(utils::head(x$annotations[ids,,drop=FALSE]))
+  print(utils::head(x$tip.annotation))
   
-  if (length(ids) > 6)
-    cat("\n...(", length(ids) - 6, " obs. omitted)...\n\n", sep="")
+  if (nrow(x$tip.annotation) > 6)
+    cat("\n...(", nrow(x$tip.annotation) - 6, " obs. omitted)...\n\n", sep="")
   
+  # Printing node annotations
+  if (length(x$node.annotation)) {
+    cat("\n Internal node annotations:\n")
+    
+    print(utils::head(x$node.annotation))
+    
+    if (nrow(x$node.annotation) > 6)
+      cat("\n...(", nrow(x$node.annotation) - 6, " obs. omitted)...\n\n", sep="")
+  } else {
+    cat("\nNo annotations for internal nodes.")
+  }
   
+
   invisible(x)
 }
 
 #' @export
-#' @param object An object of class \code{aphylo}.
+#' @param object An object of class `aphylo`.
 #' @rdname aphylo-methods
 summary.aphylo <- function(object, ...) {
   
-  ans <- lapply(1:ncol(object$annotations), function(i) table(object$annotations[,i]))
-  
-  if (!inherits(ans, "list"))
-    ans <- list(ans[,1,drop=TRUE])
-  
-  ans <- do.call(
-    rbind, 
-    lapply(ans, function(x)
-    data.frame(
-      `0`  = unname(x["0"]),
-      `1`  = unname(x["1"]),
-      `NA` = unname(x["9"]),
-      check.names = FALSE
+  for (x in c("tip.annotation", "node.annotation")) {
+    ans <- lapply(1:ncol(object[[x]]), function(i) table(object[[x]][,i]))
+    
+    if (!inherits(ans, "list"))
+      ans <- list(ans[,1,drop=TRUE])
+    
+    ans <- do.call(
+      rbind, 
+      lapply(ans, function(x)
+        data.frame(
+          `0`  = unname(x["0"]),
+          `1`  = unname(x["1"]),
+          `NA` = unname(x["9"]),
+          check.names = FALSE
+        )
       )
     )
-  )
-  ans[is.na(ans)] <- 0
-  rownames(ans) <- colnames(object$annotations)
-  cat("\nDistribution of functions:\n")
-  print(ans)
+    
+    ans[is.na(ans)] <- 0
+    rownames(ans) <- colnames(object[[x]])
+    cat("\nDistribution of functions in", x, ":\n")
+    print(ans)
+  }
+  
+  
   
   invisible(ans)
   
@@ -851,7 +834,7 @@ set.default.plot.phylo.params <- function(dots) {
       env[[dots]][[p]] <- default.plot.phylo.params[[p]]
 }
 
-#' @param x An object of class \code{aphylo}.
+#' @param x An object of class `aphylo`.
 #' @param y Ignored.
 #' @param ... Further arguments passed to the method.
 #' @rdname as_po_tree
@@ -861,100 +844,7 @@ plot.po_tree <- function(
 
   dots <- list(...)
   set.default.plot.phylo.params(dots)
-  do.call(ape::plot.phylo, c(list(as.apephylo(x)), dots))
-  
-}
-
-#' Relabel a tree (edgelist) using \pkg{ape}'s convention
-#' 
-#' This function takes an edgelist and recodes (relabels) the nodes following
-#' \CRANpkg{ape}'s coding convention. \code{as_ape_tree} is the powerhorse of
-#' \code{\link{as.apephylo}}.
-#' 
-#' @template parameters
-#' @templateVar edges 1
-#' @return An integer matrix of the same dimmension as \code{edges} with the following
-#' aditional attribute:
-#' \item{labels}{Named integer vector of size \code{n}. Original labels of the edgelist
-#' where the first \code{n} are leaf nodes, \code{n+1} is the root node, and the reminder
-#' are the internal nodes.}
-#' 
-#' @examples 
-#' 
-#' # A simple example ----------------------------------------------------------
-#' set.seed(1231)
-#' 
-#' # Generating a random tree: Observe that the nodes are coded such that
-#' # for all (i,j) that are offspring and parent i > j. This is a requirement
-#' # of the peeling algorithm
-#' edges <- sim_tree(30)
-#' 
-#' # In the ape package, nodes are labeled such that leafs are from 1 to n
-#' # root node is n+1 and interior nodes can have whatever label.
-#' ape_edges <- as_ape_tree(edges)
-#' 
-#' # And further, is easy to go back to the original code
-#' edges_org <- ape_edges
-#' edges_org[] <- attr(ape_edges, "labels")[ape_edges[]]
-#' 
-#' # Comparing the three versions
-#' head(edges)
-#' head(ape_edges)
-#' head(edges_org)
-#' 
-#' @export
-#' @rdname as.apephylo
-as_ape_tree <- function(edges) {
-  
-  # Computing degrees
-  nodes <- unique(as.vector(edges))
-  ideg  <- fast_table_using_labels(edges[,2], nodes)
-  odeg  <- fast_table_using_labels(edges[,1], nodes)
-  
-  # Classifying
-  roots <- nodes[ideg == 0 & odeg > 0]
-  leafs <- nodes[ideg == 1 & odeg == 0]
-  inner <- nodes[ideg == 1 & odeg > 0]
-  
-  # Multiple parents
-  test <- which(ideg > 1)
-  if (length(test))
-    stop("Multiple parents are not supported. The following nodes have multiple parents: ",
-         paste(nodes[test], collapse=", "))
-
-  # Finding roots
-  if (length(roots) > 1)
-    stop("Multiple root nodes are not supported.")
-  if (length(roots) == 0)
-    stop("Can't find a root node here.")
-  
-  # Defining the labels:
-  #  - Leafs go from 1 to n
-  #  - Root node is n + 1
-  #  - And the inner goes from n + 2 to length(nodes)
-  # This doest it smoothly
-  nodes <- c(leafs, roots, inner)
-  
-  # Finding indexes and corresponding new labels
-  iroots <- which(edges[] == roots)
-  lroots <- match(roots, nodes)
-  
-  ileafs <- which(edges[] %in% leafs)
-  lleafs <- match(edges[ileafs], nodes)
-  
-  iinner <- which(edges[] %in% inner)
-  linner <- match(edges[iinner], nodes)
-  
-  # Relabeling the edgelist
-  edges[iroots] <- lroots
-  edges[ileafs] <- lleafs
-  edges[iinner] <- linner
-  
-  structure(
-    edges,
-    labels = nodes,
-    class = c("matrix", "ape_tree")
-  )
+  do.call(ape::plot.phylo, c(list(as.phylo(x)), dots))
   
 }
 

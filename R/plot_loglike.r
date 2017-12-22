@@ -1,20 +1,20 @@
 #' Plot LogLikelihood function of experimental data
-#' @param x An object of class \code{\link[=new_aphylo]{aphylo}}
+#' @param x An object of class [=new_aphylo::aphylo()]
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
 #' @param nlevels Integer scalar. Number of levels of each parameter to create.
-#' @param plotfun Function. Either \code{\link[graphics:contour]{contour}},
-#' @param theta Passed to \code{persp}.
-#' @param shade Passed to \code{persp}.
-#' @param border Passed to \code{persp}.
-#' @param phi Passed to \code{persp}.
-#' @param scale Passed to \code{persp}.
-#' \code{\link[graphics:persp]{persp}}, or other similar function that takes at
-#' least 3 parameters, \code{x,y,z}.
-#' @param par.args List of arguments to be passed to \code{\link{par}} before
-#' \code{plotfun} is called.
-#' @param ... Aditional parameters to be passed to \code{plotfun}.
+#' @param plotfun Function. Either [graphics:contour::contour()],
+#' @param theta Passed to `persp`.
+#' @param shade Passed to `persp`.
+#' @param border Passed to `persp`.
+#' @param phi Passed to `persp`.
+#' @param scale Passed to `persp`.
+#' [graphics:persp::persp()], or other similar function that takes at
+#' least 3 parameters, `x,y,z`.
+#' @param par.args List of arguments to be passed to [par()] before
+#' `plotfun` is called.
+#' @param ... Aditional parameters to be passed to `plotfun`.
 #' @examples 
 #' # Loading data
 #' data(fakeexperiment)

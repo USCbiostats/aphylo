@@ -51,7 +51,7 @@ In the case of \code{is.po_tree}, \code{TRUE} if is an object of
 class \code{po_tree}, \code{FALSE} otherwise.
 }
 \description{
-The function \code{\link{new_aphylo}} uses this function to make sure that
+The function \code{\link[=new_aphylo]{new_aphylo()}} uses this function to make sure that
 the edgelist that is passed makes a partial order. This is a requirement
 for the peeling algorithm, which is used explicitly in the \code{LogLike}
 function.
@@ -73,11 +73,11 @@ potree  <- as_po_tree(apetree)
 potree
 
 # Going back
-as.apephylo(potree)
+as.phylo(potree)
 
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as.apephylo}}, \code{\link{prune}}
+  \code{\link{as.phylo.aphylo}}, \code{\link{prune}}
 }
 \concept{Data management functions}
