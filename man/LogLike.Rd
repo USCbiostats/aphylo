@@ -4,10 +4,16 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, ..., verb_ans = TRUE, check_dims = TRUE)
+LogLike(tree, psi, mu, Pi, verb_ans = TRUE, check_dims = TRUE, ...)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link[ape:phylo]{ape::phylo}.}
+
+\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
+
+\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+
+\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{verb_ans}{Logical scalar. When \code{FALSE} (default) the function
 returns a list with a single scalar (the log-likelihood).}
@@ -16,12 +22,6 @@ returns a list with a single scalar (the log-likelihood).}
 checks the dimmension of the passed parameters.}
 
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
-
-\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
-
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
-
-\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
 }

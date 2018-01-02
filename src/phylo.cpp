@@ -186,7 +186,7 @@ List LogLike(
 
   arma::vec PiP = root_node_prob(Pi, S);  
   for (int s = 0; s<nstates; s++)
-    ll += PiP.at(s)*Pr.at(0, s);
+    ll += PiP.at(s)*Pr.at(pseq.at(pseq.size() - 1u), s);
   
   ll = std::log(ll);
   

@@ -63,9 +63,9 @@ IntegerMatrix sim_fun_on_tree(
   for (int p=0; p<P; p++) {
     
     // Root node function
-    ans.at(pseq.at(0) - 1u, p) = (Pi.at(0) > unif_rand())? 1u : 0u;
+    ans.at(pseq.at(0) - 1, p) = (Pi.at(0) > unif_rand())? 1u : 0u;
     
-    // Assigning probabilities to their offspring
+    // Assigning probabilities to their offspring.
     for (iviter i = pseq.begin(); i != pseq.end(); i++) {
       
       // Leaf nodes have no offspring. So this is when we include the miss
@@ -74,11 +74,13 @@ IntegerMatrix sim_fun_on_tree(
       if (!N_o) {
         
         // Gain Probability
-        if ((ans.at(*i  - 1, p) == 0u) && (psi.at(0) > unif_rand()) ) 
-          ans.at(*i - 1, p) = 1u;
+        if (ans.at(*i  - 1, p) == 0u) 
+          ans.at(*i - 1, p) = (psi.at(0) > unif_rand()) ? 1u : 0u;
         // Loss probability
-        else if ((ans.at(*i - 1, p) == 1u) && (psi.at(1) > unif_rand()) ) 
-          ans.at(*i - 1, p) = 0u;
+        else if (ans.at(*i - 1, p) == 1u) 
+          ans.at(*i - 1, p) = (psi.at(1) > unif_rand()) ? 0u : 1u;
+        else
+          stop("Skipping a leaf node.");
           
         continue;
       }
@@ -93,9 +95,11 @@ IntegerMatrix sim_fun_on_tree(
         if (ans.at(*i - 1, p) == 1u) 
           // Loss probabilities
           ans.at(*o - 1, p) = (mu.at(1) > unif_rand())? 0u : 1u;
-        else 
+        else if (ans.at(*i - 1, p) == 0u)
           // Gain Probabilities
           ans.at(*o - 1, p) = (mu.at(0) > unif_rand())? 1u : 0u;
+        else
+          stop("Skipping an internal node.");
       }
     }
   }

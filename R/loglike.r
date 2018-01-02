@@ -38,10 +38,7 @@
 #' \item{ll}{A numeric scalar with the log-likelihood value given the chosen
 #' parameters.}
 #' @export
-LogLike <- function(tree, ..., verb_ans = TRUE, check_dims=TRUE) UseMethod("LogLike")
-
-#' @export
-LogLike.aphylo <- function(
+LogLike <- function(
   tree,
   psi,
   mu,
@@ -64,28 +61,3 @@ LogLike.aphylo <- function(
   )
 }
 
-#' @export
-LogLike.default <- function(
-  tree,
-  tip.annotation,
-  node.annotation,
-  offspring,
-  pseq,
-  psi,
-  mu,
-  Pi, 
-  verb_ans = TRUE,
-  check_dims = TRUE
-) {
-  
-  .LogLike(
-    annotations = rbind(tip.annotation, node.annotation),
-    offspring   = offspring,
-    pseq        = pseq,
-    psi         = psi,
-    mu          = mu,
-    Pi          = Pi,
-    verb_ans    = verb_ans,
-    check_dims  = check_dims
-  )
-}

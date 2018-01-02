@@ -90,6 +90,9 @@ sim_fun_on_tree <- function(
 ) {
   
   # Must be coerced into a tree of class ape::phylo
+  if (!inherits(tree, "phylo") & !inherits(tree, "aphylo"))
+    stop("`tree` must be of class `phylo` or `aphylo`.", call. = FALSE)
+  
   tree <- ape::as.phylo(tree)
   
   # Generating the preorder sequence
@@ -140,8 +143,6 @@ sim_annotated_tree <- function(
   Pi   = 1
   ) {
   
-  pars <- unlist(c(psi, mu, Pi), recursive = TRUE)
-  names(pars) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
   # Step 1: Simulate a tree
   if (!length(tree)) {
@@ -149,8 +150,7 @@ sim_annotated_tree <- function(
     # Checking if there's n
     if (!length(n))
       stop("When -tree- is not specified, -n- must be specified.")
-    
-    tree  <- ape::reorder.phylo(ape::rtree(n), "postorder")
+    tree  <- ape::rtree(n)
     
   } else 
     tree <- as.phylo(tree)
@@ -159,9 +159,9 @@ sim_annotated_tree <- function(
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
     tree  = tree,
-    psi   = c(pars["psi0"], pars["psi1"]),
-    mu    = c(pars["mu0"], pars["mu1"]),
-    Pi    = pars["Pi"],
+    psi   = psi,
+    mu    = mu,
+    Pi    = Pi,
     P     = P
   )
   

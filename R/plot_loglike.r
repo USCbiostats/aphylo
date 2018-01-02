@@ -87,12 +87,10 @@ plot_LogLike.default <- function(
   
   # Computing the actual loglike value at the selected point
   ll <- LogLike(
-    x$annotations, 
-    attr(x$edges, "offspring"),
-    x$pseq,
-    psi, 
-    mu,
-    Pi,
+    x,
+    psi = psi, 
+    mu = mu,
+    Pi = Pi,
     verb_ans = FALSE,
     check_dims = FALSE
   )$ll
@@ -102,28 +100,23 @@ plot_LogLike.default <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       psi_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        x$pseq,
-        c(PSI[i], PSI[j]),
-        mu,
-        Pi,
+        x,
+        psi = c(PSI[i], PSI[j]),
+        mu  = mu,
+        Pi  = Pi,
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
   
 
-  pi_z <-
-    matrix(nrow = nlevels, ncol = nlevels) # vector("numeric", nlevels)
+  pi_z <- matrix(nrow = nlevels, ncol = nlevels)
   for (i in 1:nlevels)
     for (j in 1:nlevels) {
       pi_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        x$pseq,
-        psi,
-        c(MU[j], mu[2]),
-        PI[i],
+        x,
+        psi = psi,
+        mu  = c(MU[j], mu[2]),
+        Pi  = PI[i],
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
@@ -133,14 +126,12 @@ plot_LogLike.default <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       mu_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        x$pseq,
-        psi,
-        c(MU[i], MU[j]),
-        Pi,
+        x,
+        psi = psi,
+        mu  = c(MU[i], MU[j]),
+        Pi  = Pi,
         verb_ans = FALSE, 
-        check_dims  = FALSE
+        check_dims  = TRUE
       )$ll
   
   # Plotting

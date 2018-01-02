@@ -6,31 +6,19 @@
 
 using namespace Rcpp;
 
-arma::imat states(
-    int P
-  );
-
-arma::mat prob_mat(
-    const arma::vec & pr
-  );
-
-arma::mat leaf_prob(
-    const arma::imat & Z,
-    const arma::imat & S,
-    const arma::vec  & psi
-  );
-
 arma::vec root_node_prob(
-    const arma::vec  & pi,
+    double Pi,
     const arma::imat & S
-  );
+);
 
-arma::mat internal_prob(
-    arma::mat          Pr,
+arma::mat probabilities(
+    const arma::imat & annotations,
+    const arma::ivec & pseq,
     const arma::vec  & mu,
+    const arma::vec  & psi,
     const arma::imat & S,
     const List       & offspring
-  );
+);
 
 List LogLike(
     const arma::imat & Z,

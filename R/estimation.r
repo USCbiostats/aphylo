@@ -136,9 +136,9 @@ aphylo_mle <- function(
   method        = "L-BFGS-B",
   priors        = NULL, 
   control       = list(),
-  params        = rep(.05, 5),
-  lower         = 0,
-  upper         = 1
+  params        = rep(.01, 5),
+  lower         = 1e-5,
+  upper         = 1 - 1e-5
 ) {
   
   
@@ -161,34 +161,34 @@ aphylo_mle <- function(
   
   # Creating the objective function
   fun <- if (length(priors)) {
-    function(params, dat) {
+    function(x, dat) {
 
       ll <- LogLike(
         tree       = dat, 
-        psi        = params[1:2], 
-        mu         = params[3:4], 
-        Pi         = params[5], 
+        psi        = x[1:2], 
+        mu         = x[3:4], 
+        Pi         = x[5], 
         verb_ans   = FALSE, 
         check_dims = FALSE
-        )$ll + sum(log(priors(params)))
+        )$ll + sum(log(priors(x)))
       
-      # Checking if we got a finite result
+      # Checking if we got a infinite result
       if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }
   } else {
-    function(params, dat) {
+    function(x, dat) {
 
       ll <- LogLike(
         tree       = dat, 
-        psi        = params[1:2], 
-        mu         = params[3:4], 
-        Pi         = params[5], 
+        psi        = x[1:2], 
+        mu         = x[3:4], 
+        Pi         = x[5], 
         verb_ans   = FALSE, 
         check_dims = FALSE
       )$ll
 
-      # Checking if we got a finite result
+      # Checking if we got a infinite result
       if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }

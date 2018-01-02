@@ -1,16 +1,22 @@
 context("Parameter estimation")
 
-set.seed(121)
-n <- 200
-P <- 2
+rm(list = ls())
+set.seed(154)
+n <- 500
+P <- 1
 psi <- c(.01, .01)
-mu  <- c(.04, .02)
-Pi  <- .7
+mu  <- c(.02, .05)
+Pi  <- .2
 
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
+summary(dat)
 
 # Estimation via L-BFGS-B
-ans0 <- aphylo_mle(dat)
+ans0 <- aphylo_mle(dat, params = rep(.05, 5), priors = function(p) dbeta(p, 2, 20))
+ans1 <- aphylo_mcmc(dat = dat, params = c(psi, mu, Pi), priors = function(p) dbeta(p, 2, 20),
+                    control=list(nbatch=1e4, thin=50, burnin=1e3, nchains=5))
+ans1
+plot(ans1$hist)
 
 # Methods ----------------------------------------------------------------------
 test_that("Methods", {
