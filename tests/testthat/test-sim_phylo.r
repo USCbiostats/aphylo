@@ -17,5 +17,5 @@ test_that("Simulating Trees", {
   
   ds <- c(n, 1, n-2)
   
-  expect_equivalent(ds, degseq(sim_tree(n)))
+  expect_equivalent(ds, degseq(sim_tree(n)$edge))
 })

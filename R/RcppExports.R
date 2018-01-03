@@ -129,8 +129,8 @@ prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, Pi, P)
 }
 
-.sim_tree <- function(n) {
-    .Call(`_aphylo_sim_tree`, n)
+.sim_tree <- function(n, f, branches) {
+    .Call(`_aphylo_sim_tree`, n, f, branches)
 }
 
 fast_table <- function(x) {
@@ -143,5 +143,9 @@ fast_table_using_labels <- function(x, ids) {
 
 .recode_as_po <- function(edges) {
     .Call(`_aphylo_recode_as_po`, edges)
+}
+
+.list_offspring <- function(E, n) {
+    .Call(`_aphylo_list_offspring`, E, n)
 }
 

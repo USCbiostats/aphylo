@@ -1,9 +1,7 @@
 #' Random tree generation
 #' 
-#' By randomly choosing pairs of vertices, this function generates random
-#' trees from bottom to top such that the labels of the nodes follow a 
-#' partial order in their parent-offspring relation, with the parent
-#' always having a lower idlabel than the offspring.
+#' An alternative to [ape::rtree]. This function was written in C++ and is 
+#' significantly faster than `rtree`. 
 #' 
 #' @param n Integer scalar. Number of leaf nodes.
 #' @param edge.length A Function. Used to set the length of the edges.
@@ -11,45 +9,30 @@
 #' @details The algorithm was implemented as follows
 #' 
 #' \enumerate{
-#'   \item Initialize `left =[n*2 - 2,...,(n-1)]` and `m = n*2 - 2`, and
-#'         initialize the vectors `parent` and `offspring` to be
-#'         empty.
-#'   \item While `length(left) > 1` do:
+#'   \item Initialize `N = {1, ..., n}`, `E` to be empty,
+#'   `k = 2*n - 1`
+#'   \item While `length(N) != 1` do:
 #'   \enumerate{
-#'     \item Randomly choose a pair `(i, j)` from `left`
-#'     \item Add `leaf(i)`, `leaf(j)` to the tail of `offspring`,
-#'     \item Decrease `m` by 1, and add it two times to the tail of
-#'     `parent`.
-#'     \item Remove `(i,j)` from `leaf` and add `m` to its tail.
+#'     \item Randomly choose a pair `(i, j)` from `N`
+#'     \item Add the edges `E = E U {(k, i), (k, j)}`,
+#'     \item Redefine `N = (N \ {i, j}) U {k}`
+#'     \item Set `k = k - 1`
 #'     \item next
 #'   }
-#'   
+#'   \item Use `edge.length(2*n - 1)` (simulating branch lengths).
 #' }
 #' 
-#' The [ape:rtree::rtree()] function in the \pkg{ape} package is similar,
-#' although the big difference is in the way the labels are stablished. This later
-#' point is crucial for both \pkg{phylogenetic} and \pkg{ape} as is a key feature
-#' in some (most) of its routines.
 #' 
-#' @return An matrix of size `(n*2 - 2)*2`, an edgelist, with `n*2-1` nodes.
-#' This, a Directed Acyclic Graph (DAG), as classes `matrix` and `po_tree`.
-#' With the following additional attributes:
-#' \item{offspring}{A list of size `n*2 - 1` listing node ith's offspring if any.}
+#' @return An object of class [ape::phylo] with the edgelist as a postorderd,
+#' `node.label` and `edge.length`.
 #' 
 #' @examples
 #' # A very simple example ----------------------------------------------------
 #' set.seed(1223)
 #' newtree <- sim_tree(50)
 #' 
-#' plot(as.apephylo(newtree))
+#' plot(newtree)
 #' 
-#' # This is what you would do in igraph --------------------------------------
-#' \dontrun{
-#' g   <- ans
-#' g[] <- as.character(g)
-#' g <- igraph::graph_from_edgelist(g)
-#' plot(g, layout = igraph::layout_with_sugiyama(g)[[2]])
-#' }
 #' 
 #' # A performance benchmark with ape::rtree ----------------------------------
 #' \dontrun{
@@ -65,18 +48,13 @@
 #'    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
 #' }
 #' @export
-sim_tree <- function(n, edge.length = stats::runif) {
-  ans <- .sim_tree(n)
-  new_po_tree(
-    edges             = ans,
-    labels            = attr(ans, "labels"),
-    offspring         = attr(ans, "offspring"),
-    edge.length       = edge.length(nrow(ans)),
-    check.edges       = FALSE,
-    check.labels      = FALSE,
-    check.offspring   = FALSE,
-    check.edge.length = FALSE
-    )
+sim_tree <- function(n, edge.length = NULL) {
+  
+  if (!length(edge.length))
+    .sim_tree(n, function(x) rep.int(1, x), FALSE)
+  else
+    .sim_tree(n, edge.length, TRUE)
+  
 }
 
 #' @rdname sim_fun_on_tree
@@ -150,7 +128,7 @@ sim_annotated_tree <- function(
     # Checking if there's n
     if (!length(n))
       stop("When -tree- is not specified, -n- must be specified.")
-    tree  <- ape::rtree(n)
+    tree  <- sim_tree(n)
     
   } else 
     tree <- as.phylo(tree)
@@ -164,8 +142,6 @@ sim_annotated_tree <- function(
     Pi    = Pi,
     P     = P
   )
-  
-  rownames(ans) <- unname(attr(tree, "labels"))
   
   # Creating the aphylo object
   nleaf <- length(tree$tip.label)

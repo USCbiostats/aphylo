@@ -176,8 +176,9 @@ test_that("Internal Probabilities", {
 test_that("Log-Likelihood", {
   ll0 <- LogLike(O, psi, mu, Pi)$ll
   
-  PI  <- aphylo:::root_node_prob(Pi, S)
-  ll1 <- log(sum(Pr[1, , drop = TRUE] * PI))
+  PI   <- aphylo:::root_node_prob(Pi, S)
+  root <- O$pseq[length(O$pseq)]
+  ll1  <- log(sum(Pr[root, , drop = TRUE] * PI))
   
   expect_equal(abs(ll1 - ll0), 0, tol = errtol)
 })

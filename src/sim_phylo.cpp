@@ -141,76 +141,92 @@ table(ans)
 
 
 
-// [[Rcpp::export(name = ".sim_tree")]]
-IntegerMatrix sim_tree(int n) {
+// [[Rcpp::export(name=".sim_tree")]]
+List sim_tree(int n, Function f, bool branches) {
   
-  // Initializing
-  std::vector< int > offspring, parent;
-  std::vector< int > left(n);
-  
-  std::vector< std::vector<int> > offspring_list(n*2 - 1);
-  
-  
-  // Filling the temporary ids
-  for (int i=0;i<n;i++)
-    left.at(i) = n - 1 + i;
-  
-  int i, j;
-  int m = n - 1;
-  while (left.size() > 1) {
-    
-    // Random pick of two
-    i = sample_int(left.size());
-    j = sample_int(left.size() - 1);
-    
-    // Decreasing parent node
-    --m;
-    
-    // Adding to the edgelist
-    offspring.push_back(left.at(i));
-    offspring_list.at(m).push_back(left.at(i));
-    left.erase(left.begin() + i);
-    
-    offspring.push_back(left.at(j));
-    offspring_list.at(m).push_back(left.at(j));
-    
-    parent.push_back(m);
-    parent.push_back(m);
-    
-    left.at(j) = m;
-    
+  // Initializing set
+  std::vector< int > N(n);
+  for (int i=0; i<n; i++) {
+    N.at(i) = i + 1u;
   }
   
-  // Coercing into a Integer Matrix
-  IntegerMatrix edges(offspring.size(),2);
-  for (unsigned int i=0; i<offspring.size(); i++) {
-    edges.at(i,0) = parent.at(i); // - m;
-    edges.at(i,1) = offspring.at(i); // - m;
-  }
+  // Creating labels
+  IntegerVector tiplabel = Rcpp::clone(Rcpp::wrap(N));
+  IntegerVector nodelabel(n - 1);
+  for (int i = 0; i < (n-1); i++)
+    nodelabel.at(i) = n + i + 1;
   
-  // Coercing into list
-  List O(offspring_list.size());
-  for (unsigned int i = 0; i<offspring_list.size(); i++) {
+  // Initializing edges and pseq
+  NumericMatrix E(2*n - 2, 2);
+  NumericVector Pseq(2*n - 1);
+  
+  // Starting the algorithm
+  int i, j, p = 0, e = 0;
+  int k = n*2 - 1;
+  
+  while (N.size() > 1) {
     
-    if (!offspring_list.at(i).size())
-      O.at(i) = IntegerVector::create();
-    else
-      O.at(i) = wrap(offspring_list.at(i));
-  
+    // Picking offspring
+    i = floor(unif_rand() * N.size());
+    j = floor(unif_rand() * (N.size() - 1));
+    
+    // Adjusting, so don't pick the same
+    if (i <= j)
+      j++;
+    
+    // Adding edges
+    E.at(e, 0) = k;
+    E.at(e++, 1) = N.at(i);
+    E.at(e, 0) = k;
+    E.at(e++, 1) = N.at(j);
+    
+    // Adding to peeling seq
+    if (N.at(i) <= n)
+      Pseq.at(p++) = N.at(i);
+    if (N.at(j) <= n)
+      Pseq.at(p++) = N.at(j);
+    
+    Pseq.at(p++) = k;
+    
+    // Modifying List of nodes:
+    // We swap the values so that we can handle the case in which one of them
+    // is the last node in N. If that's the case, then we don't need to swap
+    // values with the back, which is poped out, otherwise, we need to do so
+    // so the last value is kept in the list.
+    if (i > j)
+      std::swap(i, j);
+    if (j != (N.size() - 1))
+      N.at(j) = N.back();
+    
+    N.at(i) = k--;
+    
+    N.pop_back();
   }
   
-  // And the vector of labels
-  StringVector nnames(O.size());
-  for (unsigned int i = 0; i<O.size() ; i++) {
-    char name[10];
-    sprintf(&(name[0]), "%i", i);
-    nnames[i] = name;
-  }
   
-  edges.attr("labels") = nnames;
-  edges.attr("offspring") = O;
+  // Returning
+  List ape;
+  if (branches)
+    ape = List::create(
+      _["edge"]        = E,
+      _["edge.length"] = f(2*n - 2),
+      _["tip.label"]   = tiplabel,
+      _["Nnode"]       = n - 1,
+      _["node.label"]  = nodelabel
+    );
+  else 
+    ape = List::create(
+      _["edge"]        = E,
+      _["tip.label"]   = tiplabel,
+      _["Nnode"]       = n - 1,
+      _["node.label"]  = nodelabel
+    );
   
-  return edges;
+  
+  ape.attr("class") = "phylo";
+  ape.attr("order") = "postorder";
+  
+  return ape;
   
 }
 

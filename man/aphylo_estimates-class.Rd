@@ -15,7 +15,7 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
-  params = rep(0.01, 5), lower = 0, upper = 1)
+  params = rep(0.01, 5), lower = 1e-05, upper = 1 - 1e-05)
 
 \method{print}{aphylo_estimates}(x, ...)
 

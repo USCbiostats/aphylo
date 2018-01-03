@@ -155,13 +155,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // sim_tree
-IntegerMatrix sim_tree(int n);
-RcppExport SEXP _aphylo_sim_tree(SEXP nSEXP) {
+List sim_tree(int n, Function f, bool branches);
+RcppExport SEXP _aphylo_sim_tree(SEXP nSEXP, SEXP fSEXP, SEXP branchesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(sim_tree(n));
+    Rcpp::traits::input_parameter< Function >::type f(fSEXP);
+    Rcpp::traits::input_parameter< bool >::type branches(branchesSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_tree(n, f, branches));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -199,6 +201,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// list_offspring
+List list_offspring(IntegerMatrix E, int n);
+RcppExport SEXP _aphylo_list_offspring(SEXP ESEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_offspring(E, n));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
@@ -211,10 +225,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 8},
     {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
     {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 6},
-    {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 1},
+    {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
     {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
     {"_aphylo_fast_table_using_labels", (DL_FUNC) &_aphylo_fast_table_using_labels, 2},
     {"_aphylo_recode_as_po", (DL_FUNC) &_aphylo_recode_as_po, 1},
+    {"_aphylo_list_offspring", (DL_FUNC) &_aphylo_list_offspring, 2},
     {NULL, NULL, 0}
 };
 

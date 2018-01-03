@@ -13,10 +13,14 @@ plot_LogLike(DAT[[1]], psi = c(.1, .1), mu = c(.1, .1), Pi=.1)
 
 est <- function(d) {
   tryCatch({
-    aphylo_mle(params = rep(.05,5), dat = d, #, control=list(nbatch=5e3, burnin=1e3, thin=10),
+    aphylo_mle(params = rep(.05,5), dat = d , #control=list(nbatch=5e3, burnin=1e3, thin=10),
                 priors = function(u) dbeta(u, 2, 10))
   }, error = function(e) e)
 }
+
+x <- profvis::profvis(x <- sim_annotated_tree(10000))
+htmlwidgets::saveWidget(x, "~/profile.html")
+browseURL("~/profile.html")
 
 cl <- parallel::makeForkCluster(4)
 ANS <- parallel::parLapply(cl, DAT, est)

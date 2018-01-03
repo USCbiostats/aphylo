@@ -9,14 +9,9 @@ mu  <- c(.02, .05)
 Pi  <- .2
 
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
-summary(dat)
 
 # Estimation via L-BFGS-B
-ans0 <- aphylo_mle(dat, params = rep(.05, 5), priors = function(p) dbeta(p, 2, 20))
-ans1 <- aphylo_mcmc(dat = dat, params = c(psi, mu, Pi), priors = function(p) dbeta(p, 2, 20),
-                    control=list(nbatch=1e4, thin=50, burnin=1e3, nchains=5))
-ans1
-plot(ans1$hist)
+ans0 <- aphylo_mle(dat, params = rep(.05, 5))
 
 # Methods ----------------------------------------------------------------------
 test_that("Methods", {
@@ -56,10 +51,8 @@ test_that("MCMC", {
 test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   set.seed(1)
-  tree <- sim_tree(10)
-  A    <- which(aphylo:::isleaf(tree)) - 1L
-  A    <- cbind(A, sample(c(NA), length(A), TRUE))
-  dat  <- new_aphylo(A, tree)
+  dat <- sim_annotated_tree(10, Pi=0, mu=c(0, 0), psi=c(0,0))
+  dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
     aphylo_mcmc(rep(2/12, 5), dat, priors = function(x) dbeta(x, 2, 10),

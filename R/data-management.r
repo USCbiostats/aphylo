@@ -16,21 +16,15 @@
 #' @export
 list_offspring <- function(x) UseMethod("list_offspring")
 
-list_offspring.matrix <- function(x) {
-  ids <- sort(unique(x))
-  
-  structure(
-    lapply(ids, function(i) x[which(x[,1L] == i), 2L]),
-    names = ids
-  )
-  
+list_offspring.aphylo <- function(x) {
+  x$offspring
 }
 
 list_offspring.phylo <- function(x) {
   ids <- 1L:(x$Nnode + length(x$tip.label))
   
   structure(
-    lapply(ids, function(i) x$edge[which(x$edge[,1L] == i), 2L]),
+    .list_offspring(x$edge, length(ids)),
     names = ids
   )
   
