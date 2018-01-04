@@ -143,3 +143,4 @@ arma::mat prob_mat(
   
   return ans;
 }
+

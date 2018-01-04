@@ -7,11 +7,10 @@
 list_offspring(x)
 }
 \arguments{
-\item{x}{Either a matrix or an object of class \code{phylo}}
+\item{x}{An object of class \code{phylo} or \code{aphylo}.}
 }
 \value{
-A named list of length \code{n} (total number of nodes). The names of the
-list correspond to the ids of the nodes in \code{x}.
+List of length \code{n} (total number of nodes).
 }
 \description{
 For each node in a tree, lists all its offspring.

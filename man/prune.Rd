@@ -2,15 +2,9 @@
 % Please edit documentation in R/prune.r
 \name{prune}
 \alias{prune}
-\alias{prune.po_tree}
-\alias{prune.phylo}
 \title{Removing leafs and nodes from a tree}
 \usage{
 prune(x, ids, ...)
-
-\method{prune}{po_tree}(x, ids, ...)
-
-\method{prune}{phylo}(x, ids, ...)
 }
 \arguments{
 \item{x}{An object of class \code{po_tree} or \code{aphylo}.}
@@ -79,6 +73,7 @@ x <- sim_tree(25)
 oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(2,2))
 plot(x)
+
 plot(prune(x, "leafs"))
 plot(prune(prune(x, "leafs"), "leafs"))
 plot(prune(prune(prune(x, "leafs"), "leafs"), "leafs"))
@@ -87,6 +82,6 @@ par(oldpar)
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as.phylo.aphylo}}, \code{\link{as_po_tree}}
+  \code{\link{as.phylo.aphylo}}
 }
 \concept{Data management functions}

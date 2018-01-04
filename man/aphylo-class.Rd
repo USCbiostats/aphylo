@@ -43,7 +43,7 @@ plot(ans)
 }
 \seealso{
 Other Data management functions: \code{\link{as.phylo.aphylo}},
-  \code{\link{as_po_tree}}, \code{\link{prune}}
+  \code{\link{prune}}
 
 Other aphylo methods: \code{\link{aphylo-methods}}
 }

@@ -56,12 +56,12 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   ans1 <- suppressWarnings(
     aphylo_mcmc(rep(2/12, 5), dat, priors = function(x) dbeta(x, 2, 10),
-                control = list(nbatch = 2e4))
+                control = list(nbatch = 1e4))
     )
   
   ans2 <- suppressWarnings(
     aphylo_mcmc(rep(2/32, 5), dat, priors = function(x) dbeta(x, 2, 30),
-                control = list(nbatch = 2e4))
+                control = list(nbatch = 1e4))
   )
   
   # Should converge to the prior

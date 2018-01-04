@@ -22,6 +22,6 @@ methods that can be useful.
 }
 \seealso{
 Other Data management functions: \code{\link{aphylo-class}},
-  \code{\link{as_po_tree}}, \code{\link{prune}}
+  \code{\link{prune}}
 }
 \concept{Data management functions}

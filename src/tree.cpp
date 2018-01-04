@@ -161,9 +161,11 @@ IntegerMatrix recode_as_po(
 }
 
 
+typedef std::vector< std::vector<int> > stdintvec;
+
 // [[Rcpp::export(name = ".list_offspring")]]
 List list_offspring(IntegerMatrix E, int n) {
-  std::vector< std::vector<int> > ans(n);
+  stdintvec ans(n);
   
   for (int i = 0; i < E.nrow(); i++)
     ans.at(E.at(i, 0) - 1).push_back(E.at(i, 1));
@@ -173,4 +175,16 @@ List list_offspring(IntegerMatrix E, int n) {
     O.at(i) = Rcpp::wrap(ans.at(i));
   
   return O;
+}
+
+// [[Rcpp::export(name = ".list_offspring_ptr")]]
+Rcpp::XPtr< std::vector< std::vector<int> > > list_offspring_ptr(IntegerMatrix E, int n) {
+  stdintvec *ans = new stdintvec(n);
+  
+  for (int i = 0; i < E.nrow(); i++)
+    ans->at(E.at(i, 0) - 1).push_back(E.at(i, 1));
+  
+  XPtr< stdintvec > p(ans, true);
+
+  return p;
 }
