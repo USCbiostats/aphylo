@@ -42,6 +42,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reduce_pseq
+IntegerVector reduce_pseq(const arma::ivec& pseq, const arma::mat& A, const List& offspring);
+RcppExport SEXP _aphylo_reduce_pseq(SEXP pseqSEXP, SEXP ASEXP, SEXP offspringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_pseq(pseq, A, offspring));
+    return rcpp_result_gen;
+END_RCPP
+}
 // root_node_prob
 arma::vec root_node_prob(double Pi, const arma::imat& S);
 RcppExport SEXP _aphylo_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
@@ -234,6 +247,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},
+    {"_aphylo_reduce_pseq", (DL_FUNC) &_aphylo_reduce_pseq, 3},
     {"_aphylo_root_node_prob", (DL_FUNC) &_aphylo_root_node_prob, 2},
     {"_aphylo_probabilities", (DL_FUNC) &_aphylo_probabilities, 7},
     {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 9},

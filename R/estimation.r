@@ -369,7 +369,7 @@ aphylo_mcmc <- function(
   names(params) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
   # Running the MCMC
-  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat), control))
+  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat, useCpp=TRUE), control))
   
   # We treat all chains as mcmc.list
   if (!inherits(ans, "mcmc.list"))

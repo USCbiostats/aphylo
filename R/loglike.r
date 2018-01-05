@@ -61,4 +61,3 @@ LogLike <- function(
     ...
   )
 }
-

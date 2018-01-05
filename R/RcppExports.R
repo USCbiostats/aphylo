@@ -46,6 +46,13 @@ prob_mat <- function(pr) {
     .Call(`_aphylo_prob_mat`, pr)
 }
 
+#' Reduces the peeling sequence so that only nodes that have something to contribute
+#' are included in the sequence.
+#' @noRd
+reduce_pseq <- function(pseq, A, offspring) {
+    .Call(`_aphylo_reduce_pseq`, pseq, A, offspring)
+}
+
 root_node_prob <- function(Pi, S) {
     .Call(`_aphylo_root_node_prob`, Pi, S)
 }
