@@ -161,32 +161,30 @@ IntegerMatrix recode_as_po(
 }
 
 
-// [[Rcpp::export]]
-List list_offspring(
-    const arma::umat & edges
-) {
+typedef std::vector< std::vector<int> > stdintvec;
+
+// [[Rcpp::export(name = ".list_offspring")]]
+List list_offspring(IntegerMatrix E, int n) {
+  stdintvec ans(n);
   
-  if (edges.n_rows == 0)
-    stop("No edges in this tree (nrow(edges) = 0).");
+  for (int i = 0; i < E.nrow(); i++)
+    ans.at(E.at(i, 0) - 1).push_back(E.at(i, 1));
   
-  unsigned int n = edges.max() - edges.min() + 1u, i;
-  std::vector< std::vector< arma::uword > > offspring(n);
+  List O(n);
+  for (int i = 0; i < n; i++)
+    O.at(i) = Rcpp::wrap(ans.at(i));
   
-  // Listing offsprings
-  for (i = 0u; i < edges.n_rows; i++) {
-    // Adding the offspring
-    offspring.at(edges.at(i, 0u)).push_back(edges.at(i, 1u));
-  }
-  
-  // Coercing into a list
-  List ans(n);
-  for (i = 0u; i < n; i++) {
-    if (offspring.at(i).size() == 0) ans.at(i) = IntegerVector::create();
-    else ans.at(i) = wrap( offspring.at(i) );
-    // else ans.at(i) = arma::conv_to< arma::urowvec >::from( offspring.at(i) );
-  }
-  
-  return ans;
+  return O;
 }
 
+// [[Rcpp::export(name = ".list_offspring_ptr")]]
+Rcpp::XPtr< std::vector< std::vector<int> > > list_offspring_ptr(IntegerMatrix E, int n) {
+  stdintvec *ans = new stdintvec(n);
+  
+  for (int i = 0; i < E.nrow(); i++)
+    ans->at(E.at(i, 0) - 1).push_back(E.at(i, 1));
+  
+  XPtr< stdintvec > p(ans, true);
 
+  return p;
+}

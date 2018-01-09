@@ -143,3 +143,60 @@ arma::mat prob_mat(
   
   return ans;
 }
+
+//' Reduces the peeling sequence so that only nodes that have something to contribute
+//' are included in the sequence.
+//' @noRd
+// [[Rcpp::export]]
+IntegerVector reduce_pseq(
+    const arma::ivec & pseq,
+    const arma::mat & A,
+    const List & offspring
+) {
+  
+
+  int P = A.n_cols;
+  std::vector< int > newpseq;
+  std::vector< bool > included(A.n_rows);
+  
+
+  typedef arma::ivec::const_iterator iviter;
+  typedef IntegerVector::const_iterator Riviter;
+  IntegerVector O;
+  for (iviter i = pseq.begin(); i != pseq.end(); i++) {
+    
+    // Default to false
+    included.at(*i - 1u) = false;
+    
+    // First check its offspring
+    if (Rf_length(offspring.at(*i - 1u))) {
+      O = offspring.at(*i - 1u);
+      for (Riviter o = O.begin(); o != O.end(); o++) {
+        
+        // Was any offspring included?
+        if (included.at(*o - 1u)) {
+          included.at(*i - 1u)  = true;
+          newpseq.push_back(*i);
+          break;
+        }
+        
+      }
+      
+      // Did we included it? If yes, then go to the next dude
+      if (included.at(*i - 1u))
+        continue;
+        
+    }
+    
+    // We'll try to include him looking at the annotations...
+    for (int p = 0; p < P; p++) 
+      if (A.at(*i - 1u, p) != 9) {
+        included.at(*i - 1u) = true;
+        newpseq.push_back(*i);
+        break;
+      }
+      
+  }
+    
+  return Rcpp::wrap(newpseq);
+}

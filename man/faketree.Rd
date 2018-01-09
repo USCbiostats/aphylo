@@ -5,8 +5,8 @@
 \title{Fake Phylogenetic Tree}
 \format{A data frame with 6 rows and 2 variables:
 \describe{
-  \item{NodeId}{Integer, ID of the offspring.}
-  \item{ParentId}{Integer, ID of the parent.}
+\item{NodeId}{Integer, ID of the offspring.}
+\item{ParentId}{Integer, ID of the parent.}
 }}
 \source{
 BiostatsUSC

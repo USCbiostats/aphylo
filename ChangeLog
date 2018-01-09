@@ -1,3 +1,32 @@
+2018-01-04  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* src/misc.cpp: New function reduce_pseq proposes a peeling seq that
+	  skips ininformative nodes.
+
+	* R/data-management.r: Remove a bunch of routines that wont be used
+	  anymore related to PO trees.
+
+
+2018-01-03  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* src/sim_phylo.cpp: Simulating trees using ape's phylo convention. 
+	  about 20x faster than rtree. Returns a phylo object.
+	* R/simulation.r: Idem.
+
+	* src/tree.cpp: Function to list offspring of a tree.
+	* R/data-management.r: idem.
+
+	* src/phylo.cpp: Likelihood was not been computed at the root node!
+	  but this is for the new method. The old one was OK.
+	* 
+
+2017-12-20  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* playground/*: Working on functions to prune trees using po traversal
+	  or pre-order traversal. Algorithms working and good exercise to have
+	  a better understanding of the pruning algorithm.
+
+
 2017-10-18  George G. Vega Yon <g.vegayon@gmail.com>
 	* R/data-management.r: Fixing bug in plot.aphylo.
 

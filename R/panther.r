@@ -2,18 +2,18 @@
 #' 
 #' The PANTHER Project handles a modified version of newick tree files which,
 #' besides of the tree structure, includes the type of node and ancestor
-#' labels. This function is a wrapper of \code{\link[ape:read.tree]{read.tree}}.
+#' labels. This function is a wrapper of [ape:read.tree::read.tree()].
 #' 
 #' @param x Character scalar. Full path to the panther file.
-#' @param ... Further arguments passed to \code{\link[ape:read.tree]{read.tree}}.
+#' @param ... Further arguments passed to [ape:read.tree::read.tree()].
 #' @return
 #' 
-#' A list consisting of a data.frame and a \code{phylo} object. The
+#' A list consisting of a data.frame and a `phylo` object. The
 #' data.frame has the following columns:
 #'  
 #' \item{branch_length}{Numeric vector. Length of the branch to its parent node.}
-#' \item{type}{Character vector. Can be either \code{"S"} (speciation), \code{"D"}
-#' (duplication), or \code{"T"} (horizontal transfer).}
+#' \item{type}{Character vector. Can be either `"S"` (speciation), `"D"`
+#' (duplication), or `"T"` (horizontal transfer).}
 #' \item{ancestor}{Character vector. Name of the ancestor.}
 #' 
 #' The nodeids can be identified using the rownames.
@@ -28,7 +28,7 @@ NULL
 
 #' @export
 #' @param tree.reader Function that will be used to read the tree file.
-#' It can be either \code{ape::read.tree} or \code{rncl::read_newick_phylo}.
+#' It can be either `ape::read.tree` or `rncl::read_newick_phylo`.
 #' @rdname panther-tree
 read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Reading the data-in

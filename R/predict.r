@@ -1,9 +1,9 @@
 
 #' @rdname aphylo_estimates-class
 #' @param what Either a character scalar or an integer vector. If a character,
-#' then it can be either \code{"missings"}, \code{"leafs"}, or \code{"all"}. If an integer vector,
+#' then it can be either `"missings"`, `"leafs"`, or `"all"`. If an integer vector,
 #' then these must be values between \eqn{[0, n - 1]} (node ids).
-#' @return In the case of the \code{predict} method, a two-column numeric matrix
+#' @return In the case of the `predict` method, a two-column numeric matrix
 #' with values between \eqn{[0,1]} (probabilities).
 #' @export
 predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
@@ -43,10 +43,10 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
 #' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
 #' used to compute the random imputation score.
-#' @param W A square matrix. Must have as many rows as genes in \code{expected}.
+#' @param W A square matrix. Must have as many rows as genes in `expected`.
 #' @export
-#' @details In the case of \code{prediction_score}, \code{...} are passed to
-#' \code{predict.aphylo_estimates}.
+#' @details In the case of `prediction_score`, `...` are passed to
+#' `predict.aphylo_estimates`.
 #' 
 #' @examples 
 #' # Example with prediction_score ---------------------------------------------
@@ -148,16 +148,16 @@ print.aphylo_prediction_score <- function(x, ...) {
 
 #' @export
 #' @param y Ignored.
-#' @param main Passed to \code{title}.
+#' @param main Passed to `title`.
 #' @param which.fun Integer vector. Which function to plot.
-#' @param include.labels Logical scalar. When \code{TRUE}, draws nice labels
-#' at each slice which by default are specified as the rownames of \code{x$expected}.
+#' @param include.labels Logical scalar. When `TRUE`, draws nice labels
+#' at each slice which by default are specified as the rownames of `x$expected`.
 #' This is mostly useful when the number of predictions is small.
 #' @param labels.col Character scalar. Color of the labels.
 #' @param main.colorkey Character scalar. Title of the colorkey (optional).
 #' @rdname aphylo_estimates-class  
-#' @details If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
-#' then \code{include.labels=FALSE} by default.
+#' @details If `include.labels = NULL` and `ncol(x$expected) > 40`,
+#' then `include.labels=FALSE` by default.
 #' 
 plot.aphylo_prediction_score <- function(
   x,

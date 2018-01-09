@@ -1,46 +1,46 @@
 #' Parameter estimation of Annotated Phylogenetic Trees
 #'
-#' The optimization is done via \code{optim}.
+#' The optimization is done via `optim`.
 #'
 #' @param params A vector of length 5 with initial parameters. In particular
-#' \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.
-#' @param dat An object of class \code{new_aphylo} as returned by
-#' \code{\link{new_aphylo}}.
-#' @param method Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
-#' optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{optim}}. 
-#' @param priors A list of length 3 with functions named \code{psi}, \code{mu},
-#' \code{Pi}
+#' `psi[1]`, `psi[2]`, `mu[1]`, `mu[2]`, and `Pi`.
+#' @param dat An object of class `new_aphylo` as returned by
+#' [new_aphylo()].
+#' @param method Character scalar. When `"ABC"`, uses Artificial Bee Colony
+#' optimization algorithm, otherwise it uses a method in [stats:optim::optim()]. 
+#' @param priors A list of length 3 with functions named `psi`, `mu`,
+#' `Pi`
 #' @param control A list with parameters for the optimization method (see
 #' details).
 #' @param lower Numeric vector of length 5. Lower bounds, default to 0.0001.
 #' @param upper Numeric vector of length 5. Upper bounds, default to 0.9999
-#' @param object An object of class \code{aphylo_estimates}.
+#' @param object An object of class `aphylo_estimates`.
 #' 
 #' @details 
 #' 
-#' \code{phylo_mcmc} is a wrapper of \code{\link{MCMC}}, so, instead of treating the
-#' problem as a maximization problem, \code{phylo_mcmc} generates a \bold{Markov Chain}.
-#' The default values of \code{control} are:
+#' `phylo_mcmc` is a wrapper of [MCMC()], so, instead of treating the
+#' problem as a maximization problem, `phylo_mcmc` generates a **Markov Chain**.
+#' The default values of `control` are:
 #' 
 #' \tabular{ll}{
-#' \code{nbatch} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
-#' \code{scale} \tab Numeric scalar. Default \code{0.01}. \cr
-#' \code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
-#' \code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
+#' `nbatch` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
+#' `scale` \tab Numeric scalar. Default `0.01`. \cr
+#' `lb` \tab Numeric vector. Default `rep(1e-20, 5)`. \cr
+#' `ub` \tab Numeric vector. Default `rep(1 - 1e-20, 5)`. \cr
 #' }
 #' 
 #' @return 
-#' A list of class \code{aphylo_estimates} with the following elements:
+#' A list of class `aphylo_estimates` with the following elements:
 #' \item{par}{A numeric vector of length 5 with the solution.}
-#' \item{hist}{A numeric matrix of size \code{counts*5} with the solution path (length 2 if used \code{optim}
+#' \item{hist}{A numeric matrix of size `counts*5` with the solution path (length 2 if used `optim`
 #' as the intermediate steps are not available to the user).}
-#' \item{ll}{A numeric scalar with the value of \code{fun(par, dat)}. The value of the log likelihood.}
+#' \item{ll}{A numeric scalar with the value of `fun(par, dat)`. The value of the log likelihood.}
 #' \item{counts}{Integer scalar number of steps/batch performed.}
-#' \item{convergence}{Integer scalar. Equal to 0 if \code{optim} converged. See \code{optim}.}
-#' \item{message}{Character scalar. See \code{optim}.}
+#' \item{convergence}{Integer scalar. Equal to 0 if `optim` converged. See `optim`.}
+#' \item{message}{Character scalar. See `optim`.}
 #' \item{fun}{A function (the objective function).}
-#' \item{priors}{If specified, the function \code{priors} passed to the method.}
-#' \item{dat}{The data \code{dat} provided to the function.}
+#' \item{priors}{If specified, the function `priors` passed to the method.}
+#' \item{dat}{The data `dat` provided to the function.}
 #' \item{par0}{A numeric vector of length 5 with the initial parameters.}
 #' \item{method}{Character scalar with the name of the method used.}
 #' \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
@@ -136,9 +136,9 @@ aphylo_mle <- function(
   method        = "L-BFGS-B",
   priors        = NULL, 
   control       = list(),
-  params        = rep(.05, 5),
-  lower         = 0,
-  upper         = 1
+  params        = rep(.01, 5),
+  lower         = 1e-5,
+  upper         = 1 - 1e-5
 ) {
   
   
@@ -161,36 +161,34 @@ aphylo_mle <- function(
   
   # Creating the objective function
   fun <- if (length(priors)) {
-    function(params, dat) {
+    function(x, dat) {
 
       ll <- LogLike(
-        annotations = dat$annotations, 
-        offspring   = attr(dat$edges, "offspring"),
-        psi         = params[1:2], 
-        mu          = params[3:4], 
-        Pi          = params[5], 
-        verb_ans    = FALSE, 
-        check_dims  = FALSE
-        )$ll + sum(log(priors(params)))
+        tree       = dat, 
+        psi        = x[1:2], 
+        mu         = x[3:4], 
+        Pi         = x[5], 
+        verb_ans   = FALSE, 
+        check_dims = FALSE
+        )$ll + sum(log(priors(x)))
       
-      # Checking if we got a finite result
+      # Checking if we got a infinite result
       if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }
   } else {
-    function(params, dat) {
+    function(x, dat) {
 
       ll <- LogLike(
-        annotations = dat$annotations, 
-        offspring   = attr(dat$edges, "offspring"),
-        psi         = params[1:2], 
-        mu          = params[3:4], 
-        Pi          = params[5], 
-        verb_ans    = FALSE, 
-        check_dims  = FALSE
+        tree       = dat, 
+        psi        = x[1:2], 
+        mu         = x[3:4], 
+        Pi         = x[5], 
+        verb_ans   = FALSE, 
+        check_dims = FALSE
       )$ll
 
-      # Checking if we got a finite result
+      # Checking if we got a infinite result
       if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
       ll
     }
@@ -255,8 +253,8 @@ print.aphylo_estimates <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
-  props      <- with(x$dat, table(annotations[isleaf(edges),,drop=FALSE]))
-  propspcent <- prop.table(props)*100
+  # props      <- with(x$dat, table(annotations[isleaf(edges),,drop=FALSE]))
+  # propspcent <- prop.table(props)*100
   
   with(x, {
     cat(
@@ -269,8 +267,8 @@ print.aphylo_estimates <- function(x, ...) {
       else
         sprintf("convergence: %i (see ?optim)", convergence)
       ,
-      sprintf("Leafs\n # of Functions %i", ncol(dat$annotations)),
-      paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
+      sprintf("Leafs\n # of Functions %i", ncol(dat$tip.annotation)),
+      #paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
             "\n         Estimate  Std. Error",
       sprintf(" psi[0]    %6.4f      %6.4f", par["psi0"], sderrors["psi0"]),
       sprintf(" psi[1]    %6.4f      %6.4f", par["psi1"], sderrors["psi1"]),
@@ -296,7 +294,7 @@ vcov.aphylo_estimates <- function(object, ...) {
   object$varcovar
 }
 
-#' @param x An object of class \code{aphylo_estimates}.
+#' @param x An object of class `aphylo_estimates`.
 #' @param ... Further arguments passed to the method.
 #' @rdname aphylo_estimates-class
 #' @export
@@ -309,8 +307,8 @@ plot.aphylo_estimates <- function(
 }
 
 #' @rdname aphylo_estimates-class
-#' @return In the case of \code{aphylo_mcmc}, \code{hist} is an object of class
-#' \code{\link[coda:mcmc.list]{mcmc.list}}.
+#' @return In the case of `aphylo_mcmc`, `hist` is an object of class
+#' [coda:mcmc.list::mcmc.list()].
 #' @export
 aphylo_mcmc <- function(
   params,
@@ -343,13 +341,12 @@ aphylo_mcmc <- function(
     function(params, dat) {
 
       LogLike(
-        annotations = dat$annotations,
-        offspring   = attr(dat$edges, "offspring"),
-        psi         = params[1:2] ,
-        mu          = params[3:4] ,
-        Pi          = params[5],
-        verb_ans    = FALSE, 
-        check_dims  = FALSE
+        tree       = dat,
+        psi        = params[1:2] ,
+        mu         = params[3:4] ,
+        Pi         = params[5],
+        verb_ans   = FALSE, 
+        check_dims = FALSE
       )$ll + sum(log(priors(params)))
       
     }
@@ -357,13 +354,12 @@ aphylo_mcmc <- function(
     function(params, dat) {
 
       LogLike(
-        annotations = dat$annotations,
-        offspring   = attr(dat$edges, "offspring"),
-        psi         = params[1:2] ,
-        mu          = params[3:4] ,
-        Pi          = params[5],
-        verb_ans    = FALSE, 
-        check_dims  = FALSE
+        tree       = dat,
+        psi        = params[1:2] ,
+        mu         = params[3:4] ,
+        Pi         = params[5],
+        verb_ans   = FALSE, 
+        check_dims = FALSE
       )$ll
       
     }
@@ -373,7 +369,7 @@ aphylo_mcmc <- function(
   names(params) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
   
   # Running the MCMC
-  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat), control))
+  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat, useCpp=TRUE), control))
   
   # We treat all chains as mcmc.list
   if (!inherits(ans, "mcmc.list"))

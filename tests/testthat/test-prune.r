@@ -1,7 +1,8 @@
 context("Tree prunning")
 
-
 test_that("Basic set of tests", {
+  
+  testthat::skip("Not available yet")
   
   # A known tree
   x <- structure(

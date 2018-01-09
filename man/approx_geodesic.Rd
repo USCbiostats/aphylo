@@ -25,8 +25,6 @@ pair of nodes.
 Given an adjacency matrix \eqn{A}, the geodesic can be approximated using
 its powers, since each \eqn{(i,j)} element of \eqn{A^p} corresponds to the
 number of \eqn{p} length steps between nodes \eqn{i} and \eqn{j}.
-
-\code{}
 }
 \details{
 When \code{undirected = TRUE}, the function extends \code{edges} such that

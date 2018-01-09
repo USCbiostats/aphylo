@@ -1,20 +1,20 @@
 #' Plot LogLikelihood function of experimental data
-#' @param x An object of class \code{\link[=new_aphylo]{aphylo}}
+#' @param x An object of class [=new_aphylo::aphylo()]
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
 #' @param nlevels Integer scalar. Number of levels of each parameter to create.
-#' @param plotfun Function. Either \code{\link[graphics:contour]{contour}},
-#' @param theta Passed to \code{persp}.
-#' @param shade Passed to \code{persp}.
-#' @param border Passed to \code{persp}.
-#' @param phi Passed to \code{persp}.
-#' @param scale Passed to \code{persp}.
-#' \code{\link[graphics:persp]{persp}}, or other similar function that takes at
-#' least 3 parameters, \code{x,y,z}.
-#' @param par.args List of arguments to be passed to \code{\link{par}} before
-#' \code{plotfun} is called.
-#' @param ... Aditional parameters to be passed to \code{plotfun}.
+#' @param plotfun Function. Either [graphics:contour::contour()],
+#' @param theta Passed to `persp`.
+#' @param shade Passed to `persp`.
+#' @param border Passed to `persp`.
+#' @param phi Passed to `persp`.
+#' @param scale Passed to `persp`.
+#' [graphics:persp::persp()], or other similar function that takes at
+#' least 3 parameters, `x,y,z`.
+#' @param par.args List of arguments to be passed to [par()] before
+#' `plotfun` is called.
+#' @param ... Aditional parameters to be passed to `plotfun`.
 #' @examples 
 #' # Loading data
 #' data(fakeexperiment)
@@ -87,11 +87,10 @@ plot_LogLike.default <- function(
   
   # Computing the actual loglike value at the selected point
   ll <- LogLike(
-    x$annotations, 
-    attr(x$edges, "offspring"),
-    psi, 
-    mu,
-    Pi,
+    x,
+    psi = psi, 
+    mu = mu,
+    Pi = Pi,
     verb_ans = FALSE,
     check_dims = FALSE
   )$ll
@@ -101,26 +100,23 @@ plot_LogLike.default <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       psi_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        c(PSI[i], PSI[j]),
-        mu,
-        Pi,
+        x,
+        psi = c(PSI[i], PSI[j]),
+        mu  = mu,
+        Pi  = Pi,
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
   
 
-  pi_z <-
-    matrix(nrow = nlevels, ncol = nlevels) # vector("numeric", nlevels)
+  pi_z <- matrix(nrow = nlevels, ncol = nlevels)
   for (i in 1:nlevels)
     for (j in 1:nlevels) {
       pi_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        psi,
-        c(MU[j], mu[2]),
-        PI[i],
+        x,
+        psi = psi,
+        mu  = c(MU[j], mu[2]),
+        Pi  = PI[i],
         verb_ans = FALSE, 
         check_dims  = FALSE
       )$ll
@@ -130,13 +126,12 @@ plot_LogLike.default <- function(
   for (i in 1:nlevels)
     for (j in 1:nlevels)
       mu_z[i, j] <- LogLike(
-        x$annotations,
-        attr(x$edges, "offspring"),
-        psi,
-        c(MU[i], MU[j]),
-        Pi,
+        x,
+        psi = psi,
+        mu  = c(MU[i], MU[j]),
+        Pi  = Pi,
         verb_ans = FALSE, 
-        check_dims  = FALSE
+        check_dims  = TRUE
       )$ll
   
   # Plotting

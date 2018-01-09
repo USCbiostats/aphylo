@@ -42,6 +42,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reduce_pseq
+IntegerVector reduce_pseq(const arma::ivec& pseq, const arma::mat& A, const List& offspring);
+RcppExport SEXP _aphylo_reduce_pseq(SEXP pseqSEXP, SEXP ASEXP, SEXP offspringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_pseq(pseq, A, offspring));
+    return rcpp_result_gen;
+END_RCPP
+}
 // root_node_prob
 arma::vec root_node_prob(double Pi, const arma::imat& S);
 RcppExport SEXP _aphylo_root_node_prob(SEXP PiSEXP, SEXP SSEXP) {
@@ -55,40 +68,44 @@ BEGIN_RCPP
 END_RCPP
 }
 // probabilities
-arma::mat probabilities(const arma::imat& annotations, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const List& offspring);
-RcppExport SEXP _aphylo_probabilities(SEXP annotationsSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP offspringSEXP) {
+arma::mat probabilities(const arma::imat& annotations, const arma::ivec& pseq, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const List& offspring, arma::mat& Pr);
+RcppExport SEXP _aphylo_probabilities(SEXP annotationsSEXP, SEXP pseqSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP offspringSEXP, SEXP PrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
-    rcpp_result_gen = Rcpp::wrap(probabilities(annotations, mu, psi, S, offspring));
+    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
+    rcpp_result_gen = Rcpp::wrap(probabilities(annotations, pseq, mu, psi, S, offspring, Pr));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& annotations, const List& offspring, const arma::vec& psi, const arma::vec& mu, double Pi, bool verb_ans, bool check_dims);
-RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
+List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr, bool verb_ans, bool check_dims);
+RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
     Rcpp::traits::input_parameter< bool >::type verb_ans(verb_ansSEXP);
     Rcpp::traits::input_parameter< bool >::type check_dims(check_dimsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike(annotations, offspring, psi, mu, Pi, verb_ans, check_dims));
+    rcpp_result_gen = Rcpp::wrap(LogLike(annotations, offspring, pseq, psi, mu, Pi, Pr, verb_ans, check_dims));
     return rcpp_result_gen;
 END_RCPP
 }
 // predict_fun
-double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::vec& psi, const arma::vec& mu, double Pi);
-RcppExport SEXP _aphylo_predict_fun(SEXP iSEXP, SEXP pSEXP, SEXP di0SEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr);
+RcppExport SEXP _aphylo_predict_fun(SEXP iSEXP, SEXP pSEXP, SEXP di0SEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -97,16 +114,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type di0(di0SEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict_fun(i, p, di0, annotations, offspring, psi, mu, Pi));
+    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
+    rcpp_result_gen = Rcpp::wrap(predict_fun(i, p, di0, annotations, offspring, pseq, psi, mu, Pi, Pr));
     return rcpp_result_gen;
 END_RCPP
 }
 // predict_funs
-arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::vec& psi, const arma::vec& mu, double Pi);
-RcppExport SEXP _aphylo_predict_funs(SEXP idsSEXP, SEXP edgesSEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
+arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr);
+RcppExport SEXP _aphylo_predict_funs(SEXP idsSEXP, SEXP edgesSEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,10 +133,12 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::umat& >::type edges(edgesSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict_funs(ids, edges, annotations, offspring, psi, mu, Pi));
+    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
+    rcpp_result_gen = Rcpp::wrap(predict_funs(ids, edges, annotations, offspring, pseq, psi, mu, Pi, Pr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -135,28 +156,31 @@ BEGIN_RCPP
 END_RCPP
 }
 // sim_fun_on_tree
-IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
-RcppExport SEXP _aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
+IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, const arma::vec& Pi, int P);
+RcppExport SEXP _aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< int >::type P(PSEXP);
-    rcpp_result_gen = Rcpp::wrap(sim_fun_on_tree(offspring, psi, mu, Pi, P));
+    rcpp_result_gen = Rcpp::wrap(sim_fun_on_tree(offspring, pseq, psi, mu, Pi, P));
     return rcpp_result_gen;
 END_RCPP
 }
 // sim_tree
-IntegerMatrix sim_tree(int n);
-RcppExport SEXP _aphylo_sim_tree(SEXP nSEXP) {
+List sim_tree(int n, Function f, bool branches);
+RcppExport SEXP _aphylo_sim_tree(SEXP nSEXP, SEXP fSEXP, SEXP branchesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(sim_tree(n));
+    Rcpp::traits::input_parameter< Function >::type f(fSEXP);
+    Rcpp::traits::input_parameter< bool >::type branches(branchesSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_tree(n, f, branches));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -195,13 +219,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // list_offspring
-List list_offspring(const arma::umat& edges);
-RcppExport SEXP _aphylo_list_offspring(SEXP edgesSEXP) {
+List list_offspring(IntegerMatrix E, int n);
+RcppExport SEXP _aphylo_list_offspring(SEXP ESEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::umat& >::type edges(edgesSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_offspring(edges));
+    Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_offspring(E, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// list_offspring_ptr
+Rcpp::XPtr< std::vector< std::vector<int> > > list_offspring_ptr(IntegerMatrix E, int n);
+RcppExport SEXP _aphylo_list_offspring_ptr(SEXP ESEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_offspring_ptr(E, n));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -210,18 +247,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},
+    {"_aphylo_reduce_pseq", (DL_FUNC) &_aphylo_reduce_pseq, 3},
     {"_aphylo_root_node_prob", (DL_FUNC) &_aphylo_root_node_prob, 2},
-    {"_aphylo_probabilities", (DL_FUNC) &_aphylo_probabilities, 5},
-    {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 7},
-    {"_aphylo_predict_fun", (DL_FUNC) &_aphylo_predict_fun, 8},
-    {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 7},
+    {"_aphylo_probabilities", (DL_FUNC) &_aphylo_probabilities, 7},
+    {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 9},
+    {"_aphylo_predict_fun", (DL_FUNC) &_aphylo_predict_fun, 10},
+    {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 9},
     {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
-    {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 5},
-    {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 1},
+    {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 6},
+    {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
     {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
     {"_aphylo_fast_table_using_labels", (DL_FUNC) &_aphylo_fast_table_using_labels, 2},
     {"_aphylo_recode_as_po", (DL_FUNC) &_aphylo_recode_as_po, 1},
-    {"_aphylo_list_offspring", (DL_FUNC) &_aphylo_list_offspring, 1},
+    {"_aphylo_list_offspring", (DL_FUNC) &_aphylo_list_offspring, 2},
+    {"_aphylo_list_offspring_ptr", (DL_FUNC) &_aphylo_list_offspring_ptr, 2},
     {NULL, NULL, 0}
 };
 

@@ -19,11 +19,11 @@
 
 \item{y}{Ignored.}
 
-\item{geom.tiplab.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}}
+\item{geom.tiplab.args}{Further arguments passed to \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}}
 
-\item{gheatmap.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}}
+\item{gheatmap.args}{Further arguments passed to \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}}
 
-\item{scale.fill.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree}}}
+\item{scale.fill.args}{Further arguments passed to \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}}
 
 \item{...}{Further arguments passed to the method.}
 
@@ -39,15 +39,16 @@ invisible.
 Plot and print methods for \code{aphylo} objects
 }
 \details{
-The \code{plot.aphylo} function is a wrapper of \code{\link[ggtree:ggtree]{ggtree}}
+The \code{plot.aphylo} function is a wrapper of \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}
 that creates a visualization as follows:
 \enumerate{
-  \item Retrieve the annotations from the \code{\link[=aphylo-class]{aphylo}} object
-  \item Create a \code{ggtree} map adding \code{\link[ggtree:geom_tiplab]{geom_tiplab}}s
-  \item Use \code{\link[ggtree:gheatmap]{gheatmap}} to add a heatmap.
-  \item Set the colors using \code{\link[ggplot2:scale_fill_manual]{scale_fill_manual}}
+\item Retrieve the annotations from the \code{\link[=aphylo-class:aphylo]{=aphylo-class::aphylo()}} object
+\item Create a \code{ggtree} map adding \code{\link[ggtree:geom_tiplab:geom_tiplab]{ggtree:geom_tiplab::geom_tiplab()}}s
+\item Use \code{\link[ggtree:gheatmap:gheatmap]{ggtree:gheatmap::gheatmap()}} to add a heatmap.
+\item Set the colors using \code{\link[ggplot2:scale_fill_manual:scale_fill_manual]{ggplot2:scale_fill_manual::scale_fill_manual()}}
 }
 }
 \seealso{
 Other aphylo methods: \code{\link{aphylo-class}}
 }
+\concept{aphylo methods}

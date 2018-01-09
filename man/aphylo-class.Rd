@@ -5,7 +5,7 @@
 \alias{new_aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
-new_aphylo(annotations, edges)
+new_aphylo(tip.annotation, node.annotation = NULL, tree)
 }
 \arguments{
 \item{annotations}{Matrix of size \eqn{n\times P + 1}{n*P + 1}. Annotation data, where the first column is the nodeid (should coincide with the coding of the tree), the following columns are function annotations coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
@@ -14,22 +14,21 @@ new_aphylo(annotations, edges)
 }
 \value{
 A list of class \code{aphylo} with the following elements:
-\item{annotations}{A matrix of size \eqn{n\times P}{n * P} with leaf functional
-annotations. These can be either 0, 1, or 9 indicating no function, function, and
-no information respectively.}
-\item{edges}{An integer matrix of class \code{po_tree}. An edgelist (see 
-\code{\link{as_po_tree}}).}
+\item{tree}{An object of class \link[ape:read.tree]{phylo}.}
+\item{tip.annotation}{An integer matrix. Tip (leaf) nodes annotations.}
+\item{node.annotation}{An integer matrix (optional). Internal nodes
+annotations.}
+\item{offspring}{A list. List of offspring of each node.}
+\item{pseq}{Integer vector. The pruning sequence (postorder).}
 }
 \description{
 The \code{aphylo} class tree holds both the tree structure represented as a
 partially ordered phylogenetic tree, and node annotations. While annotations
 are included for both leafs and inner nodes, the algorithms included in this
 package only uses the leaf annotations.
-
-\code{}
 }
 \details{
-Plotting is done via \code{\link[ggtree:ggtree]{ggtree}} 
+Plotting is done via \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}
 from the \pkg{ggtree} package (Bioconductor).
 }
 \examples{
@@ -43,8 +42,10 @@ ans <- new_aphylo(fakeexperiment, faketree)
 plot(ans)
 }
 \seealso{
-Other Data management functions: \code{\link{as.apephylo}},
-  \code{\link{as_po_tree}}, \code{\link{prune}}
+Other Data management functions: \code{\link{as.phylo.aphylo}},
+  \code{\link{prune}}
 
 Other aphylo methods: \code{\link{aphylo-methods}}
 }
+\concept{Data management functions}
+\concept{aphylo methods}
