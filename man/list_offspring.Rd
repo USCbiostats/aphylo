@@ -2,9 +2,15 @@
 % Please edit documentation in R/data-management.r
 \name{list_offspring}
 \alias{list_offspring}
+\alias{list_offspring.aphylo}
+\alias{list_offspring.phylo}
 \title{List each nodes' offspring}
 \usage{
 list_offspring(x)
+
+\method{list_offspring}{aphylo}(x)
+
+\method{list_offspring}{phylo}(x)
 }
 \arguments{
 \item{x}{An object of class \code{phylo} or \code{aphylo}.}

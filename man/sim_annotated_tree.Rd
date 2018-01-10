@@ -5,7 +5,7 @@
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
 sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
-  mu = c(0.1, 0.05), Pi = 1)
+  mu = c(0.1, 0.05), Pi = 1, informative = TRUE, maxtries = 20L)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
@@ -19,6 +19,10 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
+
+\item{informative, maxtries}{Passed to \link{sim_fun_on_tree}.}
+
+\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 }
 \value{
 An object of class \link{aphylo}

@@ -14,13 +14,13 @@ Description: The `aphylo` R package implements estimation and data imputation
   used with the package. Finally, `aphylo` works smoothly with popular tools for
   analysis of phylogenetic data such as `ape` R package, "Analyses of
   Phylogenetics and Evolution".
-Depends: R (>= 3.1.1)
+Depends: R (>= 3.1.1), ape
 LazyData: true
 Imports:
     Rcpp (>= 0.12.1),
     Matrix,
     methods,
-    coda, ape, rncl,
+    coda, rncl,
     stringr,
     ggplot2, ggtree,
     amcmc,

@@ -11,6 +11,8 @@ new_aphylo(tip.annotation, tree, node.annotation = NULL)
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
 
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
+
+\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
@@ -42,8 +44,6 @@ ans <- new_aphylo(fakeexperiment[,2:3], faketree)
 plot(ans)
 }
 \seealso{
-Other Data management functions: \code{\link{prune}}
-
 Other aphylo methods: \code{\link{aphylo-methods}}
 }
 \concept{Data management functions}

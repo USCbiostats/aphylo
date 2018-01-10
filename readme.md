@@ -29,6 +29,8 @@ Reading data
 library(aphylo)
 ```
 
+    ## Loading required package: ape
+
 ``` r
 # This datasets are included in the package
 data("fakeexperiment")
@@ -37,61 +39,69 @@ data("faketree")
 head(fakeexperiment)
 ```
 
-    ##   LeafId f1 f2
-    ## 1      3  0  0
-    ## 2      4  0  1
-    ## 3      5  1  0
-    ## 4      6  1  1
+    ##      LeafId f1 f2
+    ## [1,]      1  0  0
+    ## [2,]      2  0  1
+    ## [3,]      3  1  0
+    ## [4,]      4  1  1
 
 ``` r
 head(faketree)
 ```
 
     ##      ParentId NodeId
-    ## [1,]        1      3
-    ## [2,]        1      4
-    ## [3,]        2      5
-    ## [4,]        2      6
-    ## [5,]        0      1
-    ## [6,]        0      2
+    ## [1,]        6      1
+    ## [2,]        6      2
+    ## [3,]        7      3
+    ## [4,]        7      4
+    ## [5,]        5      6
+    ## [6,]        5      7
 
 ``` r
 O <- new_aphylo(
-  annotations = fakeexperiment,
-  edges       = faketree
+  tip.annotation = fakeexperiment[,2:3],
+  tree           = faketree
 )
 
 O
 ```
 
     ## 
-    ## A PARTIALLY ORDERED PHYLOGENETIC TREE
+    ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
-    ##   # Internal nodes: 3
-    ##   # Leaf nodes    : 4
+    ## Tip labels:
+    ## [1] 1 2 3 4
+    ## Node labels:
+    ## [1] 5 6 7
     ## 
-    ##   Leaf nodes labels: 
-    ##     3, 4, 5, 6.
+    ## Rooted; no branch lengths.
     ## 
-    ##   Internal nodes labels:
-    ##     0, 1, 2.
+    ##  Tip (leafs) annotations:
+    ##   f1 f2
+    ## 1  0  0
+    ## 2  0  1
+    ## 3  1  0
+    ## 4  1  1
     ## 
-    ## ANNOTATIONS:
-    ##      f1 f2
+    ##  Internal node annotations:
+    ##   f1 f2
+    ## 5  9  9
+    ## 6  9  9
+    ## 7  9  9
 
 ``` r
-as.apephylo(O)
+as.phylo(O)
 ```
 
     ## 
     ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] "3" "4" "5" "6"
+    ## [1] 1 2 3 4
     ## Node labels:
-    ## [1] "0" "1" "2"
+    ## [1] 5 6 7
     ## 
-    ## Rooted; includes branch lengths.
+    ## Rooted; no branch lengths.
 
 ``` r
 # We can visualize it
@@ -101,13 +111,13 @@ plot(O)
     ## Scale for 'fill' is already present. Adding another scale for 'fill',
     ## which will replace the existing scale.
 
-![](readme_files/figure-markdown_github-ascii_identifiers/Get%20offspring-1.png)
+![](readme_files/figure-markdown_github/Get%20offspring-1.png)
 
 ``` r
 plot_LogLike(O)
 ```
 
-![](readme_files/figure-markdown_github-ascii_identifiers/Get%20offspring-2.png)
+![](readme_files/figure-markdown_github/Get%20offspring-2.png)
 
 Simulating annoated trees
 -------------------------
@@ -115,29 +125,47 @@ Simulating annoated trees
 ``` r
 set.seed(1958)
 dat <- sim_annotated_tree(
-  100, P=1, 
+  200, P=1, 
   psi = c(0.05, 0.05),
-  mu  = c(0.1, 0.05),
-  Pi  = 1
+  mu  = c(0.1, 0.1),
+  Pi  = .5
   )
 
 dat
 ```
 
     ## 
-    ## A PARTIALLY ORDERED PHYLOGENETIC TREE
+    ## Phylogenetic tree with 200 tips and 199 internal nodes.
     ## 
-    ##   # Internal nodes: 99
-    ##   # Leaf nodes    : 100
+    ## Tip labels:
+    ##  1, 2, 3, 4, 5, 6, ...
+    ## Node labels:
+    ##  201, 202, 203, 204, 205, 206, ...
     ## 
-    ##   Leaf nodes labels: 
-    ##     99, 100, 101, 102, 103, 104, ...
+    ## Rooted; no branch lengths.
     ## 
-    ##   Internal nodes labels:
-    ##     0, 1, 2, 3, 4, 5, ...
-    ## 
-    ## ANNOTATIONS:
+    ##  Tip (leafs) annotations:
     ##      fun0000
+    ## [1,]       0
+    ## [2,]       0
+    ## [3,]       1
+    ## [4,]       0
+    ## [5,]       1
+    ## [6,]       0
+    ## 
+    ## ...(194 obs. omitted)...
+    ## 
+    ## 
+    ##  Internal node annotations:
+    ##      fun0000
+    ## [1,]       1
+    ## [2,]       1
+    ## [3,]       1
+    ## [4,]       1
+    ## [5,]       1
+    ## [6,]       1
+    ## 
+    ## ...(193 obs. omitted)...
 
 Likelihood
 ----------
@@ -149,19 +177,14 @@ mu      <- c(0.04,.01)
 pi_root <- .999
 
 # Computing likelihood
-with(dat, 
-     LogLike(
-       annotations = annotations, 
-       offspring   = attr(edges, "offspring"), 
-       psi = psi, mu = mu, Pi = pi_root)
-)
+str(LogLike(dat, psi = psi, mu = mu, Pi = pi_root))
 ```
 
-    ## $ll
-    ## [1] -68.26373
-    ## 
-    ## attr(,"class")
-    ## [1] "phylo_LogLik"
+    ## List of 3
+    ##  $ S : int [1:2, 1] 0 1
+    ##  $ Pr: num [1:399, 1:2] 0.98 0.98 0.02 0.98 0.02 0.98 0.02 0.02 0.02 0.02 ...
+    ##  $ ll: num -158
+    ##  - attr(*, "class")= chr "phylo_LogLik"
 
 Estimation
 ==========
@@ -171,29 +194,29 @@ Estimation
 (ans0 <- aphylo_mle(dat))
 ```
 
+    ## Warning in sqrt(diag(x$varcovar)): NaNs produced
+
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -50.1556,
-    ## Method used: L-BFGS-B (30 iterations)
+    ## ll: -135.5278,
+    ## Method used: L-BFGS-B (41 iterations)
     ## convergence: 0 (see ?optim)
     ## Leafs
     ##  # of Functions 1
-    ##  # of 0:    22 (22%)
-    ##  # of 1:    78 (78%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.5394      0.2297
-    ##  psi[1]    0.0724      0.0801
-    ##  mu[0]     0.0369      0.1573
-    ##  mu[1]     0.0677      0.0584
-    ##  Pi        1.0000      1.0360
+    ##  psi[0]    1.0000      0.2089
+    ##  psi[1]    1.0000      0.5945
+    ##  mu[0]     0.7675      0.5698
+    ##  mu[1]     0.6075      0.4436
+    ##  Pi        0.0000         NaN
 
 ``` r
 # Plotting loglike
 plot_LogLike(ans0)
 ```
 
-![](readme_files/figure-markdown_github-ascii_identifiers/MLE-1.png)
+![](readme_files/figure-markdown_github/MLE-1.png)
 
 ``` r
 # MCMC method
@@ -206,19 +229,17 @@ ans2
 
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll:  -47.4017,
+    ## ll: -115.2645,
     ## Method used: mcmc (10000 iterations)
     ## Leafs
     ##  # of Functions 1
-    ##  # of 0:    22 (22%)
-    ##  # of 1:    78 (78%)
     ## 
     ##          Estimate  Std. Error
-    ##  psi[0]    0.1340      0.0835
-    ##  psi[1]    0.0831      0.0428
-    ##  mu[0]     0.1623      0.0786
-    ##  mu[1]     0.0578      0.0274
-    ##  Pi        0.1312      0.1004
+    ##  psi[0]    0.1066      0.0827
+    ##  psi[1]    0.0846      0.1073
+    ##  mu[0]     0.0884      0.0868
+    ##  mu[1]     0.1457      0.0608
+    ##  Pi        0.1081      0.0675
 
 ``` r
 # MCMC Diagnostics with coda
@@ -229,15 +250,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##      Point est. Upper C.I.
-    ## psi0       1.11       1.27
-    ## psi1       1.03       1.07
-    ## mu0        1.06       1.16
-    ## mu1        1.04       1.08
-    ## Pi         1.11       1.26
+    ## psi0       1.05       1.12
+    ## psi1       1.01       1.02
+    ## mu0        1.02       1.06
+    ## mu1        1.01       1.03
+    ## Pi         1.15       1.36
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.11
+    ## 1.13
 
 ``` r
 summary(ans2$hist)
@@ -252,27 +273,27 @@ summary(ans2$hist)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##         Mean      SD  Naive SE Time-series SE
-    ## psi0 0.13401 0.08348 0.0016780       0.006577
-    ## psi1 0.08315 0.04275 0.0008594       0.002059
-    ## mu0  0.16226 0.07855 0.0015790       0.006112
-    ## mu1  0.05780 0.02745 0.0005517       0.001168
-    ## Pi   0.13120 0.10041 0.0020183       0.008871
+    ##         Mean      SD Naive SE Time-series SE
+    ## psi0 0.10657 0.08267 0.001662       0.006510
+    ## psi1 0.08463 0.10734 0.002158       0.011103
+    ## mu0  0.08838 0.08676 0.001744       0.008486
+    ## mu1  0.14571 0.06077 0.001222       0.004906
+    ## Pi   0.10810 0.06754 0.001358       0.004727
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##         2.5%     25%     50%    75%  97.5%
-    ## psi0 0.01861 0.07174 0.11816 0.1800 0.3394
-    ## psi1 0.01533 0.05103 0.07904 0.1103 0.1775
-    ## mu0  0.03132 0.10577 0.15593 0.2102 0.3364
-    ## mu1  0.01539 0.03805 0.05467 0.0737 0.1191
-    ## Pi   0.01810 0.06455 0.10694 0.1690 0.4257
+    ##          2.5%     25%     50%     75%  97.5%
+    ## psi0 0.018781 0.06337 0.09221 0.12748 0.3591
+    ## psi1 0.008775 0.03413 0.05899 0.09273 0.4778
+    ## mu0  0.017215 0.05013 0.07152 0.09698 0.4289
+    ## mu1  0.078284 0.11627 0.13728 0.16062 0.3067
+    ## Pi   0.014523 0.05720 0.09680 0.14932 0.2581
 
 ``` r
 plot(ans2$hist)
 ```
 
-![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-1.png)![](readme_files/figure-markdown_github-ascii_identifiers/MCMC-2.png)
+![](readme_files/figure-markdown_github/MCMC-1.png)![](readme_files/figure-markdown_github/MCMC-2.png)
 
 Prediction
 ==========
@@ -283,18 +304,16 @@ pred
 ```
 
     ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-    ## Observed : 0.08 (81.86)
-    ## Random   : 0.25 (243.26)
-    ## Best     : 0.00 (0.00)
-    ## Worse    : 1.00 (973.05)
+    ## Observed : 0.16 
+    ## Random   : 0.25 
     ## ---------------------------------------------------------------------------
-    ## Values between 0 and 1, 0 being best. Absolute scores in parenthesis.
+    ## Values standarized to range between 0 and 1, 0 being best.
 
 ``` r
 plot(pred)
 ```
 
-![](readme_files/figure-markdown_github-ascii_identifiers/Predict-1.png)
+![](readme_files/figure-markdown_github/Predict-1.png)
 
 Misc
 ====

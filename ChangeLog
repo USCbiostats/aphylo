@@ -1,3 +1,23 @@
+2018-01-10  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* R/estimation.r: Doc + estimation checks whether aphylo is informative.
+
+	* R/prune.r: Completely removed. No longer needed.
+
+	* R/simulation.r: Working on Doc + sim functions check if the resulting
+	  tree is informative or not + new function rdrop_annotations.
+	* tests/testthat/*: Several new tests on the previous point.
+
+
+2018-01-09  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* R/ape.r: Working on documentation.
+	* R/data-management.r: idem
+	* R/simulation.r: idem.
+
+	* R/predict.r: Adapting pred functions to new structure of aphylo.
+	
+
 2018-01-04  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* src/misc.cpp: New function reduce_pseq proposes a peeling seq that

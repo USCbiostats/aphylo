@@ -17,16 +17,16 @@
 #' 
 #' # A simple example ----------------------------------------------------------
 #' # This tree has a coding different from ape's
-#' \dontrun{
+#' 
 #' mytree <- matrix(c(1, 2, 1, 3, 2, 4, 2, 5), byrow = TRUE, ncol=2)
 #' mytree
 #' 
-#' ans <- ape::as.phylo(mytree)
+#' ans <- as.phylo(mytree)
 #' ans
 #' plot(ans)
-#' }
 #' 
-#' @name ape-as.phylo
+#' 
+#' @name as.phylo
 NULL
 
 #' Creates a phylo object
@@ -63,9 +63,9 @@ new_phylo <- function(
   )
 }
 
-
-#' @rdname ape-as.phylo
+#' @rdname as.phylo
 #' @export
+#' @method as.phylo matrix
 as.phylo.matrix <- function(
   x,
   edge.length = NULL,
@@ -142,8 +142,9 @@ as.phylo.matrix <- function(
 }
 
 
-#' @rdname ape-as.phylo
+#' @rdname as.phylo
 #' @export
+#' @method as.phylo aphylo
 as.phylo.aphylo <- function(x, ...) {
   
   x$tree

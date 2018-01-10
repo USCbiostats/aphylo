@@ -4,7 +4,8 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(tree, psi, mu, Pi, P = 1L)
+sim_fun_on_tree(tree, psi, mu, Pi, P = 1L, informative = TRUE,
+  maxtries = 20L)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
@@ -16,6 +17,13 @@ sim_fun_on_tree(tree, psi, mu, Pi, P = 1L)
 \item{Pi}{A numeric vector of length 2 (see details).}
 
 \item{P}{Integer scalar. Number of functions to simulate.}
+
+\item{informative}{Logical scalar. When \code{TRUE} (default) the function
+re-runs the simulation algorithm until both 0s and 1s show in the leaf
+nodes of the tree.}
+
+\item{maxtries}{Integer scalar. If \code{informative = TRUE}, then the function
+will try at most \code{maxtries} times.}
 }
 \value{
 An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
@@ -38,7 +46,7 @@ newtree <- sim_tree(1e3)
 
 # Simulating
 ans <- sim_fun_on_tree(
-  attr(newtree, "offspring"),
+  newtree,
   psi = c(.001, .05),
   mu = c(.01, .05),
   Pi = c(.5, .5)

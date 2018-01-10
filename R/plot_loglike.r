@@ -19,7 +19,7 @@
 #' # Loading data
 #' data(fakeexperiment)
 #' data(faketree)
-# O <- new_aphylo(fakeexperiment[,2:3], faketree)
+#' O <- new_aphylo(fakeexperiment[,2:3], faketree)
 #' 
 #' # Nice personalized plot
 #' plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 

@@ -49,12 +49,12 @@ head(faketree)
 
 ```{r Get offspring}
 O <- new_aphylo(
-  annotations = fakeexperiment,
-  edges       = faketree
+  tip.annotation = fakeexperiment[,2:3],
+  tree           = faketree
 )
 
 O
-as.apephylo(O)
+as.phylo(O)
 
 # We can visualize it
 plot(O)
@@ -66,10 +66,10 @@ plot_LogLike(O)
 ```{r}
 set.seed(1958)
 dat <- sim_annotated_tree(
-  100, P=1, 
+  200, P=1, 
   psi = c(0.05, 0.05),
-  mu  = c(0.1, 0.05),
-  Pi  = 1
+  mu  = c(0.1, 0.1),
+  Pi  = .5
   )
 
 dat
@@ -86,12 +86,7 @@ mu      <- c(0.04,.01)
 pi_root <- .999
 
 # Computing likelihood
-with(dat, 
-     LogLike(
-       annotations = annotations, 
-       offspring   = attr(edges, "offspring"), 
-       psi = psi, mu = mu, Pi = pi_root)
-)
+str(LogLike(dat, psi = psi, mu = mu, Pi = pi_root))
 
 ```
 

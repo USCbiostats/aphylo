@@ -15,10 +15,14 @@
 #' @export
 list_offspring <- function(x) UseMethod("list_offspring")
 
+#' @rdname list_offspring
+#' @export
 list_offspring.aphylo <- function(x) {
   x$offspring
 }
 
+#' @rdname list_offspring
+#' @export
 list_offspring.phylo <- function(x) {
   .list_offspring(x$edge, x$Nnode + length(x$tip.label))
 }

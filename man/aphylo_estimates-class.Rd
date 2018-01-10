@@ -15,7 +15,8 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
-  params = rep(0.01, 5), lower = 1e-05, upper = 1 - 1e-05)
+  params = rep(0.01, 5), lower = 1e-05, upper = 1 - 1e-05,
+  check.informative = TRUE)
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -25,7 +26,8 @@ aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 
 \method{plot}{aphylo_estimates}(x, ...)
 
-aphylo_mcmc(params, dat, priors = NULL, control = list())
+aphylo_mcmc(params, dat, priors = NULL, control = list(),
+  check.informative = TRUE)
 
 \method{predict}{aphylo_estimates}(object, what = c("missings", "all"), ...)
 
@@ -58,6 +60,9 @@ details).}
 \item{lower}{Numeric vector of length 5. Lower bounds, default to 0.0001.}
 
 \item{upper}{Numeric vector of length 5. Upper bounds, default to 0.9999}
+
+\item{check.informative}{Logical scalar. When \code{TRUE} (default) the algorithm
+stops with an error when the annotations are uninformative (either 0s or 1s).}
 
 \item{x}{An object of class \code{aphylo_estimates}.}
 
@@ -161,7 +166,7 @@ ans_dbeta
 
 set.seed(1233)
 # Simulating a tree
-tree <- sim_tree(200)$edges
+tree <- sim_tree(200)
 
 # Simulating functions
 dat <- sim_annotated_tree(

@@ -15,6 +15,8 @@
 #' @param lower Numeric vector of length 5. Lower bounds, default to 0.0001.
 #' @param upper Numeric vector of length 5. Upper bounds, default to 0.9999
 #' @param object An object of class `aphylo_estimates`.
+#' @param check.informative Logical scalar. When `TRUE` (default) the algorithm
+#' stops with an error when the annotations are uninformative (either 0s or 1s).
 #' 
 #' @details 
 #' 
@@ -73,7 +75,7 @@
 #' 
 #' set.seed(1233)
 #' # Simulating a tree
-#' tree <- sim_tree(200)$edges
+#' tree <- sim_tree(200)
 #' 
 #' # Simulating functions
 #' dat <- sim_annotated_tree(
@@ -129,6 +131,14 @@ new_aphylo_estimates <- function(
   )
 }
 
+#' Stop if the model is uninformative
+#' @noRd
+stop_ifuninformative <- function(tip.annotation) {
+  tab <- fast_table_using_labels(tip.annotation, c(0L, 1L))
+  if (tab[1L] == 0L & tab[2] == 0L)
+    stop("The model is uninformative (either there's only 0s or 1s).", call. = FALSE)
+}
+
 #' @rdname aphylo_estimates-class
 #' @export
 aphylo_mle <- function(
@@ -138,7 +148,8 @@ aphylo_mle <- function(
   control       = list(),
   params        = rep(.01, 5),
   lower         = 1e-5,
-  upper         = 1 - 1e-5
+  upper         = 1 - 1e-5,
+  check.informative = TRUE
 ) {
   
   
@@ -156,6 +167,10 @@ aphylo_mle <- function(
   if (getOption("aphylo_reduce_pseq", FALSE))
     dat$pseq <- reduce_pseq(dat$pseq, with(dat, rbind(tip.annotation, node.annotation)), dat$offspring)
 
+  # If the models is uninformative, then it will return with error
+  if (check.informative)
+    stop_ifuninformative(dat$tip.annotation)
+  
   # In case of fixing parameters
   par0 <- params
   
@@ -318,7 +333,8 @@ aphylo_mcmc <- function(
   params,
   dat,
   priors        = NULL,
-  control       = list()
+  control       = list(),
+  check.informative = TRUE
 ) {
   
   # Checking control
@@ -336,6 +352,10 @@ aphylo_mcmc <- function(
   
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
+  
+  # If the models is uninformative, then it will return with error
+  if (check.informative)
+    stop_ifuninformative(dat$tip.annotation)
   
   # In case of fixing parameters
   par0 <- params

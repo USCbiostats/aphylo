@@ -36,22 +36,26 @@
 #' 
 #' # A performance benchmark with ape::rtree ----------------------------------
 #' \dontrun{
+#' library(ape)
 #' microbenchmark::microbenchmark(
-#' ape = rtree(1e3),
+#'   ape = rtree(1e3),
 #'   phy = sim_tree(1e3),
-#' unit = "relative"
+#'  unit = "relative"
 #' )
 #' # This is what you would get.
-#' Unit: relative
-#'   expr     min       lq     mean  median       uq      max neval
-#'    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100
-#'    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
+#' # Unit: relative
+#' #   expr     min       lq     mean  median       uq      max neval
+#' #    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100
+#' #    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
 #' }
 #' @export
 sim_tree <- function(n, edge.length = NULL) {
   
+  if (!is.null(edge.length) && !is.function(edge.length))
+    stop("When not NULL `edge.length` should be a function.")
+  
   if (!length(edge.length))
-    .sim_tree(n, function(x) rep.int(1, x), FALSE)
+    .sim_tree(n, function(x) {}, FALSE)
   else
     .sim_tree(n, edge.length, TRUE)
   
@@ -83,7 +87,7 @@ sim_tree <- function(n, edge.length = NULL) {
 #' 
 #' # Simulating
 #' ans <- sim_fun_on_tree(
-#'   attr(newtree, "offspring"),
+#'   newtree,
 #'   psi = c(.001, .05),
 #'   mu = c(.01, .05),
 #'   Pi = c(.5, .5)
@@ -91,14 +95,44 @@ sim_tree <- function(n, edge.length = NULL) {
 #' 
 #' # Tabulating results
 #' table(ans)
+#' @name sim_fun_on_tree
+NULL
+
+#' To register function counts
+#' This is just to keep track of how many simulations were needed to have an
+#' informative function.
+#' @noRd 
+sim_counts <- new.env(parent = emptyenv())
+sim_counts$n <- vector("integer", 5e4)
+sim_counts$i <- 1L
+sim_counts$add <-function(n) {
+  
+  # Adding the number to the counter
+  sim_counts$n[sim_counts$i] <- n
+  
+  # Restarting the counter!
+  if (sim_counts$i == 5e4)
+    sim_counts$i <- 0L
+  
+  # Adding one element
+  sim_counts$i <- sim_counts$i + 1L
+}
+
 #' @rdname sim_fun_on_tree
+#' @param informative Logical scalar. When `TRUE` (default) the function 
+#' re-runs the simulation algorithm until both 0s and 1s show in the leaf
+#' nodes of the tree.
+#' @param maxtries Integer scalar. If `informative = TRUE`, then the function
+#' will try at most `maxtries` times.
 #' @export
 sim_fun_on_tree <- function(
   tree,
   psi,
   mu,
   Pi,
-  P = 1L
+  P           = 1L,
+  informative = TRUE,
+  maxtries    = 20L
 ) {
   
   # Must be coerced into a tree of class ape::phylo
@@ -117,15 +151,38 @@ sim_fun_on_tree <- function(
   pseq <- c(length(tree$tip.label) + 1L, pseq[length(pseq):1L])
   
   # Calling the c++ function that does the hard work
-  .sim_fun_on_tree(
-    offspring = list_offspring(tree),
-    pseq      = pseq,
-    psi       = psi,
-    mu        = mu,
-    Pi        = Pi,
-    P         = P
-  )
+  has_both  <- FALSE
+  ntries    <- 1L
+  offspring <- list_offspring(tree)
+  ntips     <- length(tree$tip.label)
+  while (!has_both) {
+    f <- .sim_fun_on_tree(
+      offspring = offspring,
+      pseq      = pseq,
+      psi       = psi,
+      mu        = mu,
+      Pi        = Pi,
+      P         = P
+    )
+    
+    # Checking break
+    if (!informative | (ntries > maxtries))
+      break
+    
+    # Increasing
+    tab <- fast_table_using_labels(as.vector(f[1:ntips,]), c(0, 1))
+    has_both <- (tab[1] > 0) & (tab[2] > 0)
+    ntries <- ntries + 1L
+  }
   
+  # Increasing the stats
+  sim_counts$add(ntries - 1L)
+  
+  # Wasn't
+  if (informative & !has_both)
+    warning("The computed function has either only zeros or only ones.")
+  
+  f
 }
 
 #' Simulation of Annotated Phylogenetic Trees
@@ -137,6 +194,7 @@ sim_fun_on_tree <- function(
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
+#' @param informative,maxtries Passed to [sim_fun_on_tree].
 #' @return An object of class [aphylo]
 #' @family Simulation Functions 
 #' @export
@@ -147,12 +205,14 @@ sim_fun_on_tree <- function(
 #' ans <- sim_annotated_tree(n=500)
 #' 
 sim_annotated_tree <- function(
-  n    = NULL,
-  tree = NULL,
-  P    = 1,
-  psi  = c(.05, .05),
-  mu   = c(.1,.05),
-  Pi   = 1
+  n           = NULL,
+  tree        = NULL,
+  P           = 1,
+  psi         = c(.05, .05),
+  mu          = c(.1,.05),
+  Pi          = 1,
+  informative = TRUE,
+  maxtries    = 20L
   ) {
   
   
@@ -187,4 +247,82 @@ sim_annotated_tree <- function(
   
 }
 
+#' Randomly drop leaf annotations
+#' 
+#' The function takes an annotated tree and randomly selects leaf nodes to set
+#' annotations as 9 (missing). The function allows specifying a proportion of
+#' annotations to drop, and also the relative probability that has dropping
+#' a 0 with respecto to a 1.
+#' 
+#' @param x An object of class [aphylo].
+#' @param pcent Numeric scalar. Proportion of the annotations to remove.
+#' @param prob.drop.0 Numeric scalar. Probability of removing a 0, conversely,
+#' `1 - prob.drop.0` is the probability of removing a 1.
+#' @param informative Logical scalar. If `TRUE` (the default) the algorithm drops
+#' annotations only if the number of annotations to drop of either 0s or 1s are
+#' less than the currently available in the data.
+#' @return `x` with fewer annotations (more 9s).
+#' 
+#' @examples 
+#' # The following tree has roughtly the same proportion of 0s and 1s
+#' # and 0 mislabeling.
+#' set.seed(1)
+#' x <- sim_annotated_tree(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
+#' summary(x)
+#' 
+#' # Dropping half of the annotations
+#' summary(rdrop_annotations(x, .5))
+#' 
+#' # Dropping half of the annotations, but 0 are more likely to drop
+#' summary(rdrop_annotations(x, .5, prob.drop.0 = 2/3))
+#' 
+#' @export
+rdrop_annotations <- function(
+  x, pcent,
+  prob.drop.0 = .5,
+  informative = TRUE
+  ) {
+  
+  # Number of leafs
+  n       <- length(x$tree$tip.label)
+  nremove <- max(ceiling(pcent*n), 1L)
+  
+  # Cannot be strictly 0 or 1
+  prob.drop.0 <- max(.0001, min(prob.drop.0, .9999))
 
+  # We do this for each function
+  prob.drop.0     <- c(prob.drop.0, 1 - prob.drop.0)
+  prob.drop.0[8L] <- 0L
+  for (p in 1L:ncol(x$tip.annotation)) {
+    
+    # How many non 9 are there?
+    tab <- fast_table_using_labels(x$tip.annotation[,p], c(0L, 1L, 9L))
+    nleft <- n - tab[3L]
+
+    # Which ones will be removed
+    ids <- sample.int(
+      n, 
+      size    = min(nleft, nremove),
+      replace = FALSE,
+      prob    = prob.drop.0[x$tip.annotation[,p] + 1L]
+      )
+    
+    # Only removing if must keep informative
+    if (informative) {
+      n0 <- tab[1]
+      n1 <- tab[2]
+      
+      tab <- fast_table_using_labels(x$tip.annotation[ids, p], c(0L, 1L, 9L))
+      
+      # If we are dropping the same number of 0 and 1 that are in the table
+      # currently, then we don't, and go to the next try
+      if ((tab[1] == n0) | (tab[2] == n1))
+        next
+    }
+    
+    stopifnot(!is.null(ids))
+    x$tip.annotation[ids, p] <- 9L
+  }
+  
+  x
+}

@@ -51,17 +51,17 @@ test_that("MCMC", {
 test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   set.seed(1)
-  dat <- sim_annotated_tree(10, Pi=0, mu=c(0, 0), psi=c(0,0))
+  dat <- suppressWarnings(sim_annotated_tree(10, Pi=0, mu=c(0, 0), psi=c(0,0)))
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
     aphylo_mcmc(rep(2/12, 5), dat, priors = function(x) dbeta(x, 2, 10),
-                control = list(nbatch = 1e4))
+                control = list(nbatch = 1e4), check.informative = FALSE)
     )
   
   ans2 <- suppressWarnings(
     aphylo_mcmc(rep(2/32, 5), dat, priors = function(x) dbeta(x, 2, 30),
-                control = list(nbatch = 1e4))
+                control = list(nbatch = 1e4), check.informative = FALSE)
   )
   
   # Should converge to the prior

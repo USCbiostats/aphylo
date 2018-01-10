@@ -7,20 +7,21 @@ N <- 500
 
 set.seed(111222)
 PAR <- lapply(1:N, function(i) rbeta(5, 2, 20))
-DAT <- lapply(PAR, function(p) sim_annotated_tree(n, psi=p[1:2], mu=p[3:4], Pi=p[5]))
+SIZ <- ceiling(runif(N, 4, 400))
+DAT <- lapply(seq_along(PAR), function(p) sim_annotated_tree(SIZ[p], psi=PAR[[p]][1:2], mu=PAR[[p]][3:4], Pi=PAR[[p]][5]))
 
 plot_LogLike(DAT[[1]], psi = c(.1, .1), mu = c(.1, .1), Pi=.1)
 
 est <- function(d) {
   tryCatch({
-    aphylo_mle(params = rep(.05,5), dat = d , #control=list(nbatch=5e3, burnin=1e3, thin=10),
-                priors = function(u) dbeta(u, 2, 10))
+    aphylo_mcmc(params = rep(.05,5), dat = d , control=list(nbatch=5e3, burnin=1e3, thin=10),
+                priors = function(u) dbeta(u, 2, 20))
   }, error = function(e) e)
 }
 
-x <- profvis::profvis(x <- sim_annotated_tree(10000))
-htmlwidgets::saveWidget(x, "~/profile.html")
-browseURL("~/profile.html")
+# x <- profvis::profvis(x <- sim_annotated_tree(10000))
+# htmlwidgets::saveWidget(x, "~/profile.html")
+# browseURL("~/profile.html")
 
 cl <- parallel::makeForkCluster(4)
 ANS <- parallel::parLapply(cl, DAT, est)

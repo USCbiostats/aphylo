@@ -46,15 +46,16 @@ plot(newtree)
 
 # A performance benchmark with ape::rtree ----------------------------------
 \dontrun{
+library(ape)
 microbenchmark::microbenchmark(
-ape = rtree(1e3),
+  ape = rtree(1e3),
   phy = sim_tree(1e3),
-unit = "relative"
+ unit = "relative"
 )
 # This is what you would get.
-Unit: relative
-  expr     min       lq     mean  median       uq      max neval
-   ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100
-   phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
+# Unit: relative
+#   expr     min       lq     mean  median       uq      max neval
+#    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100
+#    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
 }
 }
