@@ -58,8 +58,8 @@ isleaf <- function(edgelist, from0=TRUE) {
 map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
   
   # Retrieving information about the tree 
-  env <- parent.frame()
-  labels <- attr(env[[dat_name]][["dat"]][["edges"]], "labels")
+  env    <- parent.frame()
+  labels <- with(env[[dat_name]][["dat"]][["tree"]], c(tip.label, node.label))
   n      <- length(labels)
   
   # Mapping the ids to the positions -------------------------------------------
@@ -74,11 +74,13 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
     env[[ids_name]] <- switch(
       env[[ids_name]], 
       all      = 0L:(n - 1L),
-      leafs    = which(isleaf(env[[dat_name]][["dat"]][["edges"]])) - 1L,
-      missings = which(
-        isleaf(env[[dat_name]][["dat"]][["edges"]]) &
-          apply(env[[dat_name]][["dat"]][["annotations"]], 1, function(a) any(a == 9)*1L) > 0
-      ) - 1L
+      leafs    = 0L:(length(env[[dat_name]][["dat"]][["tree"]]$tip.label) - 1L),
+      missings = {
+        
+        tmp <- with(env[[dat_name]][["dat"]], rbind(tip.annotation, node.annotation))
+        which(!stats::complete.cases(tmp)) - 1L
+        
+      }
     )
     
   } else if (is.character(env[[ids_name]])) {
@@ -112,10 +114,10 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' package only uses the leaf annotations.
 #' 
 #' @template parameters
-#' @templateVar edges 1
-#' @templateVar annotationslab 1
+#' @templateVar tree 1
+#' @templateVar tip.annotation 1
 #' 
-#' @details Plotting is done via [ggtree:ggtree::ggtree()] 
+#' @details Plotting is done via [ggtree::ggtree()] 
 #' from the \pkg{ggtree} package (Bioconductor).
 #' 
 #' @return A list of class `aphylo` with the following elements:
@@ -131,7 +133,7 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' 
 #' data(fakeexperiment)
 #' data(faketree)
-#' ans <- new_aphylo(fakeexperiment, faketree)
+#' ans <- new_aphylo(fakeexperiment[,2:3], faketree)
 #'  
 #' # We can visualize it
 #' plot(ans)
@@ -191,7 +193,7 @@ check_annotations <- function(x) {
   fun_names <- colnames(node_annotations)
   
   if (!length(fun_names))
-    fun_names <- sprintf("fun%03i", P)
+    fun_names <- sprintf("fun%03i", ncol(node_annotations))
   
   # Setting dimnames
   dimnames(node_annotations) <- list(
@@ -208,8 +210,8 @@ check_annotations <- function(x) {
 #' @export
 new_aphylo <- function(
   tip.annotation,
-  node.annotation = NULL,
-  tree
+  tree, 
+  node.annotation = NULL
   ) {
   
   # Coercing tree to a phylo object
@@ -301,18 +303,18 @@ as_aphylo <- function(
 #' 
 #' @param x An object of class `aphylo`.
 #' @param y Ignored.
-#' @param geom.tiplab.args Further arguments passed to [ggtree:ggtree::ggtree()]
-#' @param gheatmap.args Further arguments passed to [ggtree:ggtree::ggtree()]
-#' @param scale.fill.args Further arguments passed to [ggtree:ggtree::ggtree()]
+#' @param geom.tiplab.args Further arguments passed to [ggtree::ggtree()]
+#' @param gheatmap.args Further arguments passed to [ggtree::ggtree()]
+#' @param scale.fill.args Further arguments passed to [ggtree::ggtree()]
 #' @param ... Further arguments passed to the method.
 #' @name aphylo-methods
-#' @details The `plot.aphylo` function is a wrapper of [ggtree:ggtree::ggtree()]
+#' @details The `plot.aphylo` function is a wrapper of [ggtree::ggtree()]
 #' that creates a visualization as follows:
 #' \enumerate{
-#'   \item Retrieve the annotations from the [=aphylo-class::aphylo()] object
-#'   \item Create a `ggtree` map adding [ggtree:geom_tiplab::geom_tiplab()]s
-#'   \item Use [ggtree:gheatmap::gheatmap()] to add a heatmap.
-#'   \item Set the colors using [ggplot2:scale_fill_manual::scale_fill_manual()]
+#'   \item Retrieve the annotations from the [aphylo] object
+#'   \item Create a `ggtree` map adding [ggtree::geom_tiplab()]s
+#'   \item Use [ggtree::gheatmap()] to add a heatmap.
+#'   \item Set the colors using [ggplot2::scale_fill_manual()]
 #' }
 #' 
 #' @export
@@ -380,17 +382,8 @@ leafs.phylo <- function(x, ...) {
 
 #' @rdname leafs
 #' @export
-leafs.po_tree <- function(x, ...) {
-  labs <- attr(x, "labels")
-  d <- fast_table_using_labels(x[,1], as.integer(names(labs)))
-  
-  unname(labs[which(d == 0)])
-}
-
-#' @rdname leafs
-#' @export
 leafs.aphylo <- function(x, ...) {
-  leafs.po_tree(x$edges)
+  leafs.phylo(x$tree)
 }
 
 #' @export

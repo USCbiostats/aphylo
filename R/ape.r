@@ -1,11 +1,12 @@
 #' Extensions to the `as.phylo` function
 #' 
 #' This function takes an edgelist and recodes (relabels) the nodes following
-#' \CRANpkg{ape}'s coding convention. `as_ape_tree` is the powerhorse of
-#' [as.apephylo()].
+#' \CRANpkg{ape}'s coding convention. 
 #' 
-#' @template parameters
-#' @templateVar edges 1
+#' @param x Either an edgelist or an object of class [aphylo].
+#' @param ... Further arguments passed to the method.
+#' @param edge.length A vector with branch lengths  (optional). 
+#' @param root.edge A numeric scalar with the length for the root node (optional).
 #' @return An integer matrix of the same dimmension as `edges` with the following
 #' aditional attribute:
 #' \item{labels}{Named integer vector of size `n`. Original labels of the edgelist
@@ -15,27 +16,17 @@
 #' @examples 
 #' 
 #' # A simple example ----------------------------------------------------------
-#' set.seed(1231)
+#' # This tree has a coding different from ape's
+#' \dontrun{
+#' mytree <- matrix(c(1, 2, 1, 3, 2, 4, 2, 5), byrow = TRUE, ncol=2)
+#' mytree
 #' 
-#' # Generating a random tree: Observe that the nodes are coded such that
-#' # for all (i,j) that are offspring and parent i > j. This is a requirement
-#' # of the peeling algorithm
-#' edges <- sim_tree(30)
+#' ans <- ape::as.phylo(mytree)
+#' ans
+#' plot(ans)
+#' }
 #' 
-#' # In the ape package, nodes are labeled such that leafs are from 1 to n
-#' # root node is n+1 and interior nodes can have whatever label.
-#' ape_edges <- as_ape_tree(edges)
-#' 
-#' # And further, is easy to go back to the original code
-#' edges_org <- ape_edges
-#' edges_org[] <- attr(ape_edges, "labels")[ape_edges[]]
-#' 
-#' # Comparing the three versions
-#' head(edges)
-#' head(ape_edges)
-#' head(edges_org)
-#' 
-#' @name as.phylo.matrix
+#' @name ape-as.phylo
 NULL
 
 #' Creates a phylo object
@@ -73,7 +64,7 @@ new_phylo <- function(
 }
 
 
-#' @rdname as.phylo.matrix
+#' @rdname ape-as.phylo
 #' @export
 as.phylo.matrix <- function(
   x,
@@ -151,17 +142,7 @@ as.phylo.matrix <- function(
 }
 
 
-#' Coercing into `phylo` objects of the \pkg{ape} package.
-#'
-#' `as.apephylo` coerces objects to [ape:as.phylo::phylo()] objects
-#' from the \pkg{ape} package. These have several methods including visualization
-#' methods that can be useful.
-#'
-#' @param x An object of class [=as_po_tree::po_tree()] or
-#' [=new_aphylo::aphylo()].
-#' @param ... Ignored.
-#' @return An object of class [ape:as.phylo::phylo()]
-#' @family Data management functions
+#' @rdname ape-as.phylo
 #' @export
 as.phylo.aphylo <- function(x, ...) {
   

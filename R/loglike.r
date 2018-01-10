@@ -3,13 +3,10 @@
 #' This function computes the log-likelihood of the chosen parameters given
 #' a particular dataset. The arguments \code{annotations}, and \code{offspring}
 #' should be as those returned by \code{\link{new_aphylo}}.
-#' For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
+#' For complete Maximum Likelihood Estimation see [aphylo_estimates][aphylo_estimates-class].
 #' 
 #' @template parameters
-#' @param tree A phylogenetic tree of class [ape::phylo].
-#' @templateVar node.annotation 1
-#' @templateVar tip.annotation 1
-#' @templateVar offspring 1
+#' @param tree A phylogenetic tree of class [aphylo].
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
@@ -44,8 +41,7 @@ LogLike <- function(
   mu,
   Pi, 
   verb_ans = TRUE,
-  check_dims = TRUE,
-  ...
+  check_dims = TRUE
 ) {
   
   .LogLike(
@@ -57,7 +53,6 @@ LogLike <- function(
     Pi          = Pi,
     Pr          = tree$Pr,
     verb_ans    = verb_ans,
-    check_dims  = check_dims,
-    ...
+    check_dims  = check_dims
   )
 }

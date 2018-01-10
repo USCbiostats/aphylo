@@ -69,8 +69,8 @@ root_node_prob <- function(Pi, S) {
 #' @templateVar psi 1
 #' @templateVar S 1
 #' @templateVar offspring 1
+#' @param Pr A matrix.
 #' 
-#' @export
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' @noRd
@@ -94,44 +94,6 @@ prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }
 
-#' Simulate functions on a ginven tree
-#' 
-#' @param offspring A List of length \eqn{N} with the set of offspring of
-#' each node.
-#' @param psi A numeric vector of length 2 (see details).
-#' @param mu A numeric vector of length 2 (see details).
-#' @param Pi A numeric vector of length 2 (see details).
-#' @param P Integer scalar. Number of functions to simulate.
-#' 
-#' @details
-#' 
-#' Using the model described in the vignette
-#' \href{../doc/peeling_phylo.html}{peeling_phylo.html}
-#' 
-#' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
-#' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
-#' 
-#' @examples
-#' # Example 1 ----------------------------------------------------------------
-#' # We need to simulate a tree
-#' set.seed(1231)
-#' newtree <- sim_tree(1e3)
-#' 
-#' # Preprocessing the data
-#'     
-#' # Simulating
-#' ans <- sim_fun_on_tree(
-#'   attr(newtree, "offspring"),
-#'   psi = c(.001, .05),
-#'   mu = c(.01, .05),
-#'   Pi = c(.5, .5)
-#'   )
-#'       
-#' # Tabulating results
-#' table(ans)
-#' 
-#' 
-#' @name sim_fun_on_tree
 .sim_fun_on_tree <- function(offspring, pseq, psi, mu, Pi, P = 1L) {
     .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, Pi, P)
 }

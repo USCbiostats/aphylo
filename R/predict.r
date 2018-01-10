@@ -22,19 +22,21 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   pred <- with(object, 
                predict_funs(
                  ids         = what,
-                 edges       = dat$edges,
-                 annotations = dat$annotations,
-                 offspring   = attr(dat$edges, "offspring"),
+                 edges       = dat$tree$edge,
+                 annotations = with(dat, rbind(tip.annotation, node.annotation)),
+                 offspring   = dat$offspring,
+                 pseq        = dat$pseq,
                  psi         = par[1:2],
                  mu          = par[3:4],
-                 Pi          = par[5]
+                 Pi          = par[5],
+                 Pr          = dat$Pr
                )
   )
   
   # Adding names
   dimnames(pred) <- list(
-    rownames(object$dat$annotations)[what+1L],
-    colnames(object$dat$annotations))
+    with(object$dat$tree, c(tip.label, node.label))[what + 1L],
+    colnames(object$dat$tip.annotation))
   
   pred
 }
@@ -66,25 +68,28 @@ prediction_score <- function(
   
   # Finding relevant ids
   if (!length(expected)) 
-    expected <- x$dat$annotations
+    expected <- with(x$dat, rbind(tip.annotation, node.annotation))
   else {
-    test <- all(dim(expected) == dim(x$dat$annotations))
+    test <- all(dim(expected) == dim(with(x$dat, rbind(tip.annotation, node.annotation))))
     if (!test) 
-      stop("-expected- must have the same dimmension as -x$dat$annotations-.")
+      stop(
+        "`expected` must be a matrix of size ",
+        length(with(x$dat$tree, c(tip.label, node.label))), "x",
+        ncol(x$dat$node.annotation), call. = FALSE)
   }
 
   # We will only focuse on those that we can actually asses
   ids <- which(apply(expected, 1L, function(x) all(x != 9L)))
   
   # And furthermore, only on the leafs
-  ids <- intersect(ids, which(isleaf(x$dat$edges)))
+  ids <- intersect(ids, 1L:nrow(x$dat$tip.annotation))
 
   # Prediction
   pred <- predict.aphylo_estimates(x, what = ids - 1L, ...)
   
   # Inverse of Geodesic distances
   if (!length(W)) {
-    G     <- approx_geodesic(x$dat$edges, undirected = TRUE)[ids,ids]
+    G     <- approx_geodesic(x$dat$tree$edge - 1L, undirected = TRUE)[ids,ids]
     G_inv <- 1/(G + diag(nrow(G)))
   } else {
     G_inv <- W

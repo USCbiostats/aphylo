@@ -54,8 +54,8 @@ arma::vec root_node_prob(
 //' @templateVar psi 1
 //' @templateVar S 1
 //' @templateVar offspring 1
+//' @param Pr A matrix.
 //' 
-//' @export
 //' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 //' probabilities for each node.
 //' @noRd

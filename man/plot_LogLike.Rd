@@ -18,7 +18,7 @@ plot_LogLike(x, ...)
   20, shade = 0.7, border = "steelblue", phi = 30, scale = TRUE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link[=new_aphylo:aphylo]{=new_aphylo::aphylo()}}}
+\item{x}{An object of class \code{\link[=aphylo]{aphylo()}}}
 
 \item{...}{Aditional parameters to be passed to \code{plotfun}.}
 
@@ -36,7 +36,7 @@ plot_LogLike(x, ...)
 
 \item{nlevels}{Integer scalar. Number of levels of each parameter to create.}
 
-\item{plotfun}{Function. Either \code{\link[graphics:contour:contour]{graphics:contour::contour()}},}
+\item{plotfun}{Function. Either \code{\link[graphics:contour]{graphics::contour()}},}
 
 \item{par.args}{List of arguments to be passed to \code{\link[=par]{par()}} before
 \code{plotfun} is called.}
@@ -50,7 +50,7 @@ plot_LogLike(x, ...)
 \item{phi}{Passed to \code{persp}.}
 
 \item{scale}{Passed to \code{persp}.
-\code{\link[graphics:persp:persp]{graphics:persp::persp()}}, or other similar function that takes at
+\code{\link[graphics:persp]{graphics::persp()}}, or other similar function that takes at
 least 3 parameters, \code{x,y,z}.}
 }
 \description{
@@ -62,7 +62,6 @@ Plot LogLikelihood function of experimental data
 # Loading data
 data(fakeexperiment)
 data(faketree)
-O <- new_aphylo(fakeexperiment, faketree)
 
 # Nice personalized plot
 plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 

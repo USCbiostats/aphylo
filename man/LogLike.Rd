@@ -4,10 +4,10 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, psi, mu, Pi, verb_ans = TRUE, check_dims = TRUE, ...)
+LogLike(tree, psi, mu, Pi, verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{
-\item{tree}{A phylogenetic tree of class \link[ape:phylo]{ape::phylo}.}
+\item{tree}{A phylogenetic tree of class \link{aphylo}.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -20,10 +20,6 @@ returns a list with a single scalar (the log-likelihood).}
 
 \item{check_dims}{Logical scalar. When \code{TRUE} (default) the function
 checks the dimmension of the passed parameters.}
-
-\item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
-
-\item{offspring}{List of length \eqn{n}. Offspring of each node (see \code{\link{new_aphylo}}).}
 }
 \value{
 A list of class \code{phylo_LogLik} with the following elements:
@@ -38,7 +34,7 @@ parameters.}
 This function computes the log-likelihood of the chosen parameters given
 a particular dataset. The arguments \code{annotations}, and \code{offspring}
 should be as those returned by \code{\link{new_aphylo}}.
-For complete Maximum Likelihood Estimation see \code{\link[=aphylo_estimates-class]{aphylo_estimates}}.
+For complete Maximum Likelihood Estimation see \link[=aphylo_estimates-class]{aphylo_estimates}.
 }
 \details{
 The parameters to estimate are described as follows:

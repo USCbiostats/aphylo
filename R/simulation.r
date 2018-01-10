@@ -57,6 +57,40 @@ sim_tree <- function(n, edge.length = NULL) {
   
 }
 
+#' Simulate functions on a ginven tree
+#' 
+#' @param tree An object of class [phylo][ape::read.tree]
+#' @param psi A numeric vector of length 2 (see details).
+#' @param mu A numeric vector of length 2 (see details).
+#' @param Pi A numeric vector of length 2 (see details).
+#' @param P Integer scalar. Number of functions to simulate.
+#' 
+#' @details
+#' 
+#' Using the model described in the vignette
+#' \href{../doc/peeling_phylo.html}{peeling_phylo.html}
+#' 
+#' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
+#' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
+#' 
+#' @examples
+#' # Example 1 ----------------------------------------------------------------
+#' # We need to simulate a tree
+#' set.seed(1231)
+#' newtree <- sim_tree(1e3)
+#' 
+#' # Preprocessing the data
+#' 
+#' # Simulating
+#' ans <- sim_fun_on_tree(
+#'   attr(newtree, "offspring"),
+#'   psi = c(.001, .05),
+#'   mu = c(.01, .05),
+#'   Pi = c(.5, .5)
+#' )
+#' 
+#' # Tabulating results
+#' table(ans)
 #' @rdname sim_fun_on_tree
 #' @export
 sim_fun_on_tree <- function(
@@ -97,13 +131,13 @@ sim_fun_on_tree <- function(
 #' Simulation of Annotated Phylogenetic Trees
 #' 
 #' @param n Integer scalar. Number of leafs. If not specified, then 
-#' @param tree An object of class [=sim_tree::po_tree()].
+#' @param tree An object of class [phylo][ape::read.tree].
 #' @param P Integer scalar. Number of functions to generate.
 #' @template parameters
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
-#' @return An object of class [=new_aphylo::aphylo()]
+#' @return An object of class [aphylo]
 #' @family Simulation Functions 
 #' @export
 #' @examples 

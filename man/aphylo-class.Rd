@@ -5,12 +5,12 @@
 \alias{new_aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
-new_aphylo(tip.annotation, node.annotation = NULL, tree)
+new_aphylo(tip.annotation, tree, node.annotation = NULL)
 }
 \arguments{
-\item{annotations}{Matrix of size \eqn{n\times P + 1}{n*P + 1}. Annotation data, where the first column is the nodeid (should coincide with the coding of the tree), the following columns are function annotations coded as \code{1} if the node has the function, \code{0} if the node doesn't has the function and \code{9} or \code{NA} otherwise (no information).}
+\item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
 
-\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
+\item{tree}{An object of class \link[ape:read.tree]{phylo}}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
@@ -28,7 +28,7 @@ are included for both leafs and inner nodes, the algorithms included in this
 package only uses the leaf annotations.
 }
 \details{
-Plotting is done via \code{\link[ggtree:ggtree:ggtree]{ggtree:ggtree::ggtree()}}
+Plotting is done via \code{\link[ggtree:ggtree]{ggtree::ggtree()}}
 from the \pkg{ggtree} package (Bioconductor).
 }
 \examples{
@@ -36,14 +36,13 @@ from the \pkg{ggtree} package (Bioconductor).
 
 data(fakeexperiment)
 data(faketree)
-ans <- new_aphylo(fakeexperiment, faketree)
+ans <- new_aphylo(fakeexperiment[,2:3], faketree)
  
 # We can visualize it
 plot(ans)
 }
 \seealso{
-Other Data management functions: \code{\link{as.phylo.aphylo}},
-  \code{\link{prune}}
+Other Data management functions: \code{\link{prune}}
 
 Other aphylo methods: \code{\link{aphylo-methods}}
 }

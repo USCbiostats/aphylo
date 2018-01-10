@@ -5,44 +5,6 @@ int sample_int(int n) {
   return (int) floor(unif_rand() * (double) n);
 }
 
-//' Simulate functions on a ginven tree
-//' 
-//' @param offspring A List of length \eqn{N} with the set of offspring of
-//' each node.
-//' @param psi A numeric vector of length 2 (see details).
-//' @param mu A numeric vector of length 2 (see details).
-//' @param Pi A numeric vector of length 2 (see details).
-//' @param P Integer scalar. Number of functions to simulate.
-//' 
-//' @details
-//' 
-//' Using the model described in the vignette
-//' \href{../doc/peeling_phylo.html}{peeling_phylo.html}
-//' 
-//' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
-//' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
-//' 
-//' @examples
-//' # Example 1 ----------------------------------------------------------------
-//' # We need to simulate a tree
-//' set.seed(1231)
-//' newtree <- sim_tree(1e3)
-//' 
-//' # Preprocessing the data
-//'     
-//' # Simulating
-//' ans <- sim_fun_on_tree(
-//'   attr(newtree, "offspring"),
-//'   psi = c(.001, .05),
-//'   mu = c(.01, .05),
-//'   Pi = c(.5, .5)
-//'   )
-//'       
-//' # Tabulating results
-//' table(ans)
-//' 
-//' 
-//' @name sim_fun_on_tree
 // [[Rcpp::export(name=".sim_fun_on_tree")]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,

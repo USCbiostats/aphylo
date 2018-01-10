@@ -10,7 +10,7 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
 
-\item{tree}{An object of class \code{\link[=sim_tree:po_tree]{=sim_tree::po_tree()}}.}
+\item{tree}{An object of class \link[ape:read.tree]{phylo}.}
 
 \item{P}{Integer scalar. Number of functions to generate.}
 
@@ -21,7 +21,7 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 }
 \value{
-An object of class \code{\link[=new_aphylo:aphylo]{=new_aphylo::aphylo()}}
+An object of class \link{aphylo}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees

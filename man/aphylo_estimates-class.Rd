@@ -44,7 +44,7 @@ prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
 \code{\link[=new_aphylo]{new_aphylo()}}.}
 
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
-optimization algorithm, otherwise it uses a method in \code{\link[stats:optim:optim]{stats:optim::optim()}}.}
+optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{stats::optim()}}.}
 
 \item{priors}{A list of length 3 with functions named \code{psi}, \code{mu},
 \code{Pi}}
@@ -107,7 +107,7 @@ as the intermediate steps are not available to the user).}
 \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
 
 In the case of \code{aphylo_mcmc}, \code{hist} is an object of class
-\code{\link[coda:mcmc.list:mcmc.list]{coda:mcmc.list::mcmc.list()}}.
+\code{\link[coda:mcmc.list]{coda::mcmc.list()}}.
 
 In the case of the \code{predict} method, a two-column numeric matrix
 with values between \eqn{[0,1]} (probabilities).

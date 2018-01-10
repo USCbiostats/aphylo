@@ -2,7 +2,7 @@
 #' 
 #' This function takes one or more nodes/leafs from a given tree and removes them
 #' making sure that the position indexes are updated, hence preserving the 
-#' [po_tree()] structure.
+#' `po_tree()` structure.
 #' 
 #' @param x An object of class `po_tree` or `aphylo`.
 #' @param ids Either a vector or a scalar indicating which nodes/leafs to remove.
@@ -25,7 +25,7 @@
 #' in the list, these will be added (the whole branch is removed).
 #' 
 #' \item Considering which nodes are been removed, a new set of positions
-#' is computed so that it follows [po_tree()] convention.
+#' is computed so that it follows `po_tree()` convention.
 #' 
 #' \item The edgelist is updated, as well the labels.
 #' 

@@ -2,10 +2,10 @@
 #' 
 #' The PANTHER Project handles a modified version of newick tree files which,
 #' besides of the tree structure, includes the type of node and ancestor
-#' labels. This function is a wrapper of [ape:read.tree::read.tree()].
+#' labels. This function is a wrapper of [ape::read.tree()].
 #' 
 #' @param x Character scalar. Full path to the panther file.
-#' @param ... Further arguments passed to [ape:read.tree::read.tree()].
+#' @param ... Further arguments passed to [ape::read.tree()].
 #' @return
 #' 
 #' A list consisting of a data.frame and a `phylo` object. The

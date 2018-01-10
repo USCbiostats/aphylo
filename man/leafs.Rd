@@ -3,15 +3,12 @@
 \name{leafs}
 \alias{leafs}
 \alias{leafs.phylo}
-\alias{leafs.po_tree}
 \alias{leafs.aphylo}
 \title{Extract leaf labels}
 \usage{
 leafs(x, ...)
 
 \method{leafs}{phylo}(x, ...)
-
-\method{leafs}{po_tree}(x, ...)
 
 \method{leafs}{aphylo}(x, ...)
 }

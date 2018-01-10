@@ -7,7 +7,7 @@
 #' @param dat An object of class `new_aphylo` as returned by
 #' [new_aphylo()].
 #' @param method Character scalar. When `"ABC"`, uses Artificial Bee Colony
-#' optimization algorithm, otherwise it uses a method in [stats:optim::optim()]. 
+#' optimization algorithm, otherwise it uses a method in [stats::optim()]. 
 #' @param priors A list of length 3 with functions named `psi`, `mu`,
 #' `Pi`
 #' @param control A list with parameters for the optimization method (see
@@ -152,6 +152,10 @@ aphylo_mle <- function(
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
   
+  # Reducing the peeling sequence
+  if (getOption("aphylo_reduce_pseq", FALSE))
+    dat$pseq <- reduce_pseq(dat$pseq, with(dat, rbind(tip.annotation, node.annotation)), dat$offspring)
+
   # In case of fixing parameters
   par0 <- params
   
@@ -308,7 +312,7 @@ plot.aphylo_estimates <- function(
 
 #' @rdname aphylo_estimates-class
 #' @return In the case of `aphylo_mcmc`, `hist` is an object of class
-#' [coda:mcmc.list::mcmc.list()].
+#' [coda::mcmc.list()].
 #' @export
 aphylo_mcmc <- function(
   params,

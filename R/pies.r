@@ -78,7 +78,7 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 
 #' A flexible piechart.
 #' 
-#' While similar to [graphics:pie::pie()], this function is much more
+#' While similar to [graphics::pie()], this function is much more
 #' flexible as it allows providing different parameters for each slice of the pie.
 #' Furthermore, it allows adding the plot to the current device, making it possible
 #' to create compound piecharts.
@@ -92,10 +92,10 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 #' @param slice.off Numeric vector. When `!=0`, specifies how much to
 #' move the slice away from the origin. When scalar is recycled.
 #' @param labels Character vector of length `length(x)`. Passed to
-#' [graphics:text::text()].
+#' [graphics::text()].
 #' @param tick.len Numeric scalar. Size of the tick marks as proportion of the radius.
-#' @param text.args List. Further arguments passed to [graphics:text::text()].
-#' @param segments.args List. Further arguments passed to [graphics:segments::segments()]
+#' @param text.args List. Further arguments passed to [graphics::text()].
+#' @param segments.args List. Further arguments passed to [graphics::segments()]
 #' when drawing the tickmarks.
 #' @param init.angle Numeric scalar. Angle from where to start drawing in degrees.
 #' @param last.angle Numeric scalar. Angle where to finish drawing in degrees.
@@ -104,7 +104,7 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 #' @param rescale Logical scalar. When `TRUE` (default), the y-coordinates of
 #' the polygons (slices), text and tickmarks will be rescaled such that the
 #' aspect ratio is preserved, i.e. looks like a circle.
-#' @param ... Further arguments passed to [graphics:polygon::polygon()]
+#' @param ... Further arguments passed to [graphics::polygon()]
 #' (see details).
 #' 
 #' @return 
@@ -118,7 +118,7 @@ circle <- function(x0, y0, r, rescale=TRUE) {
 #' \item{alpha1}{A numeric vector of size `length(x)` with the ending
 #' degree in radians of the slice.}
 #' 
-#' @details The function is a wrapper of [graphics:polygon::polygon()],
+#' @details The function is a wrapper of [graphics::polygon()],
 #' so all parameters such as color, density, border, etc. are passed directly
 #' by [mapply()] so that are specified one per slice. The coordinates
 #' of the slices are computed internally.
