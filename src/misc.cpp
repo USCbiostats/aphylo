@@ -9,8 +9,7 @@ using namespace Rcpp;
 //' its powers, since each \eqn{(i,j)} element of \eqn{A^p} corresponds to the
 //' number of \eqn{p} length steps between nodes \eqn{i} and \eqn{j}.
 //' 
-//' @template parameters
-//' @templateVar edges 1
+//' @template edges
 //' @param nsteps Integer scalar. Number of maximum steps for the approximation.
 //' @param warn Logical scalar. When \code{TRUE} shows a warning after no further
 //' steps are needed.

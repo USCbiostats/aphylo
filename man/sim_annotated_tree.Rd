@@ -21,8 +21,6 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{informative, maxtries}{Passed to \link{sim_fun_on_tree}.}
-
-\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 }
 \value{
 An object of class \link{aphylo}

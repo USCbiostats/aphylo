@@ -7,7 +7,7 @@
 approx_geodesic(edges, nsteps = 5000L, undirected = TRUE, warn = FALSE)
 }
 \arguments{
-\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
+\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \\code{(parent, offspring)}.}
 
 \item{nsteps}{Integer scalar. Number of maximum steps for the approximation.}
 

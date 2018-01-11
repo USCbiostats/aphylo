@@ -157,7 +157,7 @@ List sim_tree(int n, Function f, bool branches) {
     // so the last value is kept in the list.
     if (i > j)
       std::swap(i, j);
-    if (j != (N.size() - 1))
+    if (j != (int) (N.size() - 1u))
       N.at(j) = N.back();
     
     N.at(i) = k--;

@@ -8,5 +8,4 @@
 #' <%=ifelse(exists("Pi"),          "@param Pi Numeric scalar. Root node probability of having the function (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists("offspring"),   "@param offspring List of length \\eqn{n}. Offspring of each node (see \\code{\\link{new_aphylo}}).", "") %>
 #' <%=ifelse(exists("S"),           "@param S Integer matrix of size \\eqn{2^P\\times P}{2^P * P}. See \\code{\\link{states}}.", "") %>
-#' <%=ifelse(exists("edges"),       "@param edges Integer matrix with two columns. An edgelist where each row is in the form of \\code{(parent, offspring)}.", "") %>
 #' <%=ifelse(exists("tree"),       "@param tree An object of class [phylo][ape::read.tree]", "") %>

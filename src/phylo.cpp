@@ -72,7 +72,6 @@ arma::mat probabilities(
   
   // Obtaining relevant constants
   int P         = S.n_cols;
-  int N         = annotations.n_rows;
   int nstates   = S.n_rows;
   arma::mat M   = prob_mat(mu);
   arma::mat PSI = prob_mat(psi);

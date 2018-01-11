@@ -52,8 +52,6 @@ plot_LogLike(x, ...)
 \item{scale}{Passed to \code{persp}.
 \code{\link[graphics:persp]{graphics::persp()}}, or other similar function that takes at
 least 3 parameters, \code{x,y,z}.}
-
-\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 }
 \description{
 Plot LogLikelihood function of experimental data

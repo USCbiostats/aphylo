@@ -20,8 +20,6 @@ returns a list with a single scalar (the log-likelihood).}
 
 \item{check_dims}{Logical scalar. When \code{TRUE} (default) the function
 checks the dimmension of the passed parameters.}
-
-\item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \code{(parent, offspring)}.}
 }
 \value{
 A list of class \code{phylo_LogLik} with the following elements:
