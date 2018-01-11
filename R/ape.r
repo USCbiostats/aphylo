@@ -108,7 +108,8 @@ as.phylo.matrix <- function(
   # Case in which the only inner node is the root!
   test <- ifelse(
     length(inner) > 0,
-    test && (sort(inner) == (nleafs + 2L):length(nodes))
+    test && (sort(inner) == (nleafs + 2L):length(nodes)),
+    test
     )
     
   
