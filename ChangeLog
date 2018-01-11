@@ -3,6 +3,8 @@
 	* R/ape.r: Fixing case in which as.phylo.matrix processes a tree with
 	  only leafs and a root.
 
+	* R/data-management.r: Fixing bug in plot.aphylo.
+
 
 2018-01-10  George G. Vega Yon <g.vegayon@gmail.com>
 

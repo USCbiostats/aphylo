@@ -348,11 +348,11 @@ plot.aphylo <- function(
   tree <- as.phylo(x)
   
   # Retrieving the annotations
-  A   <- x$tip.annotation
+  A   <- with(x, rbind(tip.annotation))
   A[] <- as.character(A)
   
   # Matching positions
-  A   <- A[match(tree$tip.label, rownames(A)),,drop=FALSE]
+  # A   <- A[match(tree$tip.label, rownames(A)),,drop=FALSE]
   
   # Creating the mapping
   p <- ggtree::ggtree(tree) +
