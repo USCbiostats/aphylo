@@ -1,3 +1,9 @@
+2018-01-11  George G. Vega Yon <g.vegayon@gmail.com>
+	
+	* R/ape.r: Fixing case in which as.phylo.matrix processes a tree with
+	  only leafs and a root.
+
+
 2018-01-10  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* R/estimation.r: Doc + estimation checks whether aphylo is informative.

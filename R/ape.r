@@ -103,8 +103,14 @@ as.phylo.matrix <- function(
   nleafs <- length(leafs)
   test   <- is.numeric(nodes) &&
     all(sort(leafs) == 1:length(leafs)) &&
-    (roots == (nleafs + 1L)) &&
-    (sort(inner) == (nleafs + 2L):length(nodes))
+    (roots == (nleafs + 1L))
+  
+  # Case in which the only inner node is the root!
+  test <- ifelse(
+    length(inner) > 0,
+    test && (sort(inner) == (nleafs + 2L):length(nodes))
+    )
+    
   
   # Defining the labels:
   #  - Leafs go from 1 to n
