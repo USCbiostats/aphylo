@@ -272,9 +272,7 @@ print.aphylo_estimates <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
-  # props      <- with(x$dat, table(annotations[isleaf(edges),,drop=FALSE]))
-  # propspcent <- prop.table(props)*100
-  
+
   with(x, {
     cat(
       sep = "\n",

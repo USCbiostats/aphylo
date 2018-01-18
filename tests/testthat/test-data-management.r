@@ -7,6 +7,7 @@ data(faketree)
 test_that("As phylo conversion and methods", {
   ans <- new_aphylo(tip.annotation = fakeexperiment[,-1], tree = faketree)
   
+  expect_output(print(ans), "\\(leafs\\) annotations")
   expect_s3_class(as.phylo(ans), "phylo")
   expect_s3_class(plot(ans), "ggplot")
   expect_output(summary(as.phylo(ans)), "Phylogenetic tree")
@@ -26,13 +27,3 @@ test_that("Can return to the original labeling", {
 })
 
 
-test_that("Listing leafs", {
-  set.seed(1)
-  dat0 <- sim_tree(100)
-  dat1 <- as.phylo(dat0)
-  
-  dat0 <- leafs(dat0)
-  dat1 <- leafs(dat1)
-  
-  expect_true(all(sort(dat0) == sort(dat1)))
-})

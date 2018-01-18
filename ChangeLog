@@ -7,6 +7,11 @@
 	  Also, when the node was the rootnode, d0i should yield probabilities
 	  equal to pi.
 
+	* R/data-management.r: Removing functions that are no longer required.
+	* src/tree.cpp: Idem.
+
+	* tests/testthat/test-data-management.r: New set of tests.
+
 
 2018-01-11  George G. Vega Yon <g.vegayon@gmail.com>
 	

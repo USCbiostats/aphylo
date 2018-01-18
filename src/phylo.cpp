@@ -178,14 +178,14 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Prfilled  = probabilities(annotations, pseq, mu, psi, S, offspring);
+  arma::mat Pr  = probabilities(annotations, pseq, mu, psi, S, offspring);
 
   // We only use the root node
   double ll = 0.0;
 
   arma::vec PiP = root_node_prob(Pi, S);  
   for (int s = 0; s<nstates; s++)
-    ll += PiP.at(s)*Prfilled.at(pseq.at(pseq.size() - 1u) - 1u, s);
+    ll += PiP.at(s)*Pr.at(pseq.at(pseq.size() - 1u) - 1u, s);
   
   ll = std::log(ll);
   
@@ -194,7 +194,7 @@ List LogLike(
     
     List ans = List::create(
       _["S"]   = S,
-      _["Pr"]   = Prfilled,
+      _["Pr"]   = Pr,
       _["ll"]  = ll
     );
     ans.attr("class") = "phylo_LogLik";
@@ -278,12 +278,11 @@ arma::mat predict_funs(
   arma::umat G = approx_geodesic(edges, 1e3, true, false);
 
   for (i = 0u; i < n; i++)
-    for (p = 0u; p < P; p++) {
+    for (p = 0u; p < P; p++) 
       ans.at(i, p) = predict_fun(
-        ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u), annotations, offspring, pseq, psi, mu, Pi
+        ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u),
+        annotations, offspring, pseq, psi, mu, Pi
       );
-    }
-      
   
   return ans;
 }

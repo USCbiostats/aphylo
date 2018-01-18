@@ -27,37 +27,7 @@ list_offspring.phylo <- function(x) {
   .list_offspring(x$edge, x$Nnode + length(x$tip.label))
 }
 
-# This function takes and edgelist and tries to find 'labels' attr on it. If
-# there are no labels, it will make some.
-# This only work for matrices (internal use only)
-getlabels <- function(edgelist) {
-  
-  # Checking the class
-  if (!is.integer(edgelist))
-    stop("-edgelist- must be of class integer.")
-  
-  # Are there any labels?
-  labels <- attr(edgelist, "labels")
-  if (length(labels))
-    return(unname(labels))
-  
-  warning("No labels found. We will use the coding as labels.")
-  
-  # If there are no labels, then we have to 'find them'
-  sort(unique(as.vector(edgelist)))
-}
 
-
-# Returns a logical vector indicating whether the node is a leaf or not
-# The edgelist must be codded from 0 to n-1.
-isleaf <- function(edgelist, from0=TRUE) {
-  
-  n <- length(getlabels(edgelist))
-  
-  # Tabulating the parents, if returns 0 means that it has no
-  # offspring, hence, is a leaf.
-  fast_table_using_labels(edgelist[,1], (1L-from0):(n - from0)) == 0
-}
 
 map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
   
@@ -359,30 +329,6 @@ plot.aphylo <- function(
   p
 }
 
-
-
-#' Extract leaf labels 
-#' @param x A phylogenetic tree.
-#' @param ... Ignored.
-#' @return `leafs` returns a character vector with the names of the leafs
-#' @examples 
-#' set.seed(1)
-#' ans <- sim_tree(10)
-#' leafs(ans)
-#' @export
-leafs <- function(x, ...) UseMethod("leafs")
-
-#' @rdname leafs
-#' @export
-leafs.phylo <- function(x, ...) {
-  x$tip.label
-}
-
-#' @rdname leafs
-#' @export
-leafs.aphylo <- function(x, ...) {
-  leafs.phylo(x$tree)
-}
 
 #' @export
 #' @rdname aphylo-methods

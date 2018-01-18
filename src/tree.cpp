@@ -75,92 +75,6 @@ arma::uvec fast_table_using_labels(
   return ans;
 }
 
-// [[Rcpp::export(name = ".recode_as_po")]]
-IntegerMatrix recode_as_po(
-    const arma::imat & edges
-  ) {
-
-  // Creating saving storage
-  unsigned int N = edges.n_rows;
-  
-  // Original positions
-  arma::icolvec positions(edges.n_rows, arma::fill::ones);
-  positions = arma::cumsum(positions) - 1;
-  
-  // Temporary edgelist
-  arma::imat edges0 = edges;
-  
-  IntegerMatrix edges1(N, 2u);
-  
-  // Fetching labels and computing the indegree vector
-  // L    : Labels,
-  // Lans : Resulting labels
-  arma::ivec L = arma::unique(arma::vectorise(edges0));
-  IntegerVector Lans(L.size());  
-  arma::uvec nparents = fast_table_using_labels(edges0.col(1u), L);
-  edges0 = arma::join_rows(edges0, positions);
-
-  // Tagging possible root nodes and computing number of parents
-  unsigned int counter = 0u;
-  for (unsigned int i = 0u; i < L.size(); i++)
-    if      (nparents.at(i) == 0u) Lans.at(counter++) = L.at(i);
-    else if (nparents.at(i) == 1u) continue;
-    else stop("Node with label: %i has %i parents. Multiple parents is not supported yet.",
-              L.at(i), nparents.at(i));
-  
-  // Checking if all this makes sense
-  if (counter == 0u)
-    Rcpp::stop("There are no root nodes (i.e. indegree == 0).");
-  else if (counter > 1u)
-    Rcpp::stop("There is more than 1 root node. Multiply rooted trees are not supported.");
-  
-  unsigned int i, j, nleafs = 0u;
-  for (i = 0u; i < Lans.size(); i++) {
-    
-    // Find offsprings: Vector of individuals equal to the label of Lans.at(i)
-    arma::uvec offspring = arma::find(edges0.col(0u) == Lans.at(i));
-    
-    // If no offspring (then leaf), then continue
-    if (offspring.n_rows == 0u) {
-      nleafs++;
-      continue;
-    }
-
-    // Add them to the list
-    for (j = 0; j < offspring.size(); j++) {
-
-      // Adding the index
-      Lans.at(counter++) = edges0(offspring.at(j), 1u);
-      
-      // Adding the
-      edges1.at(edges0.at(offspring.at(j), 2u), 0u) = i;
-      edges1.at(edges0.at(offspring.at(j), 2u), 1u) = counter - 1u;
-
-    }
-    
-    // Removing from E
-    j = offspring.size();
-    while (j != 0)
-      edges0.shed_row(offspring.at(--j));
-      
-  }
-
-  // Creating nametags
-  StringVector labels(Lans.size());
-  for (int i = 0; i< (int) Lans.size(); i++) {
-    char lab[10];
-    sprintf(&(lab[0]), "%i", Lans.at(i));
-    labels[i] = lab;
-  }
-  
-  // Returning
-  edges1.attr("labels") = labels;
-  
-  return edges1;
-  
-}
-
-
 typedef std::vector< std::vector<int> > stdintvec;
 
 // [[Rcpp::export(name = ".list_offspring")]]
@@ -175,16 +89,4 @@ List list_offspring(IntegerMatrix E, int n) {
     O.at(i) = Rcpp::wrap(ans.at(i));
   
   return O;
-}
-
-// [[Rcpp::export(name = ".list_offspring_ptr")]]
-Rcpp::XPtr< std::vector< std::vector<int> > > list_offspring_ptr(IntegerMatrix E, int n) {
-  stdintvec *ans = new stdintvec(n);
-  
-  for (int i = 0; i < E.nrow(); i++)
-    ans->at(E.at(i, 0) - 1).push_back(E.at(i, 1));
-  
-  XPtr< stdintvec > p(ans, true);
-
-  return p;
 }

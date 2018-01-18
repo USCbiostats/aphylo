@@ -203,17 +203,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// recode_as_po
-IntegerMatrix recode_as_po(const arma::imat& edges);
-RcppExport SEXP _aphylo_recode_as_po(SEXP edgesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::imat& >::type edges(edgesSEXP);
-    rcpp_result_gen = Rcpp::wrap(recode_as_po(edges));
-    return rcpp_result_gen;
-END_RCPP
-}
 // list_offspring
 List list_offspring(IntegerMatrix E, int n);
 RcppExport SEXP _aphylo_list_offspring(SEXP ESEXP, SEXP nSEXP) {
@@ -223,18 +212,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(list_offspring(E, n));
-    return rcpp_result_gen;
-END_RCPP
-}
-// list_offspring_ptr
-Rcpp::XPtr< std::vector< std::vector<int> > > list_offspring_ptr(IntegerMatrix E, int n);
-RcppExport SEXP _aphylo_list_offspring_ptr(SEXP ESEXP, SEXP nSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_offspring_ptr(E, n));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -254,9 +231,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
     {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
     {"_aphylo_fast_table_using_labels", (DL_FUNC) &_aphylo_fast_table_using_labels, 2},
-    {"_aphylo_recode_as_po", (DL_FUNC) &_aphylo_recode_as_po, 1},
     {"_aphylo_list_offspring", (DL_FUNC) &_aphylo_list_offspring, 2},
-    {"_aphylo_list_offspring_ptr", (DL_FUNC) &_aphylo_list_offspring_ptr, 2},
     {NULL, NULL, 0}
 };
 

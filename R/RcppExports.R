@@ -109,15 +109,7 @@ fast_table_using_labels <- function(x, ids) {
     .Call(`_aphylo_fast_table_using_labels`, x, ids)
 }
 
-.recode_as_po <- function(edges) {
-    .Call(`_aphylo_recode_as_po`, edges)
-}
-
 .list_offspring <- function(E, n) {
     .Call(`_aphylo_list_offspring`, E, n)
-}
-
-.list_offspring_ptr <- function(E, n) {
-    .Call(`_aphylo_list_offspring_ptr`, E, n)
 }
 
