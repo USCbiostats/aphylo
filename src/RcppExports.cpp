@@ -68,8 +68,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // probabilities
-arma::mat probabilities(const arma::imat& annotations, const arma::ivec& pseq, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const List& offspring, arma::mat& Pr);
-RcppExport SEXP _aphylo_probabilities(SEXP annotationsSEXP, SEXP pseqSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP offspringSEXP, SEXP PrSEXP) {
+arma::mat probabilities(const arma::imat& annotations, const arma::ivec& pseq, const arma::vec& mu, const arma::vec& psi, const arma::imat& S, const List& offspring);
+RcppExport SEXP _aphylo_probabilities(SEXP annotationsSEXP, SEXP pseqSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP SSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -79,14 +79,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::imat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
-    rcpp_result_gen = Rcpp::wrap(probabilities(annotations, pseq, mu, psi, S, offspring, Pr));
+    rcpp_result_gen = Rcpp::wrap(probabilities(annotations, pseq, mu, psi, S, offspring));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr, bool verb_ans, bool check_dims);
-RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
+List LogLike(const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, bool verb_ans, bool check_dims);
+RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -96,16 +95,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
     Rcpp::traits::input_parameter< bool >::type verb_ans(verb_ansSEXP);
     Rcpp::traits::input_parameter< bool >::type check_dims(check_dimsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike(annotations, offspring, pseq, psi, mu, Pi, Pr, verb_ans, check_dims));
+    rcpp_result_gen = Rcpp::wrap(LogLike(annotations, offspring, pseq, psi, mu, Pi, verb_ans, check_dims));
     return rcpp_result_gen;
 END_RCPP
 }
 // predict_fun
-double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr);
-RcppExport SEXP _aphylo_predict_fun(SEXP iSEXP, SEXP pSEXP, SEXP di0SEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP) {
+double predict_fun(unsigned int i, unsigned int p, unsigned int di0, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi);
+RcppExport SEXP _aphylo_predict_fun(SEXP iSEXP, SEXP pSEXP, SEXP di0SEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -118,14 +116,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict_fun(i, p, di0, annotations, offspring, pseq, psi, mu, Pi, Pr));
+    rcpp_result_gen = Rcpp::wrap(predict_fun(i, p, di0, annotations, offspring, pseq, psi, mu, Pi));
     return rcpp_result_gen;
 END_RCPP
 }
 // predict_funs
-arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi, arma::mat& Pr);
-RcppExport SEXP _aphylo_predict_funs(SEXP idsSEXP, SEXP edgesSEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP PrSEXP) {
+arma::mat predict_funs(const arma::uvec& ids, const arma::umat& edges, const arma::imat& annotations, const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, double Pi);
+RcppExport SEXP _aphylo_predict_funs(SEXP idsSEXP, SEXP edgesSEXP, SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP PiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -137,8 +134,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Pr(PrSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict_funs(ids, edges, annotations, offspring, pseq, psi, mu, Pi, Pr));
+    rcpp_result_gen = Rcpp::wrap(predict_funs(ids, edges, annotations, offspring, pseq, psi, mu, Pi));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -249,10 +245,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},
     {"_aphylo_reduce_pseq", (DL_FUNC) &_aphylo_reduce_pseq, 3},
     {"_aphylo_root_node_prob", (DL_FUNC) &_aphylo_root_node_prob, 2},
-    {"_aphylo_probabilities", (DL_FUNC) &_aphylo_probabilities, 7},
-    {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 9},
-    {"_aphylo_predict_fun", (DL_FUNC) &_aphylo_predict_fun, 10},
-    {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 9},
+    {"_aphylo_probabilities", (DL_FUNC) &_aphylo_probabilities, 6},
+    {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 8},
+    {"_aphylo_predict_fun", (DL_FUNC) &_aphylo_predict_fun, 9},
+    {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 8},
     {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
     {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 6},
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},

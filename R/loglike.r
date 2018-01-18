@@ -51,7 +51,6 @@ LogLike <- function(
     psi         = psi,
     mu          = mu,
     Pi          = Pi,
-    Pr          = tree$Pr,
     verb_ans    = verb_ans,
     check_dims  = check_dims
   )

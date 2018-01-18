@@ -286,17 +286,11 @@ as_aphylo <- function(
   
   structure(
     c(
-      list(tree = tree),
-      list(tip.annotation = tip.annotation),
+      list(tree            = tree),
+      list(tip.annotation  = tip.annotation),
       list(node.annotation = node.annotation),
-      list(offspring = list_offspring(tree)),
-      list(pseq      = pseq),
-      list(Pr        = matrix(
-        0.0,
-        nrow = nrow(tip.annotation) + nrow(node.annotation),
-        ncol = nrow(states(ncol(tip.annotation)))
-        )
-        )
+      list(offspring       = list_offspring(tree)),
+      list(pseq            = pseq)
     ),
     class = c("aphylo")
   )

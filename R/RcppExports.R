@@ -73,20 +73,20 @@ root_node_prob <- function(Pi, S) {
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' @noRd
-probabilities <- function(annotations, pseq, mu, psi, S, offspring, Pr) {
-    .Call(`_aphylo_probabilities`, annotations, pseq, mu, psi, S, offspring, Pr)
+probabilities <- function(annotations, pseq, mu, psi, S, offspring) {
+    .Call(`_aphylo_probabilities`, annotations, pseq, mu, psi, S, offspring)
 }
 
-.LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, Pr, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, Pi, Pr, verb_ans, check_dims)
+.LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
+    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, Pi, verb_ans, check_dims)
 }
 
-predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, Pi, Pr) {
-    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, Pi, Pr)
+predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, Pi) {
+    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, Pi)
 }
 
-predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, Pi, Pr) {
-    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, Pi, Pr)
+predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, Pi) {
+    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, Pi)
 }
 
 prediction_score_rand <- function(A, W, alpha) {

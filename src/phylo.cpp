@@ -3,17 +3,6 @@
 #include "misc.h"
 using namespace Rcpp;
 
-// Creates a probability matrix that will be used over and over again for the
-// mcmc. This way we don't need to assign space everytime we need it!
-XPtr< arma::mat > newprobmat(int N, int nstates) {
-  
-  arma::mat* ans = new arma::mat(N, nstates);
-  XPtr< arma::mat > p(ans, true);
-  
-  return p;
-  
-}
-
 // Root node probabilities
 // 
 // @template parameters
@@ -66,8 +55,7 @@ arma::mat probabilities(
     const arma::vec  & mu,
     const arma::vec  & psi,
     const arma::imat & S,
-    const List       & offspring,
-    arma::mat        & Pr
+    const List       & offspring
 ) {
   
   // Obtaining relevant constants
@@ -75,8 +63,7 @@ arma::mat probabilities(
   int nstates   = S.n_rows;
   arma::mat M   = prob_mat(mu);
   arma::mat PSI = prob_mat(psi);
-  
-  Pr.ones();
+  arma::mat Pr(annotations.n_rows, nstates, arma::fill::ones);
   
   typedef arma::ivec::const_iterator iviter;
   typedef IntegerVector::const_iterator Riviter;
@@ -147,7 +134,6 @@ List LogLike(
     const arma::vec  & psi,
     const arma::vec  & mu,
     double Pi,
-    arma::mat        & Pr,
     bool verb_ans = false,
     bool check_dims = true
 ) {
@@ -192,7 +178,7 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Prfilled  = probabilities(annotations, pseq, mu, psi, S, offspring, Pr);
+  arma::mat Prfilled  = probabilities(annotations, pseq, mu, psi, S, offspring);
 
   // We only use the root node
   double ll = 0.0;
@@ -234,8 +220,7 @@ double predict_fun(
   const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
-  double Pi,
-  arma::mat        & Pr
+  double Pi
 ) {
   
   arma::imat annotations_filled(annotations);
@@ -244,13 +229,13 @@ double predict_fun(
   // Compute likelihood of a_i = 0
   annotations_filled.at(i, p) = 0;
   double likelihood_given_ai_0 = exp(
-    as< double >(LogLike(annotations_filled, offspring, pseq, psi, mu, Pi, Pr, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq, psi, mu, Pi, false)["ll"])
     );
   
   // Compute likelihood of a_i = 1
   annotations_filled.at(i, p) = 1;
   double likelihood_given_ai_1 = exp(
-    as< double >(LogLike(annotations_filled, offspring, pseq,  psi, mu, Pi, Pr, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq,  psi, mu, Pi, false)["ll"])
     );
   
   // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
@@ -282,8 +267,7 @@ arma::mat predict_funs(
   const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
-  double Pi,
-  arma::mat        & Pr
+  double Pi
 ) {
   
   unsigned int n = ids.size(), i;
@@ -296,7 +280,7 @@ arma::mat predict_funs(
   for (i = 0u; i < n; i++)
     for (p = 0u; p < P; p++) {
       ans.at(i, p) = predict_fun(
-        ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u), annotations, offspring, pseq, psi, mu, Pi, Pr
+        ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u), annotations, offspring, pseq, psi, mu, Pi
       );
     }
       

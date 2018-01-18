@@ -14,7 +14,7 @@ O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = faketree)
 S  <- states(2)
 Pr <- probabilities(
   with(O, rbind(tip.annotation, node.annotation)),
-  O$pseq, mu, psi, S, O$offspring, O$Pr)
+  O$pseq, mu, psi, S, O$offspring)
 
 # Checking Leaf Probabilities --------------------------------------------------
 

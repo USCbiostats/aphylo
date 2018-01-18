@@ -28,8 +28,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
                  pseq        = dat$pseq,
                  psi         = par[1:2],
                  mu          = par[3:4],
-                 Pi          = par[5],
-                 Pr          = dat$Pr
+                 Pi          = par[5]
                )
   )
   
