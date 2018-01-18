@@ -22,7 +22,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
   pred <- with(object, 
                predict_funs(
                  ids         = what,
-                 edges       = dat$tree$edge,
+                 edges       = dat$tree$edge - 1L,
                  annotations = with(dat, rbind(tip.annotation, node.annotation)),
                  offspring   = dat$offspring,
                  pseq        = dat$pseq,

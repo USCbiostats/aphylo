@@ -1,3 +1,13 @@
+2018-01-18  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* R/estimation.r: Fixing checking of non-informative data.
+
+	* R/predict.r: Indexing of edges was wrong.
+	* src/phylo.cpp: predict_fun was taking the wrong id for root node.
+	  Also, when the node was the rootnode, d0i should yield probabilities
+	  equal to pi.
+
+
 2018-01-11  George G. Vega Yon <g.vegayon@gmail.com>
 	
 	* R/ape.r: Fixing case in which as.phylo.matrix processes a tree with

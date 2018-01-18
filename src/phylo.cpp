@@ -254,13 +254,18 @@ double predict_fun(
     );
   
   // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
-  arma::mat MU = prob_mat(mu);
+  double Pr_ai_1;
+  if (di0 > 0u) {
+    arma::mat MU = prob_mat(mu);
+    
+    // Rasing it to the power of di0
+    for (unsigned int i = 1; i < di0; i++)
+      MU = MU * MU;
+    
+    Pr_ai_1 = Pi * MU.at(1, 1) + (1.0 - Pi) * MU.at(0, 1);
+  } else 
+    Pr_ai_1 = Pi;
   
-  // Rasing it to the power of di0
-  for (unsigned int i = 1; i < di0; i++)
-    MU = MU * MU;
-  
-  double Pr_ai_1 = Pi * MU.at(1, 1) + (1.0 - Pi) * MU.at(0, 1);
   
   // Returning:
   return likelihood_given_ai_1 / (
@@ -287,11 +292,11 @@ arma::mat predict_funs(
   
   // Computing geodesic
   arma::umat G = approx_geodesic(edges, 1e3, true, false);
-  
+
   for (i = 0u; i < n; i++)
     for (p = 0u; p < P; p++) {
       ans.at(i, p) = predict_fun(
-        ids.at(i), p, G.at(ids.at(i), 0), annotations, offspring, pseq, psi, mu, Pi, Pr
+        ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u), annotations, offspring, pseq, psi, mu, Pi, Pr
       );
     }
       
