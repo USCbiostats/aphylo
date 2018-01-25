@@ -124,6 +124,15 @@ sim_counts$add <-function(n) {
 #' nodes of the tree.
 #' @param maxtries Integer scalar. If `informative = TRUE`, then the function
 #' will try at most `maxtries` times.
+#' 
+#' @details
+#' 
+#' The optiona `informative` was created such that when needed the
+#' function can be forced to simualte annotations while making sure (or at
+#' least trying `maxtries` times) that the leafs have both 0s and 9s. From what
+#' we've learned while conducting simulation studies, using this option may 
+#' indirectly bias the data generating process.
+#' 
 #' @export
 sim_fun_on_tree <- function(
   tree,
@@ -230,11 +239,13 @@ sim_annotated_tree <- function(
   
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
-    tree  = tree,
-    psi   = psi,
-    mu    = mu,
-    Pi    = Pi,
-    P     = P
+    tree        = tree,
+    psi         = psi,
+    mu          = mu,
+    Pi          = Pi,
+    P           = P,
+    informative = informative,
+    maxtries    = maxtries
   )
   
   # Creating the aphylo object

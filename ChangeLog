@@ -1,3 +1,10 @@
+2018-01-25  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* R/simulation.r: Values of `informative` and `maxtries` were not
+	passed
+	  to simulate_fun_on_tree.
+
+
 2018-01-18  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* R/estimation.r: Fixing checking of non-informative data.
