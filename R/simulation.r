@@ -64,9 +64,11 @@ sim_tree <- function(n, edge.length = NULL) {
 #' Simulate functions on a ginven tree
 #' 
 #' @param tree An object of class [phylo][ape::read.tree]
-#' @param psi A numeric vector of length 2 (see details).
-#' @param mu A numeric vector of length 2 (see details).
-#' @param Pi A numeric vector of length 2 (see details).
+#' @template parameters
+#' @templateVar psi 1
+#' @templateVar mu 1
+#' @templateVar eta 1
+#' @templateVar Pi 1
 #' @param P Integer scalar. Number of functions to simulate.
 #' 
 #' @details
@@ -90,7 +92,8 @@ sim_tree <- function(n, edge.length = NULL) {
 #'   newtree,
 #'   psi = c(.001, .05),
 #'   mu = c(.01, .05),
-#'   Pi = c(.5, .5)
+#'   Pi = c(.5, .5),
+#'   eta = c(1, 1)
 #' )
 #' 
 #' # Tabulating results
@@ -138,6 +141,7 @@ sim_fun_on_tree <- function(
   tree,
   psi,
   mu,
+  eta,
   Pi,
   P           = 1L,
   informative = TRUE,
@@ -170,6 +174,7 @@ sim_fun_on_tree <- function(
       pseq      = pseq,
       psi       = psi,
       mu        = mu,
+      eta       = eta,
       Pi        = Pi,
       P         = P
     )
@@ -202,6 +207,7 @@ sim_fun_on_tree <- function(
 #' @template parameters
 #' @templateVar psi 1
 #' @templateVar mu 1
+#' @templateVar eta 1
 #' @templateVar Pi 1
 #' @param informative,maxtries Passed to [sim_fun_on_tree].
 #' @return An object of class [aphylo]
@@ -216,10 +222,11 @@ sim_fun_on_tree <- function(
 sim_annotated_tree <- function(
   n           = NULL,
   tree        = NULL,
-  P           = 1,
+  P           = 1L,
   psi         = c(.05, .05),
   mu          = c(.1,.05),
-  Pi          = 1,
+  eta         = c(1.0, 1.0),
+  Pi          = 1.0,
   informative = TRUE,
   maxtries    = 20L
   ) {
@@ -242,6 +249,7 @@ sim_annotated_tree <- function(
     tree        = tree,
     psi         = psi,
     mu          = mu,
+    eta         = eta,
     Pi          = Pi,
     P           = P,
     informative = informative,

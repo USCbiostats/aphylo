@@ -2,6 +2,7 @@
 #' @param x An object of class [aphylo()]
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
+#' @param eta_range Numeric vector of length 2. Domain of \eqn{eta}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
 #' @param nlevels Integer scalar. Number of levels of each parameter to create.
 #' @param plotfun Function. Either [graphics::contour()],
@@ -46,15 +47,18 @@ plot_LogLike.aphylo_estimates <- function(x, ...) {
 #' @templateVar psi TRUE
 #' @templateVar mu TRUE
 #' @templateVar Pi TRUE
+#' @templateVar eta TRUE
 #' @export
 plot_LogLike.default <- function(
   x,
   psi_range = c(0.00001, .3),
   mu_range  = c(0.00001, .3),
+  eta_range = c(0.00001, .3),
   Pi_range  = c(0.00001, .3),
-  psi = rep(mean(psi_range), 2),
-  mu = rep(mean(mu_range), 2),
-  Pi = mean(Pi_range),
+  psi       = rep(mean(psi_range), 2),
+  mu        = rep(mean(mu_range), 2),
+  eta       = rep(mean(eta_range), 2),
+  Pi        = mean(Pi_range),
   nlevels   = 30,
   plotfun   = persp,
   par.args  = list(mar=c(1, 1, 1, 1), oma=c(0,0,4,0)),
@@ -69,28 +73,33 @@ plot_LogLike.default <- function(
   # Adjusting values
   psi_range <- range(c(psi_range, psi))
   mu_range  <- range(c(mu_range, mu))
+  eta_range  <- range(c(eta_range, eta))
   Pi_range  <- range(c(Pi_range, Pi))
   
   psi_range[1] <- max(.0001, psi_range[1] - .01)
   mu_range[1] <- max(.0001, mu_range[1] - .01)
+  eta_range[1] <- max(.0001, eta_range[1] - .01)
   Pi_range[1] <- max(.0001, Pi_range[1] - .01)
   
   psi_range[2] <- min(1 - .0001, psi_range[2] + .01)
   mu_range[2] <- min(1 - .0001, mu_range[2] + .01)
+  eta_range[2] <- min(1 - .0001, eta_range[2] + .01)
   Pi_range[2] <- min(1 - .0001, Pi_range[2] + .01)
   
   
   # Creating space
   PSI <- seq(psi_range[1], psi_range[2], length.out = nlevels)
   MU  <- seq(mu_range[1], mu_range[2], length.out = nlevels)
+  ETA  <- seq(eta_range[1], eta_range[2], length.out = nlevels)
   PI  <- seq(Pi_range[1], Pi_range[2], length.out = nlevels)
   
   # Computing the actual loglike value at the selected point
   ll <- LogLike(
     x,
     psi = psi, 
-    mu = mu,
-    Pi = Pi,
+    mu  = mu,
+    eta = eta,
+    Pi  = Pi,
     verb_ans = FALSE,
     check_dims = FALSE
   )$ll
@@ -103,6 +112,7 @@ plot_LogLike.default <- function(
         x,
         psi = c(PSI[i], PSI[j]),
         mu  = mu,
+        eta = eta,
         Pi  = Pi,
         verb_ans = FALSE, 
         check_dims  = FALSE
@@ -116,6 +126,7 @@ plot_LogLike.default <- function(
         x,
         psi = psi,
         mu  = c(MU[j], mu[2]),
+        eta = eta,
         Pi  = PI[i],
         verb_ans = FALSE, 
         check_dims  = FALSE
@@ -129,6 +140,7 @@ plot_LogLike.default <- function(
         x,
         psi = psi,
         mu  = c(MU[i], MU[j]),
+        eta = eta,
         Pi  = Pi,
         verb_ans = FALSE, 
         check_dims  = TRUE
@@ -224,7 +236,8 @@ plot_LogLike.default <- function(
     list(
       psi = list(PSI, psi_z),
       mu  = list(MU, mu_z),
-      Pi  = list(PI, pi_z)
+      Pi  = list(PI, pi_z),
+      eta = eta
     )
   )
 }

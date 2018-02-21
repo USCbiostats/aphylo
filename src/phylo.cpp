@@ -41,6 +41,7 @@ arma::vec root_node_prob(
 //' @templateVar annotations 1
 //' @templateVar mu 1
 //' @templateVar psi 1
+//' @templateVar eta 1
 //' @templateVar S 1
 //' @templateVar offspring 1
 //' @param Pr A matrix.
@@ -52,8 +53,9 @@ arma::vec root_node_prob(
 arma::mat probabilities(
     const arma::imat & annotations,
     const arma::ivec & pseq,
-    const arma::vec  & mu,
     const arma::vec  & psi,
+    const arma::vec  & mu,
+    const arma::vec  & eta,
     const arma::imat & S,
     const List       & offspring
 ) {
@@ -69,20 +71,30 @@ arma::mat probabilities(
   typedef IntegerVector::const_iterator Riviter;
   
   for (iviter n = pseq.begin(); n != pseq.end(); n++) {
+    
     // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
     if (! (bool) Rf_length(offspring.at(*n - 1u))) {
+      
       for (int s=0; s<nstates; s++)
         for (int p=0; p<P; p++) {
           
-          // If missing (no experimental data)
-          if (annotations.at(*n - 1u,p) == 9)
-            continue;
+          // Annotation bias probabilities:
+          // eta[0]: Probability of annotating a 0.
+          // eta[1]: Probability of annotating a 1.
           
-          Pr.at(*n - 1u, s) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p));
+          // If missing (no experimental data)
+          if (annotations.at(*n - 1u, p) == 9) {
+            Pr.at(*n - 1u, S.at(s, p)) *= (1.0 - eta.at(S.at(s, p)));
+            continue;
+          }
+            
+          Pr.at(*n - 1u, S.at(s, p)) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p))*
+            eta.at(S.at(s, p));
           
         }
         continue;
+      
     }
       
     // Obtaining list of offspring <- this can be improved (speed)
@@ -133,6 +145,7 @@ List LogLike(
     const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
+    const arma::vec  & eta,
     double Pi,
     bool verb_ans = false,
     bool check_dims = true
@@ -178,7 +191,7 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Pr  = probabilities(annotations, pseq, mu, psi, S, offspring);
+  arma::mat Pr  = probabilities(annotations, pseq, psi, mu, eta, S, offspring);
 
   // We only use the root node
   double ll = 0.0;
@@ -220,6 +233,7 @@ double predict_fun(
   const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
+  const arma::vec  & eta,
   double Pi
 ) {
   
@@ -229,13 +243,13 @@ double predict_fun(
   // Compute likelihood of a_i = 0
   annotations_filled.at(i, p) = 0;
   double likelihood_given_ai_0 = exp(
-    as< double >(LogLike(annotations_filled, offspring, pseq, psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq, psi, mu, eta, Pi, false)["ll"])
     );
   
   // Compute likelihood of a_i = 1
   annotations_filled.at(i, p) = 1;
   double likelihood_given_ai_1 = exp(
-    as< double >(LogLike(annotations_filled, offspring, pseq,  psi, mu, Pi, false)["ll"])
+    as< double >(LogLike(annotations_filled, offspring, pseq,  psi, mu, eta, Pi, false)["ll"])
     );
   
   // Pr(a_i = 1 | Tree Structure only) -----------------------------------------
@@ -267,6 +281,7 @@ arma::mat predict_funs(
   const arma::ivec & pseq,
   const arma::vec  & psi,
   const arma::vec  & mu,
+  const arma::vec  & eta,
   double Pi
 ) {
   
@@ -281,7 +296,7 @@ arma::mat predict_funs(
     for (p = 0u; p < P; p++) 
       ans.at(i, p) = predict_fun(
         ids.at(i), p, G.at(ids.at(i), pseq.at(pseq.size() - 1u) - 1u),
-        annotations, offspring, pseq, psi, mu, Pi
+        annotations, offspring, pseq, psi, mu, eta, Pi
       );
   
   return ans;

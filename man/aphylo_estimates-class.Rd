@@ -15,7 +15,7 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
-  params = rep(0.01, 5), lower = 1e-05, upper = 1 - 1e-05,
+  params = rep(0.01, 7), lower = 1e-05, upper = 1 - 1e-05,
   check.informative = TRUE)
 
 \method{print}{aphylo_estimates}(x, ...)
@@ -54,8 +54,8 @@ optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{s
 \item{control}{A list with parameters for the optimization method (see
 details).}
 
-\item{params}{A vector of length 5 with initial parameters. In particular
-\code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, and \code{Pi}.}
+\item{params}{A vector of length 7 with initial parameters. In particular
+\code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, \code{eta[1]}, \code{eta[2]} and \code{Pi}.}
 
 \item{lower}{Numeric vector of length 5. Lower bounds, default to 0.0001.}
 
@@ -180,7 +180,7 @@ dat <- sim_annotated_tree(
 set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
-  rep(.1, 5), dat,
+  rep(.1, 7), dat,
   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 )
 }

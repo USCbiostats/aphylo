@@ -2,8 +2,8 @@
 #'
 #' The optimization is done via `optim`.
 #'
-#' @param params A vector of length 5 with initial parameters. In particular
-#' `psi[1]`, `psi[2]`, `mu[1]`, `mu[2]`, and `Pi`.
+#' @param params A vector of length 7 with initial parameters. In particular
+#' `psi[1]`, `psi[2]`, `mu[1]`, `mu[2]`, `eta[1]`, `eta[2]` and `Pi`.
 #' @param dat An object of class `new_aphylo` as returned by
 #' [new_aphylo()].
 #' @param method Character scalar. When `"ABC"`, uses Artificial Bee Colony
@@ -89,7 +89,7 @@
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   rep(.1, 5), dat,
+#'   rep(.1, 7), dat,
 #'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
@@ -146,7 +146,7 @@ aphylo_mle <- function(
   method        = "L-BFGS-B",
   priors        = NULL, 
   control       = list(),
-  params        = rep(.01, 5),
+  params        = rep(.01, 7),
   lower         = 1e-5,
   upper         = 1 - 1e-5,
   check.informative = TRUE
@@ -157,7 +157,7 @@ aphylo_mle <- function(
   if (!inherits(dat, "aphylo"))
     stop("-dat- should be of class aphylo")
   
-  if (length(params) != 5)
+  if (length(params) != 7)
     stop("-params- must be of length 5.")
   
   if (!is.numeric(params))
@@ -176,7 +176,7 @@ aphylo_mle <- function(
   
   # Both available for ABC
   control$fnscale  <- -1
-  control$parscale <- rep(1, 5)
+  control$parscale <- rep(1, 7)
   
   # Creating the objective function
   fun <- if (length(priors)) {
@@ -186,7 +186,8 @@ aphylo_mle <- function(
         tree       = dat, 
         psi        = x[1:2], 
         mu         = x[3:4], 
-        Pi         = x[5], 
+        eta        = x[5:6],
+        Pi         = x[7],
         verb_ans   = FALSE, 
         check_dims = FALSE
         )$ll + sum(log(priors(x)))
@@ -201,8 +202,9 @@ aphylo_mle <- function(
       ll <- LogLike(
         tree       = dat, 
         psi        = x[1:2], 
-        mu         = x[3:4], 
-        Pi         = x[5], 
+        mu         = x[3:4],  
+        eta        = x[5:6],
+        Pi         = x[7],
         verb_ans   = FALSE, 
         check_dims = FALSE
       )$ll
@@ -243,7 +245,7 @@ aphylo_mle <- function(
     environment(priors) <- env
   
   # Naming the parameter estimates
-  names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
+  names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
   
   # Hessian for observed information matrix
   dimnames(hessian) <- list(names(ans$par), names(ans$par))
@@ -291,6 +293,8 @@ print.aphylo_estimates <- function(x, ...) {
       sprintf(" psi[1]    %6.4f      %6.4f", par["psi1"], sderrors["psi1"]),
       sprintf(" mu[0]     %6.4f      %6.4f", par["mu0"], sderrors["mu0"]),
       sprintf(" mu[1]     %6.4f      %6.4f", par["mu1"], sderrors["mu1"]),
+      sprintf(" eta[0]    %6.4f      %6.4f", par["eta0"], sderrors["eta0"]),
+      sprintf(" eta[1]    %6.4f      %6.4f", par["eta1"], sderrors["eta1"]),
       sprintf(" Pi        %6.4f      %6.4f\n", par["Pi"], sderrors["Pi"])
       )
     
@@ -338,14 +342,14 @@ aphylo_mcmc <- function(
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .01
-  if (!length(control$ub))     control$ub     <- rep(1, 5)
-  if (!length(control$lb))     control$lb     <- rep(0, 5)
+  if (!length(control$ub))     control$ub     <- rep(1, 7)
+  if (!length(control$lb))     control$lb     <- rep(0, 7)
   
   # Checking params
   if (!inherits(dat, "aphylo"))
     stop("-dat- should be of class aphylo")
   
-  if (length(params) != 5)
+  if (length(params) != 7)
     stop("-params- must be of length 5.")
   
   if (!is.numeric(params))
@@ -366,7 +370,8 @@ aphylo_mcmc <- function(
         tree       = dat,
         psi        = params[1:2] ,
         mu         = params[3:4] ,
-        Pi         = params[5],
+        eta        = params[5:6] ,
+        Pi         = params[7],
         verb_ans   = FALSE, 
         check_dims = FALSE
       )$ll + sum(log(priors(params)))
@@ -379,7 +384,8 @@ aphylo_mcmc <- function(
         tree       = dat,
         psi        = params[1:2] ,
         mu         = params[3:4] ,
-        Pi         = params[5],
+        eta        = params[5:6] ,
+        Pi         = params[7],
         verb_ans   = FALSE, 
         check_dims = FALSE
       )$ll
@@ -388,7 +394,7 @@ aphylo_mcmc <- function(
   }
   
   # Naming the parameter estimates
-  names(params) <- c("psi0", "psi1", "mu0", "mu1", "Pi")
+  names(params) <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
   
   # Running the MCMC
   ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat, useCpp=TRUE), control))

@@ -4,8 +4,9 @@
 \alias{sim_annotated_tree}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
-sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
-  mu = c(0.1, 0.05), Pi = 1, informative = TRUE, maxtries = 20L)
+sim_annotated_tree(n = NULL, tree = NULL, P = 1L, psi = c(0.05, 0.05),
+  mu = c(0.1, 0.05), eta = c(1, 1), Pi = 1, informative = TRUE,
+  maxtries = 20L)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
@@ -17,6 +18,8 @@ sim_annotated_tree(n = NULL, tree = NULL, P = 1, psi = c(0.05, 0.05),
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+
+\item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 

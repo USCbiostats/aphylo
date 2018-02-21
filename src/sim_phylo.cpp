@@ -11,6 +11,7 @@ IntegerMatrix sim_fun_on_tree(
     const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
+    const arma::vec  & eta,
     const arma::vec  & Pi,
     int P = 1
 ) {
@@ -32,16 +33,29 @@ IntegerMatrix sim_fun_on_tree(
       
       // Leaf nodes have no offspring. So this is when we include the miss
       // classification factor
-      N_o = Rf_length(offspring.at(*i - 1));
+      N_o = Rf_length(offspring.at(*i - 1u));
       if (!N_o) {
         
-        // Gain Probability
-        if (ans.at(*i  - 1, p) == 0u) 
-          ans.at(*i - 1, p) = (psi.at(0) > unif_rand()) ? 1u : 0u;
-        // Loss probability
-        else if (ans.at(*i - 1, p) == 1u) 
-          ans.at(*i - 1, p) = (psi.at(1) > unif_rand()) ? 0u : 1u;
-        else
+        if (ans.at(*i - 1u, p) == 0u) {
+          
+          // Mislabelling a zero
+          ans.at(*i - 1u, p) = (psi.at(0) > unif_rand()) ? 1u : 0u;
+          
+          // Likelihood of not annotating
+          if (eta.at(0u) < unif_rand()) 
+            ans.at(*i - 1u, p) = 9u;
+          
+          
+        } else if (ans.at(*i - 1, p) == 1u)  {
+          
+          // Loss probability
+          ans.at(*i - 1u, p) = (psi.at(1u) > unif_rand()) ? 0u : 1u;
+          
+          // Likelihood of not annotating
+          if (eta.at(1u) < unif_rand()) 
+            ans.at(*i - 1u, p) = 9u;
+          
+        } else
           stop("Skipping a leaf node.");
           
         continue;
@@ -54,12 +68,10 @@ IntegerMatrix sim_fun_on_tree(
       for (iviter o = O.begin(); o != O.end(); o++) {
         
         // If there is a function
-        if (ans.at(*i - 1, p) == 1u) 
-          // Loss probabilities
-          ans.at(*o - 1, p) = (mu.at(1) > unif_rand())? 0u : 1u;
-        else if (ans.at(*i - 1, p) == 0u)
-          // Gain Probabilities
-          ans.at(*o - 1, p) = (mu.at(0) > unif_rand())? 1u : 0u;
+        if (ans.at(*i - 1u, p) == 1u)      // Loss probabilities
+          ans.at(*o - 1u, p) = (mu.at(1u) > unif_rand())? 0u : 1u; 
+        else if (ans.at(*i - 1, p) == 0u) // Gain Probabilities
+          ans.at(*o - 1u, p) = (mu.at(0u) > unif_rand())? 1u : 0u; 
         else
           stop("Skipping an internal node.");
       }

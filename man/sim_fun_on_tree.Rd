@@ -4,17 +4,19 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(tree, psi, mu, Pi, P = 1L, informative = TRUE,
+sim_fun_on_tree(tree, psi, mu, eta, Pi, P = 1L, informative = TRUE,
   maxtries = 20L)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
 
-\item{psi}{A numeric vector of length 2 (see details).}
+\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{A numeric vector of length 2 (see details).}
+\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
-\item{Pi}{A numeric vector of length 2 (see details).}
+\item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
+
+\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{P}{Integer scalar. Number of functions to simulate.}
 
@@ -31,6 +33,8 @@ indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 }
 \description{
 Simulate functions on a ginven tree
+
+\code{}
 }
 \details{
 Using the model described in the vignette
@@ -55,7 +59,8 @@ ans <- sim_fun_on_tree(
   newtree,
   psi = c(.001, .05),
   mu = c(.01, .05),
-  Pi = c(.5, .5)
+  Pi = c(.5, .5),
+  eta = c(1, 1)
 )
 
 # Tabulating results

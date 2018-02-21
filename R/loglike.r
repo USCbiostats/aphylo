@@ -9,6 +9,7 @@
 #' @param tree A phylogenetic tree of class [aphylo].
 #' @templateVar psi 1
 #' @templateVar mu 1
+#' @templateVar eta 1
 #' @templateVar Pi 1
 #' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
 #' returns a list with a single scalar (the log-likelihood).
@@ -24,6 +25,8 @@
 #' respectively.}
 #' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
 #' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+#' \item{\code{eta}: A vector of length 2 with \eqn{\eta_0}{eta[0]} and
+#' \eqn{\eta_1}{eta[1]} which are the annotation bias probabilities.}
 #' \item{\code{Pi}: A numeric scalar which for which equals the probability
 #' of the root node having the function.}
 #' }
@@ -39,6 +42,7 @@ LogLike <- function(
   tree,
   psi,
   mu,
+  eta,
   Pi, 
   verb_ans = TRUE,
   check_dims = TRUE
@@ -50,6 +54,7 @@ LogLike <- function(
     pseq        = tree$pseq,
     psi         = psi,
     mu          = mu,
+    eta         = eta,
     Pi          = Pi,
     verb_ans    = verb_ans,
     check_dims  = check_dims

@@ -66,6 +66,7 @@ root_node_prob <- function(Pi, S) {
 #' @templateVar annotations 1
 #' @templateVar mu 1
 #' @templateVar psi 1
+#' @templateVar eta 1
 #' @templateVar S 1
 #' @templateVar offspring 1
 #' @param Pr A matrix.
@@ -73,28 +74,28 @@ root_node_prob <- function(Pi, S) {
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 #' probabilities for each node.
 #' @noRd
-probabilities <- function(annotations, pseq, mu, psi, S, offspring) {
-    .Call(`_aphylo_probabilities`, annotations, pseq, mu, psi, S, offspring)
+probabilities <- function(annotations, pseq, psi, mu, eta, S, offspring) {
+    .Call(`_aphylo_probabilities`, annotations, pseq, psi, mu, eta, S, offspring)
 }
 
-.LogLike <- function(annotations, offspring, pseq, psi, mu, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, Pi, verb_ans, check_dims)
+.LogLike <- function(annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans = FALSE, check_dims = TRUE) {
+    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans, check_dims)
 }
 
-predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, Pi) {
-    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, Pi)
+predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, eta, Pi) {
+    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, eta, Pi)
 }
 
-predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, Pi) {
-    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, Pi)
+predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, eta, Pi) {
+    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, eta, Pi)
 }
 
 prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }
 
-.sim_fun_on_tree <- function(offspring, pseq, psi, mu, Pi, P = 1L) {
-    .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, Pi, P)
+.sim_fun_on_tree <- function(offspring, pseq, psi, mu, eta, Pi, P = 1L) {
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, eta, Pi, P)
 }
 
 .sim_tree <- function(n, f, branches) {

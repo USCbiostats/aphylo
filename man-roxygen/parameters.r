@@ -5,6 +5,7 @@
 #' <%=ifelse(exists("tip.annotation"), "@param tip.annotation,node.annotation Annotation data. See [aphylo-class].", "") %>
 #' <%=ifelse(exists("psi"),         "@param psi Numeric vector of length 2. Misclasification probabilities. (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists("mu"),          "@param mu Numeric vector of length 2. Gain/loss probabilities (see \\code{\\link{LogLike}}).", "") %>
+#' <%=ifelse(exists("eta"),         "@param eta Numeric vector of length 2. Annotation bias probabilities (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists("Pi"),          "@param Pi Numeric scalar. Root node probability of having the function (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists("offspring"),   "@param offspring List of length \\eqn{n}. Offspring of each node (see \\code{\\link{new_aphylo}}).", "") %>
 #' <%=ifelse(exists("S"),           "@param S Integer matrix of size \\eqn{2^P\\times P}{2^P * P}. See \\code{\\link{states}}.", "") %>

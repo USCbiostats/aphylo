@@ -6,6 +6,7 @@ data("fakeexperiment")
 # Parameters
 psi    <- c(.01, .02)
 mu     <- c(.05, .1)
+eta    <- c(.7, .9)
 Pi     <- 1 - .3
 errtol <- 1e-15
 
@@ -14,7 +15,7 @@ O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = faketree)
 S  <- states(2)
 Pr <- probabilities(
   with(O, rbind(tip.annotation, node.annotation)),
-  O$pseq, mu, psi, S, O$offspring)
+  O$pseq, psi, mu, eta, S, O$offspring)
 
 # Checking Leaf Probabilities --------------------------------------------------
 
@@ -174,7 +175,7 @@ test_that("Internal Probabilities", {
 # Likelihood of Rootnode -------------------------------------------------------
 
 test_that("Log-Likelihood", {
-  ll0 <- LogLike(O, psi, mu, Pi)$ll
+  ll0 <- LogLike(O, psi, mu, eta, Pi)$ll
   
   PI   <- aphylo:::root_node_prob(Pi, S)
   root <- O$pseq[length(O$pseq)]

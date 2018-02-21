@@ -14,8 +14,9 @@ arma::vec root_node_prob(
 arma::mat probabilities(
     const arma::imat & annotations,
     const arma::ivec & pseq,
-    const arma::vec  & mu,
     const arma::vec  & psi,
+    const arma::vec  & mu,
+    const arma::vec  & eta,
     const arma::imat & S,
     const List       & offspring
 );
@@ -26,6 +27,7 @@ List LogLike(
     const arma::imat & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
+    const arma::vec  & eta,
     const arma::vec  & Pi,
     bool verb_ans = false
   );

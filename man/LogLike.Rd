@@ -4,7 +4,7 @@
 \alias{LogLike}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, psi, mu, Pi, verb_ans = TRUE, check_dims = TRUE)
+LogLike(tree, psi, mu, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link{aphylo}.}
@@ -12,6 +12,8 @@ LogLike(tree, psi, mu, Pi, verb_ans = TRUE, check_dims = TRUE)
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
 \item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+
+\item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
@@ -45,6 +47,8 @@ The parameters to estimate are described as follows:
 respectively.}
 \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
 \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+\item{\code{eta}: A vector of length 2 with \eqn{\eta_0}{eta[0]} and
+\eqn{\eta_1}{eta[1]} which are the annotation bias probabilities.}
 \item{\code{Pi}: A numeric scalar which for which equals the probability
 of the root node having the function.}
 }
