@@ -28,7 +28,8 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
                  pseq        = dat$pseq,
                  psi         = par[1:2],
                  mu          = par[3:4],
-                 Pi          = par[5]
+                 eta         = par[5:6],
+                 Pi          = par[7]
                )
   )
   
@@ -53,7 +54,7 @@ predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(1312)
 #' ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
-#' ans <- aphylo_mcmc(rep(.05, 5), ap, control = list(nbatch=1e4, thin=100),
+#' ans <- aphylo_mcmc(rep(.05, 7), ap, control = list(nbatch=1e4, thin=100),
 #'                    priors = function(x) dbeta(x, 1, 30))
 #'                    
 #' pr <- prediction_score(ans)

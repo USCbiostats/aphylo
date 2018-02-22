@@ -1,3 +1,21 @@
+
+#' Try to compute the inverse of the matrix
+#' @return If it fails, then it returns a matrix of size n*n with NAs.
+#' @noRd
+try_solve <- function(x, ...) {
+  
+  ans <- tryCatch(solve(x, ...), error = function(e) e)
+  
+  # If it is an error
+  if (inherits(ans, "error")) {
+    warning("The algorithm did not converge. Cannot find the inverse of the hessian.")
+    return(matrix(ncol = length(x), nrow=length(x)))
+  }
+    
+  
+  ans
+}
+
 #' Parameter estimation of Annotated Phylogenetic Trees
 #'
 #' The optimization is done via `optim`.
@@ -50,7 +68,7 @@
 #' @examples 
 #' 
 #' # Using simulated data ------------------------------------------------------
-#' set.seed(890)
+#' set.seed(89)
 #' dat <- sim_annotated_tree(100, P=2)
 #' 
 #' # Computing Estimating the parameters 
@@ -62,7 +80,7 @@
 #' 
 #' # Computing Estimating the parameters Using Priors for all the parameters
 #' mypriors <- function(params) {
-#'     dbeta(params, 2, 10)
+#'     dbeta(params, c(2, 2, 2, 2, 1, 10, 2), rep(10, 7))
 #' }
 #' 
 #' ans_dbeta <- aphylo_mle(dat, priors = mypriors)
@@ -146,9 +164,9 @@ aphylo_mle <- function(
   method        = "L-BFGS-B",
   priors        = NULL, 
   control       = list(),
-  params        = rep(.01, 7),
-  lower         = 1e-5,
-  upper         = 1 - 1e-5,
+  params        = c(rep(.01, 4), .99, .99, .01),
+  lower         = 0.0,
+  upper         = 1.0,
   check.informative = TRUE
 ) {
   
@@ -263,7 +281,7 @@ aphylo_mle <- function(
     dat        = dat,
     par0       = par0,
     method     = method,
-    varcovar   = solve(-hessian, tol = 1e-100)
+    varcovar   = try_solve(-hessian, tol = 1e-100)
   )
 }
 

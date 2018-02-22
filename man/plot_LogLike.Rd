@@ -11,12 +11,11 @@ plot_LogLike(x, ...)
 \method{plot_LogLike}{aphylo_estimates}(x, ...)
 
 \method{plot_LogLike}{default}(x, psi_range = c(1e-05, 0.3),
-  mu_range = c(1e-05, 0.3), eta_range = c(1e-05, 0.3), Pi_range = c(1e-05,
-  0.3), psi = rep(mean(psi_range), 2), mu = rep(mean(mu_range), 2),
-  eta = rep(mean(eta_range), 2), Pi = mean(Pi_range), nlevels = 30,
-  plotfun = persp, par.args = list(mar = c(1, 1, 1, 1), oma = c(0, 0, 4,
-  0)), theta = -pi * 20, shade = 0.7, border = "steelblue", phi = 30,
-  scale = TRUE, ...)
+  mu_range = c(1e-05, 0.3), Pi_range = c(1e-05, 0.3),
+  psi = rep(mean(psi_range), 2), mu = rep(mean(mu_range), 2), eta = c(1,
+  1), Pi = mean(Pi_range), nlevels = 30, plotfun = persp,
+  par.args = list(mar = c(1, 1, 1, 1), oma = c(0, 0, 4, 0)), theta = -pi *
+  20, shade = 0.7, border = "steelblue", phi = 30, scale = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link[=aphylo]{aphylo()}}}
@@ -26,8 +25,6 @@ plot_LogLike(x, ...)
 \item{psi_range}{Numeric vector of length 2. Domain of \eqn{psi}.}
 
 \item{mu_range}{Numeric vector of length 2. Domain of \eqn{mu}.}
-
-\item{eta_range}{Numeric vector of length 2. Domain of \eqn{eta}.}
 
 \item{Pi_range}{Numeric vector of length 2. Domain of \eqn{pi}.}
 

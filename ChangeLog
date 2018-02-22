@@ -1,3 +1,25 @@
+2018-02-22  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* src/phylo.cpp: Fixing 'error' back.
+
+	* R/predict.r: Adding eta to the call.
+	* R/plot_loglike.r: idem.
+	* R/estimation.r: idem, and adding function to try to compute inv.
+
+	* tests/testthat/*.r: Adding eta to the tests.
+
+
+2018-02-21  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* src/phylo.cpp: Adding the eta parameter for controlling for
+	annotation bias.
+	* src/sim_phylo.cpp: Idem.
+	* R/estimation.r: Idem.
+	* R/simulation.r: Idem.
+	* R/plot_loglike.r: Idem.
+	* R/loglike.r: Idem.
+
+
 2018-01-25  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* R/simulation.r: Values of `informative` and `maxtries` were not

@@ -2,7 +2,6 @@
 #' @param x An object of class [aphylo()]
 #' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
 #' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
-#' @param eta_range Numeric vector of length 2. Domain of \eqn{eta}.
 #' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
 #' @param nlevels Integer scalar. Number of levels of each parameter to create.
 #' @param plotfun Function. Either [graphics::contour()],
@@ -39,7 +38,7 @@ plot_LogLike <- function(x, ...) UseMethod("plot_LogLike")
 #' @rdname plot_LogLike
 plot_LogLike.aphylo_estimates <- function(x, ...) {
   # provided <- names(list(...))
-  plot_LogLike.default(x$dat, psi = x$par[1:2], mu = x$par[3:4], Pi = x$par[5], ...)
+  plot_LogLike.default(x$dat, psi = x$par[1:2], mu = x$par[3:4], eta = x$par[5:6], Pi = x$par[5], ...)
 }
 
 #' @rdname plot_LogLike
@@ -53,11 +52,10 @@ plot_LogLike.default <- function(
   x,
   psi_range = c(0.00001, .3),
   mu_range  = c(0.00001, .3),
-  eta_range = c(0.00001, .3),
   Pi_range  = c(0.00001, .3),
   psi       = rep(mean(psi_range), 2),
   mu        = rep(mean(mu_range), 2),
-  eta       = rep(mean(eta_range), 2),
+  eta       = c(1, 1),
   Pi        = mean(Pi_range),
   nlevels   = 30,
   plotfun   = persp,
@@ -73,24 +71,20 @@ plot_LogLike.default <- function(
   # Adjusting values
   psi_range <- range(c(psi_range, psi))
   mu_range  <- range(c(mu_range, mu))
-  eta_range  <- range(c(eta_range, eta))
   Pi_range  <- range(c(Pi_range, Pi))
   
   psi_range[1] <- max(.0001, psi_range[1] - .01)
   mu_range[1] <- max(.0001, mu_range[1] - .01)
-  eta_range[1] <- max(.0001, eta_range[1] - .01)
   Pi_range[1] <- max(.0001, Pi_range[1] - .01)
   
   psi_range[2] <- min(1 - .0001, psi_range[2] + .01)
   mu_range[2] <- min(1 - .0001, mu_range[2] + .01)
-  eta_range[2] <- min(1 - .0001, eta_range[2] + .01)
   Pi_range[2] <- min(1 - .0001, Pi_range[2] + .01)
   
   
   # Creating space
   PSI <- seq(psi_range[1], psi_range[2], length.out = nlevels)
   MU  <- seq(mu_range[1], mu_range[2], length.out = nlevels)
-  ETA  <- seq(eta_range[1], eta_range[2], length.out = nlevels)
   PI  <- seq(Pi_range[1], Pi_range[2], length.out = nlevels)
   
   # Computing the actual loglike value at the selected point

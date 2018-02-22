@@ -11,7 +11,7 @@ Pi  <- .2
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
 
 # Estimation via L-BFGS-B
-ans0 <- aphylo_mle(dat, params = rep(.05, 5))
+ans0 <- aphylo_mle(dat, params = c(.05, .05, .05, .05, .9, .9, .5))
 
 # Methods ----------------------------------------------------------------------
 test_that("Methods", {
@@ -50,22 +50,23 @@ test_that("MCMC", {
 
 test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
+  
   set.seed(1)
   dat <- suppressWarnings(sim_annotated_tree(10, Pi=0, mu=c(0, 0), psi=c(0,0)))
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
-    aphylo_mcmc(rep(2/12, 5), dat, priors = function(x) dbeta(x, 2, 10),
-                control = list(nbatch = 1e4), check.informative = FALSE)
+    aphylo_mcmc(rep(2/12, 7), dat, priors = function(x) dbeta(x, 2, 10),
+                control = list(nbatch = 2e4), check.informative = FALSE)
     )
   
   ans2 <- suppressWarnings(
-    aphylo_mcmc(rep(2/32, 5), dat, priors = function(x) dbeta(x, 2, 30),
-                control = list(nbatch = 1e4), check.informative = FALSE)
+    aphylo_mcmc(rep(2/32, 7), dat, priors = function(x) dbeta(x, 2, 30),
+                control = list(nbatch = 2e4), check.informative = FALSE)
   )
   
   # Should converge to the prior
-  expect_equal(unname(coef(ans1)), rep(2/12, 5), tol=.05)
-  expect_equal(unname(coef(ans2)), rep(2/32, 5), tol=.025)
+  expect_equal(unname(coef(ans1)), rep(2/12, 7), tol=.05)
+  expect_equal(unname(coef(ans2)), rep(2/32, 7), tol=.025)
   
 })
