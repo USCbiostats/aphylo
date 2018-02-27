@@ -64,12 +64,13 @@ plot_LogLike(O)
 ## Simulating annoated trees
 
 ```{r}
-set.seed(1958)
+set.seed(198)
 dat <- sim_annotated_tree(
   200, P=1, 
   psi = c(0.05, 0.05),
   mu  = c(0.1, 0.1),
-  Pi  = .5
+  eta = c(.7, .95),
+  Pi  = .4
   )
 
 dat
@@ -83,20 +84,19 @@ dat
 # Parameters and data
 psi     <- c(0.020,0.010)
 mu      <- c(0.04,.01)
-pi_root <- .999
+eta     <- c(.7, .9)
+pi_root <- .05
 
 # Computing likelihood
-str(LogLike(dat, psi = psi, mu = mu, Pi = pi_root))
+str(LogLike(dat, psi = psi, mu = mu, eta = eta, Pi = pi_root))
 
 ```
 
 # Estimation
 
 ```{r MLE}
-# Using L-BFGS-B (MLE)
-(ans0 <- aphylo_mle(dat))
-# Plotting loglike
-plot_LogLike(ans0)
+# Using L-BFGS-B (MLE) to get an initial guess
+ans0 <- aphylo_mle(dat)
 
 
 # MCMC method
@@ -105,6 +105,8 @@ ans2 <- aphylo_mcmc(
   prior = function(p) dbeta(p, 2,20),
   control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
+
+plot(ans2)
 ```
 
 ```{r MCMC}
@@ -112,8 +114,6 @@ ans2
 library(coda)
 gelman.diag(ans2$hist)
 summary(ans2$hist)
-
-plot(ans2$hist)
 ```
 
 
