@@ -111,13 +111,13 @@ plot(O)
     ## Scale for 'fill' is already present. Adding another scale for 'fill',
     ## which will replace the existing scale.
 
-![](readme_files/figure-markdown_github/Get%20offspring-1.png)
+![](README_files/figure-markdown_github/Get%20offspring-1.png)
 
 ``` r
 plot_LogLike(O)
 ```
 
-![](readme_files/figure-markdown_github/Get%20offspring-2.png)
+![](README_files/figure-markdown_github/Get%20offspring-2.png)
 
 Simulating annoated trees
 -------------------------
@@ -224,7 +224,7 @@ ans2
 plot(ans2)
 ```
 
-![](readme_files/figure-markdown_github/MLE-1.png)
+![](README_files/figure-markdown_github/MLE-1.png)
 
 ``` r
 # MCMC Diagnostics with coda
@@ -298,7 +298,7 @@ pred
 plot(pred)
 ```
 
-![](readme_files/figure-markdown_github/Predict-1.png)
+![](README_files/figure-markdown_github/Predict-1.png)
 
 Misc
 ====
