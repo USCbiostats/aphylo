@@ -1,3 +1,12 @@
+2018-02-27  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* src/phylo.cpp: Updating etas in the model. Now it is the probability
+	  of not reporting a discovery given the observed state (before it was
+	  the true state).
+	* src/sim_phylo.cpp: idem.
+	* tests/*: idem.
+
+
 2018-02-22  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* src/phylo.cpp: Fixing 'error' back.

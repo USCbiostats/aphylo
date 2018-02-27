@@ -41,23 +41,18 @@ IntegerMatrix sim_fun_on_tree(
           // Mislabelling a zero
           ans.at(*i - 1u, p) = (psi.at(0) > unif_rand()) ? 1u : 0u;
           
-          // Likelihood of not annotating
-          if (eta.at(0u) < unif_rand()) 
-            ans.at(*i - 1u, p) = 9u;
-          
-          
         } else if (ans.at(*i - 1, p) == 1u)  {
           
-          // Loss probability
+          // Mislabelling a one
           ans.at(*i - 1u, p) = (psi.at(1u) > unif_rand()) ? 0u : 1u;
-          
-          // Likelihood of not annotating
-          if (eta.at(1u) < unif_rand()) 
-            ans.at(*i - 1u, p) = 9u;
           
         } else
           stop("Skipping a leaf node.");
           
+        // Likelihood of not annotating
+        if (eta.at(ans.at(*i - 1u, p)) < unif_rand()) 
+          ans.at(*i - 1u, p) = 9u;
+        
         continue;
       }
         

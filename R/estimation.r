@@ -157,6 +157,45 @@ stop_ifuninformative <- function(tip.annotation) {
     stop("The model is uninformative (either there's only 0s or 1s).", call. = FALSE)
 }
 
+#' Objective function with priors
+#' @noRd
+obj_fun_priors <- function(x, dat, priors) {
+    
+    ll <- LogLike(
+      tree       = dat, 
+      psi        = x[1:2], 
+      mu         = x[3:4], 
+      eta        = x[5:6],
+      Pi         = x[7],
+      verb_ans   = FALSE, 
+      check_dims = FALSE
+    )$ll + sum(log(priors(x)))
+    
+    # Checking if we got a infinite result
+    if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
+    ll
+}
+
+#' Objective function
+#' @noRd
+obj_fun <- function(x, dat) {
+    
+    ll <- LogLike(
+      tree       = dat, 
+      psi        = x[1:2], 
+      mu         = x[3:4],  
+      eta        = x[5:6],
+      Pi         = x[7],
+      verb_ans   = FALSE, 
+      check_dims = FALSE
+    )$ll
+    
+    # Checking if we got a infinite result
+    if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
+    ll
+}
+
+
 #' @rdname aphylo_estimates-class
 #' @export
 aphylo_mle <- function(

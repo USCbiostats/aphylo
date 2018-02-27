@@ -85,12 +85,15 @@ arma::mat probabilities(
           
           // If missing (no experimental data)
           if (annotations.at(*n - 1u, p) == 9) {
-            Pr.at(*n - 1u, s) *= (1.0 - eta.at(S.at(s, p)));
+            Pr.at(*n - 1u, s) *= 
+              (1.0 - eta.at(0u)) * PSI.at(S.at(s, p), 0u) + 
+              (1.0 - eta.at(1u)) * PSI.at(S.at(s, p), 1u)
+            ;
             continue;
           }
             
           Pr.at(*n - 1u, s) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p))*
-            eta.at(S.at(s, p));
+            eta.at(annotations.at(*n - 1u, p));
           
         }
         continue;

@@ -4,7 +4,7 @@ data("faketree")
 data("fakeexperiment")
 
 # Adding an NA
-fakeexperiment[1,2] <- NA
+# fakeexperiment[1,2] <- NA
 
 # Parameters
 psi    <- c(.01, .02)
@@ -28,27 +28,27 @@ test_that("Leaf Probabilities", {
   PrRaw[] <- 1
   
   # Node 3 (0,0)
-  PrRaw[4, 1] <- (1 - psi[1]) * (1 - eta[1]) * eta[1]
-  PrRaw[4, 2] <- (1 - psi[1]) * (1 - eta[2]) * eta[1]
-  PrRaw[4, 3] <- psi[2] * (1 - eta[1]) * eta[2]
-  PrRaw[4, 4] <- psi[2] * (1 - eta[2]) * eta[2]
+  PrRaw[4, 1] <- (1 - psi[1])^2 * eta[1]^2
+  PrRaw[4, 2] <- psi[2] * (1 - psi[1]) * eta[1]^2
+  PrRaw[4, 3] <- (1 - psi[1]) * psi[2] * eta[1]^2
+  PrRaw[4, 4] <- psi[2]^2 * eta[1]^2
   
   # Node 4 (0,1)
-  PrRaw[5, 1] <- (1 - psi[1])*psi[1] * eta[1]^2
-  PrRaw[5, 2] <- psi[2] * psi[1] * eta[2]*eta[1]
-  PrRaw[5, 3] <- (1 - psi[1]) * (1 - psi[2]) * eta[1]*eta[2]
-  PrRaw[5, 4] <- psi[2] * (1 - psi[2]) * eta[2]^2
+  PrRaw[5, 1] <- (1 - psi[1])*psi[1] * eta[1] * eta[2]
+  PrRaw[5, 2] <- psi[2] * psi[1] * eta[1] * eta[2]
+  PrRaw[5, 3] <- (1 - psi[1]) * (1 - psi[2]) * eta[1] * eta[2]
+  PrRaw[5, 4] <- psi[2] * (1 - psi[2]) * eta[1] * eta[2]
   
   # Node 5 (1,0)
-  PrRaw[6, 1] <- psi[1]*(1 - psi[1]) * eta[1]^2
-  PrRaw[6, 2] <- (1 - psi[2]) * (1 - psi[1]) * eta[2]*eta[1]
-  PrRaw[6, 3] <- psi[1] * psi[2] * eta[1]*eta[2]
-  PrRaw[6, 4] <- (1 - psi[2]) * psi[2] * eta[2]^2
+  PrRaw[6, 1] <- psi[1]*(1 - psi[1]) * eta[2] * eta[1] 
+  PrRaw[6, 2] <- (1 - psi[2]) * (1 - psi[1]) * eta[2] * eta[1] 
+  PrRaw[6, 3] <- psi[1] * psi[2] * eta[2] * eta[1] 
+  PrRaw[6, 4] <- (1 - psi[2]) * psi[2] * eta[2] * eta[1] 
   
   # Node 6 (1,1)
-  PrRaw[7, 1] <- psi[1] ^ 2 * eta[1]^2
-  PrRaw[7, 2] <- (1 - psi[2]) * psi[1] * eta[2]*eta[1]
-  PrRaw[7, 3] <- psi[1] * (1 - psi[2]) * eta[1]*eta[2]
+  PrRaw[7, 1] <- psi[1] ^ 2 * eta[2]^2
+  PrRaw[7, 2] <- (1 - psi[2]) * psi[1] * eta[2]^2
+  PrRaw[7, 3] <- psi[1] * (1 - psi[2]) * eta[2]^2
   PrRaw[7, 4] <- (1 - psi[2]) ^ 2 * eta[2]^2
   
   # These should be identical
