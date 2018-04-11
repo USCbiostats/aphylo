@@ -29,7 +29,7 @@ IntegerMatrix sim_fun_on_tree(
     ans.at(pseq.at(0) - 1, p) = (Pi.at(0) > unif_rand())? 1u : 0u;
     
     // Assigning probabilities to their offspring.
-    for (iviter i = pseq.begin(); i != pseq.end(); i++) {
+    for (iviter i = pseq.begin(); i != pseq.end(); ++i) {
       
       // Leaf nodes have no offspring. So this is when we include the miss
       // classification factor

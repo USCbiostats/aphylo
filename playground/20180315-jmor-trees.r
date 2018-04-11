@@ -12,11 +12,24 @@ X    <- c(0, 0, 0)
 atree <- new_aphylo(X, tree)
 
 # Model parameters
-Pi  <- c(.7, .3)
+Pi  <- .3
 psi <- c(.01, .02)
 mu  <- c(.2, .1)
+eta <- c(1, 1)
 
-tree_prob <- function(tree, psi, mu, Pi) {
+#' Posterior probabilities based on parameter estimates
+#' @param atree A tree of class [aphylo]
+#' @template parameters
+#' @templateVar psi 1
+#' @templateVar mu 1
+#' @templateVar Pi
+#' @export
+predict_brute_force <- function(atree, psi, mu, Pi) {
+  
+  # Coercing into the true class
+  tree <- as.phylo(atree)
+  Pi   <- c(1 - Pi, Pi)
+  
   # Generating a states matrix
   states <- do.call(expand.grid, rep(list(c(0,1)), ape::Nnode(tree) + ape::Ntip(tree)))
   colnames(states) <- paste0("node", 1:(ncol(states)))
@@ -48,21 +61,32 @@ tree_prob <- function(tree, psi, mu, Pi) {
     
   }
   
+  # Computing posterior probabilities
+  posterior <- vector("numeric", ncol(states))
+  for (i in 1:ncol(states)) {
+    state_col <- which(apply(states_tip, 1, function(x) all(x == atree$tip.annotation)))
+    state_rows <- which(states[,i] == 1)
+    
+    posterior[i] <- sum(Pr[state_rows, state_col])/sum(Pr[, state_col])
+  }
+  
+  
   # Results
   list(
     Pr  = Pr,
     row = states,
-    col = states_tip
+    col = states_tip,
+    posterior = posterior
   )
   
 }
 
-ans <- tree_prob(tree, psi, mu, Pi)
+ans <- predict_brute_force(atree, psi, mu, Pi)
 
 sum(ans$Pr) # This should add up to 1
 
 # Comparing with aphylo --------------------------------------------------------
-l <- LogLike(atree, psi, mu, Pi[2])
+l <- LogLike(atree, psi, mu, eta, Pi)
 X <- as.vector(atree$tip.annotation)
 colSums(ans$Pr)[which(apply(ans$col, 1, function(x) all(x == X)))] -
   exp(l$ll)
@@ -71,7 +95,7 @@ exp(l$ll) # Jmorr tree 0.286622598, c(0, 0, 0)
 
 # Conditional probability ------------------------------------------------------
 
-i <- 4
+i <- 5
 
 # Matching state
 state_col <- which(apply(ans$col, 1, function(x) all(x == X)))
@@ -85,8 +109,8 @@ sprintf(
 
 sprintf(
   "%.10f",
-  l$Pr[4,1]*Pi[1]/
-    (l$Pr[4,2]*Pi[2] + l$Pr[4,1]*Pi[1])
+  l$Pr[4,1]*(1-Pi)/
+    (l$Pr[4,2]*Pi + l$Pr[4,1]*(1-Pi))
 )
 
 i_isone <- which(ans$row[,i] == 1L)

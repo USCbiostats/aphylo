@@ -90,6 +90,10 @@ predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, eta,
     .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, eta, Pi)
 }
 
+.posterior_prob <- function(Pr_postorder, mu, Pi, pseq, offspring) {
+    .Call(`_aphylo_posterior_prob`, Pr_postorder, mu, Pi, pseq, offspring)
+}
+
 prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }

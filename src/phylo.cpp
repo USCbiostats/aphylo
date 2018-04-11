@@ -70,7 +70,7 @@ arma::mat probabilities(
   typedef arma::ivec::const_iterator iviter;
   typedef IntegerVector::const_iterator Riviter;
   
-  for (iviter n = pseq.begin(); n != pseq.end(); n++) {
+  for (iviter n = pseq.begin(); n != pseq.end(); ++n) {
     
     // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
@@ -110,7 +110,7 @@ arma::mat probabilities(
       // Loop through offspring
       double offspring_joint_likelihood = 1.0;
       
-      for (Riviter o_n = O.begin(); o_n != O.end() ; o_n++) {
+      for (Riviter o_n = O.begin(); o_n != O.end() ; ++o_n) {
         
         // Offspring states integration
         double offspring_likelihood = 0.0;

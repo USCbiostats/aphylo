@@ -64,7 +64,7 @@ arma::umat approx_geodesic(
     
     // Computing nsteps
     
-    for (spiter it = pG.begin(); it != pG.end(); it ++)
+    for (spiter it = pG.begin(); it != pG.end(); ++it)
       if (ans.at(it.row(), it.col()) == 0u)
         ans.at(it.row(), it.col()) += i,
           ++change_count;
@@ -162,7 +162,7 @@ IntegerVector reduce_pseq(
   typedef arma::ivec::const_iterator iviter;
   typedef IntegerVector::const_iterator Riviter;
   IntegerVector O;
-  for (iviter i = pseq.begin(); i != pseq.end(); i++) {
+  for (iviter i = pseq.begin(); i != pseq.end(); ++i) {
     
     // Default to false
     included.at(*i - 1u) = false;
@@ -170,7 +170,7 @@ IntegerVector reduce_pseq(
     // First check its offspring
     if (Rf_length(offspring.at(*i - 1u))) {
       O = offspring.at(*i - 1u);
-      for (Riviter o = O.begin(); o != O.end(); o++) {
+      for (Riviter o = O.begin(); o != O.end(); ++o) {
         
         // Was any offspring included?
         if (included.at(*o - 1u)) {

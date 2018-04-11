@@ -142,6 +142,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// posterior_prob
+List posterior_prob(const arma::mat& Pr_postorder, const arma::vec& mu, const double& Pi, const arma::ivec& pseq, const List& offspring);
+RcppExport SEXP _aphylo_posterior_prob(SEXP Pr_postorderSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP pseqSEXP, SEXP offspringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Pr_postorder(Pr_postorderSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Pi(PiSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
+    Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    rcpp_result_gen = Rcpp::wrap(posterior_prob(Pr_postorder, mu, Pi, pseq, offspring));
+    return rcpp_result_gen;
+END_RCPP
+}
 // prediction_score_rand
 double prediction_score_rand(const arma::mat& A, const arma::mat& W, double alpha);
 RcppExport SEXP _aphylo_prediction_score_rand(SEXP ASEXP, SEXP WSEXP, SEXP alphaSEXP) {
@@ -231,6 +246,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_LogLike", (DL_FUNC) &_aphylo_LogLike, 9},
     {"_aphylo_predict_fun", (DL_FUNC) &_aphylo_predict_fun, 10},
     {"_aphylo_predict_funs", (DL_FUNC) &_aphylo_predict_funs, 9},
+    {"_aphylo_posterior_prob", (DL_FUNC) &_aphylo_posterior_prob, 5},
     {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
     {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 7},
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
