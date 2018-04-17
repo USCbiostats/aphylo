@@ -36,8 +36,8 @@ predict_brute_force <- function(atree, psi, mu, Pi) {
   
   # Computing matrix of probabilities --------------------------------------------
   # 2^(ntips + nnodes) 
-  PSI <- aphylo:::prob_mat(psi)
-  MU  <- aphylo:::prob_mat(mu)
+  PSI <- prob_mat(psi)
+  MU  <- prob_mat(mu)
   
   # For
   Pr <- Pi[states[, ape::Ntip(tree) + 1] + 1]

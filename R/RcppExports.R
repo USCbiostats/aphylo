@@ -82,14 +82,6 @@ probabilities <- function(annotations, pseq, psi, mu, eta, S, offspring) {
     .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans, check_dims)
 }
 
-predict_fun <- function(i, p, di0, annotations, offspring, pseq, psi, mu, eta, Pi) {
-    .Call(`_aphylo_predict_fun`, i, p, di0, annotations, offspring, pseq, psi, mu, eta, Pi)
-}
-
-predict_funs <- function(ids, edges, annotations, offspring, pseq, psi, mu, eta, Pi) {
-    .Call(`_aphylo_predict_funs`, ids, edges, annotations, offspring, pseq, psi, mu, eta, Pi)
-}
-
 .posterior_prob <- function(Pr_postorder, mu, Pi, pseq, offspring) {
     .Call(`_aphylo_posterior_prob`, Pr_postorder, mu, Pi, pseq, offspring)
 }

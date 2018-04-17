@@ -401,6 +401,7 @@ aphylo_mcmc <- function(
   if (!length(control$scale))  control$scale  <- .01
   if (!length(control$ub))     control$ub     <- rep(1, 7)
   if (!length(control$lb))     control$lb     <- rep(0, 7)
+  if (!length(control$useCpp)) control$useCpp <- TRUE
   
   # Checking params
   if (!inherits(dat, "aphylo"))
@@ -454,7 +455,7 @@ aphylo_mcmc <- function(
   names(params) <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
   
   # Running the MCMC
-  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat, useCpp=TRUE), control))
+  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat), control))
   
   # We treat all chains as mcmc.list
   if (!inherits(ans, "mcmc.list"))

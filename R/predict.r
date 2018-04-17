@@ -1,41 +1,25 @@
 
 #' @rdname aphylo_estimates-class
-#' @param what Either a character scalar or an integer vector. If a character,
-#' then it can be either `"missings"`, `"leafs"`, or `"all"`. If an integer vector,
-#' then these must be values between \eqn{[0, n - 1]} (node ids).
-#' @return In the case of the `predict` method, a two-column numeric matrix
+#' @return In the case of the `predict` method, a `P` column numeric matrix
 #' with values between \eqn{[0,1]} (probabilities).
 #' @export
-predict.aphylo_estimates <- function(object, what = c("missings", "all"), ...) {
-  
-  # Parameters
-  n <- nrow(object$dat$annotations)
-  
-  # Checking the default
-  if (length(what) == 2 && all(what == c("missings", "all")))
-    what <- "missings"
-  
-  # This function maps
-  map_ids_to_positions.aphylo_estimates("what", "object")
+predict.aphylo_estimates <- function(object, ...) {
   
   # Running prediction function
-  pred <- with(object, 
-               predict_funs(
-                 ids         = what,
-                 edges       = dat$tree$edge - 1L,
-                 annotations = with(dat, rbind(tip.annotation, node.annotation)),
-                 offspring   = dat$offspring,
-                 pseq        = dat$pseq,
-                 psi         = par[1:2],
-                 mu          = par[3:4],
-                 eta         = par[5:6],
-                 Pi          = par[7]
-               )
-  )
+  pred <- with(
+    object,
+    predict_pre_order(
+      atree = dat,
+      psi   = par[c("psi0", "psi1")],
+      mu    = par[c("mu0", "mu1")],
+      eta   = par[c("eta0", "eta1")],
+      Pi    = par["Pi"]
+    )
+    )
   
   # Adding names
   dimnames(pred) <- list(
-    with(object$dat$tree, c(tip.label, node.label))[what + 1L],
+    with(object$dat$tree, c(tip.label, node.label)),
     colnames(object$dat$tip.annotation))
   
   pred
@@ -85,7 +69,7 @@ prediction_score <- function(
   ids <- intersect(ids, 1L:nrow(x$dat$tip.annotation))
 
   # Prediction
-  pred <- predict.aphylo_estimates(x, what = ids - 1L, ...)
+  pred <- predict.aphylo_estimates(x, ...)[ids,,drop=FALSE]
   
   # Inverse of Geodesic distances
   if (!length(W)) {
@@ -144,7 +128,7 @@ print.aphylo_prediction_score <- function(x, ...) {
     sprintf("Observed : %-.2f ", obs/worse),
     sprintf("Random   : %-.2f ", random/worse),
     paste0(rep("-", getOption("width")), collapse=""),
-    "Values standarized to range between 0 and 1, 0 being best.",
+    "Values scaled to range between 0 and 1, 0 being best.",
     sep ="\n"
   ))
   invisible(x)
@@ -192,7 +176,7 @@ plot.aphylo_prediction_score <- function(
   for (i in 1:k) {
     
     # Sorting accordingly to predicted
-    ord <- order(x$predicted[,i])
+    ord <- 1L:length(x$predicted[,i]) # order(x$predicted[,i])
 
     
     # Outer polygon

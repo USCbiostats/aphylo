@@ -29,7 +29,7 @@ test_that("Prediction works", {
   
   
   expect_equivalent(ans0, ans1$posterior)
-  expect_equivalent(ans1$posterior, ans1$posterior)
+  expect_equivalent(ans1$posterior, ans2)
   
   # Random test
   set.seed(122331)
@@ -38,6 +38,6 @@ test_that("Prediction works", {
   ans0 <- predict_brute_force(atree, psi, mu, Pi)
   ans1 <- predict_pre_order(atree, psi, mu, eta, Pi)
   
-  all.equal(ans0$posterior, ans1$posterior[,1])
+  expect_equivalent(ans0$posterior, ans1[,1])
   
 })

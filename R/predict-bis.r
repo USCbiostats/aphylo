@@ -1,32 +1,67 @@
 #' Posterior probabilities based on parameter estimates
+#' 
+#' The function `predict_pre_order` uses a pre-order algorithm to compute the
+#' posterior probabilities, whereas the `predict_brute_force` computes posterior
+#' probabilities generating all possible cases.
+#' 
 #' @param atree A tree of class [aphylo]
 #' @template parameters
 #' @templateVar psi 1
 #' @templateVar mu 1
 #' @templateVar Pi 1
 #' @templateVar eta 1
-#' @name predict-bis
+#' 
+#' @details 
+#' The function `predict_brute_force` is only intended for testing. For predictions
+#' after estimating the model, see [predict.aphylo_estimates].
+#' 
+#' @name posterior-probabilities
 NULL
 
-#' @rdname predict-bis
+#' @rdname posterior-probabilities
 #' @export
 predict_pre_order <- function(atree, psi, mu, eta, Pi) {
   
-  l <- LogLike(atree, psi, mu, eta, Pi)
+  # Should be aphylo
+  if (!inherits(atree, "aphylo"))
+    stop("`atree` must be of class `aphylo` (it is of class ", class(atree), ".")
   
-  # const arma::mat  & Pr_postorder,
-  # const arma::vec  & mu,
-  # const double     & Pi,
-  # const arma::ivec & pseq,
-  # const List       & offspring
   
-  .posterior_prob(l$Pr, mu, Pi, atree$pseq, atree$offspring)
+  p <- ncol(atree$tip.annotation)
+  ans <- lapply(1:p, function(i) {
+    
+    # Computing loglike
+    l <- .LogLike(
+      annotations = with(atree, rbind(tip.annotation, node.annotation))[,i,drop=FALSE],
+      offspring   = atree$offspring,
+      pseq        = atree$pseq,
+      psi         = psi,
+      mu          = mu,
+      eta         = eta,
+      Pi          = Pi,
+      verb_ans    = TRUE,
+      check_dims  = FALSE
+    )
+    
+    # Returning posterior probability
+    .posterior_prob(l$Pr, mu, Pi, atree$pseq, atree$offspring)$posterior
+    
+  })
+    
+  do.call(cbind, ans)
   
 }
 
-#' @rdname predict-bis
+#' @rdname posterior-probabilities
 #' @export
 predict_brute_force <- function(atree, psi, mu, Pi) {
+  
+  # Should be aphylo
+  if (!inherits(atree, "aphylo"))
+    stop("`atree` must be of class `aphylo` (it is of class ", class(atree), ".")
+  
+  if (length(atree$offspring) > 7)
+    stop("In the case of the brute-force calculations, trees with more than 7 nodes becomes burdensome.")
   
   # Coercing into the true class
   tree <- as.phylo(atree)
@@ -38,8 +73,8 @@ predict_brute_force <- function(atree, psi, mu, Pi) {
   
   # Computing matrix of probabilities --------------------------------------------
   # 2^(ntips + nnodes) 
-  PSI <- aphylo:::prob_mat(psi)
-  MU  <- aphylo:::prob_mat(mu)
+  PSI <- prob_mat(psi)
+  MU  <- prob_mat(mu)
   
   # For
   Pr <- Pi[states[, ape::Ntip(tree) + 1] + 1]

@@ -415,4 +415,3 @@ set.default.plot.phylo.params <- function(dots) {
 }
 
 
-

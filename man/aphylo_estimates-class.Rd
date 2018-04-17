@@ -29,7 +29,7 @@ aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 aphylo_mcmc(params, dat, priors = NULL, control = list(),
   check.informative = TRUE)
 
-\method{predict}{aphylo_estimates}(object, what = c("missings", "all"), ...)
+\method{predict}{aphylo_estimates}(object, ...)
 
 prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
 
@@ -69,10 +69,6 @@ stops with an error when the annotations are uninformative (either 0s or 1s).}
 \item{...}{Further arguments passed to the method.}
 
 \item{object}{An object of class \code{aphylo_estimates}.}
-
-\item{what}{Either a character scalar or an integer vector. If a character,
-then it can be either \code{"missings"}, \code{"leafs"}, or \code{"all"}. If an integer vector,
-then these must be values between \eqn{[0, n - 1]} (node ids).}
 
 \item{expected}{Integer vector of length \eqn{n}. Expected values (either 0 or 1).}
 
@@ -114,7 +110,7 @@ as the intermediate steps are not available to the user).}
 In the case of \code{aphylo_mcmc}, \code{hist} is an object of class
 \code{\link[coda:mcmc.list]{coda::mcmc.list()}}.
 
-In the case of the \code{predict} method, a two-column numeric matrix
+In the case of the \code{predict} method, a \code{P} column numeric matrix
 with values between \eqn{[0,1]} (probabilities).
 }
 \description{
