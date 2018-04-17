@@ -31,4 +31,13 @@ test_that("Prediction works", {
   expect_equivalent(ans0, ans1$posterior)
   expect_equivalent(ans1$posterior, ans1$posterior)
   
+  # Random test
+  set.seed(122331)
+  atree <- sim_annotated_tree(6, psi = psi, mu = mu, eta = eta, Pi = Pi)
+  
+  ans0 <- predict_brute_force(atree, psi, mu, Pi)
+  ans1 <- predict_pre_order(atree, psi, mu, eta, Pi)
+  
+  all.equal(ans0$posterior, ans1$posterior[,1])
+  
 })
