@@ -16,15 +16,19 @@ Description: The `aphylo` R package implements estimation and data imputation
   Phylogenetics and Evolution".
 Depends: R (>= 3.1.1), ape
 LazyData: true
-Imports:
+Imports: 
     Rcpp (>= 0.12.1),
     Matrix,
     methods,
-    coda, rncl,
+    coda,
+    rncl,
     stringr,
-    ggplot2, ggtree,
+    ggplot2,
+    ggtree,
+    polygons,
     amcmc,
-    utils
+    utils,
+    RColorBrewer
 Suggests:
     covr,
     testthat,
@@ -38,3 +42,4 @@ BugReports: https://github.com/USCbiostats/phylogenetic/issues
 Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
+Remotes: USCbiostats/polygons, USCbiostats/amcmc

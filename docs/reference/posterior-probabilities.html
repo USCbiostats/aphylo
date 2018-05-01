@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>All news • aphylo</title>
+<title>Posterior probabilities based on parameter estimates — posterior-probabilities • aphylo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -96,24 +96,62 @@
       </header>
 
       <div class="row">
-
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Change log <small>All releases</small></h1>
+    <h1>Posterior probabilities based on parameter estimates</h1>
     </div>
 
-    <div class="contents">
-    </div>
+    
+    <p>The function <code>predict_pre_order</code> uses a pre-order algorithm to compute the
+posterior probabilities, whereas the <code>predict_brute_force</code> computes posterior
+probabilities generating all possible cases.</p>
+    
+
+    <pre class="usage"><span class='fu'>predict_pre_order</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>eta</span>, <span class='no'>Pi</span>)
+
+<span class='fu'>predict_brute_force</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>Pi</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>atree</th>
+      <td><p>A tree of class <a href='aphylo.html'>aphylo</a></p></td>
+    </tr>
+    <tr>
+      <th>psi</th>
+      <td><p>Numeric vector of length 2. Misclasification probabilities. (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>mu</th>
+      <td><p>Numeric vector of length 2. Gain/loss probabilities (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>eta</th>
+      <td><p>Numeric vector of length 2. Annotation bias probabilities (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>Pi</th>
+      <td><p>Numeric scalar. Root node probability of having the function (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The function <code>predict_brute_force</code> is only intended for testing. For predictions
+after estimating the model, see <a href='aphylo_estimates-class.html'>predict.aphylo_estimates</a>.</p>
+    
+
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-      </ul>
-    </div>
-  </div>
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
+  </div>
 </div>
 
       <footer>

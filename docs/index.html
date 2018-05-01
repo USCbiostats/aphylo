@@ -8,20 +8,8 @@
 <title>Statistical Inference of Annotated Phylogenetic Trees • aphylo</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="Statistical Inference of Annotated Phylogenetic Trees">
-<meta property="og:description" content="The `aphylo` R package implements estimation and data imputation
-  methods for Functional Annotations in Phylogenetic Trees. The core function
-  consists on the computation of the log-likelihood of observing a given
-  phylogenetic tree with functional annotation on its leafs, and probabilities
-  associated to gain and loss of functionalities, including probabilities of
-  experimental misclasification. Furthermore, the log-likelihood is computed
-  using Felsenstein's pruning algorithm, which required developing and implementing efficient
-  algorithms for recoding and preparing phylogenetic tree data so that can be
-  used with the package. Finally, `aphylo` works smoothly with popular tools for
-  analysis of phylogenetic data such as `ape` R package, " analyses of phylogenetics and evolution>
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -176,7 +164,7 @@ O</code></pre></div>
 <a href="#simulating-annoated-trees" class="anchor"></a>Simulating annoated trees</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">198</span>)
 dat &lt;-<span class="st"> </span><span class="kw"><a href="reference/sim_annotated_tree.html">sim_annotated_tree</a></span>(
-  <span class="dv">200</span>, <span class="dt">P=</span><span class="dv">1</span>, 
+  <span class="dv">200</span>, <span class="dt">P=</span><span class="dv">2</span>, 
   <span class="dt">psi =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>),
   <span class="dt">mu  =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>),
   <span class="dt">eta =</span> <span class="kw">c</span>(.<span class="dv">7</span>, .<span class="dv">95</span>),
@@ -195,25 +183,25 @@ dat</code></pre></div>
 ## Rooted; no branch lengths.
 ## 
 ##  Tip (leafs) annotations:
-##      fun0000
-## [1,]       1
-## [2,]       0
-## [3,]       0
-## [4,]       1
-## [5,]       1
-## [6,]       1
+##      fun0000 fun0001
+## [1,]       1       1
+## [2,]       0       1
+## [3,]       0       9
+## [4,]       1       1
+## [5,]       1       1
+## [6,]       1       1
 ## 
 ## ...(194 obs. omitted)...
 ## 
 ## 
 ##  Internal node annotations:
-##      fun0000
-## [1,]       1
-## [2,]       1
-## [3,]       1
-## [4,]       1
-## [5,]       1
-## [6,]       0
+##      fun0000 fun0001
+## [1,]       1       0
+## [2,]       1       0
+## [3,]       1       1
+## [4,]       1       1
+## [5,]       1       1
+## [6,]       0       1
 ## 
 ## ...(193 obs. omitted)...</code></pre>
 </div>
@@ -229,9 +217,9 @@ pi_root &lt;-<span class="st"> </span>.<span class="dv">05</span>
 <span class="co"># Computing likelihood</span>
 <span class="kw">str</span>(<span class="kw"><a href="reference/LogLike.html">LogLike</a></span>(dat, <span class="dt">psi =</span> psi, <span class="dt">mu =</span> mu, <span class="dt">eta =</span> eta, <span class="dt">Pi =</span> pi_root))</code></pre></div>
 <pre><code>## List of 3
-##  $ S : int [1:2, 1] 0 1
-##  $ Pr: num [1:399, 1:2] 0.018 0.686 0.686 0.018 0.018 0.018 0.686 0.018 0.686 0.018 ...
-##  $ ll: num -222
+##  $ S : int [1:4, 1:2] 0 1 0 1 0 0 1 1
+##  $ Pr: num [1:399, 1:4] 0.000324 0.012348 0.203056 0.000324 0.000324 ...
+##  $ ll: num -426
 ##  - attr(*, "class")= chr "phylo_LogLik"</code></pre>
 </div>
 <div id="estimation" class="section level1">
@@ -249,19 +237,19 @@ ans2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/aphylo_es
 ans2</code></pre></div>
 <pre><code>## 
 ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-## ll: -232.9435,
+## ll: -425.9144,
 ## Method used: mcmc (10000 iterations)
 ## Leafs
-##  # of Functions 1
+##  # of Functions 2
 ## 
 ##          Estimate  Std. Error
-##  psi[0]    0.0956      0.0553
-##  psi[1]    0.0549      0.0349
-##  mu[0]     0.1212      0.0334
-##  mu[1]     0.0917      0.0373
-##  eta[0]    0.6414      0.0485
-##  eta[1]    0.6954      0.0488
-##  Pi        0.0983      0.0670</code></pre>
+##  psi[0]    0.0843      0.0458
+##  psi[1]    0.0433      0.0273
+##  mu[0]     0.1204      0.0239
+##  mu[1]     0.0821      0.0237
+##  eta[0]    0.6780      0.0364
+##  eta[1]    0.7983      0.0336
+##  Pi        0.0912      0.0647</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ans2)</code></pre></div>
 <p><img src="index_files/figure-html/MLE-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># MCMC Diagnostics with coda</span>
@@ -270,17 +258,17 @@ ans2</code></pre></div>
 <pre><code>## Potential scale reduction factors:
 ## 
 ##      Point est. Upper C.I.
-## psi0       1.02       1.06
-## psi1       1.01       1.01
-## mu0        1.04       1.11
-## mu1        1.01       1.03
-## eta0       1.01       1.03
-## eta1       1.00       1.01
-## Pi         1.07       1.18
+## psi0       1.01       1.02
+## psi1       1.00       1.01
+## mu0        1.01       1.02
+## mu1        1.00       1.01
+## eta0       1.02       1.04
+## eta1       1.01       1.03
+## Pi         1.07       1.16
 ## 
 ## Multivariate psrf
 ## 
-## 1.1</code></pre>
+## 1.06</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(ans2<span class="op">$</span>hist)</code></pre></div>
 <pre><code>## 
 ## Iterations = 120:10000
@@ -292,24 +280,24 @@ ans2</code></pre></div>
 ##    plus standard error of the mean:
 ## 
 ##         Mean      SD  Naive SE Time-series SE
-## psi0 0.09556 0.05529 0.0011114       0.003289
-## psi1 0.05488 0.03488 0.0007010       0.001396
-## mu0  0.12119 0.03339 0.0006711       0.001381
-## mu1  0.09165 0.03728 0.0007493       0.001598
-## eta0 0.64137 0.04852 0.0009753       0.002561
-## eta1 0.69541 0.04875 0.0009799       0.002465
-## Pi   0.09827 0.06698 0.0013463       0.004882
+## psi0 0.08431 0.04576 0.0009199      0.0024186
+## psi1 0.04333 0.02731 0.0005489      0.0010202
+## mu0  0.12038 0.02394 0.0004813      0.0008638
+## mu1  0.08209 0.02373 0.0004770      0.0007317
+## eta0 0.67804 0.03637 0.0007310      0.0014703
+## eta1 0.79834 0.03358 0.0006749      0.0012805
+## Pi   0.09123 0.06468 0.0013001      0.0049708
 ## 
 ## 2. Quantiles for each variable:
 ## 
-##          2.5%     25%     50%     75%  97.5%
-## psi0 0.014520 0.05268 0.08818 0.12803 0.2251
-## psi1 0.008309 0.02811 0.04762 0.07458 0.1390
-## mu0  0.059180 0.09874 0.11978 0.14254 0.1905
-## mu1  0.029218 0.06450 0.08839 0.11697 0.1721
-## eta0 0.546001 0.60905 0.64115 0.67350 0.7345
-## eta1 0.597325 0.66253 0.69601 0.72878 0.7861
-## Pi   0.012759 0.04796 0.08324 0.13399 0.2684</code></pre>
+##         2.5%     25%     50%     75%  97.5%
+## psi0 0.01337 0.04955 0.07836 0.11349 0.1874
+## psi1 0.00600 0.02283 0.03815 0.05809 0.1089
+## mu0  0.07439 0.10455 0.12039 0.13612 0.1672
+## mu1  0.03846 0.06522 0.08102 0.09847 0.1307
+## eta0 0.60703 0.65314 0.67875 0.70395 0.7447
+## eta1 0.72867 0.77693 0.79965 0.82172 0.8595
+## Pi   0.01162 0.04477 0.07602 0.12228 0.2699</code></pre>
 </div>
 <div id="prediction" class="section level1">
 <h1 class="hasAnchor">
@@ -317,10 +305,10 @@ ans2</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw"><a href="reference/aphylo_estimates-class.html">prediction_score</a></span>(ans2)
 pred</code></pre></div>
 <pre><code>## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-## Observed : 0.15 
-## Random   : 0.25 
+## Observed : 0.01 
+## Random   : 0.36 
 ## ---------------------------------------------------------------------------
-## Values standarized to range between 0 and 1, 0 being best.</code></pre>
+## Values scaled to range between 0 and 1, 0 being best.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(pred)</code></pre></div>
 <p><img src="index_files/figure-html/Predict-1.png" width="672"></p>
 </div>
@@ -345,7 +333,7 @@ pred</code></pre></div>
 <p><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE.html">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>FirsName LastName <br><small class="roles"> Author, maintainer </small>  </li>
+<li>FirsName LastName <br><small class="roles"> Author, maintainer </small> </li>
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
@@ -363,7 +351,7 @@ pred</code></pre></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

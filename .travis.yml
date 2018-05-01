@@ -5,12 +5,9 @@ language: r
 sudo: false
 cache: packages
 
-
-before_install:
-  - Rscript -e 'install.packages("ape", repos = "http://ape-package.ird.fr/")'
-  
 r_github_packages: 
   - USCBiostats/amcmc
+  - USCBiostats/polygons
 
 bioc_packages:
   - ggtree

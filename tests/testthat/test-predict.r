@@ -33,7 +33,7 @@ test_that("Prediction works", {
   
   # Random test
   set.seed(122331)
-  atree <- sim_annotated_tree(6, psi = psi, mu = mu, eta = eta, Pi = Pi)
+  atree <- sim_annotated_tree(4, psi = psi, mu = mu, eta = eta, Pi = Pi)
   
   ans0 <- predict_brute_force(atree, psi, mu, Pi)
   ans1 <- predict_pre_order(atree, psi, mu, eta, Pi)

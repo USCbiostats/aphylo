@@ -18,8 +18,6 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-<!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -27,10 +25,6 @@
 <script src="../pkgdown.js"></script>
   
   
-<meta property="og:title" content="Parameter estimation of Annotated Phylogenetic Trees — aphylo_estimates-class" />
-
-<meta property="og:description" content="The optimization is done via optim." />
-<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -131,7 +125,7 @@
   <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for aphylo_estimates</span>
-<span class='fu'>predict</span>(<span class='no'>object</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"missings"</span>, <span class='st'>"all"</span>), <span class='no'>...</span>)
+<span class='fu'>predict</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='fu'>prediction_score</span>(<span class='no'>x</span>, <span class='kw'>expected</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
@@ -199,12 +193,6 @@ stops with an error when the annotations are uninformative (either 0s or 1s).</p
       <td><p>An object of class <code>aphylo_estimates</code>.</p></td>
     </tr>
     <tr>
-      <th>what</th>
-      <td><p>Either a character scalar or an integer vector. If a character,
-then it can be either <code>"missings"</code>, <code>"leafs"</code>, or <code>"all"</code>. If an integer vector,
-then these must be values between \([0, n - 1]\) (node ids).</p></td>
-    </tr>
-    <tr>
       <th>expected</th>
       <td><p>Integer vector of length \(n\). Expected values (either 0 or 1).</p></td>
     </tr>
@@ -265,7 +253,7 @@ as the intermediate steps are not available to the user).</p></dd>
 In the case of aphylo_mcmc, hist is an object of class
 <a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>coda::mcmc.list()</a>.
 
-In the case of the predict method, a two-column numeric matrix
+In the case of the predict method, a P column numeric matrix
 with values between [0,1] (probabilities).
 
     
@@ -374,16 +362,16 @@ then <code>include.labels=FALSE</code> by default.</p>
 
 <span class='no'>pr</span> <span class='kw'>&lt;-</span> <span class='fu'>prediction_score</span>(<span class='no'>ans</span>)
 <span class='fu'>with</span>(<span class='no'>pr</span>, <span class='fu'>cbind</span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000     fun0000
-#&gt; 1        1 0.559708365
-#&gt; 2        0 0.025076366
-#&gt; 3        1 0.559708365
-#&gt; 4        1 0.559708365
-#&gt; 5        1 0.559708365
-#&gt; 6        0 0.047456049
-#&gt; 7        0 0.008773381
-#&gt; 8        0 0.025076366
-#&gt; 9        0 0.047456049
-#&gt; 10       0 0.024566471</div></pre>
+#&gt; 1        1 0.997198659
+#&gt; 2        0 0.001808376
+#&gt; 3        1 0.997198659
+#&gt; 4        1 0.997198659
+#&gt; 5        1 0.997198659
+#&gt; 6        0 0.001809982
+#&gt; 7        0 0.002309335
+#&gt; 8        0 0.001808376
+#&gt; 9        0 0.001809982
+#&gt; 10       0 0.001749497</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -406,7 +394,7 @@ then <code>include.labels=FALSE</code> by default.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

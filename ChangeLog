@@ -1,3 +1,9 @@
+2018-05-01  George G. Vega Yon <g.vegayon@gmail.com>
+
+	* R/pies.r: All dependencies have been moved to polygons.
+	* R/predict.r: idem.
+
+
 2018-04-17  George G. Vega Yon <g.vegayon@gmail.com>
 
 	* src/phylo.cpp: Removed prediction functions (wrongly implemented).

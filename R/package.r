@@ -4,13 +4,15 @@
 #' @importFrom utils head tail
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points segments polygon
-#' @importFrom grDevices colors trans3d adjustcolor rgb colorRamp
+#' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
 #' @importFrom rncl read_newick_phylo
 #' @importFrom ggtree ggtree geom_tiplab gheatmap
 #' @importFrom ggplot2 scale_fill_manual
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom polygons colorkey colorRamp2 piechart circle
 NULL
 
 #' @useDynLib aphylo, .registration=TRUE

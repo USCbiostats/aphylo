@@ -49,7 +49,7 @@ arma::vec root_node_prob(
 //' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
 //' probabilities for each node.
 //' @noRd
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 arma::mat probabilities(
     const arma::imat & annotations,
     const arma::ivec & pseq,
@@ -141,7 +141,7 @@ arma::mat probabilities(
 }
 
 // Computes Log-likelihood
-// [[Rcpp::export(name = ".LogLike")]]
+// [[Rcpp::export(name = ".LogLike", rng = false)]]
 List LogLike(
     const arma::imat & annotations,
     const List       & offspring,

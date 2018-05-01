@@ -72,7 +72,6 @@ arma::mat probabilities(const arma::imat& annotations, const arma::ivec& pseq, c
 RcppExport SEXP _aphylo_probabilities(SEXP annotationsSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP etaSEXP, SEXP SSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
@@ -89,7 +88,6 @@ List LogLike(const arma::imat& annotations, const List& offspring, const arma::i
 RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);

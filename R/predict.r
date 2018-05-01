@@ -168,10 +168,8 @@ plot.aphylo_prediction_score <- function(
   }
     
   
-  
-  oldpar <- graphics::par(no.readonly = TRUE)
+  oldpar <- graphics::par(mfrow=c(1, k), mar=c(3,0,3,0))
   on.exit(graphics::par(oldpar))
-  graphics::par(mfrow=c(1, k), mar=c(6,0,3,0))
   
   for (i in 1:k) {
     
@@ -186,17 +184,17 @@ plot.aphylo_prediction_score <- function(
       doughnut = .5, skip.plot.slices = TRUE
       )
     
-    graphics::polygon(circle(0,0,1.5), border="gray", lwd = 1.5)
-    graphics::polygon(circle(0,0,0.5), border="gray", lwd = 1.5)
+    graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5)
+    graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5)
 
     # Function to color the absence/presence of function
     blue <- function(x) {
-      ans <- grDevices::colorRamp(c("steelblue", "lightgray", "darkred"))(x)
-      grDevices::rgb(ans[,1], ans[,2], ans[,3], 200, maxColorValue = 255)
+      ans <- polygons::colorRamp2(RColorBrewer::brewer.pal(7, "RdBu"))(x)
+      grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
     }
     
     # Outer pie
-    piechart(
+    polygons::piechart(
       y,
       radius    = 1,
       doughnut  = .755,
@@ -208,7 +206,7 @@ plot.aphylo_prediction_score <- function(
     )
     
     # Inner pie
-    piechart(
+    polygons::piechart(
       y,
       doughnut  = 0.5,
       radius    = .745,
@@ -223,7 +221,7 @@ plot.aphylo_prediction_score <- function(
     if (include.labels) {
       deg <- 1:length(y)
       deg <- c(deg[1], deg[-1] + deg[-length(y)])/length(y)/2*360
-      piechart(
+      polygons::piechart(
         y,
         radius    = .5,
         add       = TRUE,
@@ -247,20 +245,20 @@ plot.aphylo_prediction_score <- function(
   }
   
   # Drawing color key
-  graphics::par(mfrow=c(1,1), new=TRUE, mar=c(3,0,3,0), xpd=TRUE)
-  graphics::plot.new()
-  graphics::plot.window(c(0,1), c(0,1))
+  oldmar <- graphics::par(mar = rep(0, 4))
+  graphics::par(mfrow=c(1,1))
   
-  colorkey(
-    .10, 0, .90, .05, 
+  polygons::colorkey(
+    x0 = .10, y0=0, x1=.90, y1=.1, 
     label.from = 'No function',
     label.to = "Function",
-    cols = grDevices::adjustcolor(c("steelblue", "lightgray", "darkred"), alpha.f = 200/255),
+    cols = blue(seq(0,1,length.out = 3)), 
     tick.range = c(0,1),
     tick.marks = c(0,.25,.5,.75,1),
     nlevels = 200,
     main = main.colorkey
   )
+  graphics::par(oldmar)
   
   graphics::title(
     main= main, font.main=1
