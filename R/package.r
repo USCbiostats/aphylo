@@ -1,6 +1,6 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
-#' @importFrom stats var coef vcov optim optimHess complete.cases
+#' @importFrom stats var coef vcov optim optimHess complete.cases dbeta
 #' @importFrom utils head tail
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points segments polygon

@@ -26,12 +26,14 @@ aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 
 \method{plot}{aphylo_estimates}(x, ...)
 
-aphylo_mcmc(params, dat, priors = NULL, control = list(),
-  check.informative = TRUE)
+aphylo_mcmc(dat, params = c(0.02, 0.02, 0.02, 0.02, 0.9, 0.9, 0.02),
+  priors = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6],
+  38, 2)), control = list(), check.informative = TRUE)
 
 \method{predict}{aphylo_estimates}(object, ...)
 
-prediction_score(x, expected = NULL, alpha = 0.5, W = NULL, ...)
+prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation ==
+  1L, na.rm = TRUE), W = NULL, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 
@@ -176,7 +178,7 @@ dat <- sim_annotated_tree(
 set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
-  rep(.1, 7), dat,
+  rep(.1, 7),  dat = dat,
   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 )
 }
@@ -184,7 +186,7 @@ ans_mcmc <- aphylo_mcmc(
 # Example with prediction_score ---------------------------------------------
 set.seed(1312)
 ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
-ans <- aphylo_mcmc(rep(.05, 7), ap, control = list(nbatch=1e4, thin=100),
+ans <- aphylo_mcmc(rep(.05, 7), dat = ap, control = list(nbatch=1e4, thin=100),
                    priors = function(x) dbeta(x, 1, 30))
                    
 pr <- prediction_score(ans)

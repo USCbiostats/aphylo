@@ -56,12 +56,12 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
-    aphylo_mcmc(rep(2/12, 7), dat, priors = function(x) dbeta(x, 2, 10),
+    aphylo_mcmc(rep(2/12, 7), dat = dat, priors = function(x) dbeta(x, 2, 10),
                 control = list(nbatch = 3e4), check.informative = FALSE)
     )
   
   ans2 <- suppressWarnings(
-    aphylo_mcmc(rep(2/22, 7), dat, priors = function(x) dbeta(x, 2, 20),
+    aphylo_mcmc(rep(2/22, 7), dat =  dat, priors = function(x) dbeta(x, 2, 20),
                 control = list(nbatch = 3e4), check.informative = FALSE)
   )
   

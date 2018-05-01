@@ -38,7 +38,7 @@ predict.aphylo_estimates <- function(object, ...) {
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(1312)
 #' ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
-#' ans <- aphylo_mcmc(rep(.05, 7), ap, control = list(nbatch=1e4, thin=100),
+#' ans <- aphylo_mcmc(rep(.05, 7), dat = ap, control = list(nbatch=1e4, thin=100),
 #'                    priors = function(x) dbeta(x, 1, 30))
 #'                    
 #' pr <- prediction_score(ans)
@@ -46,14 +46,15 @@ predict.aphylo_estimates <- function(object, ...) {
 prediction_score <- function(
   x,
   expected = NULL,
-  alpha    = 0.5,
+  alpha    = mean(x$dat$tip.annotation == 1L, na.rm = TRUE),
   W        = NULL,
   ...) {
   
   # Finding relevant ids
-  if (!length(expected)) 
+  if (!length(expected)) {
     expected <- with(x$dat, rbind(tip.annotation, node.annotation))
-  else {
+    dimnames(expected) <- with(x$dat, list(c(tree$tip.label, tree$node.label), colnames(tip.annotation)))
+  } else {
     test <- all(dim(expected) == dim(with(x$dat, rbind(tip.annotation, node.annotation))))
     if (!test) 
       stop(
@@ -166,7 +167,6 @@ plot.aphylo_prediction_score <- function(
     if (nrow(x$expected) > 40) include.labels <- FALSE
     else include.labels <- TRUE
   }
-    
   
   oldpar <- graphics::par(mfrow=c(1, k), mar=c(3,0,3,0))
   on.exit(graphics::par(oldpar))
@@ -246,7 +246,7 @@ plot.aphylo_prediction_score <- function(
   
   # Drawing color key
   oldmar <- graphics::par(mar = rep(0, 4))
-  graphics::par(mfrow=c(1,1))
+  graphics::par(mfrow=c(1,1), xpd=NA)
   
   polygons::colorkey(
     x0 = .10, y0=0, x1=.90, y1=.1, 

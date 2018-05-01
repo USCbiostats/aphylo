@@ -107,7 +107,7 @@ try_solve <- function(x, ...) {
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   rep(.1, 7), dat,
+#'   rep(.1, 7),  dat = dat,
 #'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
@@ -389,9 +389,9 @@ plot.aphylo_estimates <- function(
 #' [coda::mcmc.list()].
 #' @export
 aphylo_mcmc <- function(
-  params,
   dat,
-  priors        = NULL,
+  params        = c(.02, .02, .02, .02, .9, .9, .02),
+  priors        = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6], 38,2)),
   control       = list(),
   check.informative = TRUE
 ) {

@@ -41,3 +41,19 @@ test_that("Prediction works", {
   expect_equivalent(ans0$posterior, ans1[,1])
   
 })
+
+test_that("Calling the prediction function works", {
+  
+  set.seed(137245)
+  
+  x <- sim_annotated_tree(10)
+  x_obs <- rdrop_annotations(x, .5)
+  res   <- suppressWarnings(aphylo_mcmc(params = rep(.1, 7), x_obs))
+  
+  ans0 <- predict_pre_order(x_obs, res$par[c("psi0", "psi1")], res$par[c("mu0", "mu1")], res$par[c("eta0", "eta1")], res$par["Pi"])
+  ans1 <- predict(res)
+  
+  expect_silent(plot(prediction_score(res)))
+  expect_equivalent(ans0, ans1)
+  
+})
