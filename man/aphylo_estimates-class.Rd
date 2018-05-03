@@ -38,7 +38,7 @@ prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation ==
 \method{print}{aphylo_prediction_score}(x, ...)
 
 \method{plot}{aphylo_prediction_score}(x, y = NULL,
-  main = "Predicted v/s\\nExpected Values",
+  main = "Prediction Accuracy: Observed versus predicted values",
   main.colorkey = "Probability of Functional Annotation",
   which.fun = seq_len(ncol(x$expected)), include.labels = NULL,
   labels.col = "black", ...)

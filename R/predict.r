@@ -70,7 +70,7 @@ prediction_score <- function(
   ids <- intersect(ids, 1L:nrow(x$dat$tip.annotation))
 
   # Prediction
-  pred <- predict.aphylo_estimates(x, ...)[ids,,drop=FALSE]
+  pred <- predict.aphylo_estimates(x, ...)
   
   # Inverse of Geodesic distances
   if (!length(W)) {
@@ -87,14 +87,14 @@ prediction_score <- function(
   if (!length(expected))
     expected <- x$dat$annotations[ids, ]
   
-  obs <- sqrt(rowSums((pred - expected[ids,,drop = FALSE])^2))
+  obs <- sqrt(rowSums((pred[ids,,drop=FALSE] - expected[ids,,drop = FALSE])^2))
   obs <- t(obs) %*% G_inv %*% obs
   
   # Best case
   best <- 0
   
   # Worst case
-  worse <- sum(G_inv)*ncol(pred)
+  worse <- sum(G_inv)*ncol(pred[ids,,drop=FALSE])
   
   # Random case
   rand  <- prediction_score_rand(expected[ids,,drop=FALSE], G_inv, alpha)
@@ -104,9 +104,11 @@ prediction_score <- function(
       obs       = obs,
       worse     = worse,
       predicted = pred,
-      expected  = expected[ids, ,drop=FALSE],
+      expected  = expected,
       random    = rand,
-      alpha     = alpha
+      alpha     = alpha,
+      obs.ids   = ids,
+      leaf.ids  = 1L:nrow(x$dat$tip.annotation)
     ), class = "aphylo_prediction_score"
   )
   
@@ -152,7 +154,7 @@ print.aphylo_prediction_score <- function(x, ...) {
 plot.aphylo_prediction_score <- function(
   x,
   y=NULL, 
-  main = "Predicted v/s\nExpected Values",
+  main = "Prediction Accuracy: Observed versus predicted values",
   main.colorkey = "Probability of Functional Annotation",
   which.fun = seq_len(ncol(x$expected)),
   include.labels = NULL,
@@ -176,7 +178,6 @@ plot.aphylo_prediction_score <- function(
     # Sorting accordingly to predicted
     ord <- 1L:length(x$predicted[,i]) # order(x$predicted[,i])
 
-    
     # Outer polygon
     piechart(
       y, border="transparent", col = "transparent", lwd=2,
@@ -186,35 +187,43 @@ plot.aphylo_prediction_score <- function(
     
     graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5)
     graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5)
-
+    
     # Function to color the absence/presence of function
     blue <- function(x) {
       ans <- polygons::colorRamp2(RColorBrewer::brewer.pal(7, "RdBu"))(x)
-      grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
+      ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
+      ifelse(x == 9, "black", ans)
     }
     
     # Outer pie
-    polygons::piechart(
+    opie <- polygons::piechart(
       y,
       radius    = 1,
       doughnut  = .755,
       add       = TRUE,
       col       = blue(x$predicted[ord,i]),
       border    = blue(x$predicted[ord,i]), 
-      lwd       = 1.5,
-      slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
+      lwd       = 1,
+      slice.off = ifelse(
+        x$expected[ord, i] == 9L,.25,
+        abs(x$predicted[ord, i] - x$expected[ord, i])/2
+      )
     )
     
     # Inner pie
-    polygons::piechart(
+    ipie <- polygons::piechart(
       y,
       doughnut  = 0.5,
       radius    = .745,
       add       = TRUE,
       col       = blue(x$expected[ord,i]),
       border    = blue(x$expected[ord,i]),
-      lwd       = 1.5,
-      slice.off = abs(x$predicted[ord, i] - x$expected[ord, i])/2
+      lwd       = 1,
+      density   = ifelse(x$expected[ord,i] == 9L, 10, NA),
+      slice.off = ifelse(
+        x$expected[ord, i] == 9L,.25,
+        abs(x$predicted[ord, i] - x$expected[ord, i])/2
+      )
     )
     
     # Labels
@@ -240,7 +249,33 @@ plot.aphylo_prediction_score <- function(
       )
     }
     
-    # graphics::polygon(circle(0, 0, r=.60), border = "black", lwd=1)
+    # Extra annotations
+    graphics::segments(
+      x0 = 0.1, y0 = 1.6, x1 = 1.75, y1 = 1.6, col="black", 
+      lty=2, lwd=2
+    )
+    graphics::segments(x0 = 0, y0 = 1.5, x1 = .1, y1 = 1.6, lwd=2)
+    graphics::text(1.75,1.6, labels = "No match", pos = 3)
+    
+    graphics::segments(
+      x0 = 0.1, y0 = 0.6, x1 = 1.75, y1 = 0.6, col="black", 
+      lty=2, lwd=2)
+    graphics::segments(x0 = 0, y0 = .5, x1 = .1, y1 = .6, lwd=2)
+    graphics::text(1.75,0.6, labels = "Perfect\nmatch", pos = 3)
+    
+    # Adding more notes
+    slice2annotate <- which.min(opie$textcoords[,1])
+    
+    opie <- colMeans(opie$slices[[slice2annotate]])
+    ipie <- colMeans(ipie$slices[[slice2annotate]])
+    
+    graphics::text(-1.76, .7, labels = "Observed", pos=2)
+    graphics::segments(-1.76, .7, ipie[1], ipie[2], lty=2, lwd=2)
+    graphics::text(-1.76, -.7, labels = "Predicted", pos=2)
+    graphics::segments(-1.76, -.7, opie[1], opie[2], lty=2, lwd=2)
+    
+    
+    
     graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
     
     # Drawing color key
