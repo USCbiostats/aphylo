@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Annotated Phylogenetic Tree — aphylo-class • aphylo</title>
+<title>Visualize predictions — plot.aphylo_prediction_score • aphylo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -98,75 +98,73 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Annotated Phylogenetic Tree</h1>
+    <h1>Visualize predictions</h1>
     </div>
 
     
-    <p>The <code>aphylo</code> class tree holds both the tree structure represented as a
-partially ordered phylogenetic tree, and node annotations. While annotations
-are included for both leafs and inner nodes, the algorithms included in this
-package only uses the leaf annotations.</p>
+    <p>Visualize predictions</p>
     
 
-    <pre class="usage"><span class='fu'>new_aphylo</span>(<span class='no'>tip.annotation</span>, <span class='no'>tree</span>, <span class='kw'>node.annotation</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for aphylo_prediction_score</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Prediction Accuracy: Observed versus predicted values"</span>,
+  <span class='kw'>main.colorkey</span> <span class='kw'>=</span> <span class='st'>"Probability of Functional Annotation"</span>,
+  <span class='kw'>which.fun</span> <span class='kw'>=</span> <span class='fu'>seq_len</span>(<span class='fu'>ncol</span>(<span class='no'>x</span>$<span class='no'>expected</span>)), <span class='kw'>include.labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>labels.col</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>tip.annotation, node.annotation</th>
-      <td><p>Annotation data. See aphylo.</p></td>
+      <th>x</th>
+      <td><p>An object of class <code>aphylo_prediction_score</code>.</p></td>
     </tr>
     <tr>
-      <th>tree</th>
-      <td><p>An object of class <a href='http://www.rdocumentation.org/packages/ape/topics/read.tree'>phylo</a></p></td>
+      <th>y</th>
+      <td><p>Ignored.</p></td>
+    </tr>
+    <tr>
+      <th>main</th>
+      <td><p>Passed to <code>title</code>.</p></td>
+    </tr>
+    <tr>
+      <th>main.colorkey</th>
+      <td><p>Character scalar. Title of the colorkey (optional).</p></td>
+    </tr>
+    <tr>
+      <th>which.fun</th>
+      <td><p>Integer vector. Which function to plot.</p></td>
+    </tr>
+    <tr>
+      <th>include.labels</th>
+      <td><p>Logical scalar. When <code>TRUE</code>, draws nice labels
+at each slice which by default are specified as the rownames of <code>x$expected</code>.
+This is mostly useful when the number of predictions is small.</p></td>
+    </tr>
+    <tr>
+      <th>labels.col</th>
+      <td><p>Character scalar. Color of the labels.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Ignored</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A list of class <code>aphylo</code> with the following elements:</p>
-<dt>tree</dt><dd><p>An object of class <a href='http://www.rdocumentation.org/packages/ape/topics/read.tree'>phylo</a>.</p></dd>
-<dt>tip.annotation</dt><dd><p>An integer matrix. Tip (leaf) nodes annotations.</p></dd>
-<dt>node.annotation</dt><dd><p>An integer matrix (optional). Internal nodes
-annotations.</p></dd>
-<dt>offspring</dt><dd><p>A list. List of offspring of each node.</p></dd>
-<dt>pseq</dt><dd><p>Integer vector. The pruning sequence (postorder).</p></dd>
-
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Plotting is done via <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/ggtree'>ggtree::ggtree()</a></code>
-from the <span class="pkg">ggtree</span> package (Bioconductor).</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p>Other aphylo methods: <code><a href='aphylo-methods.html'>aphylo-methods</a></code></p>
+    <p>If <code>include.labels = NULL</code> and <code>ncol(x$expected) &amp;gt; 40</code>,
+then <code>include.labels=FALSE</code> by default.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># A simple example ----------------------------------------------------------</span>
-
-<span class='fu'>data</span>(<span class='no'>fakeexperiment</span>)
-<span class='fu'>data</span>(<span class='no'>faketree</span>)
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>new_aphylo</span>(<span class='no'>fakeexperiment</span>[,<span class='fl'>2</span>:<span class='fl'>3</span>], <span class='no'>faketree</span>)
-
-<span class='co'># We can visualize it</span>
-<span class='fu'>plot</span>(<span class='no'>ans</span>)</div><div class='img'><img src='aphylo-class-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

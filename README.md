@@ -108,9 +108,6 @@ as.phylo(O)
 plot(O)
 ```
 
-    ## Scale for 'fill' is already present. Adding another scale for 'fill',
-    ## which will replace the existing scale.
-
 ![](README_files/figure-markdown_github/Get%20offspring-1.png)
 
 ``` r

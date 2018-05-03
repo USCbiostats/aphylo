@@ -121,23 +121,18 @@
 <span class='co'># S3 method for aphylo_estimates</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
-<span class='fu'>aphylo_mcmc</span>(<span class='no'>params</span>, <span class='no'>dat</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>aphylo_mcmc</span>(<span class='no'>dat</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.9</span>, <span class='fl'>0.9</span>, <span class='fl'>0.02</span>),
+  <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>p</span>) <span class='fu'>c</span>(<span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/Beta'>dbeta</a></span>(<span class='no'>p</span>[-<span class='fu'>c</span>(<span class='fl'>5</span>:<span class='fl'>6</span>)], <span class='fl'>2</span>, <span class='fl'>38</span>), <span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/Beta'>dbeta</a></span>(<span class='no'>p</span>[<span class='fl'>5</span>:<span class='fl'>6</span>],
+  <span class='fl'>38</span>, <span class='fl'>2</span>)), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for aphylo_estimates</span>
 <span class='fu'>predict</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
-<span class='fu'>prediction_score</span>(<span class='no'>x</span>, <span class='kw'>expected</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+<span class='fu'>prediction_score</span>(<span class='no'>x</span>, <span class='kw'>expected</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>mean</span>(<span class='no'>x</span>$<span class='no'>dat</span>$<span class='no'>tip.annotation</span> <span class='kw'>==</span>
+  <span class='fl'>1L</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>W</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for aphylo_prediction_score</span>
-<span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for aphylo_prediction_score</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Predicted v/s\nExpected Values"</span>,
-  <span class='kw'>main.colorkey</span> <span class='kw'>=</span> <span class='st'>"Probability of Functional Annotation"</span>,
-  <span class='kw'>which.fun</span> <span class='kw'>=</span> <span class='fu'>seq_len</span>(<span class='fu'>ncol</span>(<span class='no'>x</span>$<span class='no'>expected</span>)), <span class='kw'>include.labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>labels.col</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -205,32 +200,6 @@ used to compute the random imputation score.</p></td>
       <th>W</th>
       <td><p>A square matrix. Must have as many rows as genes in <code>expected</code>.</p></td>
     </tr>
-    <tr>
-      <th>y</th>
-      <td><p>Ignored.</p></td>
-    </tr>
-    <tr>
-      <th>main</th>
-      <td><p>Passed to <code>title</code>.</p></td>
-    </tr>
-    <tr>
-      <th>main.colorkey</th>
-      <td><p>Character scalar. Title of the colorkey (optional).</p></td>
-    </tr>
-    <tr>
-      <th>which.fun</th>
-      <td><p>Integer vector. Which function to plot.</p></td>
-    </tr>
-    <tr>
-      <th>include.labels</th>
-      <td><p>Logical scalar. When <code>TRUE</code>, draws nice labels
-at each slice which by default are specified as the rownames of <code>x$expected</code>.
-This is mostly useful when the number of predictions is small.</p></td>
-    </tr>
-    <tr>
-      <th>labels.col</th>
-      <td><p>Character scalar. Color of the labels.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -276,8 +245,6 @@ The default values of <code>control</code> are:</p><table><tr><td>
 </tr></table>
     <p>In the case of <code>prediction_score</code>, <code>...</code> are passed to
 <code>predict.aphylo_estimates</code>.</p>
-<p>If <code>include.labels = NULL</code> and <code>ncol(x$expected) &amp;gt; 40</code>,
-then <code>include.labels=FALSE</code> by default.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -350,28 +317,36 @@ then <code>include.labels=FALSE</code> by default.</p>
 <span class='fu'>set.seed</span>(<span class='fl'>1231</span>)
 
 <span class='no'>ans_mcmc</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(
-  <span class='fu'>rep</span>(<span class='fl'>.1</span>, <span class='fl'>7</span>), <span class='no'>dat</span>,
+  <span class='fu'>rep</span>(<span class='fl'>.1</span>, <span class='fl'>7</span>),  <span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>,
   <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span> <span class='kw'>=</span> <span class='fl'>2e5</span>, <span class='kw'>burnin</span><span class='kw'>=</span><span class='fl'>1000</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>200</span>, <span class='kw'>scale</span><span class='kw'>=</span><span class='fl'>2e-2</span>)
 )
 <span class='co'># }</span><div class='input'>
 <span class='co'># Example with prediction_score ---------------------------------------------</span>
 <span class='fu'>set.seed</span>(<span class='fl'>1312</span>)
 <span class='no'>ap</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_annotated_tree.html'>sim_annotated_tree</a></span>(<span class='fl'>10</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Pi</span><span class='kw'>=</span><span class='fl'>.2</span>, <span class='kw'>mu</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>.05</span>,<span class='fl'>.02</span>))
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(<span class='fu'>rep</span>(<span class='fl'>.05</span>, <span class='fl'>7</span>), <span class='no'>ap</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
-                   <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbeta</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>))
-
+<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(<span class='fu'>rep</span>(<span class='fl'>.05</span>, <span class='fl'>7</span>), <span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>ap</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
+                   <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbeta</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: The -coda- package has not been loaded.</span></div><div class='input'>
 <span class='no'>pr</span> <span class='kw'>&lt;-</span> <span class='fu'>prediction_score</span>(<span class='no'>ans</span>)
-<span class='fu'>with</span>(<span class='no'>pr</span>, <span class='fu'>cbind</span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000     fun0000
-#&gt; 1        1 0.997198659
-#&gt; 2        0 0.001808376
-#&gt; 3        1 0.997198659
-#&gt; 4        1 0.997198659
-#&gt; 5        1 0.997198659
-#&gt; 6        0 0.001809982
-#&gt; 7        0 0.002309335
-#&gt; 8        0 0.001808376
-#&gt; 9        0 0.001809982
-#&gt; 10       0 0.001749497</div></pre>
+<span class='fu'>with</span>(<span class='no'>pr</span>, <span class='fu'>cbind</span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000      fun0000
+#&gt; 1        1 9.971987e-01
+#&gt; 2        0 1.808376e-03
+#&gt; 3        1 9.971987e-01
+#&gt; 4        1 9.971987e-01
+#&gt; 5        1 9.971987e-01
+#&gt; 6        0 1.809982e-03
+#&gt; 7        0 2.309335e-03
+#&gt; 8        0 1.808376e-03
+#&gt; 9        0 1.809982e-03
+#&gt; 10       0 1.749497e-03
+#&gt; 11       1 1.580741e-02
+#&gt; 12       0 1.039833e-03
+#&gt; 13       1 9.471572e-01
+#&gt; 14       0 6.962706e-05
+#&gt; 15       0 1.899767e-04
+#&gt; 16       1 9.943745e-01
+#&gt; 17       0 9.009136e-05
+#&gt; 18       0 1.927008e-04
+#&gt; 19       1 9.943745e-01</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

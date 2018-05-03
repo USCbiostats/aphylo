@@ -1,16 +1,14 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
 #' @importFrom stats var coef vcov optim optimHess complete.cases dbeta
-#' @importFrom utils head tail
+#' @importFrom utils head tail getFromNamespace
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
-#'  points segments polygon
+#'  points segments polygon rect yinch
 #' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
 #' @importFrom rncl read_newick_phylo
-#' @importFrom ggtree ggtree geom_tiplab gheatmap
-#' @importFrom ggplot2 scale_fill_manual
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 NULL

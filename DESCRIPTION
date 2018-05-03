@@ -23,8 +23,6 @@ Imports:
     coda,
     rncl,
     stringr,
-    ggplot2,
-    ggtree,
     polygons,
     amcmc,
     utils,

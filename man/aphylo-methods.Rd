@@ -7,8 +7,7 @@
 \alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
-\method{plot}{aphylo}(x, y = NULL, geom.tiplab.args = list(),
-  gheatmap.args = list(), scale.fill.args = list(), ...)
+\method{plot}{aphylo}(x, y = NULL, prop = 0.15, ...)
 
 \method{print}{aphylo}(x, ...)
 
@@ -19,13 +18,10 @@
 
 \item{y}{Ignored.}
 
-\item{geom.tiplab.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree::ggtree()}}}
+\item{prop}{Numeric scalar between 0 and 1. Proportion of the device that the
+annotations use in \code{plot.aphylo}.}
 
-\item{gheatmap.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree::ggtree()}}}
-
-\item{scale.fill.args}{Further arguments passed to \code{\link[ggtree:ggtree]{ggtree::ggtree()}}}
-
-\item{...}{Further arguments passed to the method.}
+\item{...}{Further arguments passed to \link[ape:plot.phylo]{ape::plot.phylo}.}
 
 \item{object}{An object of class \code{aphylo}.}
 }
@@ -39,14 +35,7 @@ invisible.
 Plot and print methods for \code{aphylo} objects
 }
 \details{
-The \code{plot.aphylo} function is a wrapper of \code{\link[ggtree:ggtree]{ggtree::ggtree()}}
-that creates a visualization as follows:
-\enumerate{
-\item Retrieve the annotations from the \link{aphylo} object
-\item Create a \code{ggtree} map adding \code{\link[ggtree:geom_tiplab]{ggtree::geom_tiplab()}}s
-\item Use \code{\link[ggtree:gheatmap]{ggtree::gheatmap()}} to add a heatmap.
-\item Set the colors using \code{\link[ggplot2:scale_fill_manual]{ggplot2::scale_fill_manual()}}
-}
+The \code{plot.aphylo} function is a wrapper of \link[ape:plot.phylo]{ape::plot.phylo}.
 }
 \seealso{
 Other aphylo methods: \code{\link{aphylo-class}}

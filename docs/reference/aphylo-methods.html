@@ -106,8 +106,7 @@
     
 
     <pre class="usage"><span class='co'># S3 method for aphylo</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom.tiplab.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>gheatmap.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>scale.fill.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='no'>...</span>)
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>0.15</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for aphylo</span>
 <span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -127,20 +126,13 @@
       <td><p>Ignored.</p></td>
     </tr>
     <tr>
-      <th>geom.tiplab.args</th>
-      <td><p>Further arguments passed to <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/ggtree'>ggtree::ggtree()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>gheatmap.args</th>
-      <td><p>Further arguments passed to <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/ggtree'>ggtree::ggtree()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>scale.fill.args</th>
-      <td><p>Further arguments passed to <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/ggtree'>ggtree::ggtree()</a></code></p></td>
+      <th>prop</th>
+      <td><p>Numeric scalar between 0 and 1. Proportion of the device that the
+annotations use in <code>plot.aphylo</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Further arguments passed to the method.</p></td>
+      <td><p>Further arguments passed to <a href='http://www.rdocumentation.org/packages/ape/topics/plot.phylo'>ape::plot.phylo</a>.</p></td>
     </tr>
     <tr>
       <th>object</th>
@@ -156,13 +148,7 @@ invisible.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The <code>plot.aphylo</code> function is a wrapper of <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/ggtree'>ggtree::ggtree()</a></code>
-that creates a visualization as follows:</p><ol>
-<li><p>Retrieve the annotations from the <a href='aphylo.html'>aphylo</a> object</p></li>
-<li><p>Create a <code>ggtree</code> map adding <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/geom_tiplab'>ggtree::geom_tiplab()</a></code>s</p></li>
-<li><p>Use <code><a href='http://www.rdocumentation.org/packages/ggtree/topics/gheatmap'>ggtree::gheatmap()</a></code> to add a heatmap.</p></li>
-<li><p>Set the colors using <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_manual'>ggplot2::scale_fill_manual()</a></code></p></li>
-</ol>
+    <p>The <code>plot.aphylo</code> function is a wrapper of <a href='http://www.rdocumentation.org/packages/ape/topics/plot.phylo'>ape::plot.phylo</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

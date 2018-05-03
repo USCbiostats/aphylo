@@ -138,7 +138,11 @@ print.aphylo_prediction_score <- function(x, ...) {
 }
 
 
+#' Visualize predictions
+#' 
 #' @export
+#' @param x An object of class `aphylo_prediction_score`.
+#' @param ... Ignored
 #' @param y Ignored.
 #' @param main Passed to `title`.
 #' @param which.fun Integer vector. Which function to plot.
@@ -147,19 +151,22 @@ print.aphylo_prediction_score <- function(x, ...) {
 #' This is mostly useful when the number of predictions is small.
 #' @param labels.col Character scalar. Color of the labels.
 #' @param main.colorkey Character scalar. Title of the colorkey (optional).
-#' @rdname aphylo_estimates-class  
-#' @details If `include.labels = NULL` and `ncol(x$expected) > 40`,
-#' then `include.labels=FALSE` by default.
 #' 
+#' @details
+#' 
+#' If `include.labels = NULL` and `ncol(x$expected) > 40`,
+#' then `include.labels=FALSE` by default.
+#' @aliases plot-prediction
 plot.aphylo_prediction_score <- function(
   x,
-  y=NULL, 
-  main = "Prediction Accuracy: Observed versus predicted values",
-  main.colorkey = "Probability of Functional Annotation",
-  which.fun = seq_len(ncol(x$expected)),
+  y              = NULL, 
+  main           = "Prediction Accuracy: Observed versus predicted values",
+  main.colorkey  = "Probability of Functional Annotation",
+  which.fun      = seq_len(ncol(x$expected)),
   include.labels = NULL,
-  labels.col = "black",
-  ...) {
+  labels.col     = "black",
+  ...
+  ) {
   
   k <- length(which.fun)
   y <- rep(1L, nrow(x$expected))
@@ -185,12 +192,12 @@ plot.aphylo_prediction_score <- function(
       doughnut = .5, skip.plot.slices = TRUE
       )
     
-    graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5)
-    graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5)
+    graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5, col = "lightgray")
+    graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5, col="white")
     
     # Function to color the absence/presence of function
     blue <- function(x) {
-      ans <- polygons::colorRamp2(RColorBrewer::brewer.pal(7, "RdBu"))(x)
+      ans <- polygons::colorRamp2(.aphyloColors)(x)
       ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
       ifelse(x == 9, "black", ans)
     }
@@ -203,7 +210,7 @@ plot.aphylo_prediction_score <- function(
       add       = TRUE,
       col       = blue(x$predicted[ord,i]),
       border    = blue(x$predicted[ord,i]), 
-      lwd       = 1,
+      lwd       = .5,
       slice.off = ifelse(
         x$expected[ord, i] == 9L,.25,
         abs(x$predicted[ord, i] - x$expected[ord, i])/2
@@ -218,7 +225,7 @@ plot.aphylo_prediction_score <- function(
       add       = TRUE,
       col       = blue(x$expected[ord,i]),
       border    = blue(x$expected[ord,i]),
-      lwd       = 1,
+      lwd       = .5,
       density   = ifelse(x$expected[ord,i] == 9L, 10, NA),
       slice.off = ifelse(
         x$expected[ord, i] == 9L,.25,
@@ -269,12 +276,10 @@ plot.aphylo_prediction_score <- function(
     opie <- colMeans(opie$slices[[slice2annotate]])
     ipie <- colMeans(ipie$slices[[slice2annotate]])
     
-    graphics::text(-1.76, .7, labels = "Observed", pos=2)
+    graphics::text(-1.76, .7, labels = "Observed", pos=3)
     graphics::segments(-1.76, .7, ipie[1], ipie[2], lty=2, lwd=2)
-    graphics::text(-1.76, -.7, labels = "Predicted", pos=2)
+    graphics::text(-1.76, -.7, labels = "Predicted", pos=1)
     graphics::segments(-1.76, -.7, opie[1], opie[2], lty=2, lwd=2)
-    
-    
     
     graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
     

@@ -267,66 +267,124 @@ as_aphylo <- function(
 }
 
 
+#' Set of colors
+#' @noRd
+.aphyloColors <- RColorBrewer::brewer.pal(7, "RdBu")
+
 #' Plot and print methods for `aphylo` objects
 #' 
 #' @param x An object of class `aphylo`.
 #' @param y Ignored.
-#' @param geom.tiplab.args Further arguments passed to [ggtree::ggtree()]
-#' @param gheatmap.args Further arguments passed to [ggtree::ggtree()]
-#' @param scale.fill.args Further arguments passed to [ggtree::ggtree()]
-#' @param ... Further arguments passed to the method.
+#' @param ... Further arguments passed to [ape::plot.phylo].
+#' @param prop Numeric scalar between 0 and 1. Proportion of the device that the
+#' annotations use in `plot.aphylo`.
 #' @name aphylo-methods
-#' @details The `plot.aphylo` function is a wrapper of [ggtree::ggtree()]
-#' that creates a visualization as follows:
-#' \enumerate{
-#'   \item Retrieve the annotations from the [aphylo] object
-#'   \item Create a `ggtree` map adding [ggtree::geom_tiplab()]s
-#'   \item Use [ggtree::gheatmap()] to add a heatmap.
-#'   \item Set the colors using [ggplot2::scale_fill_manual()]
-#' }
+#' @details The `plot.aphylo` function is a wrapper of [ape::plot.phylo].
 #' 
 #' @export
 #' @return In the case of `plot.aphylo`, an object of class `c("ggtree", "gg", "ggplot")`
 #' @family aphylo methods
-plot.aphylo <- function(
-  x,
-  y=NULL,
-  geom.tiplab.args = list(),
-  gheatmap.args    = list(),
-  scale.fill.args  = list(), 
-  ...
-) {
+#' @export
+plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   
-  # Checkingout arguments
-  if (!("align" %in% names(geom.tiplab.args))) geom.tiplab.args$align <- TRUE
+  # Coercing into phylo
+  phylo <- as.phylo(x)
+  dots  <- list(...)
   
-  if (!("width" %in% names(gheatmap.args))) gheatmap.args$width <- .25
-  if (!("color" %in% names(gheatmap.args))) gheatmap.args$color <- "transparent"
-  if (!("colnames_angle" %in% names(gheatmap.args))) gheatmap.args$colnames_angle <- 45
+  # Some defaults
+  if (!length(dots$cex))
+    dots$cex <- .75
+  if (!length(dots$show.node.label))
+    dots$show.node.label <- TRUE
+  if (!length(dots$font))
+    dots$font <- 1
+  if (!length(dots$main))
+    dots$main <- "Annotated Phylogenetic Tree"
   
-  if (!("breaks" %in% names(scale.fill.args))) scale.fill.args$breaks <- c("0", "1", "9")
-  if (!("values" %in% names(scale.fill.args))) scale.fill.args$values <- c("gray", "steelblue", "white")
-  if (!("labels" %in% names(scale.fill.args))) scale.fill.args$labels <- c("No function", "Function", "N/A")
+  if (length(dots$type) && dots$type != "phylogram")
+    stop("Only `phylograph` is currently supported.")
   
-  # Coercing into a tree
-  tree <- as.phylo(x)
+  # Size of the device
+  dev_size <- graphics::par("din")
   
-  # Retrieving the annotations
-  A   <- with(x, rbind(tip.annotation))
-  A[] <- as.character(A)
+  # How much space for the annotations
+  labwidth <- dev_size[1]*prop
+
+  op <- graphics::par(mai = graphics::par("mai")*c(0, 1, 1, 0) + c(labwidth, 0, 0, labwidth))
   
-  # Matching positions
-  # A   <- A[match(tree$tip.label, rownames(A)),,drop=FALSE]
+  on.exit(graphics::par(op))
+  do.call(plot, c(list(x=phylo), dots))
   
-  # Creating the mapping
-  p <- ggtree::ggtree(tree) +
-    do.call(ggtree::geom_tiplab, geom.tiplab.args)
+  plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
   
-  # Adding the functions
-  p <- do.call(ggtree::gheatmap, c(list(p=p, data=A),gheatmap.args)) +
-    do.call(ggplot2::scale_fill_manual, scale.fill.args)
+  tips <- with(plot_pars$last_plot.phylo, cbind(xx, yy))
+  tips <- tips[1L:ape::Ntip(phylo),,drop=FALSE]
   
-  p
+  yspacing <- range(tips[,2])
+  yspacing <- (yspacing[2] - yspacing[1])/(nrow(tips) - 1)/2
+  
+  op2 <- graphics::par(
+    mai = graphics::par("mai")*c(1,0,1,0) +
+      c(0, dev_size[1]*(1-prop), 0, dev_size[1]*.025)
+    )
+  
+  plot.window(c(0, 1), range(tips[,2]), new=FALSE, xaxs = "i")
+  
+  nfun      <- ncol(x$tip.annotation)
+  yran      <- range(tips[,2])
+  rect(
+    xleft   = -.1,
+    ybottom = yran[1] - .1*yinch() - yspacing,
+    xright  = 1.1,
+    ytop    = yran[2] + .1*yinch() + yspacing,
+    xpd     = NA,
+    col     = "lightgray",
+    border  = "gray"
+  )
+  
+  for (f in 1:nfun) {
+    
+    # Computing colors
+    cols <- x$tip.annotation[,f]
+    cols[cols == 9] <- .5
+    cols <- rgb(polygons::colorRamp2(.aphyloColors)(cols), maxColorValue = 255)
+    
+    # Drawing rectangles
+    rect(
+      xleft   = (f - 1)/nfun,
+      ybottom = tips[,2] - yspacing,
+      xright  = f/nfun,
+      ytop    = tips[,2] + yspacing, xpd=NA,
+      col     = cols,
+      border  = "black",
+      lwd     = .5
+    )
+    
+    # Adding function label
+    graphics::text(
+      x = (2*f - 1)/nfun/2 - 1/nfun/2,
+      y = yran[1] - graphics::strheight(colnames(x$tip.annotation)[f], srt=45)*1.5 - yspacing,
+      label = colnames(x$tip.annotation)[f],
+      pos = 1,
+      srt = 45,
+      xpd = NA
+    )
+    
+  }
+  
+  # Drawing a legend
+  graphics::par(op2)
+  graphics::par(mai = c(0,0,dev_size[2] - op2$mai[1], dev_size[1]*prop))
+  graphics::plot.window(c(0,1), c(0,1))
+  legend(
+    "center",
+    legend = c("No function", "N/A", "Function"),
+    fill   = rgb(polygons::colorRamp2(.aphyloColors)(c(0,.5,1)), maxColorValue=255),
+    bty    = "n",
+    horiz  = TRUE
+    )
+  
+  invisible(NULL)
 }
 
 

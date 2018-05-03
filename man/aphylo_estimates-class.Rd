@@ -11,7 +11,6 @@
 \alias{predict.aphylo_estimates}
 \alias{prediction_score}
 \alias{print.aphylo_prediction_score}
-\alias{plot.aphylo_prediction_score}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
@@ -36,12 +35,6 @@ prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation ==
   1L, na.rm = TRUE), W = NULL, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
-
-\method{plot}{aphylo_prediction_score}(x, y = NULL,
-  main = "Prediction Accuracy: Observed versus predicted values",
-  main.colorkey = "Probability of Functional Annotation",
-  which.fun = seq_len(ncol(x$expected)), include.labels = NULL,
-  labels.col = "black", ...)
 }
 \arguments{
 \item{dat}{An object of class \code{new_aphylo} as returned by
@@ -78,20 +71,6 @@ stops with an error when the annotations are uninformative (either 0s or 1s).}
 used to compute the random imputation score.}
 
 \item{W}{A square matrix. Must have as many rows as genes in \code{expected}.}
-
-\item{y}{Ignored.}
-
-\item{main}{Passed to \code{title}.}
-
-\item{main.colorkey}{Character scalar. Title of the colorkey (optional).}
-
-\item{which.fun}{Integer vector. Which function to plot.}
-
-\item{include.labels}{Logical scalar. When \code{TRUE}, draws nice labels
-at each slice which by default are specified as the rownames of \code{x$expected}.
-This is mostly useful when the number of predictions is small.}
-
-\item{labels.col}{Character scalar. Color of the labels.}
 }
 \value{
 A list of class \code{aphylo_estimates} with the following elements:
@@ -132,9 +111,6 @@ The default values of \code{control} are:
 
 In the case of \code{prediction_score}, \code{...} are passed to
 \code{predict.aphylo_estimates}.
-
-If \code{include.labels = NULL} and \code{ncol(x$expected) &gt; 40},
-then \code{include.labels=FALSE} by default.
 }
 \examples{
 
