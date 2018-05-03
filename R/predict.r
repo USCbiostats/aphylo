@@ -168,7 +168,7 @@ plot.aphylo_prediction_score <- function(
     else include.labels <- TRUE
   }
   
-  oldpar <- graphics::par(mfrow=c(1, k), mar=c(3,0,3,0))
+  oldpar <- graphics::par(mar=c(3,0,3,0))
   on.exit(graphics::par(oldpar))
   
   for (i in 1:k) {
@@ -242,27 +242,29 @@ plot.aphylo_prediction_score <- function(
     
     # graphics::polygon(circle(0, 0, r=.60), border = "black", lwd=1)
     graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
+    
+    # Drawing color key
+    oldmar <- graphics::par(mar = rep(0, 4), new = FALSE, xpd=NA)
+    # graphics::par(mfrow=c(1,1), xpd=NA)
+    
+    polygons::colorkey(
+      x0 = .10, y0=0, x1=.90, y1=.1, 
+      label.from = 'No function',
+      label.to = "Function",
+      cols = blue(seq(0,1,length.out = 3)), 
+      tick.range = c(0,1),
+      tick.marks = c(0,.25,.5,.75,1),
+      nlevels = 200,
+      main = main.colorkey
+    )
+    graphics::par(oldmar)
+    
+    graphics::title(
+      main= main, font.main=1
+    )
   }
   
-  # Drawing color key
-  oldmar <- graphics::par(mar = rep(0, 4))
-  graphics::par(mfrow=c(1,1), xpd=NA)
   
-  polygons::colorkey(
-    x0 = .10, y0=0, x1=.90, y1=.1, 
-    label.from = 'No function',
-    label.to = "Function",
-    cols = blue(seq(0,1,length.out = 3)), 
-    tick.range = c(0,1),
-    tick.marks = c(0,.25,.5,.75,1),
-    nlevels = 200,
-    main = main.colorkey
-  )
-  graphics::par(oldmar)
-  
-  graphics::title(
-    main= main, font.main=1
-    )
 
 }
   
