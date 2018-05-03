@@ -1,6 +1,6 @@
 Package: aphylo
 Title: Statistical Inference of Annotated Phylogenetic Trees
-Authors@R: person("FirsName", "LastName", role=c("aut","cre"), email="hisemail@usc.edu")
+Authors@R: person("George", "Vega Yon", role=c("aut","cre"), email="g.vegayon@gmail.com")
 Version: 0.1.99
 Date: 2017-04-18
 Description: The `aphylo` R package implements estimation and data imputation
