@@ -15,7 +15,7 @@
 \usage{
 aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
   params = c(rep(0.01, 4), 0.99, 0.99, 0.01), lower = 0, upper = 1,
-  check.informative = TRUE)
+  check.informative = getOption("aphylo.informative", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -27,7 +27,8 @@ aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 
 aphylo_mcmc(dat, params = c(0.02, 0.02, 0.02, 0.02, 0.9, 0.9, 0.02),
   priors = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6],
-  38, 2)), control = list(), check.informative = TRUE)
+  38, 2)), control = list(),
+  check.informative = getOption("aphylo.informative", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
 
@@ -56,7 +57,7 @@ details).}
 
 \item{upper}{Numeric vector of length 5. Upper bounds, default to 0.9999}
 
-\item{check.informative}{Logical scalar. When \code{TRUE} (default) the algorithm
+\item{check.informative}{Logical scalar. When \code{TRUE} the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).}
 
 \item{x}{An object of class \code{aphylo_estimates}.}

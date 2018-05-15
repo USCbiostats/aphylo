@@ -30,7 +30,7 @@ checkout_annotations <- function(x) {
 test_that("Simulating informative annotated trees", {
   
   set.seed(1)
-  ans <- lapply(1:100, function(i) sim_annotated_tree(5))
+  ans <- lapply(1:100, function(i) sim_annotated_tree(5, informative = TRUE))
   ans <- checkout_annotations(ans)
   
   # There must be zeros and ones in all trees!
@@ -64,5 +64,48 @@ test_that("Dropping annotations", {
   ans3 <- ans3[1,]/colSums(ans3)
   
   expect_equal(mean(ans3), 1/3, tol = .1)
+  
+})
+
+test_that("Mislabeling", {
+  
+  # Ramdom tree (fully annotated) ---------------------------------------------
+  set.seed(1)
+  x <- sim_annotated_tree(20, P=4, Pi=.02)
+  
+  # All are ones/zeros
+  all_ones <- mislabel(x, psi = c(1, 0))
+  all_zero <- mislabel(x, psi = c(0, 1))
+  
+  expect_true(all(all_ones$tip.annotation == 1))
+  expect_true(all(all_zero$tip.annotation == 0))
+  
+  # All oposite
+  all_flipped <- mislabel(x, psi = c(1, 1))
+  expect_equivalent(x$tip.annotation, 1 - all_flipped$tip.annotation)
+  
+  # Same tests but setting annotations equal to 9 ------------------------------
+  
+  # Dropping annotations
+  x <- rdrop_annotations(x, .5)
+  
+  # All are ones/zeros
+  all_ones <- mislabel(x, psi = c(1, 0))
+  all_zero <- mislabel(x, psi = c(0, 1))
+
+  # Number of 9s is preserved
+  expect_equal(sum(all_ones$tip.annotation == 9), sum(x$tip.annotation == 9))
+  expect_equal(sum(all_zero$tip.annotation == 9), sum(x$tip.annotation == 9))
+    
+  expect_true(all(all_ones$tip.annotation[all_ones$tip.annotation != 9] == 1))
+  expect_true(all(all_zero$tip.annotation[all_zero$tip.annotation != 9] == 0))
+  
+  # All oposite
+  all_flipped <- mislabel(x, psi = c(1, 1))
+  expect_equivalent(
+    x$tip.annotation[x$tip.annotation != 9],
+    1 - all_flipped$tip.annotation[all_flipped$tip.annotation != 9])
+  
+  
   
 })

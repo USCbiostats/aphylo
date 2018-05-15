@@ -144,7 +144,7 @@ sim_fun_on_tree <- function(
   eta,
   Pi,
   P           = 1L,
-  informative = TRUE,
+  informative = getOption("aphylo.informative", FALSE),
   maxtries    = 20L
 ) {
   
@@ -227,7 +227,7 @@ sim_annotated_tree <- function(
   mu          = c(.1,.05),
   eta         = c(1.0, 1.0),
   Pi          = 1.0,
-  informative = TRUE,
+  informative = getOption("aphylo.informative", FALSE),
   maxtries    = 20L
   ) {
   
@@ -266,6 +266,50 @@ sim_annotated_tree <- function(
   
 }
 
+#' Switch labels acoording to mislabeling probabilities
+#' 
+#' @param atree An object of class [aphylo].
+#' @template parameters
+#' @templateVar psi
+#' 
+#' @return An object of class [aphylo] with modified labels.
+#' @examples 
+#' 
+#' set.seed(131)
+#' x <- sim_annotated_tree(5, P=2, psi=c(0,0))
+#' x$tip.annotation
+#' 
+#' # Flipping 0s to 1s and vice versa
+#' mislabel(x, psi = c(1,1))$tip.annotation
+#' 
+#' @export
+mislabel <- function(atree, psi) {
+  
+  # Drawing random numbers
+  n <- nrow(atree$tip.annotation)
+  R <- matrix(runif(ncol(atree$tip.annotation)*n), nrow=n)
+  
+  for (p in 1:ncol(atree$tip.annotation)) {
+    
+    # Which rows are not 9 (NA)
+    idx <- which(atree$tip.annotation[,p] != 9L)
+    
+    # Annotations
+    ann <- atree$tip.annotation[idx, p] + 1
+    
+    # Updating annotations
+    r <- which(R[idx, p] <= psi[ann])
+    atree$tip.annotation[idx, p][r] <- 1 - atree$tip.annotation[idx, p][r]
+  }
+  
+  atree
+  
+}
+
+
+
+# mislabel(x)
+
 #' Randomly drop leaf annotations
 #' 
 #' The function takes an annotated tree and randomly selects leaf nodes to set
@@ -299,7 +343,7 @@ sim_annotated_tree <- function(
 rdrop_annotations <- function(
   x, pcent,
   prob.drop.0 = .5,
-  informative = TRUE
+  informative = getOption("aphylo.informative", FALSE)
   ) {
   
   # Number of leafs

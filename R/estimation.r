@@ -33,7 +33,7 @@ try_solve <- function(x, ...) {
 #' @param lower Numeric vector of length 5. Lower bounds, default to 0.0001.
 #' @param upper Numeric vector of length 5. Upper bounds, default to 0.9999
 #' @param object An object of class `aphylo_estimates`.
-#' @param check.informative Logical scalar. When `TRUE` (default) the algorithm
+#' @param check.informative Logical scalar. When `TRUE` the algorithm
 #' stops with an error when the annotations are uninformative (either 0s or 1s).
 #' 
 #' @details 
@@ -206,7 +206,7 @@ aphylo_mle <- function(
   params        = c(rep(.01, 4), .99, .99, .01),
   lower         = 0.0,
   upper         = 1.0,
-  check.informative = TRUE
+  check.informative = getOption("aphylo.informative", FALSE)
 ) {
   
   
@@ -393,7 +393,7 @@ aphylo_mcmc <- function(
   params        = c(.02, .02, .02, .02, .9, .9, .02),
   priors        = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6], 38,2)),
   control       = list(),
-  check.informative = TRUE
+  check.informative = getOption("aphylo.informative", FALSE)
 ) {
   
   # Checking control

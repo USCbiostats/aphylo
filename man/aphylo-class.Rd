@@ -2,6 +2,7 @@
 % Please edit documentation in R/data-management.r
 \name{aphylo-class}
 \alias{aphylo-class}
+\alias{aphylo}
 \alias{new_aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{

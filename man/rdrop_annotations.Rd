@@ -4,7 +4,8 @@
 \alias{rdrop_annotations}
 \title{Randomly drop leaf annotations}
 \usage{
-rdrop_annotations(x, pcent, prob.drop.0 = 0.5, informative = TRUE)
+rdrop_annotations(x, pcent, prob.drop.0 = 0.5,
+  informative = getOption("aphylo.informative", FALSE))
 }
 \arguments{
 \item{x}{An object of class \link{aphylo}.}

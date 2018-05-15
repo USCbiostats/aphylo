@@ -114,6 +114,7 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' @family Data management functions
 #' @family aphylo methods
 #' @name aphylo-class
+#' @aliases aphylo
 NULL
 
 
