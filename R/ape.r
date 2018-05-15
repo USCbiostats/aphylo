@@ -71,7 +71,7 @@ as.phylo.matrix <- function(
   edge.length = NULL,
   root.edge   = NULL,
   ...
-  ) {
+) {
   
   # Computing degrees
   nodes <- unique(as.vector(x))
