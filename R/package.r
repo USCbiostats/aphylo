@@ -77,4 +77,7 @@ release_questions <- function() {
 #' 
 NULL
 
-options(aphylo.informative = FALSE)
+options(
+  aphylo.informative = FALSE,
+  aphylo_reduce_pseq = FALSE
+  )

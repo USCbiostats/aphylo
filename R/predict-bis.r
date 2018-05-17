@@ -20,7 +20,7 @@ NULL
 
 #' @rdname posterior-probabilities
 #' @export
-predict_pre_order <- function(atree, psi, mu, eta, Pi) {
+predict_pre_order <- function(atree, psi, mu, eta, Pi, ...) {
   
   # Should be aphylo
   if (!inherits(atree, "aphylo"))

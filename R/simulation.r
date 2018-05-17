@@ -105,21 +105,30 @@ NULL
 #' This is just to keep track of how many simulations were needed to have an
 #' informative function.
 #' @noRd 
-sim_counts <- new.env(parent = emptyenv())
-sim_counts$n <- vector("integer", 5e4)
-sim_counts$i <- 1L
-sim_counts$add <-function(n) {
+
+sim_counts <- eval({
+  env <- new.env(parent = emptyenv())
   
-  # Adding the number to the counter
-  sim_counts$n[sim_counts$i] <- n
+  env$n <- vector("integer", 5e4)
+  env$i <- 1L
   
-  # Restarting the counter!
-  if (sim_counts$i == 5e4)
-    sim_counts$i <- 0L
+  list(
+    add = function(n) {
+      # Adding the number to the counter
+      env$n[env$i] <- n
+      # Restarting the counter!
+      if (env$i == 5e4)
+        env$i <- 0L
+      # Adding one element
+      env$i <- env$i + 1L
+      
+      invisible()
+      },
+    get = function() {as.list(env)}
+  )
   
-  # Adding one element
-  sim_counts$i <- sim_counts$i + 1L
-}
+})
+
 
 #' @rdname sim_fun_on_tree
 #' @param informative Logical scalar. When `TRUE` (default) the function 

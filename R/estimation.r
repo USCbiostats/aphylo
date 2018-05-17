@@ -132,18 +132,18 @@ new_aphylo_estimates <- function(
   
   structure(
     list(
-      par = par,
-      hist = hist,
-      ll = ll,
-      counts = counts,
+      par         = par,
+      hist        = hist,
+      ll          = ll,
+      counts      = counts,
       convergence = convergence,
-      message = message,
-      fun = fun,
-      priors = priors,
-      dat = dat,
-      par0 = par0,
-      method = method,
-      varcovar = varcovar
+      message     = message,
+      fun         = fun,
+      priors      = priors,
+      dat         = dat,
+      par0        = par0,
+      method      = method,
+      varcovar    = varcovar
     ),
     class = "aphylo_estimates"
   )
@@ -156,45 +156,6 @@ stop_ifuninformative <- function(tip.annotation) {
   if (tab[1L] == 0L | tab[2] == 0L)
     stop("The model is uninformative (either there's only 0s or 1s).", call. = FALSE)
 }
-
-#' Objective function with priors
-#' @noRd
-obj_fun_priors <- function(x, dat, priors) {
-    
-    ll <- LogLike(
-      tree       = dat, 
-      psi        = x[1:2], 
-      mu         = x[3:4], 
-      eta        = x[5:6],
-      Pi         = x[7],
-      verb_ans   = FALSE, 
-      check_dims = FALSE
-    )$ll + sum(log(priors(x)))
-    
-    # Checking if we got a infinite result
-    if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
-    ll
-}
-
-#' Objective function
-#' @noRd
-obj_fun <- function(x, dat) {
-    
-    ll <- LogLike(
-      tree       = dat, 
-      psi        = x[1:2], 
-      mu         = x[3:4],  
-      eta        = x[5:6],
-      Pi         = x[7],
-      verb_ans   = FALSE, 
-      check_dims = FALSE
-    )$ll
-    
-    # Checking if we got a infinite result
-    if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
-    ll
-}
-
 
 #' @rdname aphylo_estimates-class
 #' @export
@@ -331,6 +292,14 @@ print.aphylo_estimates <- function(x, ...) {
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
   sderrors   <- sqrt(diag(x$varcovar))
+  
+  ans <- sprintf("Leafs\n # of Functions %i", ncol(x$dat$tip.annotation))
+  for (p in names(x$par)) {
+    ans <- c(
+      ans,
+      with(x, sprintf(" %-6s  %6.4f  %6.4f", p, par[p], sderrors[p]))
+      )
+  }
 
   with(x, {
     cat(
@@ -343,16 +312,7 @@ print.aphylo_estimates <- function(x, ...) {
       else
         sprintf("convergence: %i (see ?optim)", convergence)
       ,
-      sprintf("Leafs\n # of Functions %i", ncol(dat$tip.annotation)),
-      #paste0(sprintf(" # of %s: %5i (%2.0f%%)", names(props), props, propspcent), collapse="\n"),
-            "\n         Estimate  Std. Error",
-      sprintf(" psi[0]    %6.4f      %6.4f", par["psi0"], sderrors["psi0"]),
-      sprintf(" psi[1]    %6.4f      %6.4f", par["psi1"], sderrors["psi1"]),
-      sprintf(" mu[0]     %6.4f      %6.4f", par["mu0"], sderrors["mu0"]),
-      sprintf(" mu[1]     %6.4f      %6.4f", par["mu1"], sderrors["mu1"]),
-      sprintf(" eta[0]    %6.4f      %6.4f", par["eta0"], sderrors["eta0"]),
-      sprintf(" eta[1]    %6.4f      %6.4f", par["eta1"], sderrors["eta1"]),
-      sprintf(" Pi        %6.4f      %6.4f\n", par["Pi"], sderrors["Pi"])
+      ans, "\n"
       )
     
   })
@@ -384,32 +344,50 @@ plot.aphylo_estimates <- function(
   plot_LogLike.aphylo_estimates(x, ...)
 }
 
+#' @export
+logLik.aphylo_estimates <- function(object, ...) {
+  
+  ans <- with(object, fun(par, dat = dat, verb_ans = TRUE))
+  
+  structure(
+    .Data = ans$ll,
+    class = "logLik",
+    df    = length(object$par),
+    Pr    = ans$Pr
+  )
+  
+}
+
 #' @rdname aphylo_estimates-class
 #' @return In the case of `aphylo_mcmc`, `hist` is an object of class
 #' [coda::mcmc.list()].
 #' @export
 aphylo_mcmc <- function(
-  dat,
+  model,
   params        = c(.02, .02, .02, .02, .9, .9, .02),
-  priors        = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6], 38,2)),
+  priors        = function(p) 1,
   control       = list(),
   check.informative = getOption("aphylo.informative", FALSE)
 ) {
   
+  # Parsing the formula
+  model <- aphylo_formula(model, params)
+  dat   <- model$dat
+  
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .01
-  if (!length(control$ub))     control$ub     <- rep(1, 7)
-  if (!length(control$lb))     control$lb     <- rep(0, 7)
+  if (!length(control$ub))     control$ub     <- rep(1, sum(model$included))
+  if (!length(control$lb))     control$lb     <- rep(0, sum(model$included))
   if (!length(control$useCpp)) control$useCpp <- TRUE
   
-  # Checking params
-  if (!inherits(dat, "aphylo"))
-    stop("-dat- should be of class aphylo")
-  
-  if (length(params) != 7)
+  # # Checking params
+  # if (!inherits(dat, "aphylo"))
+  #   stop("-dat- should be of class aphylo")
+  # 
+  if (length(params[model$included]) != sum(model$included))
     stop("-params- must be of length 5.")
-  
+
   if (!is.numeric(params))
     stop("-params- must be a numeric vector")
   
@@ -418,44 +396,23 @@ aphylo_mcmc <- function(
     stop_ifuninformative(dat$tip.annotation)
   
   # In case of fixing parameters
+  params <- params[model$included]
   par0 <- params
   
   # Creating the objective function
-  fun <- if (length(priors)) {
-    function(params, dat) {
-
-      LogLike(
-        tree       = dat,
-        psi        = params[1:2] ,
-        mu         = params[3:4] ,
-        eta        = params[5:6] ,
-        Pi         = params[7],
-        verb_ans   = FALSE, 
-        check_dims = FALSE
-      )$ll + sum(log(priors(params)))
-      
-    }
-  } else {
-    function(params, dat) {
-
-      LogLike(
-        tree       = dat,
-        psi        = params[1:2] ,
-        mu         = params[3:4] ,
-        eta        = params[5:6] ,
-        Pi         = params[7],
-        verb_ans   = FALSE, 
-        check_dims = FALSE
-      )$ll
-      
-    }
-  }
+  fun <- model$fun
   
   # Naming the parameter estimates
-  names(params) <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
+  names(params) <- aphylo_params_names[model$included]
   
   # Running the MCMC
-  ans <- do.call(amcmc::MCMC, c(list(fun = fun, initial = params, dat=dat), control))
+  ans <- do.call(
+    amcmc::MCMC, 
+    c(
+      list(fun = fun, initial = params, dat=dat, priors = priors, verb_ans=FALSE),
+      control
+      )
+    )
   
   # We treat all chains as mcmc.list
   if (!inherits(ans, "mcmc.list"))

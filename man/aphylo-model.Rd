@@ -21,7 +21,7 @@ Pi(..., env)
 
 mu(..., env)
 
-aphylo_formula(fm)
+aphylo_formula(fm, init)
 }
 \arguments{
 \item{...}{Either 0, 1 or both. Depending on the parameter, the index of the
@@ -53,6 +53,6 @@ aphylo_formula(x ~ mu + psi)
 aphylo_formula(x ~ mu + psi + eta(0, 1))
 
 # Mislabeling probabilities and Pi 
-#aphylo_formula(x ~ mu + psi + Pi)
+aphylo_formula(x ~ mu + psi + Pi)
 
 }

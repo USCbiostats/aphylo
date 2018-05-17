@@ -21,38 +21,64 @@
 #' aphylo_formula(x ~ mu + psi + eta(0, 1))
 #' 
 #' # Mislabeling probabilities and Pi 
-#' #aphylo_formula(x ~ mu + psi + Pi)
+#' aphylo_formula(x ~ mu + psi + Pi)
 #' 
 #' @name aphylo-model
 #' @aliases aphylo-formula
 NULL
 
+aphylo_params_names <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
+
 #' @rdname aphylo-model
 #' @export
-aphylo_call <- function() {
+aphylo_call <- function(params) {
+  
+  if (missing(params))
+    params <- structure(rep(0, 7), names = aphylo_params_names)
+  
   list2env(
     list(
-      fun = function(p, dat) {
-      
-      # Arguments
-      args <- list(
-        tree = dat,
-        psi  = c(0, 0),
-        mu   = p[c("mu0", "mu1")],
-        eta  = c(.5, .5),
-        Pi   = p["mu0"]/(p["mu0"] + p["mu1"])
-      )
-      
-      # Call
-      do.call(
-        what = aphylo::LogLike,
-        args = args
-        )$ll + priors(p)
+      fun = function(p, priors, dat, verb_ans = FALSE) {
+        
+        # Arguments
+        args <- list(
+          tree = dat,
+          psi  = c(0, 0),
+          mu   = c(p["mu0"], p["mu1"]),
+          eta  = c(.5, .5),
+          Pi   = p["mu0"]/(p["mu0"] + p["mu1"])
+        )
+        
+        # Call
+        ans <- do.call(
+          what = aphylo::LogLike,
+          args = args
+          )
+        
+        # Correcting for eta
+        ans$ll <- ans$ll*2^prod(dim(dat$tip.annotation))
+        
+        # Adding priors
+        ans$ll <- ans$ll + sum(log(priors(p)))
+        
+        if (is.infinite(ans$ll))
+          ans$ll <- .Machine$double.xmax*sign(ans$ll)*1e-10
+        
+        # If verbose (not by default)
+        if (verb_ans)
+          ans
+        else
+          ans$ll
     },
-    fixed = structure(
+    fixed    = structure(
       .Data = c(TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE),
-      names = c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
-      )
+      names = aphylo_params_names
+      ),
+    included = structure(
+      .Data = c(FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE),
+      names = aphylo_params_names
+    ),
+    params   = params
   ))
 }
 
@@ -60,12 +86,18 @@ aphylo_call <- function() {
 eta <- function(..., env) {
   
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$eta  <- bquote(p[c("eta0", "eta1")])
+  body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
   env$fixed[c("eta0", "eta1")] <- FALSE
+  env$included[c("eta0", "eta1")] <- TRUE
+  
+  # Removing the eta correction
+  body(env$fun)[[4]] <- bquote()
   
   # Updating
-  for (f in unlist(list(...))) 
+  for (f in unlist(list(...))) {
+    body(env$fun)[[2]][[3]]$eta[[2+f]]  <- env$params[paste0("eta", f)]
     env$fixed[paste0("eta", f)] <- TRUE
+  }
     
   invisible()
 }
@@ -74,12 +106,16 @@ eta <- function(..., env) {
 psi <- function(..., env) {
   
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$psi  <- bquote(p[c("psi0", "psi1")])
+  body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
   env$fixed[c("psi0", "psi1")] <- FALSE
+  env$included[c("psi0", "psi1")] <- TRUE
   
   # Updating
-  for (f in unlist(list(...))) 
+  for (f in unlist(list(...))) {
+  
+    body(env$fun)[[2]][[3]]$psi[[2+f]]  <- env$params[paste0("psi", f)]
     env$fixed[paste0("psi", f)] <- TRUE
+  }
   
   invisible()
 }
@@ -91,9 +127,12 @@ Pi <- function(..., env) {
   body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
   env$fixed["Pi"]            <- FALSE
   
-  # Updating
-  for (f in unlist(list(...))) 
+  # Updating (if fixed, then we set whatever value should be included)
+  for (f in unlist(list(...))) {
+    body(env$fun)[[2]][[3]]$Pi <- env$params["Pi"]
     env$fixed[paste0("Pi")] <- TRUE
+  }
+    
   
   invisible()
 }
@@ -102,24 +141,27 @@ Pi <- function(..., env) {
 mu <- function(..., env) {
   
   # Updating
-  for (f in unlist(list(...))) 
+  for (f in unlist(list(...))) {
+    body(env$fun)[[2]][[3]]$mu[[2+f]]  <- env$params[paste0("mu", f)]
+    
     env$fixed[paste0("mu", f)] <- TRUE
+  }
   
   invisible()
 }
 
 #' @rdname aphylo-model
 #' @export
-aphylo_formula <- function(fm) {
+aphylo_formula <- function(fm, params) {
   
   # Creating new aphylo call object
-  model_call <- aphylo_call()
+  model_call <- aphylo_call(params)
   
   # Extracting terms
-  fm <- terms(fm, keep.order=TRUE)
+  fm_terms   <- terms(fm, keep.order=TRUE)
   
   # Taking a look at the variables
-  val <- attr(fm, "variables")
+  val <- attr(fm_terms, "variables")
   
   # Is the LHS an aphylo object?
   if (!inherits(eval(val[[2]]), "aphylo"))
@@ -136,11 +178,19 @@ aphylo_formula <- function(fm) {
       eval(val[[i]])
     }
   
+  # Checking the dimensions
+  
   # Returning the model call as a list
-  as.list(model_call)
+  c(
+    list(
+      model  = fm,
+      dat    = eval(val[[2]]),
+      params = params
+      ),
+    as.list(model_call)
+  )
+    
 }
-
-
 
 # 
 # e <- list2env(list(x = x))

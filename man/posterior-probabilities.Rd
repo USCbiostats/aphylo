@@ -6,7 +6,7 @@
 \alias{predict_brute_force}
 \title{Posterior probabilities based on parameter estimates}
 \usage{
-predict_pre_order(atree, psi, mu, eta, Pi)
+predict_pre_order(atree, psi, mu, eta, Pi, ...)
 
 predict_brute_force(atree, psi, mu, Pi)
 }
