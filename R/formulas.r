@@ -35,7 +35,7 @@ APHYLO_PARAM_DEFAULT <- structure(
 
 #' @rdname aphylo-model
 #' @export
-aphylo_call <- function() {
+aphylo_call <- function(params) {
   
   list2env(
     list(
@@ -71,35 +71,12 @@ aphylo_call <- function() {
         else
           ans$ll
     },
-    fixed    = structure(
-      .Data = c(TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE),
-      names = APHYLO_PARAM_NAMES
+    fixed = structure(
+      .Data = rep(FALSE, length(params)),
+      names = names(params)
       ),
-    included = structure(
-      .Data = c(FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE),
-      names = APHYLO_PARAM_NAMES
-    )
+    params = params
   ))
-}
-
-#' @rdname aphylo-model
-eta <- function(..., env) {
-  
-  # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
-  env$fixed[c("eta0", "eta1")] <- FALSE
-  env$included[c("eta0", "eta1")] <- TRUE
-  
-  # Removing the eta correction
-  body(env$fun)[[4]] <- NULL
-  
-  # Updating
-  for (f in unlist(list(...))) {
-    body(env$fun)[[2]][[3]]$eta[[2+f]]  <- env$params[paste0("eta", f)]
-    env$fixed[paste0("eta", f)] <- TRUE
-  }
-    
-  invisible()
 }
 
 validate_dots_in_term <- function(..., expected) {
@@ -128,20 +105,34 @@ validate_dots_in_term <- function(..., expected) {
 }
 
 #' @rdname aphylo-model
+eta <- function(..., env) {
+  
+  # Adding eta to the objective function
+  body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
+  env$fixed[c("eta0", "eta1")] <- FALSE
+  
+  # Removing the eta correction
+  body(env$fun)[[4]] <- NULL
+  
+  # Updating
+  dots <- validate_dots_in_term(..., expected = c(0,1))
+  for (f in dots) 
+    env$fixed[paste0("eta", f)] <- TRUE
+  
+  invisible()
+}
+
+#' @rdname aphylo-model
 psi <- function(..., env) {
   
   # Adding eta to the objective function
   body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
   env$fixed[c("psi0", "psi1")] <- FALSE
-  env$included[c("psi0", "psi1")] <- TRUE
-  
+
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))
-  for (f in dots) {
-  
-    body(env$fun)[[2]][[3]]$psi[[2+f]]  <- env$params[paste0("psi", f)]
+  for (f in dots) 
     env$fixed[paste0("psi", f)] <- TRUE
-  }
   
   invisible()
 }
@@ -155,13 +146,8 @@ Pi <- function(..., env) {
   
   # Updating (if fixed, then we set whatever value should be included)
   dots <- validate_dots_in_term(..., expected = 0)
-  for (f in dots) {
-    
-    body(env$fun)[[2]][[3]]$Pi <- env$params["Pi"]
+  for (f in dots)
     env$fixed[paste0("Pi")] <- TRUE
-    
-  }
-    
   
   invisible()
 }
@@ -171,12 +157,8 @@ mu <- function(..., env) {
 
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))
-  for (f in dots) {
-
-    body(env$fun)[[2]][[3]]$mu[[2+f]]  <- env$params[paste0("mu", f)]
+  for (f in dots)
     env$fixed[paste0("mu", f)] <- TRUE
-    
-  }
   
   invisible()
 }
@@ -188,8 +170,8 @@ mu <- function(..., env) {
 validate_aphylo_formula <- function(fm) {
   
   # Extracting terms
-  fm   <- stats::terms(fm, keep.order = TRUE)
-  vars <- attr(fm, "term.labels")
+  fm1  <- stats::terms(fm, keep.order = TRUE)
+  vars <- attr(fm1, "term.labels")
   term_names <- gsub("\\(.+", "", vars)
   
   # Analyzing the terms, are all 
@@ -210,8 +192,11 @@ validate_aphylo_formula <- function(fm) {
          )
   }
   
-
-  attr(fm, "variables")
+  # Is mu present?
+  if (!("mu" %in% term_names))
+    fm <- update.formula(fm, ~. + mu)
+  
+  fm
   
   
 }
@@ -224,11 +209,16 @@ validate_parameters <- function(fm, params) {
   vars <- attr(stats::terms(fm), "term.labels")
   vars <- gsub("\\(.+", "", vars)
   
+  
+  # Getting the default
+  vars <- paste0("^(",paste0(vars, collapse="|"), ")")
+  vars <- APHYLO_PARAM_NAMES[grepl(vars, x = APHYLO_PARAM_NAMES)]
+  
   # In the case of missing parameters, then return the default according to
   # what the formula is.
   if (missing(params)) {
     
-    APHYLO_PARAM_DEFAULT[which(APHYLO_PARAM_NAMES %in% vars)]
+    APHYLO_PARAM_DEFAULT[vars]
     
   } else {
     
@@ -241,11 +231,11 @@ validate_parameters <- function(fm, params) {
              "the model.", call.=FALSE)
       
       # Matching names by position
-      warning("Initial parameres matched by position.")
+      warning("Initial parameres matched by position.", call. = FALSE)
       
       return(structure(
         .Data = params,
-        names = APHYLO_PARAM_NAMES[which(APHYLO_PARAM_NAMES %in% vars)]
+        names = vars
       ))
       
     }
@@ -286,20 +276,21 @@ validate_parameters <- function(fm, params) {
 #' @export
 aphylo_formula <- function(fm, params) {
   
-  # Creating new aphylo call object
-  model_call <- aphylo_call()
-  
   # Validating formula
-  val <- validate_aphylo_formula(fm)
+  fm  <- validate_aphylo_formula(fm)
+  val <- attr(stats::terms(fm), "variables")
   
   # Validating initial parameters
   params <- validate_parameters(fm, params)
   
+  # Creating new aphylo call object
+  model_call <- aphylo_call(params)
+  
   # Is the LHS an aphylo object?
-  if (!exists(as.character(val[[2]])))
-    stop("The object -",as.character(val[[2]]), "- can't be found.")
+  if (!exists(as.character(val[[2]]), envir = parent.frame(2)))
+    stop("The object -", as.character(val[[2]]), "- can't be found.")
     
-  if (!inherits(eval(val[[2]]), "aphylo"))
+  if (!inherits(eval(val[[2]], envir = parent.frame(2)), "aphylo"))
     stop("The LHS of the equation should be an `aphylo` object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
@@ -313,27 +304,13 @@ aphylo_formula <- function(fm, params) {
       eval(val[[i]])
     }
   
-  # Checking the dimensions
-  
   # Returning the model call as a list
   c(
     list(
       model  = fm,
-      dat    = eval(val[[2]]),
-      params = params
+      dat    = eval(val[[2]], parent.frame(2))
       ),
     as.list(model_call)
   )
     
 }
-
-# 
-# e <- list2env(list(x = x))
-# x <- 1
-# 
-# z <- function() {
-#   summary(x)
-# }
-# 
-# environment(z) <- e
-# z()

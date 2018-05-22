@@ -11,7 +11,7 @@ Pi  <- .2
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
 
 # Estimation via L-BFGS-B
-ans0 <- aphylo_mle(dat, params = c(.05, .05, .05, .05, .9, .9, .5))
+ans0 <- aphylo_mle(dat ~ mu + psi + eta + Pi, params = c(.05, .05, .05, .05, .9, .9, .5))
 
 # Methods ----------------------------------------------------------------------
 test_that("Methods", {
@@ -33,7 +33,8 @@ test_that("Methods", {
 # ------------------------------------------------------------------------------
 test_that("MCMC", {
   ans1 <- suppressWarnings(
-    aphylo_mcmc(dat ~ mu + psi + eta + Pi, params = ans0$par, control = list(nbatch = 1e4, burnin=500, thin=20))
+    aphylo_mcmc(dat ~ mu + psi + eta + Pi, params = ans0$par,
+                control = list(nbatch = 1e4, burnin=500, thin=20))
   )
   
   # Checking expectations
@@ -56,14 +57,18 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
-    aphylo_mcmc(dat ~ mu + psi + eta(0,1) + Pi, params = c(rep(2/12, 4), eta0=.5, eta1=.5,2/12),
+    aphylo_mcmc(dat ~ mu + psi + eta(0,1) + Pi,
+                params = c(rep(2/12, 4), .5, .5,2/12),
                 priors = function(x) dbeta(x, 2, 10),
                 control = list(nbatch = 2e4), check.informative = FALSE)
     )
   
   ans2 <- suppressWarnings(
-    aphylo_mcmc(c(rep(2/22, 4), .5,.5,2/22), dat =  dat, priors = function(x) dbeta(x, 2, 20),
-                control = list(nbatch = 2e4, fixed = c(F, F, F, F, T, T, F)), check.informative = FALSE)
+    aphylo_mcmc(
+      dat ~ mu + psi + eta(0,1) + Pi,
+      params = c(rep(2/22, 4), .5,.5,2/22), 
+      priors = function(x) dbeta(x, 2, 20),
+      control = list(nbatch = 2e4), check.informative = FALSE)
   )
   
   

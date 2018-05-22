@@ -22,8 +22,7 @@ try_solve <- function(x, ...) {
 #'
 #' @param params A vector of length 7 with initial parameters. In particular
 #' `psi[1]`, `psi[2]`, `mu[1]`, `mu[2]`, `eta[1]`, `eta[2]` and `Pi`.
-#' @param dat An object of class `new_aphylo` as returned by
-#' [new_aphylo()].
+#' @param model A model as specified in [aphylo-model].
 #' @param method Character scalar. When `"ABC"`, uses Artificial Bee Colony
 #' optimization algorithm, otherwise it uses a method in [stats::optim()]. 
 #' @param priors A list of length 3 with functions named `psi`, `mu`,
@@ -38,7 +37,7 @@ try_solve <- function(x, ...) {
 #' 
 #' @details 
 #' 
-#' `phylo_mcmc` is a wrapper of [MCMC()], so, instead of treating the
+#' `phylo_mcmc` is a wrapper of [amcmc::MCMC], so, instead of treating the
 #' problem as a maximization problem, `phylo_mcmc` generates a **Markov Chain**.
 #' The default values of `control` are:
 #' 
@@ -127,7 +126,8 @@ new_aphylo_estimates <- function(
   dat,
   par0,
   method,
-  varcovar
+  varcovar,
+  call
 ) {
   
   structure(
@@ -143,7 +143,8 @@ new_aphylo_estimates <- function(
       dat         = dat,
       par0        = par0,
       method      = method,
-      varcovar    = varcovar
+      varcovar    = varcovar,
+      call        = call
     ),
     class = "aphylo_estimates"
   )
@@ -160,85 +161,54 @@ stop_ifuninformative <- function(tip.annotation) {
 #' @rdname aphylo_estimates-class
 #' @export
 aphylo_mle <- function(
-  dat,
+  model,
+  params,
   method        = "L-BFGS-B",
-  priors        = NULL, 
+  priors        = function(p) 1, 
   control       = list(),
-  params        = c(rep(.01, 4), .99, .99, .01),
   lower         = 0.0,
   upper         = 1.0,
   check.informative = getOption("aphylo.informative", FALSE)
 ) {
   
+  # Getting the call
+  cl <- match.call()
   
-  # Checking params
-  if (!inherits(dat, "aphylo"))
-    stop("-dat- should be of class aphylo")
-  
-  if (length(params) != 7)
-    stop("-params- must be of length 5.")
-  
-  if (!is.numeric(params))
-    stop("-params- must be a numeric vector")
+  # Parsing the formula
+  model <- aphylo_formula(model, params)
   
   # Reducing the peeling sequence
   if (getOption("aphylo_reduce_pseq", FALSE))
-    dat$pseq <- reduce_pseq(dat$pseq, with(dat, rbind(tip.annotation, node.annotation)), dat$offspring)
+    model$dat$pseq <- reduce_pseq(
+      model$dat$pseq,
+      with(model$dat, rbind(tip.annotation, node.annotation)),
+      model$dat$offspring
+      )
 
   # If the models is uninformative, then it will return with error
   if (check.informative)
-    stop_ifuninformative(dat$tip.annotation)
-  
-  # In case of fixing parameters
-  par0 <- params
+    stop_ifuninformative(model$dat$tip.annotation)
   
   # Both available for ABC
   control$fnscale  <- -1
-  control$parscale <- rep(1, 7)
-  
-  # Creating the objective function
-  fun <- if (length(priors)) {
-    function(x, dat) {
-
-      ll <- LogLike(
-        tree       = dat, 
-        psi        = x[1:2], 
-        mu         = x[3:4], 
-        eta        = x[5:6],
-        Pi         = x[7],
-        verb_ans   = FALSE, 
-        check_dims = FALSE
-        )$ll + sum(log(priors(x)))
-      
-      # Checking if we got a infinite result
-      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
-      ll
-    }
-  } else {
-    function(x, dat) {
-
-      ll <- LogLike(
-        tree       = dat, 
-        psi        = x[1:2], 
-        mu         = x[3:4],  
-        eta        = x[5:6],
-        Pi         = x[7],
-        verb_ans   = FALSE, 
-        check_dims = FALSE
-      )$ll
-
-      # Checking if we got a infinite result
-      if (is.infinite(ll)) return(.Machine$double.xmax*sign(ll)*1e-10)
-      ll
-    }
-  }
+  control$parscale <- rep(1, length(model$params))
   
   # Optimizing
   ans <- do.call(
     stats::optim, 
     c(
-      list(par = params, fn = fun, method=method, upper = upper, lower = lower,
-           hessian=FALSE, dat = dat, control=control)
+      list(
+        par      = model$params,
+        fn       = model$fun,
+        dat      = model$dat,
+        priors   = priors,
+        verb_ans = FALSE,
+        method   = method,
+        upper    = upper,
+        lower    = lower,
+        hessian  = FALSE,
+        control = control
+        )
       )
     )
   
@@ -252,18 +222,10 @@ aphylo_mle <- function(
     
     
   # Computing the hessian (information matrix)
-  hessian <- stats::optimHess(ans$par, fun, dat = dat, control = control)
-  
-  # Working on answer
-  env <- new.env()
-  environment(fun)    <- env
-  environment(dat)    <- env
-  environment(par0)   <- env
-  if (length(priors)) 
-    environment(priors) <- env
-  
-  # Naming the parameter estimates
-  names(ans$par) <- APHYLO_PARAM_NAMES
+  hessian <- stats::optimHess(
+    ans$par, model$fun, dat = model$dat, priors = priors, verb_ans = FALSE,
+    control = control
+    )
   
   # Hessian for observed information matrix
   dimnames(hessian) <- list(names(ans$par), names(ans$par))
@@ -276,12 +238,13 @@ aphylo_mle <- function(
     counts     = ans$counts,
     convergence = ans$convergence,
     message    = ans$message,
-    fun        = fun,
+    fun        = model$fun,
     priors     = priors,
-    dat        = dat,
-    par0       = par0,
+    dat        = model$dat,
+    par0       = model$params,
     method     = method,
-    varcovar   = try_solve(-hessian, tol = 1e-100)
+    varcovar   = try_solve(-hessian, tol = 1e-100),
+    call       = cl
   )
 }
 
@@ -293,27 +256,28 @@ print.aphylo_estimates <- function(x, ...) {
   
   sderrors   <- sqrt(diag(x$varcovar))
   
-  ans <- sprintf("Leafs\n # of Functions %i", ncol(x$dat$tip.annotation))
-  ans <- c(ans, sprintf(" %-6s  %6s  %6s", "", "Estimate", "Std. Err."))
+  ans <- sprintf("\n Leafs:\n # of Functions %i", ncol(x$dat$tip.annotation))
+  ans <- c(ans, sprintf("\n %-6s  %6s  %6s", "", "Estimate", "Std. Err."))
   for (p in names(x$par)) {
     ans <- c(
       ans,
-      with(x, sprintf(" %-6s  %6.4f    %6.4f", p, par[p], sderrors[p]))
+      with(x, sprintf("\n %-6s  %6.4f    %6.4f", p, par[p], sderrors[p]))
       )
   }
 
   with(x, {
     cat(
-      sep = "\n",
-      "\nESTIMATION OF ANNOTATED PHYLOGENETIC TREE",
+      sep = "",
+      "\nESTIMATION OF ANNOTATED PHYLOGENETIC TREE\n",
+      "\n Call: ", paste(deparse(x$call), sep="\n", collapse="\n"), 
       sprintf(
-        "ll: %9.4f,\nMethod used: %s (%i iterations)", ll, method, x$counts),
+        "\n ll: %-9.4f,\n Method used: %s (%i iterations)", ll, method, x$counts),
       if (method == "mcmc") 
         NULL
       else
-        sprintf("convergence: %i (see ?optim)", convergence)
+        sprintf("\n convergence: %i (see ?optim)", convergence)
       ,
-      ans, ""
+      ans, "\n\n"
       )
     
   })
@@ -365,11 +329,14 @@ logLik.aphylo_estimates <- function(object, ...) {
 #' @export
 aphylo_mcmc <- function(
   model,
-  params        = c(.02, .02, .02, .02, .9, .9, .02),
+  params,
   priors        = function(p) 1,
   control       = list(),
   check.informative = getOption("aphylo.informative", FALSE)
 ) {
+  
+  # Getting the call
+  cl <- match.call()
   
   # Parsing the formula
   model <- aphylo_formula(model, params)
@@ -377,35 +344,25 @@ aphylo_mcmc <- function(
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .01
-  if (!length(control$ub))     control$ub     <- rep(1, sum(model$included))
-  if (!length(control$lb))     control$lb     <- rep(0, sum(model$included))
+  if (!length(control$ub))     control$ub     <- rep(1, length(model$params))
+  if (!length(control$lb))     control$lb     <- rep(0, length(model$params))
   if (!length(control$useCpp)) control$useCpp <- TRUE
-  
-  if (length(params[model$included]) != sum(model$included))
-    stop("-params- must be of length 5.")
 
-  if (!is.numeric(params))
-    stop("-params- must be a numeric vector")
-  
   # If the models is uninformative, then it will return with error
   if (check.informative)
     stop_ifuninformative(model$dat$tip.annotation)
-  
-  # In case of fixing parameters
-  params <- params[model$included]
-  par0 <- params
-  
-  # Creating the objective function
-  fun <- model$fun
-  
-  # Naming the parameter estimates
-  names(params) <- APHYLO_PARAM_NAMES[model$included]
   
   # Running the MCMC
   ans <- do.call(
     amcmc::MCMC, 
     c(
-      list(fun = fun, initial = params, dat=model$dat, priors = priors, verb_ans=FALSE),
+      list(
+        fun      = model$fun,
+        initial  = model$params,
+        dat      = model$dat,
+        priors   = priors,
+        verb_ans = FALSE
+        ),
       control
       )
     )
@@ -428,8 +385,9 @@ aphylo_mcmc <- function(
     fun        = model$fun,
     priors     = priors,
     dat        = model$dat,
-    par0       = par0,
+    par0       = model$params,
     method     = "mcmc",
-    varcovar   = var(do.call(rbind, ans))
+    varcovar   = var(do.call(rbind, ans)),
+    call       = cl
   )
 }

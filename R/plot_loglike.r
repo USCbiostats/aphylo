@@ -236,3 +236,114 @@ plot_LogLike.default <- function(
   )
 }
 
+
+#' Multiavariate plot (surface)
+#' @param fun A function that receives 2 or more parameters and returns a single
+#' number.
+#' @param params Numeric vector with the default parameters.
+#' @param domain (optional) Named list with as many elements as parameters. Specifies the
+#' domain of the function.
+#' @param nlevels Integer. Number of levels.
+#' @param args List of named arguments to be passed to `fun`.
+#' @param plotfun Function that will be used to plot `x,y,z`.
+#' @param plot Logical. When `FALSE` skips plotting.
+#' @param postplot Function to be called after `plotfun`. Should recieve a vector
+#' with the current parameters.
+#' @param ... Further arguments passed to `plotfun`.
+#' @export
+#' 
+#' @examples 
+#' # Example: A model with less parameters
+#' x <- sim_annotated_tree(20)
+#' ans <- aphylo_mcmc(x ~ psi, control=list(nbatch=1e4))
+#' 
+#' # Creating the multivariate plot (using by default image)
+#' plot_multivariate(
+#'   function(...) {
+#'     ans$fun(unlist(list(...)), priors = ans$priors, dat = ans$dat, verb_ans = FALSE)
+#'   },
+#'   params = ans$par
+#' )
+plot_multivariate <- function(
+  fun,
+  params,
+  domain,
+  nlevels = 20,
+  args    = list(),
+  plotfun = image,
+  plot    = TRUE,
+  postplot = function(params) {
+    points(params, cex = 2, pch=3, col="red")
+  },
+  ...
+) {
+  
+  # How many params
+  k <- length(params)
+  
+  # Specifying names
+  if (!length(names(params)))
+    names(params) <- sprintf("par%02i", 1L:k)
+  pnames <- names(params)
+  
+  # Specifying limits
+  if (missing(domain)) 
+    domain <- structure(
+      lapply(pnames, function(i) c(1e-10, 1 - 1e-10)),
+      names = pnames
+      )
+  
+  # Listing how many combs
+  plots <- utils::combn(pnames, 2)
+  
+  ans <- vector("list", ncol(plots))
+  for (p in seq_len(ncol(plots))) {
+    
+    # Computing points
+    z <- matrix(ncol=nlevels, nrow=nlevels)
+    
+    x <- seq(domain[[plots[1,p]]][1], domain[[plots[1, p]]][2], length.out = nlevels)
+    y <- seq(domain[[plots[2,p]]][1], domain[[plots[2, p]]][2], length.out = nlevels)
+    
+    tmppar <- as.list(params)
+    for (i in 1:nlevels)
+      for (j in 1:nlevels) {
+        
+        # Replacing the values
+        tmppar[[plots[1, p]]] <- x[i]
+        tmppar[[plots[2, p]]] <- y[j]
+        
+        # Computing the z value
+        z[i, j] <- do.call(fun, c(tmppar, args))
+        
+      }
+       
+    ans[[p]] <- list(
+      x = x,
+      y = y,
+      z = z,
+      xlab = plots[1, p],
+      ylab = plots[2, p]
+      )
+    
+  }
+  
+  if (plot) {
+    op <- graphics::par(mfrow = grDevices::n2mfrow(ncol(plots)))
+    on.exit(graphics::par(op))
+    for (p in seq_along(ans)) {
+      
+      do.call(plotfun, c(ans[[p]], list(...)))
+      postplot(params[plots[,p,drop=TRUE]])
+      
+      
+    }
+  }
+  
+    
+  invisible(ans)
+  
+}
+
+
+

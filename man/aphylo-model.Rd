@@ -11,7 +11,7 @@
 \alias{aphylo_formula}
 \title{Formulas in \code{aphylo}}
 \usage{
-aphylo_call()
+aphylo_call(params)
 
 eta(..., env)
 
@@ -21,7 +21,7 @@ Pi(..., env)
 
 mu(..., env)
 
-aphylo_formula(fm, init)
+aphylo_formula(fm, params)
 }
 \arguments{
 \item{...}{Either 0, 1 or both. Depending on the parameter, the index of the

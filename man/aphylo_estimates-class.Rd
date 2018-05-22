@@ -13,8 +13,8 @@
 \alias{print.aphylo_prediction_score}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
-aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
-  params = c(rep(0.01, 4), 0.99, 0.99, 0.01), lower = 0, upper = 1,
+aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
+  control = list(), lower = 0, upper = 1,
   check.informative = getOption("aphylo.informative", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
@@ -25,9 +25,7 @@ aphylo_mle(dat, method = "L-BFGS-B", priors = NULL, control = list(),
 
 \method{plot}{aphylo_estimates}(x, ...)
 
-aphylo_mcmc(dat, params = c(0.02, 0.02, 0.02, 0.02, 0.9, 0.9, 0.02),
-  priors = function(p) c(stats::dbeta(p[-c(5:6)], 2, 38), stats::dbeta(p[5:6],
-  38, 2)), control = list(),
+aphylo_mcmc(model, params, priors = function(p) 1, control = list(),
   check.informative = getOption("aphylo.informative", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
@@ -38,8 +36,10 @@ prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation ==
 \method{print}{aphylo_prediction_score}(x, ...)
 }
 \arguments{
-\item{dat}{An object of class \code{new_aphylo} as returned by
-\code{\link[=new_aphylo]{new_aphylo()}}.}
+\item{model}{A model as specified in \link{aphylo-model}.}
+
+\item{params}{A vector of length 7 with initial parameters. In particular
+\code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, \code{eta[1]}, \code{eta[2]} and \code{Pi}.}
 
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
 optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{stats::optim()}}.}
@@ -49,9 +49,6 @@ optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{s
 
 \item{control}{A list with parameters for the optimization method (see
 details).}
-
-\item{params}{A vector of length 7 with initial parameters. In particular
-\code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, \code{eta[1]}, \code{eta[2]} and \code{Pi}.}
 
 \item{lower}{Numeric vector of length 5. Lower bounds, default to 0.0001.}
 
@@ -99,7 +96,7 @@ with values between \eqn{[0,1]} (probabilities).
 The optimization is done via \code{optim}.
 }
 \details{
-\code{phylo_mcmc} is a wrapper of \code{\link[=MCMC]{MCMC()}}, so, instead of treating the
+\code{phylo_mcmc} is a wrapper of \link[amcmc:MCMC]{amcmc::MCMC}, so, instead of treating the
 problem as a maximization problem, \code{phylo_mcmc} generates a \strong{Markov Chain}.
 The default values of \code{control} are:
 
@@ -155,7 +152,7 @@ dat <- sim_annotated_tree(
 set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
-  rep(.1, 7),  dat = dat,
+  dat ~ mu + psi + eta + Pi,
   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 )
 }
