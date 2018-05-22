@@ -107,7 +107,7 @@ try_solve <- function(x, ...) {
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   rep(.1, 7),  dat = dat,
+#'   dat ~ mu + psi + eta + Pi,
 #'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
@@ -263,7 +263,7 @@ aphylo_mle <- function(
     environment(priors) <- env
   
   # Naming the parameter estimates
-  names(ans$par) <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
+  names(ans$par) <- APHYLO_PARAM_NAMES
   
   # Hessian for observed information matrix
   dimnames(hessian) <- list(names(ans$par), names(ans$par))
@@ -294,10 +294,11 @@ print.aphylo_estimates <- function(x, ...) {
   sderrors   <- sqrt(diag(x$varcovar))
   
   ans <- sprintf("Leafs\n # of Functions %i", ncol(x$dat$tip.annotation))
+  ans <- c(ans, sprintf(" %-6s  %6s  %6s", "", "Estimate", "Std. Err."))
   for (p in names(x$par)) {
     ans <- c(
       ans,
-      with(x, sprintf(" %-6s  %6.4f  %6.4f", p, par[p], sderrors[p]))
+      with(x, sprintf(" %-6s  %6.4f    %6.4f", p, par[p], sderrors[p]))
       )
   }
 
@@ -312,7 +313,7 @@ print.aphylo_estimates <- function(x, ...) {
       else
         sprintf("convergence: %i (see ?optim)", convergence)
       ,
-      ans, "\n"
+      ans, ""
       )
     
   })
@@ -347,7 +348,7 @@ plot.aphylo_estimates <- function(
 #' @export
 logLik.aphylo_estimates <- function(object, ...) {
   
-  ans <- with(object, fun(par, dat = dat, verb_ans = TRUE))
+  ans <- with(object, fun(par, priors = priors, dat = dat, verb_ans = TRUE))
   
   structure(
     .Data = ans$ll,
@@ -372,8 +373,7 @@ aphylo_mcmc <- function(
   
   # Parsing the formula
   model <- aphylo_formula(model, params)
-  dat   <- model$dat
-  
+
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
   if (!length(control$scale))  control$scale  <- .01
@@ -381,10 +381,6 @@ aphylo_mcmc <- function(
   if (!length(control$lb))     control$lb     <- rep(0, sum(model$included))
   if (!length(control$useCpp)) control$useCpp <- TRUE
   
-  # # Checking params
-  # if (!inherits(dat, "aphylo"))
-  #   stop("-dat- should be of class aphylo")
-  # 
   if (length(params[model$included]) != sum(model$included))
     stop("-params- must be of length 5.")
 
@@ -393,7 +389,7 @@ aphylo_mcmc <- function(
   
   # If the models is uninformative, then it will return with error
   if (check.informative)
-    stop_ifuninformative(dat$tip.annotation)
+    stop_ifuninformative(model$dat$tip.annotation)
   
   # In case of fixing parameters
   params <- params[model$included]
@@ -403,13 +399,13 @@ aphylo_mcmc <- function(
   fun <- model$fun
   
   # Naming the parameter estimates
-  names(params) <- aphylo_params_names[model$included]
+  names(params) <- APHYLO_PARAM_NAMES[model$included]
   
   # Running the MCMC
   ans <- do.call(
     amcmc::MCMC, 
     c(
-      list(fun = fun, initial = params, dat=dat, priors = priors, verb_ans=FALSE),
+      list(fun = fun, initial = params, dat=model$dat, priors = priors, verb_ans=FALSE),
       control
       )
     )
@@ -419,24 +415,19 @@ aphylo_mcmc <- function(
     ans <- coda::mcmc.list(ans)
   
   # Working on answer
-  env <- new.env()
-  environment(fun)    <- env
-  environment(dat)    <- env
-  environment(par0)   <- env
-  if (length(priors)) 
-    environment(priors) <- env
+  par <- colMeans(do.call(rbind, ans))
   
   # Returning
   new_aphylo_estimates(
-    par        = colMeans(do.call(rbind, ans)),
+    par        = par,
     hist       = ans,
-    ll         = mean(apply(do.call(rbind, ans), 1, fun, dat=dat), na.rm=TRUE),
+    ll         = do.call(model$fun, list(dat = model$dat, priors=priors, p=par, verb_ans=FALSE)),
     counts     = control$nbatch,
     convergence = NA,
     message    = NA,
-    fun        = fun,
+    fun        = model$fun,
     priors     = priors,
-    dat        = dat,
+    dat        = model$dat,
     par0       = par0,
     method     = "mcmc",
     varcovar   = var(do.call(rbind, ans))

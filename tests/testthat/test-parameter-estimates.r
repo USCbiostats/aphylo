@@ -33,7 +33,7 @@ test_that("Methods", {
 # ------------------------------------------------------------------------------
 test_that("MCMC", {
   ans1 <- suppressWarnings(
-    aphylo_mcmc(params = ans0$par, dat, control = list(nbatch = 1e4, burnin=500, thin=20))
+    aphylo_mcmc(dat ~ mu + psi + eta + Pi, params = ans0$par, control = list(nbatch = 1e4, burnin=500, thin=20))
   )
   
   # Checking expectations
@@ -56,8 +56,9 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(
-    aphylo_mcmc(c(rep(2/12, 4), .5,.5,2/12), dat = dat, priors = function(x) dbeta(x, 2, 10),
-                control = list(nbatch = 2e4, fixed = c(F, F, F, F, T, T, F)), check.informative = FALSE)
+    aphylo_mcmc(dat ~ mu + psi + eta(0,1) + Pi, params = c(rep(2/12, 4), eta0=.5, eta1=.5,2/12),
+                priors = function(x) dbeta(x, 2, 10),
+                control = list(nbatch = 2e4), check.informative = FALSE)
     )
   
   ans2 <- suppressWarnings(

@@ -101,7 +101,7 @@ ans0 <- aphylo_mle(dat)
 
 # MCMC method
 ans2 <- aphylo_mcmc(
-  dat,
+  dat ~ mu + psi + eta,
   prior = function(p) dbeta(p, 2,20),
   control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
