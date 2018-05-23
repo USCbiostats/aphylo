@@ -1,19 +1,6 @@
 #' Plot LogLikelihood function of experimental data
 #' @param x An object of class [aphylo()]
-#' @param psi_range Numeric vector of length 2. Domain of \eqn{psi}.
-#' @param mu_range Numeric vector of length 2. Domain of \eqn{mu}.
-#' @param Pi_range Numeric vector of length 2. Domain of \eqn{pi}.
-#' @param nlevels Integer scalar. Number of levels of each parameter to create.
-#' @param plotfun Function. Either [graphics::contour()],
-#' @param theta Passed to `persp`.
-#' @param shade Passed to `persp`.
-#' @param border Passed to `persp`.
-#' @param phi Passed to `persp`.
-#' @param scale Passed to `persp`.
-#' [graphics::persp()], or other similar function that takes at
-#' least 3 parameters, `x,y,z`.
-#' @param par.args List of arguments to be passed to [par()] before
-#' `plotfun` is called.
+#' @inheritParams plot_multivariate
 #' @param ... Aditional parameters to be passed to `plotfun`.
 #' @examples 
 #' # Loading data
@@ -32,208 +19,92 @@
 #'   "LogLikelihood",
 #'   side=3, outer=FALSE, line = 2, cex=1.25)
 #' @export
-plot_LogLike <- function(x, ...) UseMethod("plot_LogLike")
 
 #' @export
-#' @rdname plot_LogLike
-plot_LogLike.aphylo_estimates <- function(x, ...) {
-  # provided <- names(list(...))
-  plot_LogLike.default(x$dat, psi = x$par[1:2], mu = x$par[3:4], eta = x$par[5:6], Pi = x$par[5], ...)
-}
+#' @rdname plot_logLik
+plot_logLik <- function(x, sets, ...) UseMethod("plot_logLik")
 
-#' @rdname plot_LogLike
-#' @template parameters
-#' @templateVar psi TRUE
-#' @templateVar mu TRUE
-#' @templateVar Pi TRUE
-#' @templateVar eta TRUE
+# plot_logLike.default()
+
 #' @export
-plot_LogLike.default <- function(
-  x,
-  psi_range = c(0.00001, .3),
-  mu_range  = c(0.00001, .3),
-  Pi_range  = c(0.00001, .3),
-  psi       = rep(mean(psi_range), 2),
-  mu        = rep(mean(mu_range), 2),
-  eta       = c(1, 1),
-  Pi        = mean(Pi_range),
-  nlevels   = 30,
-  plotfun   = persp,
-  par.args  = list(mar=c(1, 1, 1, 1), oma=c(0,0,4,0)),
-  theta     = -pi*20, 
-  shade     = .7,
-  border    = "steelblue",
-  phi       = 30,
-  scale     = TRUE,
-  ...
-  ) {
+#' @rdname plot_logLik
+plot_logLik.aphylo_estimates <- function(x, sets,...) {
   
-  # Adjusting values
-  psi_range <- range(c(psi_range, psi))
-  mu_range  <- range(c(mu_range, mu))
-  Pi_range  <- range(c(Pi_range, Pi))
+  # Collecting dots
+  dots <- list(...)
   
-  psi_range[1] <- max(.0001, psi_range[1] - .01)
-  mu_range[1] <- max(.0001, mu_range[1] - .01)
-  Pi_range[1] <- max(.0001, Pi_range[1] - .01)
+  # if (!length(dots))
   
-  psi_range[2] <- min(1 - .0001, psi_range[2] + .01)
-  mu_range[2] <- min(1 - .0001, mu_range[2] + .01)
-  Pi_range[2] <- min(1 - .0001, Pi_range[2] + .01)
-  
-  
-  # Creating space
-  PSI <- seq(psi_range[1], psi_range[2], length.out = nlevels)
-  MU  <- seq(mu_range[1], mu_range[2], length.out = nlevels)
-  PI  <- seq(Pi_range[1], Pi_range[2], length.out = nlevels)
-  
-  # Computing the actual loglike value at the selected point
-  ll <- LogLike(
-    x,
-    psi = psi, 
-    mu  = mu,
-    eta = eta,
-    Pi  = Pi,
-    verb_ans = FALSE,
-    check_dims = FALSE
-  )$ll
-  
-  # Check PSI
-  psi_z <- matrix(nrow = nlevels, ncol = nlevels)
-  for (i in 1:nlevels)
-    for (j in 1:nlevels)
-      psi_z[i, j] <- LogLike(
-        x,
-        psi = c(PSI[i], PSI[j]),
-        mu  = mu,
-        eta = eta,
-        Pi  = Pi,
-        verb_ans = FALSE, 
-        check_dims  = FALSE
-      )$ll
-  
+  # Generating combinations
+  if (missing(sets)) {
+    
+    sets <- NULL
+    for (p in c("psi", "mu", "eta"))
+      if (any(grepl(p, names(x$par))))
+        sets <- cbind(sets, paste0(p, 0:1))
 
-  pi_z <- matrix(nrow = nlevels, ncol = nlevels)
-  for (i in 1:nlevels)
-    for (j in 1:nlevels) {
-      pi_z[i, j] <- LogLike(
-        x,
-        psi = psi,
-        mu  = c(MU[j], mu[2]),
-        eta = eta,
-        Pi  = PI[i],
-        verb_ans = FALSE, 
-        check_dims  = FALSE
-      )$ll
-    }
+  }
   
-  mu_z <- matrix(nrow = nlevels, ncol = nlevels)
-  for (i in 1:nlevels)
-    for (j in 1:nlevels)
-      mu_z[i, j] <- LogLike(
-        x,
-        psi = psi,
-        mu  = c(MU[i], MU[j]),
-        eta = eta,
-        Pi  = Pi,
-        verb_ans = FALSE, 
-        check_dims  = TRUE
-      )$ll
+  # Finding arrangement
+  mfrow <- if(ncol(sets) == 1)
+    c(1,1)
+  else if (ncol(sets) == 2)
+    c(1, 2)
+  else if (ncol(sets) >= 3)
+    c(2, 2)
   
   # Plotting
-  oldpar <- par(no.readonly = TRUE)
-  if (!("mar" %in% names(par.args)))
-    par.args$mar <- oldpar$mar * c(1, 1, 0.25, 0.25)
-  
-  # Calling plot parameters
-  do.call(par, c(par.args, list(mfrow = c(2, 2))))
-  
-  # Actual plotting
-  smu <- sprintf("%0.4f", mu)
-  spsi <- sprintf("%0.4f", psi)
-  sPi <- sprintf("%0.4f", Pi)
-  
-  # Replacing the infs
-  psi_z[is.infinite(psi_z)] <- min(psi_z[!is.infinite(psi_z)])
-  mu_z[is.infinite(mu_z)]   <- min(mu_z[!is.infinite(mu_z)])
-  pi_z[is.infinite(pi_z)]   <- min(pi_z[!is.infinite(pi_z)])
-  
-  pmat <- plotfun(
-    PSI,
-    PSI,
-    psi_z,
-    xlab = expression(psi[0]),
-    ylab = expression(psi[1]),
-    main = bquote(mu[0] == .(smu[1])~ mu[1] == .(smu[2]) ~ and ~ pi == .(sPi)),
-    theta = theta, shade = shade, border = border, phi = phi, scale = scale,
+  op <- graphics::par(mar = c(1, 1, .2, .2))
+  on.exit(par(op))
+  plot_multivariate(
+    function(...) {
+      x$fun(unlist(list(...)), priors = x$priors, dat = x$dat, verb_ans = FALSE)
+    },
+    params  = x$par,
+    sets    = sets,
+    plotfun = function(...) {
+      
+      # Capturing arguments
+      dots <- list(...)
+      nrz <- nrow(dots$z)
+      ncz <- ncol(dots$z)
+      
+      # Creating colors
+      nbcol       <- 100
+      color       <- viridis::viridis(nbcol)
+      zfacet      <- dots$z[-1, -1] + dots$z[-1, -ncz] + dots$z[-nrz, -1] + dots$z[-nrz, -ncz]
+      facetcol    <- cut(zfacet, nbcol)
+      dots$col    <- color[facetcol]
+      dots$border <- grDevices::adjustcolor(dots$col, red.f = .5, green.f = .5, blue.f = .5)
+      
+      # Creating colors
+      do.call(persp, dots)
+    },
+    theta   = -pi*20, 
+    shade   = .7,
+    zlab    = paste0("log L(", paste0(unique(sets), collapse = ","), ")"),
+    mfrow   = mfrow,
+    phi     = 30,
+    postplot = function(par, res) {
+      points(trans3d(par[1], par[2], ans$ll, res), col = "black", pch = 25, bg = "red", cex = 1.5)
+    },
     ...
   )
   
-  # Drawing the point
-  if (identical(plotfun, persp))
-    points(trans3d(psi[1], psi[2], ll, pmat), col = "black", pch = 25, bg = "red", cex = 1.5)
-  else 
-    points(psi[1], psi[2], col = "black", pch = 25, bg = "red", cex = 1.5)
+  # For later on
+  # pmat <- plotfun(
+  #   MU,
+  #   MU,
+  #   mu_z,
+  #   xlab = expression(mu[0]),
+  #   ylab = expression(mu[1]),
+  #   main = bquote(psi[0] == .(spsi[1]) ~ psi[1] == .(spsi[2]) ~ and ~ pi == .(sPi)),
+  #   theta = theta, shade = shade, border = border, phi = phi, scale = scale,
+  #   ...
+  # )
   
   
-  pmat <- plotfun(
-    MU,
-    MU,
-    mu_z,
-    xlab = expression(mu[0]),
-    ylab = expression(mu[1]),
-    main = bquote(psi[0] == .(spsi[1]) ~ psi[1] == .(spsi[2]) ~ and ~ pi == .(sPi)),
-    theta = theta, shade = shade, border = border, phi = phi, scale = scale,
-    ...
-  )
   
-  # Drawing the point
-  if (identical(plotfun, persp))
-    points(trans3d(mu[1], mu[2], ll, pmat), col = "black", pch = 25, bg = "red", cex = 1.5)
-  else
-    points(mu[1], mu[2], col = "black", pch = 25, bg = "red", cex = 1.5)
-  
-  pmat <- plotfun(
-    PI,
-    MU,
-    pi_z,
-    xlab = expression(pi),
-    ylab = expression(mu[0]),
-    main = bquote(psi[0] == .(spsi[1])~ psi[1]==.(spsi[2]) ~ and ~ mu[1] == .(smu[2])),
-    theta = theta, shade = shade, border = border, phi = phi, scale = scale,
-    ...
-  )
-  
-  # Drawing the point
-  if (identical(plotfun, persp))
-    points(trans3d(Pi, mu[1], ll, pmat), col = "black", pch = 25, bg = "red", cex = 1.5)
-  else
-    points(Pi, mu[1], col = "black", pch = 25, bg = "red", cex = 1.5)
-  
-  # Adding legend
-  plot.new()
-  plot.window(c(0, 1), c(0, 1))
-  legend(
-    "center",
-    legend = expression(
-      pi ~ Root ~ node ~ probabilities,
-      psi ~ Misclassification ~ probabilities,
-      mu ~ Loss / Gain ~ probabilities
-    ),
-    bty = "n"
-  )
-  
-  # Restoring parameters
-  par(oldpar)
-  
-  invisible(
-    list(
-      psi = list(PSI, psi_z),
-      mu  = list(MU, mu_z),
-      Pi  = list(PI, pi_z),
-      eta = eta
-    )
-  )
 }
 
 
@@ -250,6 +121,9 @@ plot_LogLike.default <- function(
 #' @param postplot Function to be called after `plotfun`. Should recieve a vector
 #' with the current parameters.
 #' @param ... Further arguments passed to `plotfun`.
+#' @param sets (optional) Character matrix of size `2 x # of combinations`.
+#' contains the names of the pairs to plot. If nothing passed, the function will
+#' generate all possible combinations as `combn(names(params), 2)`.
 #' @export
 #' 
 #' @examples 
@@ -262,12 +136,14 @@ plot_LogLike.default <- function(
 #'   function(...) {
 #'     ans$fun(unlist(list(...)), priors = ans$priors, dat = ans$dat, verb_ans = FALSE)
 #'   },
+#'   sets = matrix(c("mu0", "mu1", "psi0", "psi1"), ncol=2),
 #'   params = ans$par
 #' )
 plot_multivariate <- function(
   fun,
   params,
   domain,
+  sets,
   nlevels = 20,
   args    = list(),
   plotfun = image,
@@ -275,6 +151,7 @@ plot_multivariate <- function(
   postplot = function(params) {
     points(params, cex = 2, pch=3, col="red")
   },
+  mfrow   = NULL,
   ...
 ) {
   
@@ -294,47 +171,54 @@ plot_multivariate <- function(
       )
   
   # Listing how many combs
-  plots <- utils::combn(pnames, 2)
+  if (missing(sets))
+    sets <- utils::combn(pnames, 2)
   
-  ans <- vector("list", ncol(plots))
-  for (p in seq_len(ncol(plots))) {
+  ans <- vector("list", ncol(sets))
+  for (p in seq_len(ncol(sets))) {
     
     # Computing points
     z <- matrix(ncol=nlevels, nrow=nlevels)
     
-    x <- seq(domain[[plots[1,p]]][1], domain[[plots[1, p]]][2], length.out = nlevels)
-    y <- seq(domain[[plots[2,p]]][1], domain[[plots[2, p]]][2], length.out = nlevels)
+    x <- seq(domain[[sets[1,p]]][1], domain[[sets[1, p]]][2], length.out = nlevels)
+    y <- seq(domain[[sets[2,p]]][1], domain[[sets[2, p]]][2], length.out = nlevels)
     
     tmppar <- as.list(params)
     for (i in 1:nlevels)
       for (j in 1:nlevels) {
         
         # Replacing the values
-        tmppar[[plots[1, p]]] <- x[i]
-        tmppar[[plots[2, p]]] <- y[j]
+        tmppar[[sets[1, p]]] <- x[i]
+        tmppar[[sets[2, p]]] <- y[j]
         
         # Computing the z value
         z[i, j] <- do.call(fun, c(tmppar, args))
         
       }
-       
+    
+    # Storing the results
     ans[[p]] <- list(
       x = x,
       y = y,
       z = z,
-      xlab = plots[1, p],
-      ylab = plots[2, p]
+      xlab = sets[1, p],
+      ylab = sets[2, p]
       )
     
   }
   
+  # Should we plot?
   if (plot) {
-    op <- graphics::par(mfrow = grDevices::n2mfrow(ncol(plots)))
+    
+    if (!length(mfrow))
+      mfrow <- grDevices::n2mfrow(ncol(sets))
+    
+    op <- graphics::par(mfrow = mfrow)
     on.exit(graphics::par(op))
     for (p in seq_along(ans)) {
       
-      do.call(plotfun, c(ans[[p]], list(...)))
-      postplot(params[plots[,p,drop=TRUE]])
+      res <- do.call(plotfun, c(ans[[p]], list(...)))
+      postplot(params[sets[,p,drop=TRUE]], res)
       
       
     }
