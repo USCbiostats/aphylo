@@ -12,14 +12,6 @@ new_aphylo(tip.annotation, tree, node.annotation = NULL)
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
 
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
-
-\item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
-
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
-
-\item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
-
-\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
@@ -35,10 +27,6 @@ The \code{aphylo} class tree holds both the tree structure represented as a
 partially ordered phylogenetic tree, and node annotations. While annotations
 are included for both leafs and inner nodes, the algorithms included in this
 package only uses the leaf annotations.
-}
-\details{
-Plotting is done via \code{\link[ggtree:ggtree]{ggtree::ggtree()}}
-from the \pkg{ggtree} package (Bioconductor).
 }
 \examples{
 # A simple example ----------------------------------------------------------

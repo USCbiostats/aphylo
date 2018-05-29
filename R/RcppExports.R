@@ -63,12 +63,12 @@ root_node_prob <- function(Pi, S) {
 #' so it is not intended to be used directly.
 #' 
 #' @template parameters
-#' @templateVar annotations 1
-#' @templateVar mu 1
-#' @templateVar psi 1
-#' @templateVar eta 1
-#' @templateVar S 1
-#' @templateVar offspring 1
+#' @templateVar .annotations 1
+#' @templateVar .mu 1
+#' @templateVar .psi 1
+#' @templateVar .eta 1
+#' @templateVar .S 1
+#' @templateVar .offspring 1
 #' @param Pr A matrix.
 #' 
 #' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state

@@ -5,10 +5,10 @@ test_that("plotll", {
   dat <- sim_annotated_tree(20)
   
   # aphylo method
-  expect_silent(plot_LogLike(dat))
+  expect_silent(plot_logLik(dat))
 
   # phylo_mle method
-  ans <- aphylo_mle(dat)
-  expect_silent(plot_LogLike(ans))
+  ans <- aphylo_mle(dat ~ mu + psi)
+  expect_silent(plot_logLik(ans))
   
 })

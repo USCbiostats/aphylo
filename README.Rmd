@@ -58,7 +58,7 @@ as.phylo(O)
 
 # We can visualize it
 plot(O)
-plot_LogLike(O)
+plot_logLik(O)
 ```
 
 ## Simulating annoated trees

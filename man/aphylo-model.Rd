@@ -21,13 +21,18 @@ Pi(..., env)
 
 mu(..., env)
 
-aphylo_formula(fm, params)
+aphylo_formula(fm, params, env = parent.frame())
 }
 \arguments{
+\item{params}{Numeric vector with model parameters.}
+
 \item{...}{Either 0, 1 or both. Depending on the parameter, the index of the
 model parameter that will be set as fixed.}
 
 \item{env}{Environment (not to be called by the user).}
+
+\item{fm}{A formula. Model of the type \code{&lt;aphylo-object&gt; ~ &lt;parameters&gt;} (see
+examples).}
 }
 \value{
 A list with the following elements:

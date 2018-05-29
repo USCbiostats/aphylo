@@ -2,7 +2,10 @@
 #' 
 #' @param ... Either 0, 1 or both. Depending on the parameter, the index of the
 #' model parameter that will be set as fixed.
+#' @param fm A formula. Model of the type `<aphylo-object> ~ <parameters>` (see 
+#' examples).
 #' @param env Environment (not to be called by the user).
+#' @param params Numeric vector with model parameters.
 #' @return A list with the following elements:
 #' * `fun` A function. The log-likelihood function.
 #' * `fixed` Logical vector. 
@@ -194,7 +197,7 @@ validate_aphylo_formula <- function(fm) {
   
   # Is mu present?
   if (!("mu" %in% term_names))
-    fm <- update.formula(fm, ~. + mu)
+    fm <- stats::update.formula(fm, ~. + mu)
   
   fm
   
@@ -274,7 +277,7 @@ validate_parameters <- function(fm, params) {
 
 #' @rdname aphylo-model
 #' @export
-aphylo_formula <- function(fm, params) {
+aphylo_formula <- function(fm, params, env = parent.frame()) {
   
   # Validating formula
   fm  <- validate_aphylo_formula(fm)
@@ -287,10 +290,10 @@ aphylo_formula <- function(fm, params) {
   model_call <- aphylo_call(params)
   
   # Is the LHS an aphylo object?
-  if (!exists(as.character(val[[2]]), envir = parent.frame(2)))
+  if (!exists(as.character(val[[2]]), envir = env))
     stop("The object -", as.character(val[[2]]), "- can't be found.")
     
-  if (!inherits(eval(val[[2]], envir = parent.frame(2)), "aphylo"))
+  if (!inherits(eval(val[[2]], envir = env), "aphylo"))
     stop("The LHS of the equation should be an `aphylo` object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
@@ -308,7 +311,7 @@ aphylo_formula <- function(fm, params) {
   c(
     list(
       model  = fm,
-      dat    = eval(val[[2]], parent.frame(2))
+      dat    = eval(val[[2]], env)
       ),
     as.list(model_call)
   )

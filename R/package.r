@@ -1,9 +1,10 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
-#' @importFrom stats var coef vcov optim optimHess complete.cases dbeta
+#' @importFrom stats var coef vcov optim optimHess complete.cases dbeta runif
+#'  as.formula update.formula
 #' @importFrom utils head tail getFromNamespace
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
-#'  points segments polygon rect yinch
+#'  points segments polygon rect yinch image
 #' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC

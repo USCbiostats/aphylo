@@ -26,7 +26,8 @@ Imports:
     polygons,
     amcmc,
     utils,
-    RColorBrewer
+    RColorBrewer,
+    viridis
 Suggests:
     covr,
     testthat,
@@ -41,3 +42,17 @@ Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
 Remotes: USCbiostats/polygons, USCbiostats/amcmc
+Collate: 
+    'RcppExports.R'
+    'ape.r'
+    'data-management.r'
+    'plot_logLik.r'
+    'estimation.r'
+    'formulas.r'
+    'loglike.r'
+    'package.r'
+    'panther.r'
+    'predict-bis.r'
+    'predict.r'
+    'prune.r'
+    'simulation.r'

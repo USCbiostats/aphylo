@@ -8,7 +8,8 @@ try_solve <- function(x, ...) {
   
   # If it is an error
   if (inherits(ans, "error")) {
-    warning("The algorithm did not converge. Cannot find the inverse of the hessian.")
+    warning("The algorithm did not converge. Cannot find the inverse of the hessian.",
+            call. = FALSE)
     return(matrix(ncol = length(x), nrow=length(x)))
   }
     
@@ -29,11 +30,11 @@ try_solve <- function(x, ...) {
 #' `Pi`
 #' @param control A list with parameters for the optimization method (see
 #' details).
-#' @param lower Numeric vector of length 5. Lower bounds, default to 0.0001.
-#' @param upper Numeric vector of length 5. Upper bounds, default to 0.9999
-#' @param object An object of class `aphylo_estimates`.
+#' @param lower,upper Numeric vectors defining the lower and upper bounds respectively.
+#' @param object,x An object of class `aphylo_estimates`.
 #' @param check.informative Logical scalar. When `TRUE` the algorithm
 #' stops with an error when the annotations are uninformative (either 0s or 1s).
+#' @param ... Further arguments passed to the method
 #' 
 #' @details 
 #' 
@@ -67,11 +68,12 @@ try_solve <- function(x, ...) {
 #' @examples 
 #' 
 #' # Using simulated data ------------------------------------------------------
-#' set.seed(89)
-#' dat <- sim_annotated_tree(100, P=2)
+#' set.seed(19)
+#' dat <- sim_annotated_tree(100)
+#' dat <- rdrop_annotations(dat, .4)
 #' 
 #' # Computing Estimating the parameters 
-#' ans  <- aphylo_mle(dat)
+#' ans  <- aphylo_mle(dat ~ psi + mu + eta + Pi)
 #' ans
 #' 
 #' # Plotting the path
@@ -82,7 +84,7 @@ try_solve <- function(x, ...) {
 #'     dbeta(params, c(2, 2, 2, 2, 1, 10, 2), rep(10, 7))
 #' }
 #' 
-#' ans_dbeta <- aphylo_mle(dat, priors = mypriors)
+#' ans_dbeta <- aphylo_mle(dat ~ psi + mu + eta + Pi, priors = mypriors)
 #' ans_dbeta
 #' 
 #' 
@@ -175,7 +177,8 @@ aphylo_mle <- function(
   cl <- match.call()
   
   # Parsing the formula
-  model <- aphylo_formula(model, params)
+  env   <- parent.frame()
+  model <- aphylo_formula(model, params, env = env)
   
   # Reducing the peeling sequence
   if (getOption("aphylo_reduce_pseq", FALSE))
@@ -297,17 +300,10 @@ vcov.aphylo_estimates <- function(object, ...) {
   object$varcovar
 }
 
-#' @param x An object of class `aphylo_estimates`.
-#' @param ... Further arguments passed to the method.
-#' @rdname aphylo_estimates-class
+#' @rdname plot_logLik
 #' @export
-plot.aphylo_estimates <- function(
-  x,
-  ...
-  ) {
-  
-  plot_LogLike.aphylo_estimates(x, ...)
-}
+#' @include plot_logLik.r
+plot.aphylo_estimates <- plot_logLik.aphylo_estimates
 
 #' @export
 logLik.aphylo_estimates <- function(object, ...) {
@@ -339,7 +335,8 @@ aphylo_mcmc <- function(
   cl <- match.call()
   
   # Parsing the formula
-  model <- aphylo_formula(model, params)
+  env   <- parent.frame()
+  model <- aphylo_formula(model, params, env = env)
 
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3
@@ -347,6 +344,7 @@ aphylo_mcmc <- function(
   if (!length(control$ub))     control$ub     <- rep(1, length(model$params))
   if (!length(control$lb))     control$lb     <- rep(0, length(model$params))
   if (!length(control$useCpp)) control$useCpp <- TRUE
+  if (!length(control$fixed))  control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error
   if (check.informative)

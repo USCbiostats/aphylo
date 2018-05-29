@@ -88,11 +88,8 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' package only uses the leaf annotations.
 #' 
 #' @template parameters
-#' @templateVar tree 1
-#' @templateVar tip.annotation 1
-#' 
-#' @details Plotting is done via [ggtree::ggtree()] 
-#' from the \pkg{ggtree} package (Bioconductor).
+#' @templateVar .tree 1
+#' @templateVar .tip.annotation 1
 #' 
 #' @return A list of class `aphylo` with the following elements:
 #' \item{tree}{An object of class [phylo][ape::read.tree].}
@@ -283,7 +280,7 @@ as_aphylo <- function(
 #' @details The `plot.aphylo` function is a wrapper of [ape::plot.phylo].
 #' 
 #' @export
-#' @return In the case of `plot.aphylo`, an object of class `c("ggtree", "gg", "ggplot")`
+#' @return In the case of `plot.aphylo`, `NULL`.
 #' @family aphylo methods
 #' @export
 plot.aphylo <- function(x, y = NULL, prop = .15, ...) {

@@ -20,9 +20,9 @@ eta <- c(1, 1)
 #' Posterior probabilities based on parameter estimates
 #' @param atree A tree of class [aphylo]
 #' @template parameters
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar Pi
+#' @templateVar .psi 1
+#' @templateVar .mu 1
+#' @templateVar .Pi
 #' @export
 predict_brute_force <- function(atree, psi, mu, Pi) {
   

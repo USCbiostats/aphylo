@@ -7,10 +7,10 @@
 #' 
 #' @template parameters
 #' @param tree A phylogenetic tree of class [aphylo].
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar eta 1
-#' @templateVar Pi 1
+#' @templateVar .psi 1
+#' @templateVar .mu 1
+#' @templateVar .eta 1
+#' @templateVar .Pi 1
 #' @param verb_ans Logical scalar. When \code{FALSE} (default) the function
 #' returns a list with a single scalar (the log-likelihood).
 #' @param check_dims Logical scalar. When \code{TRUE} (default) the function

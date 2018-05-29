@@ -26,7 +26,7 @@ annotations use in \code{plot.aphylo}.}
 \item{object}{An object of class \code{aphylo}.}
 }
 \value{
-In the case of \code{plot.aphylo}, an object of class \code{c("ggtree", "gg", "ggplot")}
+In the case of \code{plot.aphylo}, \code{NULL}.
 
 In the case of \code{print.aphylo}, the same \code{aphylo} object
 invisible.

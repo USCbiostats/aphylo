@@ -48,7 +48,7 @@ test_that("Calling the prediction function works", {
   
   x <- sim_annotated_tree(10)
   x_obs <- rdrop_annotations(x, .5)
-  res   <- suppressWarnings(aphylo_mcmc(params = rep(.1, 7), x_obs))
+  res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu + eta + Pi, params = rep(.1, 7)))
   
   ans0 <- predict_pre_order(x_obs, res$par[c("psi0", "psi1")], res$par[c("mu0", "mu1")], res$par[c("eta0", "eta1")], res$par["Pi"])
   ans1 <- predict(res)

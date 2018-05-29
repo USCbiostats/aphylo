@@ -11,7 +11,10 @@ Pi  <- .2
 dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
 
 # Estimation via L-BFGS-B
-ans0 <- aphylo_mle(dat ~ mu + psi + eta + Pi, params = c(.05, .05, .05, .05, .9, .9, .5))
+
+ans0 <- suppressWarnings({
+  aphylo_mle(dat ~ mu + psi + eta + Pi, params = c(.05, .05, .05, .05, .9, .9, .5))
+})
 
 # Methods ----------------------------------------------------------------------
 test_that("Methods", {
@@ -21,7 +24,7 @@ test_that("Methods", {
   
   # Plotting
   expect_silent(plot(ans0))
-  expect_silent(plot_LogLike(ans0))
+  expect_silent(plot_logLik(ans0))
   
   # Extracting coef and others
   expect_equal(coef(ans0), ans0$par)
@@ -42,7 +45,7 @@ test_that("MCMC", {
   
   # Plotting
   expect_silent(plot(ans1))
-  expect_silent(plot_LogLike(ans1))
+  expect_silent(plot_logLik(ans1))
   
   # Extracting coef and others
   expect_equal(coef(ans1), ans1$par)

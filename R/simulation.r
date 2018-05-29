@@ -65,10 +65,10 @@ sim_tree <- function(n, edge.length = NULL) {
 #' 
 #' @param tree An object of class [phylo][ape::read.tree]
 #' @template parameters
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar eta 1
-#' @templateVar Pi 1
+#' @templateVar .psi 1
+#' @templateVar .mu 1
+#' @templateVar .eta 1
+#' @templateVar .Pi 1
 #' @param P Integer scalar. Number of functions to simulate.
 #' 
 #' @details
@@ -214,10 +214,10 @@ sim_fun_on_tree <- function(
 #' @param tree An object of class [phylo][ape::read.tree].
 #' @param P Integer scalar. Number of functions to generate.
 #' @template parameters
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar eta 1
-#' @templateVar Pi 1
+#' @templateVar .psi 1
+#' @templateVar .mu 1
+#' @templateVar .eta 1
+#' @templateVar .Pi 1
 #' @param informative,maxtries Passed to [sim_fun_on_tree].
 #' @return An object of class [aphylo]
 #' @family Simulation Functions 
@@ -279,7 +279,7 @@ sim_annotated_tree <- function(
 #' 
 #' @param atree An object of class [aphylo].
 #' @template parameters
-#' @templateVar psi
+#' @templateVar .psi
 #' 
 #' @return An object of class [aphylo] with modified labels.
 #' @examples 
@@ -296,7 +296,7 @@ mislabel <- function(atree, psi) {
   
   # Drawing random numbers
   n <- nrow(atree$tip.annotation)
-  R <- matrix(runif(ncol(atree$tip.annotation)*n), nrow=n)
+  R <- matrix(stats::runif(ncol(atree$tip.annotation)*n), nrow=n)
   
   for (p in 1:ncol(atree$tip.annotation)) {
     

@@ -1,4 +1,4 @@
-#' Plot LogLikelihood function of experimental data
+#' Plot Log-Likelihood function of the model
 #' @param x An object of class [aphylo()]
 #' @inheritParams plot_multivariate
 #' @param ... Aditional parameters to be passed to `plotfun`.
@@ -8,23 +8,49 @@
 #' data(faketree)
 #' O <- new_aphylo(fakeexperiment[,2:3], faketree)
 #' 
-#' # Nice personalized plot
-#' plot_LogLike(O, nlevels = 60, plotfun = persp, theta = -pi*20, 
-#'   shade=.7, border="darkblue", phi=30, scale=TRUE, 
-#'   par.args = list(mar=c(1, 1, 1, 1), oma=c(0,0,4,0)),
-#'   ticktype = "detailed")
-#'   
-#' # Adding title
-#' mtext(
-#'   "LogLikelihood",
-#'   side=3, outer=FALSE, line = 2, cex=1.25)
+#' # Baseline plot (all parameters but Pi)
+#' plot_logLik(O)
+#' 
+#' # No psi parameter
+#' plot_logLik(O ~ mu + Pi + eta)
+#' 
 #' @export
 
 #' @export
 #' @rdname plot_logLik
 plot_logLik <- function(x, sets, ...) UseMethod("plot_logLik")
 
-# plot_logLike.default()
+#' @export
+#' @rdname plot_logLik
+plot_logLik.aphylo <- function(x, sets, ...) {
+  
+  # Creating formula
+  env <- parent.frame()
+  if (inherits(x, "formula"))
+    model <- aphylo_formula(x, env = env)
+  else {
+    x <- substitute(x ~ psi + mu + eta, list(x = substitute(x)))
+    x <- stats::as.formula(x, env)
+    model <- aphylo_formula(x, env = env)
+  }
+  
+  plot_logLik.aphylo_estimates(
+    list(
+      dat    = model$dat,
+      params = model$params,
+      priors = function(p) 1,
+      fun    = model$fun,
+      ll     = model$fun(model$params, function(p) 1, model$dat, FALSE)
+    ),
+    sets = sets,
+    ...
+  )
+  
+}
+
+#' @export
+#' @rdname plot_logLik
+plot_logLik.formula <- plot_logLik.aphylo
 
 #' @export
 #' @rdname plot_logLik
@@ -54,7 +80,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
     c(2, 2)
   
   # Plotting
-  op <- graphics::par(mar = c(1, 1, .2, .2))
+  op <- graphics::par(mar = c(1, 1, .2, .2), oma = c(0, 0, 2, 0))
   on.exit(par(op))
   plot_multivariate(
     function(...) {
@@ -69,6 +95,12 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       nrz <- nrow(dots$z)
       ncz <- ncol(dots$z)
       
+      # Fixing ranges
+      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.01, .99)))
+      dots$ticktype <- "detailed"
+      dots$z[dots$z > dots$zlim[2]] <- dots$zlim[2]
+      dots$z[dots$z < dots$zlim[1]] <- dots$zlim[1]
+      
       # Creating colors
       nbcol       <- 100
       color       <- viridis::viridis(nbcol)
@@ -77,19 +109,31 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       dots$col    <- color[facetcol]
       dots$border <- grDevices::adjustcolor(dots$col, red.f = .5, green.f = .5, blue.f = .5)
       
+
+      # Making some room for the labels
+      dots$xlab <- paste0("\n\n", dots$xlab)
+      dots$ylab <- paste0("\n\n", dots$ylab)
+      
       # Creating colors
-      do.call(persp, dots)
+      do.call(graphics::persp, dots)
     },
     theta   = -pi*20, 
     shade   = .7,
-    zlab    = paste0("log L(", paste0(unique(sets), collapse = ","), ")"),
+    zlab    = "",
     mfrow   = mfrow,
     phi     = 30,
     postplot = function(par, res) {
-      points(trans3d(par[1], par[2], ans$ll, res), col = "black", pch = 25, bg = "red", cex = 1.5)
+      graphics::points(
+        grDevices::trans3d(par[1], par[2], x$ll, res),
+        col = "black", pch = 25, bg = "red", cex = 1.5
+        )
     },
     ...
   )
+  
+  graphics::par(mfrow = c(1,1), xpd=NA)
+  graphics::mtext(paste0("Log L(", paste0(names(x$par), collapse = ","), ")"),
+        outer=TRUE)
   
   # For later on
   # pmat <- plotfun(
@@ -124,6 +168,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
 #' @param sets (optional) Character matrix of size `2 x # of combinations`.
 #' contains the names of the pairs to plot. If nothing passed, the function will
 #' generate all possible combinations as `combn(names(params), 2)`.
+#' @param mfrow Passed to [graphics::par].
 #' @export
 #' 
 #' @examples 
@@ -146,9 +191,9 @@ plot_multivariate <- function(
   sets,
   nlevels = 20,
   args    = list(),
-  plotfun = image,
+  plotfun = graphics::image,
   plot    = TRUE,
-  postplot = function(params) {
+  postplot = function(params, res) {
     points(params, cex = 2, pch=3, col="red")
   },
   mfrow   = NULL,
@@ -213,7 +258,7 @@ plot_multivariate <- function(
     if (!length(mfrow))
       mfrow <- grDevices::n2mfrow(ncol(sets))
     
-    op <- graphics::par(mfrow = mfrow)
+    op <- graphics::par(mfrow = mfrow, xpd=NA)
     on.exit(graphics::par(op))
     for (p in seq_along(ans)) {
       

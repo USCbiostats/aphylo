@@ -10,12 +10,6 @@ mislabel(atree, psi)
 \item{atree}{An object of class \link{aphylo}.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
-
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
-
-\item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
-
-\item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 }
 \value{
 An object of class \link{aphylo} with modified labels.

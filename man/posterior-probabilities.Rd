@@ -20,6 +20,8 @@ predict_brute_force(atree, psi, mu, Pi)
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
+
+\item{...}{Ignored.}
 }
 \description{
 The function \code{predict_pre_order} uses a pre-order algorithm to compute the

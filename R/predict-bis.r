@@ -6,10 +6,11 @@
 #' 
 #' @param atree A tree of class [aphylo]
 #' @template parameters
-#' @templateVar psi 1
-#' @templateVar mu 1
-#' @templateVar Pi 1
-#' @templateVar eta 1
+#' @templateVar .psi 1
+#' @templateVar .mu 1
+#' @templateVar .Pi 1
+#' @templateVar .eta 1
+#' @param ... Ignored.
 #' 
 #' @details 
 #' The function `predict_brute_force` is only intended for testing. For predictions

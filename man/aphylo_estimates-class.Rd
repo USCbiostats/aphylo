@@ -6,7 +6,6 @@
 \alias{print.aphylo_estimates}
 \alias{coef.aphylo_estimates}
 \alias{vcov.aphylo_estimates}
-\alias{plot.aphylo_estimates}
 \alias{aphylo_mcmc}
 \alias{predict.aphylo_estimates}
 \alias{prediction_score}
@@ -22,8 +21,6 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 \method{coef}{aphylo_estimates}(object, ...)
 
 \method{vcov}{aphylo_estimates}(object, ...)
-
-\method{plot}{aphylo_estimates}(x, ...)
 
 aphylo_mcmc(model, params, priors = function(p) 1, control = list(),
   check.informative = getOption("aphylo.informative", FALSE))
@@ -50,18 +47,14 @@ optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{s
 \item{control}{A list with parameters for the optimization method (see
 details).}
 
-\item{lower}{Numeric vector of length 5. Lower bounds, default to 0.0001.}
-
-\item{upper}{Numeric vector of length 5. Upper bounds, default to 0.9999}
+\item{lower, upper}{Numeric vectors defining the lower and upper bounds respectively.}
 
 \item{check.informative}{Logical scalar. When \code{TRUE} the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).}
 
-\item{x}{An object of class \code{aphylo_estimates}.}
+\item{...}{Further arguments passed to the method}
 
-\item{...}{Further arguments passed to the method.}
-
-\item{object}{An object of class \code{aphylo_estimates}.}
+\item{object, x}{An object of class \code{aphylo_estimates}.}
 
 \item{expected}{Integer vector of length \eqn{n}. Expected values (either 0 or 1).}
 
@@ -113,11 +106,12 @@ In the case of \code{prediction_score}, \code{...} are passed to
 \examples{
 
 # Using simulated data ------------------------------------------------------
-set.seed(89)
-dat <- sim_annotated_tree(100, P=2)
+set.seed(19)
+dat <- sim_annotated_tree(100)
+dat <- rdrop_annotations(dat, .4)
 
 # Computing Estimating the parameters 
-ans  <- aphylo_mle(dat)
+ans  <- aphylo_mle(dat ~ psi + mu + eta + Pi)
 ans
 
 # Plotting the path
@@ -128,7 +122,7 @@ mypriors <- function(params) {
     dbeta(params, c(2, 2, 2, 2, 1, 10, 2), rep(10, 7))
 }
 
-ans_dbeta <- aphylo_mle(dat, priors = mypriors)
+ans_dbeta <- aphylo_mle(dat ~ psi + mu + eta + Pi, priors = mypriors)
 ans_dbeta
 
 
@@ -160,8 +154,10 @@ ans_mcmc <- aphylo_mcmc(
 # Example with prediction_score ---------------------------------------------
 set.seed(1312)
 ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
-ans <- aphylo_mcmc(rep(.05, 7), dat = ap, control = list(nbatch=1e4, thin=100),
-                   priors = function(x) dbeta(x, 1, 30))
+ans <- aphylo_mcmc(
+  ap ~ mu + eta + psi + Pi, control = list(nbatch=1e4, thin=100),
+  priors = function(x) dbeta(x, 1, 30)
+  )
                    
 pr <- prediction_score(ans)
 with(pr, cbind(Expected = expected, Predicted = predicted))
