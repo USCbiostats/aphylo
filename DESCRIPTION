@@ -9,10 +9,7 @@ Description: The `aphylo` R package implements estimation and data imputation
   consists on the computation of the log-likelihood of observing a given
   phylogenetic tree with functional annotation on its leafs, and probabilities
   associated to gain and loss of functionalities, including probabilities of
-  experimental misclasification. Furthermore, the log-likelihood is computed
-  using Felsenstein's pruning algorithm, which required developing and implementing efficient
-  algorithms for recoding and preparing phylogenetic tree data so that can be
-  used with the package. Finally, `aphylo` works smoothly with popular tools for
+  experimental misclasification. `aphylo` works smoothly with popular tools for
   analysis of phylogenetic data such as `ape` R package, "Analyses of
   Phylogenetics and Evolution".
 Depends: R (>= 3.1.1), ape
