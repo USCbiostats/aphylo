@@ -27,6 +27,9 @@ predict_pre_order <- function(atree, psi, mu, eta, Pi, ...) {
   if (!inherits(atree, "aphylo"))
     stop("`atree` must be of class `aphylo` (it is of class ", class(atree), ".")
   
+  if (missing(Pi) || is.na(Pi))
+    Pi <- mu[1]/sum(mu)
+  
   
   p <- ncol(atree$tip.annotation)
   ans <- lapply(1:p, function(i) {

@@ -18,13 +18,22 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Parameter estimation of Annotated Phylogenetic Trees — aphylo_estimates-class" />
+
+<meta property="og:description" content="The optimization is done via optim." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">aphylo</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">aphylo</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.99</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -76,7 +89,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +101,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,19 +109,23 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Parameter estimation of Annotated Phylogenetic Trees</h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/estimation.r'><code>R/estimation.r</code></a>, <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/predict.r'><code>R/predict.r</code></a></small>
+    <div class="hidden name"><code>aphylo_estimates-class.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>The optimization is done via <code>optim</code>.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>aphylo_mle</span>(<span class='no'>dat</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"L-BFGS-B"</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>params</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'>rep</span>(<span class='fl'>0.01</span>, <span class='fl'>4</span>), <span class='fl'>0.99</span>, <span class='fl'>0.99</span>, <span class='fl'>0.01</span>), <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>aphylo_mle</span>(<span class='no'>model</span>, <span class='no'>params</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"L-BFGS-B"</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>p</span>) <span class='fl'>1</span>,
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"aphylo.informative"</span>, <span class='fl'>FALSE</span>))
 
 <span class='co'># S3 method for aphylo_estimates</span>
 <span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -118,12 +136,8 @@
 <span class='co'># S3 method for aphylo_estimates</span>
 <span class='fu'>vcov</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
-<span class='co'># S3 method for aphylo_estimates</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='fu'>aphylo_mcmc</span>(<span class='no'>dat</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.02</span>, <span class='fl'>0.9</span>, <span class='fl'>0.9</span>, <span class='fl'>0.02</span>),
-  <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>p</span>) <span class='fu'>c</span>(<span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/Beta'>dbeta</a></span>(<span class='no'>p</span>[-<span class='fu'>c</span>(<span class='fl'>5</span>:<span class='fl'>6</span>)], <span class='fl'>2</span>, <span class='fl'>38</span>), <span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/Beta'>dbeta</a></span>(<span class='no'>p</span>[<span class='fl'>5</span>:<span class='fl'>6</span>],
-  <span class='fl'>38</span>, <span class='fl'>2</span>)), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>aphylo_mcmc</span>(<span class='no'>model</span>, <span class='no'>params</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>p</span>) <span class='fl'>1</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+  <span class='kw'>check.informative</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"aphylo.informative"</span>, <span class='fl'>FALSE</span>))
 
 <span class='co'># S3 method for aphylo_estimates</span>
 <span class='fu'>predict</span>(<span class='no'>object</span>, <span class='no'>...</span>)
@@ -134,13 +148,17 @@
 <span class='co'># S3 method for aphylo_prediction_score</span>
 <span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dat</th>
-      <td><p>An object of class <code>new_aphylo</code> as returned by
-<code><a href='aphylo-class.html'>new_aphylo()</a></code>.</p></td>
+      <th>model</th>
+      <td><p>A model as specified in <a href='aphylo-model.html'>aphylo-model</a>.</p></td>
+    </tr>
+    <tr>
+      <th>params</th>
+      <td><p>A vector of length 7 with initial parameters. In particular
+<code>psi[1]</code>, <code>psi[2]</code>, <code>mu[1]</code>, <code>mu[2]</code>, <code>eta[1]</code>, <code>eta[2]</code> and <code>Pi</code>.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -158,33 +176,20 @@ optimization algorithm, otherwise it uses a method in <code><a href='http://www.
 details).</p></td>
     </tr>
     <tr>
-      <th>params</th>
-      <td><p>A vector of length 7 with initial parameters. In particular
-<code>psi[1]</code>, <code>psi[2]</code>, <code>mu[1]</code>, <code>mu[2]</code>, <code>eta[1]</code>, <code>eta[2]</code> and <code>Pi</code>.</p></td>
-    </tr>
-    <tr>
-      <th>lower</th>
-      <td><p>Numeric vector of length 5. Lower bounds, default to 0.0001.</p></td>
-    </tr>
-    <tr>
-      <th>upper</th>
-      <td><p>Numeric vector of length 5. Upper bounds, default to 0.9999</p></td>
+      <th>lower, upper</th>
+      <td><p>Numeric vectors defining the lower and upper bounds respectively.</p></td>
     </tr>
     <tr>
       <th>check.informative</th>
-      <td><p>Logical scalar. When <code>TRUE</code> (default) the algorithm
+      <td><p>Logical scalar. When <code>TRUE</code> the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).</p></td>
     </tr>
     <tr>
-      <th>x</th>
-      <td><p>An object of class <code>aphylo_estimates</code>.</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Further arguments passed to the method.</p></td>
+      <td><p>Further arguments passed to the method</p></td>
     </tr>
     <tr>
-      <th>object</th>
+      <th>object, x</th>
       <td><p>An object of class <code>aphylo_estimates</code>.</p></td>
     </tr>
     <tr>
@@ -228,21 +233,15 @@ with values between [0,1] (probabilities).
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>phylo_mcmc</code> is a wrapper of <code>MCMC()</code>, so, instead of treating the
+    <p><code>phylo_mcmc</code> is a wrapper of <a href='http://www.rdocumentation.org/packages/amcmc/topics/MCMC'>amcmc::MCMC</a>, so, instead of treating the
 problem as a maximization problem, <code>phylo_mcmc</code> generates a <strong>Markov Chain</strong>.
-The default values of <code>control</code> are:</p><table><tr><td>
-<code>nbatch</code> </td>
-<td> Integer scalar. Number of mcmc steps. Default <code>2e3</code>. </td>
-</tr><tr><td>
-<code>scale</code> </td>
-<td> Numeric scalar. Default <code>0.01</code>. </td>
-</tr><tr><td>
-<code>lb</code> </td>
-<td> Numeric vector. Default <code>rep(1e-20, 5)</code>. </td>
-</tr><tr><td>
-<code>ub</code> </td>
-<td> Numeric vector. Default <code>rep(1 - 1e-20, 5)</code>. </td>
-</tr></table>
+The default values of <code>control</code> are:</p>
+<table class='table'>
+<tr><td><code>nbatch</code></td><td>Integer scalar. Number of mcmc steps. Default <code>2e3</code>.</td></tr>
+<tr><td><code>scale</code></td><td>Numeric scalar. Default <code>0.01</code>.</td></tr>
+<tr><td><code>lb</code></td><td>Numeric vector. Default <code>rep(1e-20, 5)</code>.</td></tr>
+<tr><td><code>ub</code></td><td>Numeric vector. Default <code>rep(1 - 1e-20, 5)</code>.</td></tr>
+</table>
     <p>In the case of <code>prediction_score</code>, <code>...</code> are passed to
 <code>predict.aphylo_estimates</code>.</p>
     
@@ -250,52 +249,55 @@ The default values of <code>control</code> are:</p><table><tr><td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Using simulated data ------------------------------------------------------</span>
-<span class='fu'>set.seed</span>(<span class='fl'>89</span>)
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_annotated_tree.html'>sim_annotated_tree</a></span>(<span class='fl'>100</span>, <span class='kw'>P</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='fu'>set.seed</span>(<span class='fl'>19</span>)
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_annotated_tree.html'>sim_annotated_tree</a></span>(<span class='fl'>100</span>)
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rdrop_annotations.html'>rdrop_annotations</a></span>(<span class='no'>dat</span>, <span class='fl'>.4</span>)
 
 <span class='co'># Computing Estimating the parameters </span>
-<span class='no'>ans</span>  <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mle</span>(<span class='no'>dat</span>)
-<span class='no'>ans</span></div><div class='output co'>#&gt; 
+<span class='no'>ans</span>  <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mle</span>(<span class='no'>dat</span> ~ <span class='no'>psi</span> + <span class='no'>mu</span> + <span class='no'>eta</span> + <span class='no'>Pi</span>)
+<span class='no'>ans</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; 
 #&gt; ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-#&gt; ll:  -96.9912,
-#&gt; Method used: L-BFGS-B (28 iterations)
-#&gt; convergence: 0 (see ?optim)
-#&gt; Leafs
-#&gt;  # of Functions 2
 #&gt; 
-#&gt;          Estimate  Std. Error
-#&gt;  psi[0]    0.1109      0.0871
-#&gt;  psi[1]    0.1629      0.1221
-#&gt;  mu[0]     0.0429      0.0366
-#&gt;  mu[1]     0.0000      0.0567
-#&gt;  eta[0]    1.0000      0.1060
-#&gt;  eta[1]    1.0000      0.0949
-#&gt;  Pi        0.4975      0.3554
+#&gt;  Call: aphylo_mle(model = dat ~ psi + mu + eta + Pi)
+#&gt;  ll: -134.2324,
+#&gt;  Method used: L-BFGS-B (3 iterations)
+#&gt;  convergence: 0 (see ?optim)
+#&gt;  Leafs:
+#&gt;  # of Functions 1
+#&gt;          Estimate  Std. Err.
+#&gt;  psi0    0.1000       NaN
+#&gt;  psi1    0.1000    0.1077
+#&gt;  mu0     0.1000       NaN
+#&gt;  mu1     0.1000    0.0359
+#&gt;  eta0    0.9000       NaN
+#&gt;  eta1    0.9000       NaN
+#&gt;  Pi      0.1000    0.0941
 #&gt; </div><div class='input'>
 <span class='co'># Plotting the path</span>
-<span class='fu'>plot</span>(<span class='no'>ans</span>)</div><div class='img'><img src='aphylo_estimates-class-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>ans</span>)</div><div class='img'><img src='aphylo_estimates-class-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Computing Estimating the parameters Using Priors for all the parameters</span>
 <span class='no'>mypriors</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>params</span>) {
     <span class='fu'>dbeta</span>(<span class='no'>params</span>, <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fl'>2</span>), <span class='fu'>rep</span>(<span class='fl'>10</span>, <span class='fl'>7</span>))
 }
 
-<span class='no'>ans_dbeta</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mle</span>(<span class='no'>dat</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='no'>mypriors</span>)
-<span class='no'>ans_dbeta</span></div><div class='output co'>#&gt; 
+<span class='no'>ans_dbeta</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mle</span>(<span class='no'>dat</span> ~ <span class='no'>psi</span> + <span class='no'>mu</span> + <span class='no'>eta</span> + <span class='no'>Pi</span>, <span class='kw'>priors</span> <span class='kw'>=</span> <span class='no'>mypriors</span>)
+<span class='no'>ans_dbeta</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; 
 #&gt; ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-#&gt; ll: -196.9105,
-#&gt; Method used: L-BFGS-B (3 iterations)
-#&gt; convergence: 0 (see ?optim)
-#&gt; Leafs
-#&gt;  # of Functions 2
 #&gt; 
-#&gt;          Estimate  Std. Error
-#&gt;  psi[0]    0.0100      0.0066
-#&gt;  psi[1]    0.0100      0.0066
-#&gt;  mu[0]     0.0100      0.0039
-#&gt;  mu[1]     0.0100      0.0043
-#&gt;  eta[0]    0.9900      0.0033
-#&gt;  eta[1]    0.9900      0.0033
-#&gt;  Pi        0.0100      0.0071
+#&gt;  Call: aphylo_mle(model = dat ~ psi + mu + eta + Pi, priors = mypriors)
+#&gt;  ll: -153.3401,
+#&gt;  Method used: L-BFGS-B (3 iterations)
+#&gt;  convergence: 0 (see ?optim)
+#&gt;  Leafs:
+#&gt;  # of Functions 1
+#&gt;          Estimate  Std. Err.
+#&gt;  psi0    0.1000    0.1005
+#&gt;  psi1    0.1000    0.0783
+#&gt;  mu0     0.1000    0.0393
+#&gt;  mu1     0.1000       NaN
+#&gt;  eta0    0.9000    0.0173
+#&gt;  eta1    0.9000    0.0151
+#&gt;  Pi      0.1000    0.0748
 #&gt; </div><div class='input'>
 
 # Using the MCMC ------------------------------------------------------------
@@ -317,36 +319,39 @@ The default values of <code>control</code> are:</p><table><tr><td>
 <span class='fu'>set.seed</span>(<span class='fl'>1231</span>)
 
 <span class='no'>ans_mcmc</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(
-  <span class='fu'>rep</span>(<span class='fl'>.1</span>, <span class='fl'>7</span>),  <span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>,
+  <span class='no'>dat</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span> + <span class='no'>eta</span> + <span class='no'>Pi</span>,
   <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span> <span class='kw'>=</span> <span class='fl'>2e5</span>, <span class='kw'>burnin</span><span class='kw'>=</span><span class='fl'>1000</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>200</span>, <span class='kw'>scale</span><span class='kw'>=</span><span class='fl'>2e-2</span>)
 )
 <span class='co'># }</span><div class='input'>
 <span class='co'># Example with prediction_score ---------------------------------------------</span>
 <span class='fu'>set.seed</span>(<span class='fl'>1312</span>)
 <span class='no'>ap</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_annotated_tree.html'>sim_annotated_tree</a></span>(<span class='fl'>10</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Pi</span><span class='kw'>=</span><span class='fl'>.2</span>, <span class='kw'>mu</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>.05</span>,<span class='fl'>.02</span>))
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(<span class='fu'>rep</span>(<span class='fl'>.05</span>, <span class='fl'>7</span>), <span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>ap</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
-                   <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbeta</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: The -coda- package has not been loaded.</span></div><div class='input'>
+<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(
+  <span class='no'>ap</span> ~ <span class='no'>mu</span> + <span class='no'>eta</span> + <span class='no'>psi</span> + <span class='no'>Pi</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
+  <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbeta</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>)
+  )
+
 <span class='no'>pr</span> <span class='kw'>&lt;-</span> <span class='fu'>prediction_score</span>(<span class='no'>ans</span>)
 <span class='fu'>with</span>(<span class='no'>pr</span>, <span class='fu'>cbind</span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000      fun0000
-#&gt; 1        1 9.971987e-01
-#&gt; 2        0 1.808376e-03
-#&gt; 3        1 9.971987e-01
-#&gt; 4        1 9.971987e-01
-#&gt; 5        1 9.971987e-01
-#&gt; 6        0 1.809982e-03
-#&gt; 7        0 2.309335e-03
-#&gt; 8        0 1.808376e-03
-#&gt; 9        0 1.809982e-03
-#&gt; 10       0 1.749497e-03
-#&gt; 11       1 1.580741e-02
-#&gt; 12       0 1.039833e-03
-#&gt; 13       1 9.471572e-01
-#&gt; 14       0 6.962706e-05
-#&gt; 15       0 1.899767e-04
-#&gt; 16       1 9.943745e-01
-#&gt; 17       0 9.009136e-05
-#&gt; 18       0 1.927008e-04
-#&gt; 19       1 9.943745e-01</div></pre>
+#&gt; 1        0 7.716903e-04
+#&gt; 2        0 7.716559e-04
+#&gt; 3        0 7.716903e-04
+#&gt; 4        0 7.716903e-04
+#&gt; 5        0 7.716903e-04
+#&gt; 6        0 7.728390e-04
+#&gt; 7        0 7.513287e-04
+#&gt; 8        0 7.716559e-04
+#&gt; 9        0 7.728390e-04
+#&gt; 10       0 7.531977e-04
+#&gt; 11       0 3.730395e-05
+#&gt; 12       0 5.772935e-05
+#&gt; 13       0 3.740983e-05
+#&gt; 14       0 3.667755e-05
+#&gt; 15       0 1.021463e-04
+#&gt; 16       0 1.022216e-04
+#&gt; 17       0 6.181331e-05
+#&gt; 18       0 1.047317e-04
+#&gt; 19       0 1.022216e-04</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -369,11 +374,14 @@ The default values of <code>control</code> are:</p><table><tr><td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -76,8 +76,8 @@ prediction_score <- function(
   
   # Inverse of Geodesic distances
   if (!length(W)) {
-    G     <- approx_geodesic(x$dat$tree$edge - 1L, undirected = TRUE)[ids,ids]
-    G_inv <- 1/(G + diag(nrow(G)))
+    # G     <- approx_geodesic(x$dat$tree$edge - 1L, undirected = TRUE)[ids,ids]
+    G_inv <- diag(length(ids))
   } else {
     G_inv <- W
     if (!all(dim(W) == rep(length(ids), 2)))

@@ -111,7 +111,7 @@ plot(O)
 ![](README_files/figure-markdown_github/Get%20offspring-1.png)
 
 ``` r
-plot_LogLike(O)
+plot_logLik(O)
 ```
 
 ![](README_files/figure-markdown_github/Get%20offspring-2.png)
@@ -190,12 +190,12 @@ Estimation
 
 ``` r
 # Using L-BFGS-B (MLE) to get an initial guess
-ans0 <- aphylo_mle(dat)
+ans0 <- aphylo_mle(dat ~ psi + mu + Pi + eta)
 
 
 # MCMC method
 ans2 <- aphylo_mcmc(
-  dat,
+  dat ~ mu + psi + eta,
   prior = function(p) dbeta(p, 2,20),
   control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
 ans2
@@ -203,19 +203,21 @@ ans2
 
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-    ## ll: -425.9909,
-    ## Method used: mcmc (10000 iterations)
-    ## Leafs
-    ##  # of Functions 2
     ## 
-    ##          Estimate  Std. Error
-    ##  psi[0]    0.0869      0.0464
-    ##  psi[1]    0.0427      0.0267
-    ##  mu[0]     0.1194      0.0242
-    ##  mu[1]     0.0821      0.0240
-    ##  eta[0]    0.6787      0.0365
-    ##  eta[1]    0.7981      0.0329
-    ##  Pi        0.0959      0.0707
+    ##  Call: aphylo_mcmc(model = dat ~ mu + psi + eta, priors = function(p) dbeta(p, 
+    ##     2, 20), control = list(nbatch = 10000, burnin = 100, thin = 20, 
+    ##     nchains = 5))
+    ##  ll: -425.5714,
+    ##  Method used: mcmc (10000 iterations)
+    ##  Leafs:
+    ##  # of Functions 2
+    ##          Estimate  Std. Err.
+    ##  psi0    0.0874    0.0435
+    ##  psi1    0.0468    0.0302
+    ##  mu0     0.1143    0.0239
+    ##  mu1     0.0913    0.0234
+    ##  eta0    0.6712    0.0365
+    ##  eta1    0.7994    0.0336
 
 ``` r
 plot(ans2)
@@ -232,17 +234,16 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##      Point est. Upper C.I.
-    ## psi0       1.01       1.03
+    ## psi0       1.02       1.04
     ## psi1       1.00       1.01
-    ## mu0        1.01       1.03
+    ## mu0        1.01       1.04
     ## mu1        1.00       1.01
-    ## eta0       1.02       1.04
-    ## eta1       1.01       1.02
-    ## Pi         1.10       1.25
+    ## eta0       1.01       1.04
+    ## eta1       1.00       1.00
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.08
+    ## 1.02
 
 ``` r
 summary(ans2$hist)
@@ -258,24 +259,22 @@ summary(ans2$hist)
     ##    plus standard error of the mean:
     ## 
     ##         Mean      SD  Naive SE Time-series SE
-    ## psi0 0.08688 0.04638 0.0009323      0.0025189
-    ## psi1 0.04267 0.02673 0.0005373      0.0009619
-    ## mu0  0.11944 0.02421 0.0004867      0.0008335
-    ## mu1  0.08211 0.02404 0.0004832      0.0007673
-    ## eta0 0.67870 0.03649 0.0007334      0.0015357
-    ## eta1 0.79810 0.03285 0.0006603      0.0012248
-    ## Pi   0.09589 0.07071 0.0014212      0.0060563
+    ## psi0 0.08742 0.04347 0.0008739      0.0021689
+    ## psi1 0.04681 0.03019 0.0006069      0.0010662
+    ## mu0  0.11435 0.02392 0.0004807      0.0008128
+    ## mu1  0.09127 0.02344 0.0004712      0.0006700
+    ## eta0 0.67120 0.03655 0.0007346      0.0016759
+    ## eta1 0.79943 0.03363 0.0006759      0.0013304
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##         2.5%     25%     50%     75%  97.5%
-    ## psi0 0.01449 0.05231 0.08139 0.11536 0.1951
-    ## psi1 0.00618 0.02222 0.03736 0.05818 0.1045
-    ## mu0  0.07346 0.10288 0.11855 0.13561 0.1677
-    ## mu1  0.03870 0.06469 0.08051 0.09866 0.1321
-    ## eta0 0.60648 0.65380 0.67969 0.70407 0.7495
-    ## eta1 0.73220 0.77694 0.79815 0.82152 0.8574
-    ## Pi   0.01183 0.04504 0.07958 0.12451 0.2991
+    ##          2.5%     25%     50%     75%  97.5%
+    ## psi0 0.016047 0.05489 0.08263 0.11519 0.1869
+    ## psi1 0.006009 0.02426 0.04047 0.06434 0.1195
+    ## mu0  0.070955 0.09818 0.11339 0.13104 0.1615
+    ## mu1  0.046870 0.07488 0.09077 0.10718 0.1399
+    ## eta0 0.600502 0.64695 0.67154 0.69661 0.7434
+    ## eta1 0.729124 0.77764 0.80206 0.82252 0.8610
 
 Prediction
 ==========

@@ -96,7 +96,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       ncz <- ncol(dots$z)
       
       # Fixing ranges
-      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.01, .99)))
+      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.025, 1)))
       dots$ticktype <- "detailed"
       dots$z[dots$z > dots$zlim[2]] <- dots$zlim[2]
       dots$z[dots$z < dots$zlim[1]] <- dots$zlim[1]

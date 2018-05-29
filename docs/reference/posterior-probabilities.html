@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Posterior probabilities based on parameter estimates — posterior-probabilities" />
+
+<meta property="og:description" content="The function predict_pre_order uses a pre-order algorithm to compute the
+posterior probabilities, whereas the predict_brute_force computes posterior
+probabilities generating all possible cases." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">aphylo</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">aphylo</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.99</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -76,7 +91,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +103,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,28 +111,32 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Posterior probabilities based on parameter estimates</h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/predict-bis.r'><code>R/predict-bis.r</code></a></small>
+    <div class="hidden name"><code>posterior-probabilities.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>The function <code>predict_pre_order</code> uses a pre-order algorithm to compute the
 posterior probabilities, whereas the <code>predict_brute_force</code> computes posterior
 probabilities generating all possible cases.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>predict_pre_order</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>eta</span>, <span class='no'>Pi</span>)
+    <pre class="usage"><span class='fu'>predict_pre_order</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>eta</span>, <span class='no'>Pi</span>, <span class='no'>...</span>)
 
 <span class='fu'>predict_brute_force</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>Pi</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>atree</th>
-      <td><p>A tree of class <a href='aphylo.html'>aphylo</a></p></td>
+      <td><p>A tree of class <a href='aphylo-class.html'>aphylo</a></p></td>
     </tr>
     <tr>
       <th>psi</th>
@@ -133,6 +153,10 @@ probabilities generating all possible cases.</p>
     <tr>
       <th>Pi</th>
       <td><p>Numeric scalar. Root node probability of having the function (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Ignored.</p></td>
     </tr>
     </table>
     
@@ -160,11 +184,14 @@ after estimating the model, see <a href='aphylo_estimates-class.html'>predict.ap
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

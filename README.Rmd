@@ -96,7 +96,7 @@ str(LogLike(dat, psi = psi, mu = mu, eta = eta, Pi = pi_root))
 
 ```{r MLE}
 # Using L-BFGS-B (MLE) to get an initial guess
-ans0 <- aphylo_mle(dat)
+ans0 <- aphylo_mle(dat ~ psi + mu + Pi + eta)
 
 
 # MCMC method

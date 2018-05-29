@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Annotated Phylogenetic Tree — aphylo-class • aphylo</title>
+<title>Plot Log-Likelihood function of the model — plot_logLik • aphylo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,12 +28,9 @@
 
 
 
-<meta property="og:title" content="Annotated Phylogenetic Tree — aphylo-class" />
+<meta property="og:title" content="Plot Log-Likelihood function of the model — plot_logLik" />
 
-<meta property="og:description" content="The aphylo class tree holds both the tree structure represented as a
-partially ordered phylogenetic tree, and node annotations. While annotations
-are included for both leafs and inner nodes, the algorithms included in this
-package only uses the leaf annotations." />
+<meta property="og:description" content="Plot Log-Likelihood function of the model" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,70 +112,68 @@ package only uses the leaf annotations." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Annotated Phylogenetic Tree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/data-management.r'><code>R/data-management.r</code></a></small>
-    <div class="hidden name"><code>aphylo-class.Rd</code></div>
+    <h1>Plot Log-Likelihood function of the model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/plot_logLik.r'><code>R/plot_logLik.r</code></a>, <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/estimation.r'><code>R/estimation.r</code></a></small>
+    <div class="hidden name"><code>plot_logLik.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The <code>aphylo</code> class tree holds both the tree structure represented as a
-partially ordered phylogenetic tree, and node annotations. While annotations
-are included for both leafs and inner nodes, the algorithms included in this
-package only uses the leaf annotations.</p>
+    <p>Plot Log-Likelihood function of the model</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>new_aphylo</span>(<span class='no'>tip.annotation</span>, <span class='no'>tree</span>, <span class='kw'>node.annotation</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_logLik</span>(<span class='no'>x</span>, <span class='no'>sets</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>plot_logLik</span>(<span class='no'>x</span>, <span class='no'>sets</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for formula</span>
+<span class='fu'>plot_logLik</span>(<span class='no'>x</span>, <span class='no'>sets</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>plot_logLik</span>(<span class='no'>x</span>, <span class='no'>sets</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>sets</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>tip.annotation, node.annotation</th>
-      <td><p>Annotation data. See aphylo.</p></td>
+      <th>x</th>
+      <td><p>An object of class <code><a href='aphylo-class.html'>aphylo()</a></code></p></td>
     </tr>
     <tr>
-      <th>tree</th>
-      <td><p>An object of class <a href='http://www.rdocumentation.org/packages/ape/topics/read.tree'>phylo</a></p></td>
+      <th>sets</th>
+      <td><p>(optional) Character matrix of size <code>2 x # of combinations</code>.
+contains the names of the pairs to plot. If nothing passed, the function will
+generate all possible combinations as <code>combn(names(params), 2)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Aditional parameters to be passed to <code>plotfun</code>.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A list of class <code>aphylo</code> with the following elements:</p>
-<dt>tree</dt><dd><p>An object of class <a href='http://www.rdocumentation.org/packages/ape/topics/read.tree'>phylo</a>.</p></dd>
-<dt>tip.annotation</dt><dd><p>An integer matrix. Tip (leaf) nodes annotations.</p></dd>
-<dt>node.annotation</dt><dd><p>An integer matrix (optional). Internal nodes
-annotations.</p></dd>
-<dt>offspring</dt><dd><p>A list. List of offspring of each node.</p></dd>
-<dt>pseq</dt><dd><p>Integer vector. The pruning sequence (postorder).</p></dd>
-
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other aphylo methods: <code><a href='aphylo-methods.html'>aphylo-methods</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># A simple example ----------------------------------------------------------</span>
-
+    <pre class="examples"><div class='input'><span class='co'># Loading data</span>
 <span class='fu'>data</span>(<span class='no'>fakeexperiment</span>)
 <span class='fu'>data</span>(<span class='no'>faketree</span>)
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>new_aphylo</span>(<span class='no'>fakeexperiment</span>[,<span class='fl'>2</span>:<span class='fl'>3</span>], <span class='no'>faketree</span>)
+<span class='no'>O</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aphylo-class.html'>new_aphylo</a></span>(<span class='no'>fakeexperiment</span>[,<span class='fl'>2</span>:<span class='fl'>3</span>], <span class='no'>faketree</span>)
 
-<span class='co'># We can visualize it</span>
-<span class='fu'>plot</span>(<span class='no'>ans</span>)</div><div class='img'><img src='aphylo-class-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='co'># Baseline plot (all parameters but Pi)</span>
+<span class='fu'>plot_logLik</span>(<span class='no'>O</span>)</div><div class='img'><img src='plot_logLik-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># No psi parameter</span>
+<span class='fu'>plot_logLik</span>(<span class='no'>O</span> ~ <span class='no'>mu</span> + <span class='no'>Pi</span> + <span class='no'>eta</span>)</div><div class='img'><img src='plot_logLik-2.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 
