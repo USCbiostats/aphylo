@@ -38,7 +38,7 @@ test_that("x ~ mu", {
         fun = fun,
         initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu0", "mu1")]
       ),
-      aphylo::APHYLO_DEFAULT_MCMC_CONTROL
+      aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
     ))
     
   expect_equal(colMeans(ans1), ans0$par)
@@ -81,7 +81,7 @@ test_that("x ~ mu + psi + Pi", {
         fun = fun,
         initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(5:6)]
       ),
-      aphylo::APHYLO_DEFAULT_MCMC_CONTROL
+      aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
     ))
   
   expect_equal(colMeans(ans1), ans0$par)
