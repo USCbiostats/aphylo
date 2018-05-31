@@ -127,7 +127,13 @@ probabilities generating all possible cases.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>predict_pre_order</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>eta</span>, <span class='no'>Pi</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>predict_pre_order</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>predict_pre_order</span>(<span class='no'>x</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>x</span>$<span class='no'>par</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>predict_pre_order</span>(<span class='no'>x</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>eta</span>, <span class='no'>Pi</span>, <span class='no'>...</span>)
 
 <span class='fu'>predict_brute_force</span>(<span class='no'>atree</span>, <span class='no'>psi</span>, <span class='no'>mu</span>, <span class='no'>Pi</span>)</pre>
     
@@ -135,8 +141,12 @@ probabilities generating all possible cases.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>atree</th>
-      <td><p>A tree of class <a href='aphylo-class.html'>aphylo</a></p></td>
+      <th>...</th>
+      <td><p>Ignored.</p></td>
+    </tr>
+    <tr>
+      <th>params</th>
+      <td><p>A numeric vector with the corresponding parameters.</p></td>
     </tr>
     <tr>
       <th>psi</th>
@@ -155,8 +165,8 @@ probabilities generating all possible cases.</p>
       <td><p>Numeric scalar. Root node probability of having the function (see <code><a href='LogLike.html'>LogLike</a></code>).</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Ignored.</p></td>
+      <th>atree, x</th>
+      <td><p>Either a tree of class <a href='aphylo-class.html'>aphylo</a> or an object of class <a href='aphylo_estimates-class.html'>aphylo_estimates</a></p></td>
     </tr>
     </table>
     

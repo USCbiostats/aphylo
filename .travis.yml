@@ -9,9 +9,6 @@ r_github_packages:
   - USCBiostats/amcmc
   - USCBiostats/polygons
 
-bioc_packages:
-  - ggtree
-
 r:
   - release
   - oldrel

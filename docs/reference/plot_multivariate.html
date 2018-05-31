@@ -185,8 +185,7 @@ with the current parameters.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example: A model with less parameters</span>
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_annotated_tree.html'>sim_annotated_tree</a></span>(<span class='fl'>20</span>)
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aphylo_estimates-class.html'>aphylo_mcmc</a></span>(<span class='no'>x</span> ~ <span class='no'>psi</span>, <span class='kw'>control</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>))
-
+<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aphylo_estimates-class.html'>aphylo_mcmc</a></span>(<span class='no'>x</span> ~ <span class='no'>psi</span>, <span class='kw'>control</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: The -coda- package has not been loaded.</span></div><div class='input'>
 <span class='co'># Creating the multivariate plot (using by default image)</span>
 <span class='fu'>plot_multivariate</span>(
   <span class='kw'>function</span>(<span class='no'>...</span>) {

@@ -123,7 +123,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>aphylo_call</span>(<span class='no'>params</span>)
+    <pre class="usage"><span class='fu'>aphylo_call</span>(<span class='no'>params</span>, <span class='no'>priors</span>)
 
 <span class='fu'>eta</span>(<span class='no'>...</span>, <span class='no'>env</span>)
 
@@ -133,7 +133,7 @@
 
 <span class='fu'>mu</span>(<span class='no'>...</span>, <span class='no'>env</span>)
 
-<span class='fu'>aphylo_formula</span>(<span class='no'>fm</span>, <span class='no'>params</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>())</pre>
+<span class='fu'>aphylo_formula</span>(<span class='no'>fm</span>, <span class='no'>params</span>, <span class='no'>priors</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,6 +141,10 @@
     <tr>
       <th>params</th>
       <td><p>Numeric vector with model parameters.</p></td>
+    </tr>
+    <tr>
+      <th>priors</th>
+      <td><p>(optional) A function. Prior for the model.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -174,7 +178,7 @@ examples).</p></td>
 <span class='co'># Baseline model</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu
-#&gt; &lt;environment: 0x9be6b68&gt;
+#&gt; &lt;environment: 0x7692268&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -220,7 +224,7 @@ examples).</p></td>
 #&gt; FALSE FALSE 
 #&gt; 
 #&gt; $fun
-#&gt; function (p, priors, dat, verb_ans = FALSE) 
+#&gt; function (p, dat, priors, verb_ans = FALSE) 
 #&gt; {
 #&gt;     args &lt;- list(tree = dat, psi = c(0, 0), mu = c(p["mu0"], 
 #&gt;         p["mu1"]), eta = c(0.5, 0.5), Pi = p["mu0"]/(p["mu0"] + 
@@ -234,12 +238,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0x917f110&gt;
+#&gt; &lt;environment: 0xdd6bd30&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi
-#&gt; &lt;environment: 0x9be6b68&gt;
+#&gt; &lt;environment: 0x7692268&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -285,7 +289,7 @@ examples).</p></td>
 #&gt; FALSE FALSE FALSE FALSE 
 #&gt; 
 #&gt; $fun
-#&gt; function (p, priors, dat, verb_ans = FALSE) 
+#&gt; function (p, dat, priors, verb_ans = FALSE) 
 #&gt; {
 #&gt;     args &lt;- list(tree = dat, psi = c(p["psi0"], p["psi1"]), mu = c(p["mu0"], 
 #&gt;         p["mu1"]), eta = c(0.5, 0.5), Pi = p["mu0"]/(p["mu0"] + 
@@ -299,12 +303,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0x78ae130&gt;
+#&gt; &lt;environment: 0xd21ea48&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities and etas(fixed)</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span> + <span class='fu'>eta</span>(<span class='fl'>0</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi + eta(0, 1)
-#&gt; &lt;environment: 0x9be6b68&gt;
+#&gt; &lt;environment: 0x7692268&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -350,7 +354,7 @@ examples).</p></td>
 #&gt; FALSE FALSE FALSE FALSE  TRUE  TRUE 
 #&gt; 
 #&gt; $fun
-#&gt; function (p, priors, dat, verb_ans = FALSE) 
+#&gt; function (p, dat, priors, verb_ans = FALSE) 
 #&gt; {
 #&gt;     args &lt;- list(tree = dat, psi = c(p["psi0"], p["psi1"]), mu = c(p["mu0"], 
 #&gt;         p["mu1"]), eta = c(p["eta0"], p["eta1"]), Pi = p["mu0"]/(p["mu0"] + 
@@ -363,12 +367,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0x9d61158&gt;
+#&gt; &lt;environment: 0x9b4a500&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities and Pi </span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span> + <span class='no'>Pi</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi + Pi
-#&gt; &lt;environment: 0x9be6b68&gt;
+#&gt; &lt;environment: 0x7692268&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -414,7 +418,7 @@ examples).</p></td>
 #&gt; FALSE FALSE FALSE FALSE FALSE 
 #&gt; 
 #&gt; $fun
-#&gt; function (p, priors, dat, verb_ans = FALSE) 
+#&gt; function (p, dat, priors, verb_ans = FALSE) 
 #&gt; {
 #&gt;     args &lt;- list(tree = dat, psi = c(p["psi0"], p["psi1"]), mu = c(p["mu0"], 
 #&gt;         p["mu1"]), eta = c(0.5, 0.5), Pi = p["Pi"])
@@ -427,7 +431,7 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0xb1d4170&gt;
+#&gt; &lt;environment: 0x6e693f0&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

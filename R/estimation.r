@@ -181,6 +181,9 @@ aphylo_mle <- function(
   env   <- parent.frame()
   model <- aphylo_formula(model, params, priors, env = env)
   
+  if (any(model$fixed))
+    warnings("Fixing parameters is ignored in MLE estimation.")
+  
   # Reducing the peeling sequence
   if (getOption("aphylo_reduce_pseq", FALSE))
     model$dat$pseq <- reduce_pseq(

@@ -329,8 +329,7 @@ The default values of <code>control</code> are:</p>
 <span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>aphylo_mcmc</span>(
   <span class='no'>ap</span> ~ <span class='no'>mu</span> + <span class='no'>eta</span> + <span class='no'>psi</span> + <span class='no'>Pi</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>nbatch</span><span class='kw'>=</span><span class='fl'>1e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
   <span class='kw'>priors</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbeta</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>)
-  )
-
+  )</div><div class='output co'>#&gt; <span class='warning'>Warning: The -coda- package has not been loaded.</span></div><div class='input'>
 <span class='no'>pr</span> <span class='kw'>&lt;-</span> <span class='fu'>prediction_score</span>(<span class='no'>ans</span>)
 <span class='fu'>with</span>(<span class='no'>pr</span>, <span class='fu'>cbind</span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000      fun0000
 #&gt; 1        0 7.716903e-04

@@ -101,7 +101,7 @@ validate_dots_in_term <- function(..., expected) {
   dots <- unlist(list(...))
   if (length(dots) && !all(dots %in% c(0, 1)))
     stop(
-      "Argumets passed to `",
+      "Arguments passed to `",
       parent_call,
       "`, if any, should be any of {",
       paste0(expected, collapse=", "),
@@ -297,7 +297,7 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
   
   # Is the LHS an aphylo object?
   if (!exists(as.character(val[[2]]), envir = env))
-    stop("The object -", as.character(val[[2]]), "- can't be found.")
+    stop("The object -", as.character(val[[2]]), "- can't be found.", call. = FALSE)
     
   if (!inherits(eval(val[[2]], envir = env), "aphylo"))
     stop("The LHS of the equation should be an `aphylo` object.", call. = FALSE)
