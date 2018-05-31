@@ -455,7 +455,7 @@ summary.aphylo <- function(object, ...) {
 
 # This list sets the default plotting parameters when calling
 # the plot.phylo function.
-default.plot.phylo.params <- list(
+APHYLO_DEFAULT_PLOT_PARAMS <- list(
   show.node.label = TRUE,
   show.tip.label  = TRUE,
   root.edge       = TRUE
@@ -466,8 +466,8 @@ set.default.plot.phylo.params <- function(dots) {
   dots <- as.character(match.call()$dots)
   env <- parent.frame()
   
-  for (p in names(default.plot.phylo.params)) 
+  for (p in names(APHYLO_DEFAULT_PLOT_PARAMS)) 
     if (!length(env[[dots]][[p]]))
-      env[[dots]][[p]] <- default.plot.phylo.params[[p]]
+      env[[dots]][[p]] <- APHYLO_DEFAULT_PLOT_PARAMS[[p]]
 }
 

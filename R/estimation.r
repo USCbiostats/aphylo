@@ -323,6 +323,16 @@ logLik.aphylo_estimates <- function(object, ...) {
   
 }
 
+APHYLO_DEFAULT_MCMC_CONTROL <- list(
+  nbatch = 2e4L,
+  burnin = 1e3L,
+  thin   = 20L,
+  scale  = .01,
+  ub     = 1,
+  lb     = 0,
+  useCpp = TRUE
+)
+
 #' @rdname aphylo_estimates-class
 #' @return In the case of `aphylo_mcmc`, `hist` is an object of class
 #' [coda::mcmc.list()].
@@ -343,11 +353,12 @@ aphylo_mcmc <- function(
   model <- aphylo_formula(model, params, priors, env = env)
 
   # Checking control
-  if (!length(control$nbatch)) control$nbatch <- 2e3
-  if (!length(control$scale))  control$scale  <- .01
-  if (!length(control$ub))     control$ub     <- rep(1, length(model$params))
-  if (!length(control$lb))     control$lb     <- rep(0, length(model$params))
-  if (!length(control$useCpp)) control$useCpp <- TRUE
+  for (n in names(APHYLO_DEFAULT_MCMC_CONTROL)) {
+    if (!length(control[[n]]))
+      control[[n]] <- APHYLO_DEFAULT_MCMC_CONTROL[[n]]
+  }
+  
+  # Fixed parameters
   if (!length(control$fixed))  control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error

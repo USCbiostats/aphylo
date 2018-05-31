@@ -184,11 +184,14 @@ validate_aphylo_formula <- function(fm) {
   term_names <- gsub("\\(.+", "", vars)
   
   # Analyzing the terms, are all 
-  test <- which(!(term_names %in% unique(gsub("[0-9]", "", APHYLO_PARAM_NAMES))))
+  TNAMES <- unique(gsub("[0-9]", "", APHYLO_PARAM_NAMES))
+  test <- which(!(term_names %in% TNAMES))
   
   if (length(test)) {
     stop("The following terms in the formula are not supported by `aphylo`: '",
-         paste0(vars[test], collapse = "', '"), "'.", call. = FALSE)
+         paste0(vars[test], collapse = "', '"), "'. ", 
+         "Only `", paste(TNAMES, collapse="()`, `"), "()` are allowed.",
+         call. = FALSE)
   }
   
   # Is there any repeated term?
