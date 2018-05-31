@@ -325,6 +325,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
     mai = graphics::par("mai")*c(1,0,1,0) +
       c(0, dev_size[1]*(1-prop), 0, dev_size[1]*.025)
     )
+  on.exit(graphics::par(op2), add=TRUE)
   
   plot.window(c(0, 1), range(tips[,2]), new=FALSE, xaxs = "i")
   
@@ -469,5 +470,4 @@ set.default.plot.phylo.params <- function(dots) {
     if (!length(env[[dots]][[p]]))
       env[[dots]][[p]] <- default.plot.phylo.params[[p]]
 }
-
 

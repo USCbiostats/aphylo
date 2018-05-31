@@ -48,6 +48,10 @@ LogLike <- function(
   check_dims = TRUE
 ) {
   
+  # Is this the right thing?
+  if (!inherits(tree, "aphylo"))
+    stop("`tree` should be an object of class 'aphylo'.", call. = FALSE)
+  
   .LogLike(
     annotations = with(tree, rbind(tip.annotation, node.annotation)),
     offspring   = tree$offspring,

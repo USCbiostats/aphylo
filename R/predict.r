@@ -6,16 +6,7 @@
 predict.aphylo_estimates <- function(object, ...) {
   
   # Running prediction function
-  pred <- with(
-    object,
-    predict_pre_order(
-      atree = dat,
-      psi   = par[c("psi0", "psi1")],
-      mu    = par[c("mu0", "mu1")],
-      eta   = par[c("eta0", "eta1")],
-      Pi    = par["Pi"]
-    )
-    )
+  pred <- predict_pre_order.aphylo_estimates(object, ...)
   
   # Adding names
   dimnames(pred) <- list(

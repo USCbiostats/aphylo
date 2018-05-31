@@ -3,15 +3,23 @@
 \name{posterior-probabilities}
 \alias{posterior-probabilities}
 \alias{predict_pre_order}
+\alias{predict_pre_order.aphylo_estimates}
+\alias{predict_pre_order.aphylo}
 \alias{predict_brute_force}
 \title{Posterior probabilities based on parameter estimates}
 \usage{
-predict_pre_order(atree, psi, mu, eta, Pi, ...)
+predict_pre_order(x, ...)
+
+\method{predict_pre_order}{aphylo_estimates}(x, params = x$par, ...)
+
+\method{predict_pre_order}{aphylo}(x, psi, mu, eta, Pi, ...)
 
 predict_brute_force(atree, psi, mu, Pi)
 }
 \arguments{
-\item{atree}{A tree of class \link{aphylo}}
+\item{...}{Ignored.}
+
+\item{params}{A numeric vector with the corresponding parameters.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -21,7 +29,7 @@ predict_brute_force(atree, psi, mu, Pi)
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
-\item{...}{Ignored.}
+\item{atree, x}{Either a tree of class \link{aphylo} or an object of class \link{aphylo_estimates}}
 }
 \description{
 The function \code{predict_pre_order} uses a pre-order algorithm to compute the

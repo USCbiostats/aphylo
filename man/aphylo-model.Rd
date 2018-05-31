@@ -11,7 +11,7 @@
 \alias{aphylo_formula}
 \title{Formulas in \code{aphylo}}
 \usage{
-aphylo_call(params)
+aphylo_call(params, priors)
 
 eta(..., env)
 
@@ -21,10 +21,12 @@ Pi(..., env)
 
 mu(..., env)
 
-aphylo_formula(fm, params, env = parent.frame())
+aphylo_formula(fm, params, priors, env = parent.frame())
 }
 \arguments{
 \item{params}{Numeric vector with model parameters.}
+
+\item{priors}{(optional) A function. Prior for the model.}
 
 \item{...}{Either 0, 1 or both. Depending on the parameter, the index of the
 model parameter that will be set as fixed.}

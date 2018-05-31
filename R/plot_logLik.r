@@ -40,7 +40,7 @@ plot_logLik.aphylo <- function(x, sets, ...) {
       params = model$params,
       priors = function(p) 1,
       fun    = model$fun,
-      ll     = model$fun(model$params, function(p) 1, model$dat, FALSE)
+      ll     = model$fun(model$params, model$dat, function(p) 1, FALSE)
     ),
     sets = sets,
     ...

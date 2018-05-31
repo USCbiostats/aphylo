@@ -2,6 +2,7 @@
 % Please edit documentation in R/estimation.r, R/predict.r
 \name{aphylo_estimates-class}
 \alias{aphylo_estimates-class}
+\alias{aphylo_estimates}
 \alias{aphylo_mle}
 \alias{print.aphylo_estimates}
 \alias{coef.aphylo_estimates}

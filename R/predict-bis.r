@@ -4,7 +4,8 @@
 #' posterior probabilities, whereas the `predict_brute_force` computes posterior
 #' probabilities generating all possible cases.
 #' 
-#' @param atree A tree of class [aphylo]
+#' @param atree,x Either a tree of class [aphylo] or an object of class [aphylo_estimates]
+#' @param params A numeric vector with the corresponding parameters.
 #' @template parameters
 #' @templateVar .psi 1
 #' @templateVar .mu 1
@@ -19,26 +20,65 @@
 #' @name posterior-probabilities
 NULL
 
+#' @export
+#' @rdname posterior-probabilities
+predict_pre_order <- function(x, ...) UseMethod("predict_pre_order")
+
+#' @export
+#' @rdname posterior-probabilities
+predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
+  
+  dots <- list(...)
+  
+  # Checking parameters
+  if (!("Pi" %in% names(params)))
+    Pi <- params["mu0"]/(params["mu0"] + params["mu1"])
+  else 
+    Pi <- params["Pi"]
+  
+  mu <- params[c("mu0", "mu1")]
+  
+  # Looping through the variables
+  p   <- ncol(x$dat$tip.annotation)
+  ans <- lapply(1:p, function(i) {
+    
+    # Updating tree (we only need a single function)
+    tmpdat <- x$dat
+    tmpdat$tip.annotation  <- tmpdat$tip.annotation[,i,drop=FALSE]
+    tmpdat$node.annotation <- tmpdat$node.annotation[,i,drop=FALSE]
+    
+    dots$dat      <- tmpdat
+    dots$p        <- params
+    dots$verb_ans <- TRUE
+    
+    # The user may change the priors
+    if (!length(dots$priors))
+      dots$priors <- x$priors
+    
+    # Computing loglike
+    l <- do.call(x$fun, dots)
+    
+    # Returning posterior probability
+    .posterior_prob(l$Pr, mu, Pi, x$dat$pseq, x$dat$offspring)$posterior
+    
+  })
+  
+  do.call(cbind, ans)
+  
+}
+
 #' @rdname posterior-probabilities
 #' @export
-predict_pre_order <- function(atree, psi, mu, eta, Pi, ...) {
+predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
   
-  # Should be aphylo
-  if (!inherits(atree, "aphylo"))
-    stop("`atree` must be of class `aphylo` (it is of class ", class(atree), ".")
-  
-  if (missing(Pi) || is.na(Pi))
-    Pi <- mu[1]/sum(mu)
-  
-  
-  p <- ncol(atree$tip.annotation)
+  p <- ncol(x$tip.annotation)
   ans <- lapply(1:p, function(i) {
     
     # Computing loglike
     l <- .LogLike(
-      annotations = with(atree, rbind(tip.annotation, node.annotation))[,i,drop=FALSE],
-      offspring   = atree$offspring,
-      pseq        = atree$pseq,
+      annotations = with(x, rbind(tip.annotation, node.annotation))[,i,drop=FALSE],
+      offspring   = x$offspring,
+      pseq        = x$pseq,
       psi         = psi,
       mu          = mu,
       eta         = eta,
@@ -48,7 +88,7 @@ predict_pre_order <- function(atree, psi, mu, eta, Pi, ...) {
     )
     
     # Returning posterior probability
-    .posterior_prob(l$Pr, mu, Pi, atree$pseq, atree$offspring)$posterior
+    .posterior_prob(l$Pr, mu, Pi, x$pseq, x$offspring)$posterior
     
   })
     

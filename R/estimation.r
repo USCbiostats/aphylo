@@ -114,6 +114,7 @@ try_solve <- function(x, ...) {
 #' }
 #' 
 #' @name aphylo_estimates-class
+#' @aliases aphylo_estimates
 NULL
 
 new_aphylo_estimates <- function(
@@ -178,7 +179,7 @@ aphylo_mle <- function(
   
   # Parsing the formula
   env   <- parent.frame()
-  model <- aphylo_formula(model, params, env = env)
+  model <- aphylo_formula(model, params, priors, env = env)
   
   # Reducing the peeling sequence
   if (getOption("aphylo_reduce_pseq", FALSE))
@@ -336,7 +337,7 @@ aphylo_mcmc <- function(
   
   # Parsing the formula
   env   <- parent.frame()
-  model <- aphylo_formula(model, params, env = env)
+  model <- aphylo_formula(model, params, priors, env = env)
 
   # Checking control
   if (!length(control$nbatch)) control$nbatch <- 2e3

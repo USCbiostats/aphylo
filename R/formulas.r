@@ -4,6 +4,7 @@
 #' model parameter that will be set as fixed.
 #' @param fm A formula. Model of the type `<aphylo-object> ~ <parameters>` (see 
 #' examples).
+#' @param priors (optional) A function. Prior for the model.
 #' @param env Environment (not to be called by the user).
 #' @param params Numeric vector with model parameters.
 #' @return A list with the following elements:
@@ -38,11 +39,11 @@ APHYLO_PARAM_DEFAULT <- structure(
 
 #' @rdname aphylo-model
 #' @export
-aphylo_call <- function(params) {
+aphylo_call <- function(params, priors) {
   
-  list2env(
+  ans <- list2env(
     list(
-      fun = function(p, priors, dat, verb_ans = FALSE) {
+      fun = function(p, dat, priors, verb_ans = FALSE) {
         
         # Arguments
         args <- list(
@@ -80,6 +81,11 @@ aphylo_call <- function(params) {
       ),
     params = params
   ))
+  
+  if (!missing(priors))
+    formals(ans$fun)$priors <- priors
+  
+  ans
 }
 
 validate_dots_in_term <- function(..., expected) {
@@ -277,7 +283,7 @@ validate_parameters <- function(fm, params) {
 
 #' @rdname aphylo-model
 #' @export
-aphylo_formula <- function(fm, params, env = parent.frame()) {
+aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
   
   # Validating formula
   fm  <- validate_aphylo_formula(fm)
@@ -287,7 +293,7 @@ aphylo_formula <- function(fm, params, env = parent.frame()) {
   params <- validate_parameters(fm, params)
   
   # Creating new aphylo call object
-  model_call <- aphylo_call(params)
+  model_call <- aphylo_call(params, priors)
   
   # Is the LHS an aphylo object?
   if (!exists(as.character(val[[2]]), envir = env))
