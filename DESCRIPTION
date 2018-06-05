@@ -2,8 +2,8 @@ Package: aphylo
 Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"), email="g.vegayon@gmail.com",
   comment = c(ORCID = "0000-0002-3171-0844"))
-Version: 0.1.99
-Date: 2017-04-18
+Version: 0.0.99
+Date: 2018-06-05
 Description: The `aphylo` R package implements estimation and data imputation
   methods for Functional Annotations in Phylogenetic Trees. The core function
   consists on the computation of the log-likelihood of observing a given
@@ -12,7 +12,7 @@ Description: The `aphylo` R package implements estimation and data imputation
   experimental misclasification. `aphylo` works smoothly with popular tools for
   analysis of phylogenetic data such as `ape` R package, "Analyses of
   Phylogenetics and Evolution".
-Depends: R (>= 3.1.1), ape
+Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
 Imports: 
     Rcpp (>= 0.12.1),
