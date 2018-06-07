@@ -1,0 +1,135 @@
+---
+title: "P01 IMAGE Retreat 2018"
+author: "George G. Vega Yon"
+date: "June 7, 2018"
+output: html_document
+---
+
+
+# Core C/D
+
+## Up to the EAC
+
+*   A bunch of R packages
+
+*   An uscimage R package with rmarkdown templates
+
+*   The Happy Scientist Semminars
+
+*   The Writing R packages Workshop
+
+## New since the EAC
+
+*   We have a list of github issue templates that can be used as checklists for
+    starting projects.
+    
+*   We have AWS, now what...
+
+*   Bioghost 2: On the process of acquiring new hard drives to make both machines
+    bioghost 1/2 to use the same filesys.
+    
+*   Upcomming Happy Scientist Semminars: Shiny, Docker (?)
+
+*   The Intro to HPC with R
+
+*   Sort of alliance with HPCC for education (possible will be doing a workshop
+    on R by the end of the summer)
+    
+*   A list of R packages (more [here](https://github.com/USCbiostats/software-dev#uscbiostats-r-packages)):
+    
+    -   LUCid
+    -   hierr
+    -   aphylo
+    -   amcmc
+    -   polygons
+    -   uscimage
+    -   partition*
+    -   fdrci*
+    -   CASI*
+    
+    (*) New since the EAC
+    
+
+# Project 2
+
+## Up to the EAC
+
+*   Working version of the MCMC/MLE estimators
+    
+*   Simulations using PANTHER data showed the MCMC has good coverage and is
+    performing as expected.
+    
+*   Working and highly tested R package (but the posterior probabilities)
+
+## After the EAC
+
+*   Looking at the last point, a corrected and throughly tested algorithm for
+    computing posterior probabilities (the jmorr tests)
+    
+*   We have included a new parameter in the model, $\eta$ publication bias probabilities.
+    
+*   New version of the R package allows more flexibility in model specification.
+    The likelihood function is written based on formulas:
+    
+    ```r
+    # Baseline model, only including gain/loss probabilities
+    dat ~ mu
+    
+    # Now we add mislabeling probabilities
+    dat ~ mu + psi
+    
+    # Now the mislabeling probabilities (both for psi0 and psi1) are fixed in the
+    # model.
+    dat ~ mu + psi(0, 1)
+    
+    # Adding the publication bias (eta) probabilities and telling the model
+    # that Pi (the root node probability) has its own parameter
+    dat ~ mu + psi + eta + Pi
+    ```
+    
+*   We are working on re-running the algorithm on both simulated annotations and
+    manually curated data.
+  
+*   A couple of examples
+    ```{r aphylo-example, cache=TRUE}
+    
+    library(aphylo)
+    
+    # Simulating and dropping annotations
+    set.seed(3)
+    dat <- sim_annotated_tree(40, eta = c(.7, .9)) 
+
+    # Doing some viz
+    plot(dat)
+    
+    # Analysis
+    ans <- aphylo_mcmc(
+      dat ~ psi + eta,
+      control = list(nbatch = 5e4, nchains=4, thin=10),
+      priors = function(p) c(
+        # Beta priors for all parameters
+        dbeta(p[c("mu0", "mu1", "psi0", "psi1")], 2, 18),
+        dbeta(p[c("eta0", "eta1")], 18, 2)
+      )
+      )
+    
+    ans
+    plot(ans) # Looking at the surface
+    
+    # Prediction
+    pred <- predict(ans)
+    prediction_score(ans)
+    
+    plot(prediction_score(ans))
+    ```
+    
+    
+## Challenges and What
+
+*   We still have to figure out how to incorporate some sort of correlation 
+    structure accross functions. Right now we are assuming that functions are
+    independent and that's a problem as annotations are rather sparse.
+    
+
+
+  
