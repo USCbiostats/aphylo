@@ -9,9 +9,8 @@
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo
-#' @importFrom rncl read_newick_phylo
-#' @importFrom RColorBrewer brewer.pal
 #' @importFrom polygons colorkey colorRamp2 piechart circle
+#' @importFrom viridisLite viridis
 NULL
 
 #' @useDynLib aphylo, .registration=TRUE

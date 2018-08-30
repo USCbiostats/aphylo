@@ -28,8 +28,8 @@ aphylo_mcmc(model, params, priors = function(p) 1, control = list(),
 
 \method{predict}{aphylo_estimates}(object, ...)
 
-prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation ==
-  1L, na.rm = TRUE), W = NULL, ...)
+prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation
+  == 1L, na.rm = TRUE), W = NULL, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }

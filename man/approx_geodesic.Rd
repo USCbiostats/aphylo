@@ -4,7 +4,8 @@
 \alias{approx_geodesic}
 \title{Approximation of Geodesic distances using Matrix Powers}
 \usage{
-approx_geodesic(edges, nsteps = 5000L, undirected = TRUE, warn = FALSE)
+approx_geodesic(edges, nsteps = 5000L, undirected = TRUE,
+  warn = FALSE)
 }
 \arguments{
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \\code{(parent, offspring)}.}

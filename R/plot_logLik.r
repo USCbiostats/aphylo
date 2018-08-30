@@ -103,7 +103,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       
       # Creating colors
       nbcol       <- 100
-      color       <- viridis::viridis(nbcol)
+      color       <- viridisLite::viridis(nbcol)
       zfacet      <- dots$z[-1, -1] + dots$z[-1, -ncz] + dots$z[-nrz, -1] + dots$z[-nrz, -ncz]
       facetcol    <- cut(zfacet, nbcol)
       dots$col    <- color[facetcol]

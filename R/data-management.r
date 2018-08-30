@@ -265,9 +265,10 @@ as_aphylo <- function(
 }
 
 
-#' Set of colors
+#' Set of colors from dput(RColorBrewer::brewer.pal(7, "RdBu"), file = "")
 #' @noRd
-.aphyloColors <- RColorBrewer::brewer.pal(7, "RdBu")
+.aphyloColors <- c("#B2182B", "#EF8A62", "#FDDBC7", "#F7F7F7", "#D1E5F0", "#67A9CF", 
+                   "#2166AC")
 
 #' Plot and print methods for `aphylo` objects
 #' 

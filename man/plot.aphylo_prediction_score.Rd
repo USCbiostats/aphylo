@@ -34,6 +34,6 @@ This is mostly useful when the number of predictions is small.}
 Visualize predictions
 }
 \details{
-If \code{include.labels = NULL} and \code{ncol(x$expected) &gt; 40},
+If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
 then \code{include.labels=FALSE} by default.
 }

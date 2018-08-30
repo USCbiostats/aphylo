@@ -4,9 +4,10 @@
 \alias{plot_multivariate}
 \title{Multiavariate plot (surface)}
 \usage{
-plot_multivariate(fun, params, domain, sets, nlevels = 20, args = list(),
-  plotfun = graphics::image, plot = TRUE, postplot = function(params, res)
-  {     points(params, cex = 2, pch = 3, col = "red") }, mfrow = NULL, ...)
+plot_multivariate(fun, params, domain, sets, nlevels = 20,
+  args = list(), plotfun = graphics::image, plot = TRUE,
+  postplot = function(params, res) {     points(params, cex = 2, pch = 3,
+  col = "red") }, mfrow = NULL, ...)
 }
 \arguments{
 \item{fun}{A function that receives 2 or more parameters and returns a single
