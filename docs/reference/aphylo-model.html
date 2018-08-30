@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -32,6 +34,7 @@
 
 <meta property="og:description" content="Formulas in aphylo" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -58,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.99</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.99</span>
       </span>
     </div>
 
@@ -157,7 +160,7 @@ model parameter that will be set as fixed.</p></td>
     </tr>
     <tr>
       <th>fm</th>
-      <td><p>A formula. Model of the type <code>&amp;lt;aphylo-object&amp;gt; ~ &amp;lt;parameters&amp;gt;</code> (see
+      <td><p>A formula. Model of the type <code>&lt;aphylo-object&gt; ~ &lt;parameters&gt;</code> (see
 examples).</p></td>
     </tr>
     </table>
@@ -178,7 +181,7 @@ examples).</p></td>
 <span class='co'># Baseline model</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu
-#&gt; &lt;environment: 0x7692268&gt;
+#&gt; &lt;environment: 0x743c8f8&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -238,12 +241,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0xdd6bd30&gt;
+#&gt; &lt;environment: 0x6f01820&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi
-#&gt; &lt;environment: 0x7692268&gt;
+#&gt; &lt;environment: 0x743c8f8&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -303,12 +306,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0xd21ea48&gt;
+#&gt; &lt;environment: 0xd6f8de0&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities and etas(fixed)</span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span> + <span class='fu'>eta</span>(<span class='fl'>0</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi + eta(0, 1)
-#&gt; &lt;environment: 0x7692268&gt;
+#&gt; &lt;environment: 0x743c8f8&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -367,12 +370,12 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0x9b4a500&gt;
+#&gt; &lt;environment: 0xba0f5e8&gt;
 #&gt; </div><div class='input'>
 <span class='co'># Mislabeling probabilities and Pi </span>
 <span class='fu'>aphylo_formula</span>(<span class='no'>x</span> ~ <span class='no'>mu</span> + <span class='no'>psi</span> + <span class='no'>Pi</span>)</div><div class='output co'>#&gt; $model
 #&gt; x ~ mu + psi + Pi
-#&gt; &lt;environment: 0x7692268&gt;
+#&gt; &lt;environment: 0x743c8f8&gt;
 #&gt; 
 #&gt; $dat
 #&gt; 
@@ -431,7 +434,7 @@ examples).</p></td>
 #&gt;         ans
 #&gt;     else ans$ll
 #&gt; }
-#&gt; &lt;environment: 0x6e693f0&gt;
+#&gt; &lt;environment: 0xbeff880&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
