@@ -230,35 +230,47 @@ validate_parameters <- function(fm, params) {
   # what the formula is.
   if (missing(params)) {
     
+    warning("No parameters were specified. Default will be used instead.")
     APHYLO_PARAM_DEFAULT[vars]
     
   } else {
     
+    # Retrieving name of the parameters
+    pnames <- switch(
+      class(params),
+      matrix = colnames(params),
+      names(params)
+      )
+    
     # Checking length
-    if (!length(names(params))) {
+    if (!length(pnames)) {
       
       # If unnamed, are we giving enough information?
-      if (length(params) != length(vars))
+      npars <- switch (class(params),
+        matrix = ncol(params),
+        length(params)
+      )
+      if (npars != length(vars))
         stop("The initial parameters have different length than specified in ",
              "the model.", call.=FALSE)
       
       # Matching names by position
       warning("Initial parameres matched by position.", call. = FALSE)
       
-      return(structure(
-        .Data = params,
-        names = vars
-      ))
+      if (is.matrix(params)) 
+        return(structure(.Data = params, dimnames = list(NULL, vars)))
+      else
+        return(structure(.Data = params, names = vars))
       
     }
     
     # More than needed
-    test <- which(!(names(params) %in% vars))
+    test <- which(!(pnames %in% vars))
     if (length(test)) {
       stop(
         "The initial parametes must match those specified in the model. ",
         "The following parameters have been overspecified: '",
-        paste(names(params)[test], collapse = "', '"), "'. These should ",
+        paste(pnames[test], collapse = "', '"), "'. These should ",
         "match the following set of parameters: '",
         paste(vars, collapse = "', '"), "'.", 
         call. = FALSE
@@ -266,7 +278,7 @@ validate_parameters <- function(fm, params) {
     }
     
     # Less than required
-    test <- which(!(vars %in% names(params)))
+    test <- which(!(vars %in% pnames))
     if (length(test)) {
       stop(
         "The initial parametes must match those specified in the model. ",
@@ -278,7 +290,11 @@ validate_parameters <- function(fm, params) {
       )
     }
     
-    params
+    # Sorting accordingly
+    if (is.matrix(params))
+      params[,vars,drop=FALSE]
+    else
+      params[vars]
     
   }
   
