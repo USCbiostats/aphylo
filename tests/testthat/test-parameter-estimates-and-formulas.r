@@ -11,7 +11,7 @@ test_that("x ~ mu", {
   mypriors <- function(z) dbeta(z, 2, 10)
 
   set.seed(1)
-  ans0 <- aphylo_mcmc(x ~ mu, priors = mypriors)
+  ans0 <- suppressWarnings(aphylo_mcmc(x ~ mu, priors = mypriors))
   
 
   fun <- function(p) {
@@ -54,7 +54,7 @@ test_that("x ~ mu + psi + Pi", {
   mypriors <- function(z) dbeta(z, 2, 10)
   
   set.seed(1)
-  ans0 <- aphylo_mcmc(x ~ mu + psi + Pi, priors = mypriors)
+  ans0 <- suppressWarnings(aphylo_mcmc(x ~ mu + psi + Pi, priors = mypriors))
   
   
   fun <- function(p) {
