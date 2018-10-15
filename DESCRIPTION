@@ -23,7 +23,8 @@ Imports:
     polygons,
     amcmc,
     utils,
-    viridisLite
+    viridisLite,
+    MASS
 Suggests:
     covr,
     testthat,
@@ -42,12 +43,12 @@ Remotes: USCbiostats/polygons, USCbiostats/amcmc
 Collate: 
     'RcppExports.R'
     'ape.r'
+    'aphylo-package.r'
     'data-management.r'
     'plot_logLik.r'
     'estimation.r'
     'formulas.r'
     'loglike.r'
-    'package.r'
     'panther.r'
     'predict-bis.r'
     'predict.r'

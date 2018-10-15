@@ -4,7 +4,7 @@
 #' @noRd
 try_solve <- function(x, ...) {
   
-  ans <- tryCatch(solve(x, ...), error = function(e) e)
+  ans <- tryCatch(MASS::ginv(x, ...), error = function(e) e)
   
   # If it is an error
   if (inherits(ans, "error")) {

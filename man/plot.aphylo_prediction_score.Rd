@@ -9,7 +9,7 @@
   main = "Prediction Accuracy: Observed versus predicted values",
   main.colorkey = "Probability of Functional Annotation",
   which.fun = seq_len(ncol(x$expected)), include.labels = NULL,
-  labels.col = "black", ...)
+  labels.col = "black", leafs_only = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{aphylo_prediction_score}.}
@@ -27,6 +27,8 @@ at each slice which by default are specified as the rownames of \code{x$expected
 This is mostly useful when the number of predictions is small.}
 
 \item{labels.col}{Character scalar. Color of the labels.}
+
+\item{leafs_only}{Logical. When \code{TRUE} (default) only plots the leaf nodes.}
 
 \item{...}{Ignored}
 }

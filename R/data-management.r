@@ -314,6 +314,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   on.exit(graphics::par(op))
   do.call(plot, c(list(x=phylo), dots))
   
+  # Capturing the parameters from the `ape` package
   plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
   
   tips <- with(plot_pars$last_plot.phylo, cbind(xx, yy))
@@ -343,20 +344,16 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   )
   
   for (f in 1:nfun) {
-    
-    # Computing colors
-    cols <- x$tip.annotation[,f]
-    cols[cols == 9] <- .5
-    cols <- rgb(polygons::colorRamp2(.aphyloColors)(cols), maxColorValue = 255)
-    
+
     # Drawing rectangles
     rect(
       xleft   = (f - 1)/nfun,
       ybottom = tips[,2] - yspacing,
       xright  = f/nfun,
       ytop    = tips[,2] + yspacing, xpd=NA,
-      col     = cols,
-      border  = "black",
+      col     = blue(x$tip.annotation[,f]),
+      density = ifelse(x$tip.annotation[,f] == 9L, 10, NA),
+      border  = blue(x$tip.annotation[,f]),
       lwd     = .5
     )
     
@@ -378,10 +375,11 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   graphics::plot.window(c(0,1), c(0,1))
   legend(
     "center",
-    legend = c("No function", "N/A", "Function"),
-    fill   = rgb(polygons::colorRamp2(.aphyloColors)(c(0,.5,1)), maxColorValue=255),
-    bty    = "n",
-    horiz  = TRUE
+    legend  = c("No function", "Function", "no information"),
+    fill    = blue(c(0,1,9)),
+    bty     = "n",
+    density = c(NA, NA, 10),
+    horiz   = TRUE
     )
   
   invisible(NULL)
