@@ -324,13 +324,14 @@ logLik.aphylo_estimates <- function(object, ...) {
 }
 
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
-  nbatch = 2e4L,
-  burnin = 1e3L,
-  thin   = 20L,
-  scale  = .01,
-  ub     = 1,
-  lb     = 0,
-  useCpp = TRUE
+  nbatch   = 1e5L,
+  burnin   = 1e4L,
+  thin     = 20L,
+  scale    = .01,
+  ub       = 1,
+  lb       = 0,
+  useCpp   = FALSE,
+  autostop = 5e3
 )
 
 #' @rdname aphylo_estimates-class
@@ -371,10 +372,10 @@ aphylo_mcmc <- function(
     c(
       list(
         fun      = model$fun,
-        initial  = model$params,
         dat      = model$dat,
         priors   = priors,
-        verb_ans = FALSE
+        verb_ans = FALSE,
+        initial  = model$params
         ),
       control
       )
@@ -389,18 +390,18 @@ aphylo_mcmc <- function(
   
   # Returning
   new_aphylo_estimates(
-    par        = par,
-    hist       = ans,
-    ll         = do.call(model$fun, list(dat = model$dat, priors=priors, p=par, verb_ans=FALSE)),
-    counts     = control$nbatch,
+    par         = par,
+    hist        = ans,
+    ll          = do.call(model$fun, list(dat = model$dat, priors=priors, p=par, verb_ans=FALSE)),
+    counts      = coda::niter(ans),
     convergence = NA,
-    message    = NA,
-    fun        = model$fun,
-    priors     = priors,
-    dat        = model$dat,
-    par0       = model$params,
-    method     = "mcmc",
-    varcovar   = var(do.call(rbind, ans)),
-    call       = cl
+    message     = NA,
+    fun         = model$fun,
+    priors      = priors,
+    dat         = model$dat,
+    par0        = model$params,
+    method      = "mcmc",
+    varcovar    = var(do.call(rbind, ans)),
+    call        = cl
   )
 }
