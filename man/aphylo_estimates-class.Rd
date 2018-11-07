@@ -14,7 +14,7 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
-  control = list(), lower = 0, upper = 1,
+  control = list(), lower = 1e-10, upper = 1 - 1e-10,
   check.informative = getOption("aphylo.informative", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
@@ -156,8 +156,9 @@ ans_mcmc <- aphylo_mcmc(
 set.seed(1312)
 ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
 ans <- aphylo_mcmc(
-  ap ~ mu + eta + psi + Pi, control = list(nbatch=1e4, thin=100),
-  priors = function(x) dbeta(x, 1, 30)
+  ap ~ mu + eta + psi + Pi,
+  control = list(nbatch=2e4, thin=100),
+  priors  = function(x) dbeta(x, 1, 30)
   )
                    
 pr <- prediction_score(ans)

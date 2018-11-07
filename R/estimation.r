@@ -169,8 +169,8 @@ aphylo_mle <- function(
   method        = "L-BFGS-B",
   priors        = function(p) 1, 
   control       = list(),
-  lower         = 0.0,
-  upper         = 1.0,
+  lower         = 1e-10,
+  upper         = 1 - 1e-10,
   check.informative = getOption("aphylo.informative", FALSE)
 ) {
   
@@ -324,14 +324,16 @@ logLik.aphylo_estimates <- function(object, ...) {
 }
 
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
-  nbatch   = 1e5L,
-  burnin   = 1e4L,
-  thin     = 20L,
-  scale    = .01,
-  ub       = 1,
-  lb       = 0,
-  useCpp   = FALSE,
-  autostop = 5e3
+  nbatch    = 1e5L,
+  burnin    = 1e4L,
+  thin      = 20L,
+  scale     = .01,
+  ub        = 1,
+  lb        = 0,
+  nchains   = 2L,
+  multicore = TRUE,
+  useCpp    = FALSE,
+  autostop  = 5e3
 )
 
 #' @rdname aphylo_estimates-class
