@@ -15,7 +15,8 @@
 \usage{
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
   control = list(), lower = 1e-10, upper = 1 - 1e-10,
-  check.informative = getOption("aphylo.informative", FALSE))
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -23,8 +24,9 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-aphylo_mcmc(model, params, priors = function(p) 1, control = list(),
-  check.informative = getOption("aphylo.informative", FALSE))
+aphylo_mcmc(model, params, priors = uprior(), control = list(),
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
 
@@ -42,8 +44,7 @@ prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
 optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{stats::optim()}}.}
 
-\item{priors}{A list of length 3 with functions named \code{psi}, \code{mu},
-\code{Pi}}
+\item{priors}{A function to be used as prior for the model (see \link{bprior}).}
 
 \item{control}{A list with parameters for the optimization method (see
 details).}
@@ -52,6 +53,10 @@ details).}
 
 \item{check.informative}{Logical scalar. When \code{TRUE} the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).}
+
+\item{reduced_pseq}{Logical. When \code{TRUE} it will use a reduced peeling sequence
+in which it drops unannotated leafs. If the model includes \code{eta} this is set
+to \code{FALSE}.}
 
 \item{...}{Further arguments passed to the method}
 

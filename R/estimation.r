@@ -26,14 +26,16 @@ try_solve <- function(x, ...) {
 #' @param model A model as specified in [aphylo-model].
 #' @param method Character scalar. When `"ABC"`, uses Artificial Bee Colony
 #' optimization algorithm, otherwise it uses a method in [stats::optim()]. 
-#' @param priors A list of length 3 with functions named `psi`, `mu`,
-#' `Pi`
+#' @param priors A function to be used as prior for the model (see [bprior]).
 #' @param control A list with parameters for the optimization method (see
 #' details).
 #' @param lower,upper Numeric vectors defining the lower and upper bounds respectively.
 #' @param object,x An object of class `aphylo_estimates`.
 #' @param check.informative Logical scalar. When `TRUE` the algorithm
 #' stops with an error when the annotations are uninformative (either 0s or 1s).
+#' @param reduced_pseq Logical. When `TRUE` it will use a reduced peeling sequence
+#' in which it drops unannotated leafs. If the model includes `eta` this is set
+#' to `FALSE`.
 #' @param ... Further arguments passed to the method
 #' 
 #' @details 
@@ -166,12 +168,13 @@ stop_ifuninformative <- function(tip.annotation) {
 aphylo_mle <- function(
   model,
   params,
-  method        = "L-BFGS-B",
-  priors        = function(p) 1, 
-  control       = list(),
-  lower         = 1e-10,
-  upper         = 1 - 1e-10,
-  check.informative = getOption("aphylo.informative", FALSE)
+  method            = "L-BFGS-B",
+  priors            = function(p) 1, 
+  control           = list(),
+  lower             = 1e-10,
+  upper             = 1 - 1e-10,
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
 ) {
   
   # Getting the call
@@ -185,13 +188,17 @@ aphylo_mle <- function(
     warnings("Fixing parameters is ignored in MLE estimation.")
   
   # Reducing the peeling sequence
-  if (getOption("aphylo_reduce_pseq", FALSE))
+  # This only happens if the eta parameter is not included
+  if (length(model$fixed["eta0"]))
+    reduced_pseq <- FALSE
+  
+  if (reduced_pseq)
     model$dat$pseq <- reduce_pseq(
       model$dat$pseq,
       with(model$dat, rbind(tip.annotation, node.annotation)),
       model$dat$offspring
-      )
-
+    )
+  
   # If the models is uninformative, then it will return with error
   if (check.informative)
     stop_ifuninformative(model$dat$tip.annotation)
@@ -343,9 +350,10 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
 aphylo_mcmc <- function(
   model,
   params,
-  priors        = function(p) 1,
-  control       = list(),
-  check.informative = getOption("aphylo.informative", FALSE)
+  priors            = uprior(),
+  control           = list(),
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
 ) {
   
   # Getting the call
@@ -355,6 +363,18 @@ aphylo_mcmc <- function(
   env   <- parent.frame()
   model <- aphylo_formula(model, params, priors, env = env)
 
+  # Reducing the peeling sequence
+  # This only happens if the eta parameter is not included
+  if ("eta0" %in% names(model$fixed))
+    reduced_pseq <- FALSE
+    
+  if (reduced_pseq)
+    model$dat$pseq <- reduce_pseq(
+      model$dat$pseq,
+      with(model$dat, rbind(tip.annotation, node.annotation)),
+      model$dat$offspring
+    )
+  
   # Checking control
   for (n in names(APHYLO_DEFAULT_MCMC_CONTROL)) {
     if (!length(control[[n]]))

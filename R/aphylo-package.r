@@ -80,5 +80,5 @@ NULL
 
 options(
   aphylo.informative = FALSE,
-  aphylo_reduce_pseq = FALSE
+  aphylo_reduce_pseq = TRUE
   )

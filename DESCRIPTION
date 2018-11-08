@@ -52,5 +52,6 @@ Collate:
     'panther.r'
     'predict-bis.r'
     'predict.r'
+    'priors.R'
     'prune.r'
     'simulation.r'
