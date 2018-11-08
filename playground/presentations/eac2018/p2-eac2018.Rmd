@@ -1,0 +1,88 @@
+---
+title: "Untitled"
+author: "George G. Vega Yon"
+date: "November 7, 2018"
+output: uscimage::beamer_USCImage
+---
+
+```{r setup, include=FALSE}
+library(aphylo)
+knitr::opts_chunk$set(
+  echo = TRUE, warning = FALSE, message = FALSE, echo=FALSE,
+  out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
+```
+
+## Changes from last year
+
+Particular of the model
+
+*   Flexible model especification
+
+*   Prediction function
+
+*   New set of parameters
+
+By products
+
+*   The `sluRm` R package: A light weight interface to slurm.
+
+*   Improvements on the `amcmc` R package, notably: automatic convergence.
+
+
+## A walk using the R package
+
+Simulating data
+
+```{r dgp}
+library(aphylo)
+
+# Setting the seed and simulating the data
+set.seed(1)
+x <- sim_annotated_tree(20)
+
+# Droping some annotations
+x <- rdrop_annotations(x, .7)
+```
+
+## Nice visualizations
+
+```{r tree}
+plot(x)
+```
+
+----
+
+```{r likelihood}
+plot_logLik(x ~ mu + psi + Pi)
+```
+
+
+## Flexible model especification
+
+Automatic especification of the likelihood function, e.g.
+
+\small
+
+*   `x ~ mu` baseline model
+
+*   `x ~ mu + psi + Pi` model including mislabeling and root node probabilities
+
+*   `x ~ mu + Pi` same as before, but excluding mislabeling
+
+*   `x ~ mu + psi(1) + Pi` mislabeling of 1 is fixed
+
+*   `x ~ mu + psi(0, 1) + Pi` mislabeling of 0s and 1s is fixed
+
+\normalsize
+
+## Flexible model especification
+
+\footnotesize
+
+```{r model-example}
+ans <- aphylo_mcmc(x ~ mu + psi + Pi, priors = bprior())
+ans
+```
+
+
+\normalsize
