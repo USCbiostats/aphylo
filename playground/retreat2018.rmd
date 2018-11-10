@@ -105,7 +105,7 @@ output: html_document
     # Analysis
     ans <- aphylo_mcmc(
       dat ~ psi + eta,
-      control = list(nbatch = 5e4, nchains=4, thin=10),
+      control = list(nbatch = 5e4, nsteps=4, thin=10),
       priors = function(p) c(
         # Beta priors for all parameters
         dbeta(p[c("mu0", "mu1", "psi0", "psi1")], 2, 18),

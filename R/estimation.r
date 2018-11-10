@@ -45,7 +45,7 @@ try_solve <- function(x, ...) {
 #' The default values of `control` are:
 #' 
 #' \tabular{ll}{
-#' `nbatch` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
+#' `nsteps` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
 #' `scale` \tab Numeric scalar. Default `0.01`. \cr
 #' `lb` \tab Numeric vector. Default `rep(1e-20, 5)`. \cr
 #' `ub` \tab Numeric vector. Default `rep(1 - 1e-20, 5)`. \cr
@@ -111,7 +111,7 @@ try_solve <- function(x, ...) {
 #' 
 #' ans_mcmc <- aphylo_mcmc(
 #'   dat ~ mu + psi + eta + Pi,
-#'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
+#'   control = list(nsteps = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
 #' 
@@ -331,7 +331,7 @@ logLik.aphylo_estimates <- function(object, ...) {
 }
 
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
-  nbatch    = 1e5L,
+  nsteps    = 1e5L,
   burnin    = 1e4L,
   thin      = 20L,
   scale     = .01,
