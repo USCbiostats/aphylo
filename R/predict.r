@@ -30,8 +30,9 @@ predict.aphylo_estimates <- function(object, ...) {
 #' set.seed(1312)
 #' ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
 #' ans <- aphylo_mcmc(
-#'   ap ~ mu + eta + psi + Pi, control = list(nbatch=1e4, thin=100),
-#'   priors = function(x) dbeta(x, 1, 30)
+#'   ap ~ mu + eta + psi + Pi,
+#'   control = list(nsteps=2e4, thin=100),
+#'   priors  = function(x) dbeta(x, 1, 30)
 #'   )
 #'                    
 #' pr <- prediction_score(ans)
@@ -101,7 +102,8 @@ prediction_score <- function(
       random    = rand,
       alpha     = alpha,
       obs.ids   = ids,
-      leaf.ids  = 1L:nrow(x$dat$tip.annotation)
+      leaf.ids  = 1L:nrow(x$dat$tip.annotation),
+      tree      = x$dat$tree
     ), class = "aphylo_prediction_score"
   )
   
@@ -131,6 +133,13 @@ print.aphylo_prediction_score <- function(x, ...) {
 }
 
 
+# Function to color the absence/presence of function
+blue <- function(x) {
+  ans <- polygons::colorRamp2(.aphyloColors)(x)
+  ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
+  ifelse(x == 9, "black", ans)
+}
+
 #' Visualize predictions
 #' 
 #' @export
@@ -144,7 +153,7 @@ print.aphylo_prediction_score <- function(x, ...) {
 #' This is mostly useful when the number of predictions is small.
 #' @param labels.col Character scalar. Color of the labels.
 #' @param main.colorkey Character scalar. Title of the colorkey (optional).
-#' 
+#' @param leafs_only Logical. When `TRUE` (default) only plots the leaf nodes.
 #' @details
 #' 
 #' If `include.labels = NULL` and `ncol(x$expected) > 40`,
@@ -158,17 +167,32 @@ plot.aphylo_prediction_score <- function(
   which.fun      = seq_len(ncol(x$expected)),
   include.labels = NULL,
   labels.col     = "black",
+  leafs_only     = TRUE,
   ...
   ) {
   
+  # Should we plot only the leafs?
+  if (leafs_only)
+    idx <- x$leaf.ids
+  else
+    idx <- 1:nrow(x$predicted)
+  
+  predicted <- x$predicted[idx,,drop=FALSE]
+  expected  <- x$expected[idx,,drop=FALSE]
+  
   k <- length(which.fun)
-  y <- rep(1L, nrow(x$expected))
+  y <- rep(1L, nrow(predicted))
   
   # Should we draw the labels?
   if (!length(include.labels)) {
-    if (nrow(x$expected) > 40) include.labels <- FALSE
+    if (nrow(predicted) > 40) include.labels <- FALSE
     else include.labels <- TRUE
   }
+  
+  # Getting the order
+  grDevices::pdf(file = NULL);ape::plot.phylo(x$tree, plot=FALSE);grDevices::dev.off()
+  plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
+  ord  <- order(plot_pars$last_plot.phylo$yy[idx])
   
   oldpar <- graphics::par(mar=c(3,0,3,0))
   on.exit(graphics::par(oldpar))
@@ -176,7 +200,8 @@ plot.aphylo_prediction_score <- function(
   for (i in 1:k) {
     
     # Sorting accordingly to predicted
-    ord <- 1L:length(x$predicted[,i]) # order(x$predicted[,i])
+    # ord <- 1L:length(predicted[,i]) 
+    
 
     # Outer polygon
     piechart(
@@ -188,25 +213,18 @@ plot.aphylo_prediction_score <- function(
     graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5, col = "lightgray")
     graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5, col="white")
     
-    # Function to color the absence/presence of function
-    blue <- function(x) {
-      ans <- polygons::colorRamp2(.aphyloColors)(x)
-      ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
-      ifelse(x == 9, "black", ans)
-    }
-    
     # Outer pie
     opie <- polygons::piechart(
       y,
       radius    = 1,
       doughnut  = .755,
       add       = TRUE,
-      col       = blue(x$predicted[ord,i]),
-      border    = blue(x$predicted[ord,i]), 
+      col       = blue(predicted[ord,i]),
+      border    = blue(predicted[ord,i]), 
       lwd       = .5,
       slice.off = ifelse(
-        x$expected[ord, i] == 9L,.25,
-        abs(x$predicted[ord, i] - x$expected[ord, i])/2
+        expected[ord, i] == 9L,.25,
+        abs(predicted[ord, i] - expected[ord, i])/2
       )
     )
     
@@ -216,13 +234,13 @@ plot.aphylo_prediction_score <- function(
       doughnut  = 0.5,
       radius    = .745,
       add       = TRUE,
-      col       = blue(x$expected[ord,i]),
-      border    = blue(x$expected[ord,i]),
+      col       = blue(expected[ord,i]),
+      border    = blue(expected[ord,i]),
       lwd       = .5,
-      density   = ifelse(x$expected[ord,i] == 9L, 10, NA),
+      density   = ifelse(expected[ord,i] == 9L, 10, NA),
       slice.off = ifelse(
-        x$expected[ord, i] == 9L,.25,
-        abs(x$predicted[ord, i] - x$expected[ord, i])/2
+        expected[ord, i] == 9L,.25,
+        abs(predicted[ord, i] - expected[ord, i])/2
       )
     )
     
@@ -235,7 +253,7 @@ plot.aphylo_prediction_score <- function(
         radius    = .5,
         add       = TRUE,
         border    = NA,
-        labels    = rownames(x$expected)[ord],
+        labels    = rownames(expected)[ord],
         text.args = list(
           srt  = ifelse(deg > 270, deg,
                         ifelse(deg > 90, deg + 180, deg)),
@@ -255,13 +273,13 @@ plot.aphylo_prediction_score <- function(
       lty=2, lwd=2
     )
     graphics::segments(x0 = 0, y0 = 1.5, x1 = .1, y1 = 1.6, lwd=2)
-    graphics::text(1.75,1.6, labels = "No match", pos = 3)
+    graphics::text(1.75,1.6, labels = "Perfect miss", pos = 3)
     
     graphics::segments(
       x0 = 0.1, y0 = 0.6, x1 = 1.75, y1 = 0.6, col="black", 
       lty=2, lwd=2)
     graphics::segments(x0 = 0, y0 = .5, x1 = .1, y1 = .6, lwd=2)
-    graphics::text(1.75,0.6, labels = "Perfect\nmatch", pos = 3)
+    graphics::text(1.75,0.6, labels = "Perfect\nprediction", pos = 3)
     
     # Adding more notes
     slice2annotate <- which.min(opie$textcoords[,1])
@@ -269,12 +287,12 @@ plot.aphylo_prediction_score <- function(
     opie <- colMeans(opie$slices[[slice2annotate]])
     ipie <- colMeans(ipie$slices[[slice2annotate]])
     
-    graphics::text(-1.76, .7, labels = "Observed", pos=3)
+    graphics::text(-1.76, .7, labels = "Observed\nannotation", pos=3)
     graphics::segments(-1.76, .7, ipie[1], ipie[2], lty=2, lwd=2)
-    graphics::text(-1.76, -.7, labels = "Predicted", pos=1)
+    graphics::text(-1.76, -.7, labels = "Predicted\nannotation", pos=1)
     graphics::segments(-1.76, -.7, opie[1], opie[2], lty=2, lwd=2)
     
-    graphics::text(0, 0, label=colnames(x$expected)[i], font=2)
+    graphics::text(0, 0, label=colnames(expected)[i], font=2)
     
     # Drawing color key
     oldmar <- graphics::par(mar = rep(0, 4), new = FALSE, xpd=NA)

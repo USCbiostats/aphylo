@@ -103,7 +103,7 @@ ans0 <- aphylo_mle(dat ~ psi + mu + Pi + eta)
 ans2 <- aphylo_mcmc(
   dat ~ mu + psi + eta,
   prior = function(p) dbeta(p, 2,20),
-  control = list(nbatch=1e4, burnin=100, thin=20, nchains=5))
+  control = list(nsteps=1e4, burnin=100, thin=20, nchains=5))
 ans2
 
 plot(ans2)

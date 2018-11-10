@@ -14,8 +14,9 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
-  control = list(), lower = 0, upper = 1,
-  check.informative = getOption("aphylo.informative", FALSE))
+  control = list(), lower = 1e-10, upper = 1 - 1e-10,
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -23,8 +24,9 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-aphylo_mcmc(model, params, priors = function(p) 1, control = list(),
-  check.informative = getOption("aphylo.informative", FALSE))
+aphylo_mcmc(model, params, priors = uprior(), control = list(),
+  check.informative = getOption("aphylo.informative", FALSE),
+  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
 
@@ -42,8 +44,7 @@ prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation
 \item{method}{Character scalar. When \code{"ABC"}, uses Artificial Bee Colony
 optimization algorithm, otherwise it uses a method in \code{\link[stats:optim]{stats::optim()}}.}
 
-\item{priors}{A list of length 3 with functions named \code{psi}, \code{mu},
-\code{Pi}}
+\item{priors}{A function to be used as prior for the model (see \link{bprior}).}
 
 \item{control}{A list with parameters for the optimization method (see
 details).}
@@ -52,6 +53,10 @@ details).}
 
 \item{check.informative}{Logical scalar. When \code{TRUE} the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).}
+
+\item{reduced_pseq}{Logical. When \code{TRUE} it will use a reduced peeling sequence
+in which it drops unannotated leafs. If the model includes \code{eta} this is set
+to \code{FALSE}.}
 
 \item{...}{Further arguments passed to the method}
 
@@ -95,7 +100,7 @@ problem as a maximization problem, \code{phylo_mcmc} generates a \strong{Markov 
 The default values of \code{control} are:
 
 \tabular{ll}{
-\code{nbatch} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
+\code{nsteps} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
 \code{scale} \tab Numeric scalar. Default \code{0.01}. \cr
 \code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
 \code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
@@ -148,7 +153,7 @@ set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
   dat ~ mu + psi + eta + Pi,
-  control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
+  control = list(nsteps = 2e5, burnin=1000, thin=200, scale=2e-2)
 )
 }
 
@@ -156,8 +161,9 @@ ans_mcmc <- aphylo_mcmc(
 set.seed(1312)
 ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
 ans <- aphylo_mcmc(
-  ap ~ mu + eta + psi + Pi, control = list(nbatch=1e4, thin=100),
-  priors = function(x) dbeta(x, 1, 30)
+  ap ~ mu + eta + psi + Pi,
+  control = list(nsteps=2e4, thin=100),
+  priors  = function(x) dbeta(x, 1, 30)
   )
                    
 pr <- prediction_score(ans)

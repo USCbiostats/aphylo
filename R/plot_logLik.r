@@ -174,7 +174,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
 #' @examples 
 #' # Example: A model with less parameters
 #' x <- sim_annotated_tree(20)
-#' ans <- aphylo_mcmc(x ~ psi, control=list(nbatch=1e4))
+#' ans <- aphylo_mcmc(x ~ psi, control=list(nsteps=2e4))
 #' 
 #' # Creating the multivariate plot (using by default image)
 #' plot_multivariate(

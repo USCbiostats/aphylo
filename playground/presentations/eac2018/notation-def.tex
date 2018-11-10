@@ -1,0 +1,54 @@
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+
+% Mathematical functions
+\newcommand{\isone}[1]{{\boldsymbol{1}\left( #1 \right)}}
+\renewcommand{\Pr}[1]{{\mathbb{P}\left(#1\right) }}
+\newcommand{\f}[1]{{f\left(#1\right) }}
+\newcommand{\Prcond}[2]{{\mathbb{P}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
+\newcommand{\fcond}[2]{{f\left(#1|#2\right) }}
+\newcommand{\Expected}[1]{{\mathbb{E}\left\{#1\right\}}}
+
+\newcommand{\Likelihood}[2]{\text{L}\left(#1 \left|\vphantom{#1}#2\right.\right)}
+
+% Mathematical Annotation -------------------------------
+% Modify this so that it matches the P01 convention overall
+
+% Tree
+\newcommand{\phylo}{\Lambda{}} % The actual tree
+\newcommand{\aphylo}{D{}}      % The annotated phylogenetic tree
+\newcommand{\aphyloObs}{\tilde \aphylo{}} % The observed annotated phylogenetic tree
+\newcommand{\parent}[1]{\mathbf{p}\left(#1\right)}
+\newcommand{\offspring}[1]{\mathbf{O}\left(#1\right)}
+\newcommand{\nodes}{\mathcal{N}{}}
+\newcommand{\edges}{\mathcal{E}{}}
+
+% Annotations
+\newcommand{\Ann}{\mathbf{X}{}} % Matrix of "real" annotations
+\newcommand{\ann}[1]{x_{#1}{}} % single element of "real" annotations
+\newcommand{\constraints}{\mathcal{C}{}} % Taxon constraints
+
+% Obs Annotations
+\newcommand{\AnnObs}{\mathbf{Z}{}}%{Z{}} \mathbf{X}^{obs}{}
+\newcommand{\annObs}[1]{z_{#1}{}}%{z{}}  x_{#1}^{obs
+
+% Pred. Annotations
+\newcommand{\AnnPred}{\hat X{}}
+\newcommand{\annPred}[1]{\hat x_{#1}}
+
+% Leaf nodes
+\newcommand{\Leaf}{L{}}
+
+% Shortest path
+\newcommand{\Geodesic}{\text{T}{}}
+\newcommand{\geodesic}{\tau{}}
+
+\newcommand{\Params}{\Omega{}}
+\newcommand{\params}{\omega{}}
+
+% Parameters
+\newcommand{\gain}{\mu_{01}{}}
+\newcommand{\loss}{\mu_{10}{}}
+\newcommand{\misszero}{\psi_{01}{}}
+\newcommand{\missone}{\psi_{10}{}}
+\newcommand{\proot}{\pi}

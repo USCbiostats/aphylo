@@ -230,7 +230,7 @@ validate_parameters <- function(fm, params) {
   # what the formula is.
   if (missing(params)) {
     
-    warning("No parameters were specified. Default will be used instead.")
+    message("No parameters were specified. Default will be used instead.")
     APHYLO_PARAM_DEFAULT[vars]
     
   } else {

@@ -1,0 +1,182 @@
+---
+title: "Project 2: Augmenting functional information about human genes using probabilistic phylogenetic modeling"
+short_title: 
+author: "George G. Vega Yon \\linebreak[4] vegayon@usc.edu \\linebreak[4] \\footnotesize Duncan Thomas \\and Paul D. Thomas \\and Paul Marjoram \\and Huaiyu Mi \\and John Morrison \\normalsize"
+date: "November 14th, 2018"
+institute: "Department of Preventive Medicine \\linebreak[4] University of Southern California"
+short_institute: USC
+short_author: Vega Yon
+output: 
+  uscimage::beamer_USCImage:
+    includes:
+      in_header: notation-def.tex
+    toc: false
+    highlight: zenburn
+    keep_tex: true
+section-titles: false
+fontsize: 9pt
+handout: false
+page-number: true
+classoption: aspectratio=169
+---
+
+```{r setup, include=FALSE}
+library(aphylo)
+knitr::knit_hooks$set(smallsize = function(before, options, envir) {
+    if (before) {
+        "\\footnotesize\n\n"
+    } else {
+        "\n\\normalsize\n\n"
+    }
+})
+
+options(digits = 4)
+knitr::opts_chunk$set(
+  echo = TRUE, warning = FALSE, message = FALSE, echo=FALSE,
+  out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
+```
+
+## Changes from last year
+
+Particular of the model
+
+*   Flexible model especification
+
+*   Prediction function
+
+*   New set of parameters
+
+By products
+
+*   The `sluRm` R package: A light weight interface to slurm.
+
+*   Improvements on the `amcmc` R package, notably: automatic convergence.
+
+## Recap: Notation
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{ll}
+\toprule
+Parameter & Description \\ \midrule
+$\pi$ & Probability that the root node has the function \\
+$\gain$ & Probability of gaining a function \\
+$\loss$ & Probability of loosing a function \\
+$\misszero$ & Probability of mislabeling a 0 \\
+$\missone$ & Probability of mislabeling a 1 \\ \bottomrule
+\end{tabular}
+\caption{Model parameters\label{tab:parameters}}
+\end{table}
+
+
+## A walk using the R package
+
+Simulating data
+
+```{r dgp}
+library(aphylo)
+
+# Setting the seed and simulating the data
+set.seed(2)
+x <- sim_annotated_tree(40, P = 2)
+
+# Droping some annotations
+x <- rdrop_annotations(x, .5)
+```
+
+## Nice visualizations
+
+```{r tree, fig.cap="Annotated Phylogenetic Tree"}
+plot(x, main = "")
+```
+
+----
+
+```{r likelihood, fig.cap="Surface of the likelihood of a given annotated tree."}
+plot_logLik(x ~ mu + psi + Pi)
+```
+
+----
+
+```{r pred, fig.cap="Prediction Accuracy: Observed versus predicted values", cache=TRUE}
+ans <- aphylo_mcmc(x ~ mu + psi + Pi, priors = bprior())
+plot(prediction_score(ans), main = "", )
+```
+
+
+
+## Flexible model especification
+
+Automatic especification of the likelihood function, e.g.
+
+\small
+
+*   `x ~ mu` baseline model
+
+*   `x ~ mu + psi + Pi` model including mislabeling and root node probabilities
+
+*   `x ~ mu + Pi` same as before, but excluding mislabeling
+
+*   `x ~ mu + psi(1) + Pi` mislabeling of 1 is fixed
+
+*   `x ~ mu + psi(0, 1) + Pi` mislabeling of 0s and 1s is fixed
+
+\normalsize
+
+## Flexible model especification
+
+\footnotesize
+
+```{r model-example}
+ans
+```
+
+
+\normalsize
+
+## Model prediction
+
+## Results on the new especification (adventure)
+
+A bad plot goes here
+
+----
+
+Our problem:\pause Missigness is confounded with propensity to fail to report
+
+## Next steps
+
+*   Finish the manuscript 
+
+*   Send to ...
+
+*   Prepare pieces of software to publication
+
+## Concluding remarks
+
+A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 week with 10 processors only).\pause 
+
+-   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
+
+
+-   For the next steps, we are evaluating whether to include or how to include:\pause
+    
+    *   Type of node: speciation, duplication, horizontal transfer.
+    
+    *   Branch lengths
+    
+    *   Correlation structure between functions
+    
+    *   Using Taxon Constraints to improve predictions
+    
+    *   Hierarchical model: Use fully annotated trees by curators as prior information.
+
+----
+
+\begin{center}
+\huge
+\color{USCCardinal}{\textbf{Thank you!}}
+\end{center}
+
+\maketitle
+

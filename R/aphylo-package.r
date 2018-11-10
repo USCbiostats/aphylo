@@ -11,6 +11,7 @@
 #' @importFrom ape as.phylo plot.phylo
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 #' @importFrom viridisLite viridis
+#' @importFrom MASS ginv
 NULL
 
 #' @useDynLib aphylo, .registration=TRUE
@@ -79,5 +80,5 @@ NULL
 
 options(
   aphylo.informative = FALSE,
-  aphylo_reduce_pseq = FALSE
+  aphylo_reduce_pseq = TRUE
   )

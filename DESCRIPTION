@@ -2,7 +2,7 @@ Package: aphylo
 Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"), email="g.vegayon@gmail.com",
   comment = c(ORCID = "0000-0002-3171-0844"))
-Version: 0.0.99
+Version: 0.1.99
 Date: 2018-06-05
 Description: The `aphylo` R package implements estimation and data imputation
   methods for Functional Annotations in Phylogenetic Trees. The core function
@@ -23,7 +23,8 @@ Imports:
     polygons,
     amcmc,
     utils,
-    viridisLite
+    viridisLite,
+    MASS
 Suggests:
     covr,
     testthat,
@@ -31,7 +32,7 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8
 URL: https://github.com/USCbiostats/phylogenetic
 BugReports: https://github.com/USCbiostats/phylogenetic/issues
@@ -42,14 +43,15 @@ Remotes: USCbiostats/polygons, USCbiostats/amcmc
 Collate: 
     'RcppExports.R'
     'ape.r'
+    'aphylo-package.r'
     'data-management.r'
     'plot_logLik.r'
     'estimation.r'
     'formulas.r'
     'loglike.r'
-    'package.r'
     'panther.r'
     'predict-bis.r'
     'predict.r'
+    'priors.R'
     'prune.r'
     'simulation.r'
