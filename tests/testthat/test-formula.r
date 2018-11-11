@@ -50,3 +50,4 @@ test_that("Multiple chains formulas work", {
   expect_s3_class(ans, "aphylo_estimates")
   
 })
+

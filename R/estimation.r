@@ -251,7 +251,7 @@ aphylo_mle <- function(
       dat      = model$dat,
       priors   = priors,
       verb_ans = FALSE
-    )$ll
+    )
     
   }
   
@@ -405,7 +405,8 @@ aphylo_mcmc <- function(
   }
   
   # Fixed parameters
-  if (!length(control$fixed))  control$fixed  <- model$fixed
+  if (!length(control$fixed))
+    control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error
   if (check.informative)
@@ -438,11 +439,11 @@ aphylo_mcmc <- function(
     model$dat$pseq <- old_pseq
 
   ll <- model$fun(
-    p        = ans$par,
+    p        = par,
     dat      = model$dat,
     priors   = priors,
     verb_ans = FALSE
-  )$ll
+  )
   
   # Returning
   new_aphylo_estimates(
