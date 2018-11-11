@@ -149,7 +149,7 @@ arma::mat prob_mat(
 // [[Rcpp::export]]
 IntegerVector reduce_pseq(
     const arma::ivec & pseq,
-    const arma::mat & A,
+    const arma::mat  & A,
     const List & offspring
 ) {
   

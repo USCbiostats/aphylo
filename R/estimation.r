@@ -192,12 +192,19 @@ aphylo_mle <- function(
   if (length(model$fixed["eta0"]))
     reduced_pseq <- FALSE
   
-  if (reduced_pseq)
+  # Short the pruning sequence?
+  if (reduced_pseq) {
+    
+    # Saving
+    old_pseq <- model$dat$pseq
+    
     model$dat$pseq <- reduce_pseq(
       model$dat$pseq,
       with(model$dat, rbind(tip.annotation, node.annotation)),
       model$dat$offspring
     )
+    
+  }
   
   # If the models is uninformative, then it will return with error
   if (check.informative)
@@ -233,8 +240,21 @@ aphylo_mle <- function(
     message     = ans$message,
     counts      = ans$counts["function"]
     )
+  
+  # If changed, we need to set back the original peeling sequence.
+  if (reduced_pseq) {
     
+    model$dat$pseq <- old_pseq
     
+    ans$value <- model$fun(
+      p        = ans$par,
+      dat      = model$dat,
+      priors   = priors,
+      verb_ans = FALSE
+    )$ll
+    
+  }
+  
   # Computing the hessian (information matrix)
   hessian <- stats::optimHess(
     ans$par, model$fun, dat = model$dat, priors = priors, verb_ans = FALSE,
@@ -368,12 +388,15 @@ aphylo_mcmc <- function(
   if ("eta0" %in% names(model$fixed))
     reduced_pseq <- FALSE
     
-  if (reduced_pseq)
+  if (reduced_pseq) {
+    old_pseq <- model$dat$pseq
+    
     model$dat$pseq <- reduce_pseq(
       model$dat$pseq,
       with(model$dat, rbind(tip.annotation, node.annotation)),
       model$dat$offspring
     )
+  }
   
   # Checking control
   for (n in names(APHYLO_DEFAULT_MCMC_CONTROL)) {
@@ -410,11 +433,22 @@ aphylo_mcmc <- function(
   # Working on answer
   par <- colMeans(do.call(rbind, ans))
   
+  # If changed, we need to set back the original peeling sequence.
+  if (reduced_pseq) 
+    model$dat$pseq <- old_pseq
+
+  ll <- model$fun(
+    p        = ans$par,
+    dat      = model$dat,
+    priors   = priors,
+    verb_ans = FALSE
+  )$ll
+  
   # Returning
   new_aphylo_estimates(
     par         = par,
     hist        = ans,
-    ll          = do.call(model$fun, list(dat = model$dat, priors=priors, p=par, verb_ans=FALSE)),
+    ll          = ll,
     counts      = coda::niter(ans),
     convergence = NA,
     message     = NA,
