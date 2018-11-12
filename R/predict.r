@@ -31,7 +31,7 @@ predict.aphylo_estimates <- function(object, ...) {
 #' ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
 #' ans <- aphylo_mcmc(
 #'   ap ~ mu + eta + psi + Pi,
-#'   control = list(nbatch=2e4, thin=100),
+#'   control = list(nsteps=2e4, thin=100),
 #'   priors  = function(x) dbeta(x, 1, 30)
 #'   )
 #'                    

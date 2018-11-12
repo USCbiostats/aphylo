@@ -40,13 +40,14 @@ test_that("Multiple chains formulas work", {
   set.seed(121)
   
   x <- sim_annotated_tree(30)
-  p <- matrix(runif(7*2), nrow=2, dimnames = )
+  p <- matrix(runif(7*2), nrow=2, dimnames = NULL)
   
   expect_warning(
-    ans <- aphylo_mcmc(x~psi+mu+eta+Pi, params = p, control = list(nchains=2, nbatch=500, burnin=10)),
+    ans <- aphylo_mcmc(x~psi+mu+eta+Pi, params = p, control = list(nchains=2, nsteps=500, burnin=10)),
     "matched by position"
   )
   
   expect_s3_class(ans, "aphylo_estimates")
   
 })
+

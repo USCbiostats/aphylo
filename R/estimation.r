@@ -45,7 +45,7 @@ try_solve <- function(x, ...) {
 #' The default values of `control` are:
 #' 
 #' \tabular{ll}{
-#' `nbatch` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
+#' `nsteps` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
 #' `scale` \tab Numeric scalar. Default `0.01`. \cr
 #' `lb` \tab Numeric vector. Default `rep(1e-20, 5)`. \cr
 #' `ub` \tab Numeric vector. Default `rep(1 - 1e-20, 5)`. \cr
@@ -111,7 +111,7 @@ try_solve <- function(x, ...) {
 #' 
 #' ans_mcmc <- aphylo_mcmc(
 #'   dat ~ mu + psi + eta + Pi,
-#'   control = list(nbatch = 2e5, burnin=1000, thin=200, scale=2e-2)
+#'   control = list(nsteps = 2e5, burnin=1000, thin=200, scale=2e-2)
 #' )
 #' }
 #' 
@@ -192,12 +192,19 @@ aphylo_mle <- function(
   if (length(model$fixed["eta0"]))
     reduced_pseq <- FALSE
   
-  if (reduced_pseq)
+  # Short the pruning sequence?
+  if (reduced_pseq) {
+    
+    # Saving
+    old_pseq <- model$dat$pseq
+    
     model$dat$pseq <- reduce_pseq(
       model$dat$pseq,
       with(model$dat, rbind(tip.annotation, node.annotation)),
       model$dat$offspring
     )
+    
+  }
   
   # If the models is uninformative, then it will return with error
   if (check.informative)
@@ -233,8 +240,21 @@ aphylo_mle <- function(
     message     = ans$message,
     counts      = ans$counts["function"]
     )
+  
+  # If changed, we need to set back the original peeling sequence.
+  if (reduced_pseq) {
     
+    model$dat$pseq <- old_pseq
     
+    ans$value <- model$fun(
+      p        = ans$par,
+      dat      = model$dat,
+      priors   = priors,
+      verb_ans = FALSE
+    )
+    
+  }
+  
   # Computing the hessian (information matrix)
   hessian <- stats::optimHess(
     ans$par, model$fun, dat = model$dat, priors = priors, verb_ans = FALSE,
@@ -331,7 +351,7 @@ logLik.aphylo_estimates <- function(object, ...) {
 }
 
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
-  nbatch    = 1e5L,
+  nsteps    = 1e5L,
   burnin    = 1e4L,
   thin      = 20L,
   scale     = .01,
@@ -368,12 +388,15 @@ aphylo_mcmc <- function(
   if ("eta0" %in% names(model$fixed))
     reduced_pseq <- FALSE
     
-  if (reduced_pseq)
+  if (reduced_pseq) {
+    old_pseq <- model$dat$pseq
+    
     model$dat$pseq <- reduce_pseq(
       model$dat$pseq,
       with(model$dat, rbind(tip.annotation, node.annotation)),
       model$dat$offspring
     )
+  }
   
   # Checking control
   for (n in names(APHYLO_DEFAULT_MCMC_CONTROL)) {
@@ -382,7 +405,8 @@ aphylo_mcmc <- function(
   }
   
   # Fixed parameters
-  if (!length(control$fixed))  control$fixed  <- model$fixed
+  if (!length(control$fixed))
+    control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error
   if (check.informative)
@@ -410,11 +434,22 @@ aphylo_mcmc <- function(
   # Working on answer
   par <- colMeans(do.call(rbind, ans))
   
+  # If changed, we need to set back the original peeling sequence.
+  if (reduced_pseq) 
+    model$dat$pseq <- old_pseq
+
+  ll <- model$fun(
+    p        = par,
+    dat      = model$dat,
+    priors   = priors,
+    verb_ans = FALSE
+  )
+  
   # Returning
   new_aphylo_estimates(
     par         = par,
     hist        = ans,
-    ll          = do.call(model$fun, list(dat = model$dat, priors=priors, p=par, verb_ans=FALSE)),
+    ll          = ll,
     counts      = coda::niter(ans),
     convergence = NA,
     message     = NA,
