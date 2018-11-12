@@ -52,3 +52,21 @@
 \newcommand{\misszero}{\psi_{01}{}}
 \newcommand{\missone}{\psi_{10}{}}
 \newcommand{\proot}{\pi}
+
+% tricks for two column
+\def\begincols{\begin{columns}[T]}
+\def\begincol{\begin{column}[T]}
+\def\endcol{\end{column}}
+\def\endcols{\end{columns}}
+
+\usepackage{tabularx}
+
+\usepackage{tikz}
+
+\newcommand{\includetikz}[2]{
+\begin{figure}
+\scalebox{#2}{
+\input{#1}
+}
+\end{figure}
+}

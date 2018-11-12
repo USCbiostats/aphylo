@@ -36,44 +36,127 @@ knitr::opts_chunk$set(
   out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
 ```
 
-## Changes from last year
+## Recap: Model
 
-Particular of the model
+\begincols
 
-*   Flexible model especification
+\begincol{.575\linewidth}
 
-*   Prediction function
+1.  A probabilistic model of gene function evolution,
 
-*   New set of parameters
+2.  The probability that the root node has the function is $\pi$,
 
-By products
+3.  Conditional on its parent state, the probabilties that any given node has to
+    either gain or lose a function are $(\gain,\loss)$,
+    
+4.  Finally, at the leaf node, the probability that a node with no function
+    is mislabeled as having the function is $\misszero$. Conversely, the
+    probability that a node with a function is mislabeled as not having
+    the function is $\missone$.
+    
+\endcol
 
-*   The `sluRm` R package: A light weight interface to slurm.
-
-*   Improvements on the `amcmc` R package, notably: automatic convergence.
-
-## Recap: Notation
+\begincol{.375\linewidth}
 
 \begin{table}[tb]
 \centering
-\begin{tabular}{ll}
+\begin{tabular}{lm{.7\linewidth}}
 \toprule
-Parameter & Description \\ \midrule
-$\pi$ & Probability that the root node has the function \\
-$\gain$ & Probability of gaining a function \\
-$\loss$ & Probability of loosing a function \\
-$\misszero$ & Probability of mislabeling a 0 \\
-$\missone$ & Probability of mislabeling a 1 \\ \bottomrule
+Parameter & Probability \\ \midrule
+$\pi$ & The root node has the function \\
+$\gain$ & Gaining a function \\
+$\loss$ & Loosing a function \\
+$\misszero$ & Mislabeling a 0 \\
+$\missone$ & Mislabeling a 1 \\ \bottomrule
 \end{tabular}
 \caption{Model parameters\label{tab:parameters}}
 \end{table}
 
+\endcol
+    
+\endcols
 
-## A walk using the R package
+## Recap: Notation {.m}
 
-Simulating data
+\footnotesize
 
-```{r dgp}
+\begincols
+
+\begincol{.49\textwidth}
+
+\includetikz{simple_tree_names.tex}{.5}
+
+\endcol
+
+\begincol{.49\textwidth}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{lm{.5\linewidth}}
+\toprule
+Symbol & Description \\ \midrule 
+$\phylo \equiv (\nodes, \edges)$ & Phylogenetic Tree.\\
+$\parent{n}$ & Parent of node $n$. \\
+$\offspring{n}$ & Offspring of node $n$.\\
+$\Ann \equiv \{\ann{n}\}_{n\in\nodes}$ & True annotations.\\
+$\AnnObs \equiv \{\annObs{n}\}_{n\in\nodes}$ & Experimental annotations.\\
+$\aphylo \equiv (\phylo, \Ann)$ & Annotated Phylogenetic Tree.\\
+$\aphyloObs \equiv (\phylo, \AnnObs)$ & Experimentally Annotated Phylogenetic Tree.\\
+$\aphyloObs_n$ & Induced Experimentally Annotated Subtree of node $n$. \\
+$\aphyloObs_n^c$ & Complement of $\aphyloObs_n$. \\
+\bottomrule
+\end{tabular}
+\caption{Mathematical Notation\label{tab:notation}}
+\end{table}
+
+\endcol
+
+\endcols
+
+\normalsize
+
+
+## Changes from last year
+
+From the formal (statistical) stand
+
+*   Prediction function: Right mathematical definition of the model prediction.
+
+*   New set of parameters: Propensity to report a finding.
+
+*   Flexible model specification: Definition of the likelihood function for different sets of parameters
+
+By products generated during the implementation
+
+*   The `sluRm` R package: A light-weight interface to slurm.
+
+*   Improvements on the `amcmc` R package, notably: automatic convergence.
+
+
+## Recap: The aphylo R package
+
+Features:
+
+*   Provides a representation of _annotated_ partially ordered trees. \pause
+
+*   Interacts with the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
+    
+*   Implements the loglikelihood calculation of our model (with C++ under-the-hood).\pause
+
+Some new features
+
+*   Model specification via formula.
+
+*   Added he propensity to report discovery parameters.
+
+*   Two implementations of the prediction function (using a post-order algorithm as suggested by
+    Prof. Suchard), and a brute force method... we use this for unit tests.
+    
+*   (in the `amcmc` R package) Convergence monitoring and automatic stop of the MCMC
+    algorithm
+
+
+```{r dgp, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
 library(aphylo)
 
 # Setting the seed and simulating the data
@@ -98,16 +181,16 @@ plot_logLik(x ~ mu + psi + Pi)
 
 ----
 
-```{r pred, fig.cap="Prediction Accuracy: Observed versus predicted values", cache=TRUE}
+```{r pred, fig.cap="Prediction Accuracy: Observed versus predicted values", cache=TRUE, out.width=".5\\linewidth"}
 ans <- aphylo_mcmc(x ~ mu + psi + Pi, priors = bprior())
-plot(prediction_score(ans), main = "", )
+plot(prediction_score(ans), main = "", which.fun=1L)
 ```
 
 
 
-## Flexible model especification
+## Flexible model specification
 
-Automatic especification of the likelihood function, e.g.
+Automatic specification of the likelihood function, e.g.
 
 \small
 
@@ -123,7 +206,7 @@ Automatic especification of the likelihood function, e.g.
 
 \normalsize
 
-## Flexible model especification
+## Flexible model specification
 
 \footnotesize
 
@@ -131,33 +214,41 @@ Automatic especification of the likelihood function, e.g.
 ans
 ```
 
-
 \normalsize
 
-## Model prediction
 
-## Results on the new especification (adventure)
+## Results on the new specification (adventure)
 
-A bad plot goes here
+The data generating process was `x ~ mu + psi + eta + Pi` (`eta` are the propensity
+to publication parameters).
 
-----
+\begincols
 
-Our problem:\pause Missigness is confounded with propensity to fail to report
+\begincol{.40\linewidth}
 
-## Next steps
+\begin{figure}\centering
+\caption{Correct specification (includes `eta`)}
+\includegraphics[width=1\linewidth]{bad-full-model.png}
+\end{figure}
 
-*   Finish the manuscript 
+\endcol
 
-*   Send to ...
+\begincol{.40\linewidth}
 
-*   Prepare pieces of software to publication
+\begin{figure}\centering
+\caption{Miss specified model (does not include `eta`). Missigness is confounded with propensity to fail to report}
+\includegraphics[width=1\linewidth]{bad-pub-prop.png}
+\end{figure}
+
+\endcol
+
+\endcols
 
 ## Concluding remarks
 
-A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 week with 10 processors only).\pause 
+A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 ~~week~~ hour with ~~10~~ 240 processors ~~only~~).\pause 
 
--   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
-
+-   Already implemented, we are currently in the stage of ~~writing the paper and setting up the simulation study~~ finishing and submiting the paper.\pause
 
 -   For the next steps, we are evaluating whether to include or how to include:\pause
     
@@ -167,9 +258,11 @@ A parsimonious model of gene functions: easy to apply on a large scale (we alrea
     
     *   Correlation structure between functions
     
-    *   Using Taxon Constraints to improve predictions
+    *   ~~Using Taxon Constraints to improve predictions~~
     
     *   Hierarchical model: Use fully annotated trees by curators as prior information.
+    
+-   We are still unsure about how to procede with the software: R journal? Journal of Open Source Software? Journal of Statistical Software? Bioinformatics? etc.
 
 ----
 
