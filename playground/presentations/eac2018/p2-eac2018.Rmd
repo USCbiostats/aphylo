@@ -36,63 +36,19 @@ knitr::opts_chunk$set(
   out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
 ```
 
-## Recap: Model
+## Notation {.t}
 
 \begincols
 
-\begincol{.575\linewidth}
-
-1.  A probabilistic model of gene function evolution,
-
-2.  The probability that the root node has the function is $\pi$,
-
-3.  Conditional on its parent state, the probabilties that any given node has to
-    either gain or lose a function are $(\gain,\loss)$,
-    
-4.  Finally, at the leaf node, the probability that a node with no function
-    is mislabeled as having the function is $\misszero$. Conversely, the
-    probability that a node with a function is mislabeled as not having
-    the function is $\missone$.
-    
+\begincol{.25\linewidth}
+\includegraphics[height=.8\textheight]{fig/annotated-tree.pdf}
 \endcol
 
-\begincol{.375\linewidth}
+\begincol{.74\linewidth}
 
 \begin{table}[tb]
 \centering
 \begin{tabular}{lm{.7\linewidth}}
-\toprule
-Parameter & Probability \\ \midrule
-$\pi$ & The root node has the function \\
-$\gain$ & Gaining a function \\
-$\loss$ & Loosing a function \\
-$\misszero$ & Mislabeling a 0 \\
-$\missone$ & Mislabeling a 1 \\ \bottomrule
-\end{tabular}
-\caption{Model parameters\label{tab:parameters}}
-\end{table}
-
-\endcol
-    
-\endcols
-
-## Recap: Notation {.m}
-
-\footnotesize
-
-\begincols
-
-\begincol{.49\textwidth}
-
-\includetikz{simple_tree_names.tex}{.5}
-
-\endcol
-
-\begincol{.49\textwidth}
-
-\begin{table}[tb]
-\centering
-\begin{tabular}{lm{.5\linewidth}}
 \toprule
 Symbol & Description \\ \midrule 
 $\phylo \equiv (\nodes, \edges)$ & Phylogenetic Tree.\\
@@ -110,15 +66,60 @@ $\aphyloObs_n^c$ & Complement of $\aphyloObs_n$. \\
 \end{table}
 
 \endcol
-
 \endcols
 
-\normalsize
+## Recap: Model {.t}
+
+\begincols
+
+\begincol{.475\linewidth}
+
+\begin{enumerate}
+\item A probabilistic model of gene function evolution,
+
+\item The probability that the root node has the function is $\pi$,
+
+\item Conditional on its parent state, the probabilities that any given node has to
+    either gain or lose a function are $(\gain,\loss)$,
+    
+\item \only<1>{Finally}\only<2->{\sout{Finally}}, at the leaf node, the probability that a node with no function
+    is mislabeled as having the function is $\misszero$. Conversely, the
+    probability that a node with a function is mislabeled as not having
+    the function is $\missone$.
+    
+\only<2>{\item Finally, curators will report their discovery of function
+    \emph{present}/\emph{absent} with probability $\reportzero/\reportone$.}
+\end{enumerate}
+    
+\endcol
+
+\begincol{.475\linewidth}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{lm{.7\linewidth}}
+\toprule
+Parameter & Probability \\ \midrule
+$\pi$ & The root node has the function \\
+$\gain$ & Gaining a function \\
+$\loss$ & losing a function \\
+$\misszero$ & Mislabeling a 0 \\
+$\missone$ & Mislabeling a 1 \\ 
+\only<2>{$\reportzero$} & \only<2>{Propensity to report a 0} \\
+\only<2>{$\reportone$} & \only<2>{Propensity to report a 1} \\
+\bottomrule
+\end{tabular}
+\caption{Model parameters\label{tab:parameters}}
+\end{table}
+
+\endcol
+    
+\endcols
 
 
 ## Changes from last year
 
-From the formal (statistical) stand
+From the formal (statistical) stand point
 
 *   Prediction function: Right mathematical definition of the model prediction.
 
@@ -126,11 +127,11 @@ From the formal (statistical) stand
 
 *   Flexible model specification: Definition of the likelihood function for different sets of parameters
 
-By products generated during the implementation
+By-products generated during the implementation
 
 *   The `sluRm` R package: A light-weight interface to slurm.
 
-*   Improvements on the `amcmc` R package, notably: automatic convergence.
+*   Improvements on the `amcmc` R package, notably: automatic stop.
 
 
 ## Recap: The aphylo R package
@@ -139,7 +140,7 @@ Features:
 
 *   Provides a representation of _annotated_ partially ordered trees. \pause
 
-*   Interacts with the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
+*   Integrates the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
     
 *   Implements the loglikelihood calculation of our model (with C++ under-the-hood).\pause
 
@@ -147,13 +148,13 @@ Some new features
 
 *   Model specification via formula.
 
-*   Added he propensity to report discovery parameters.
+*   Added the $\eta$ parameter.
 
 *   Two implementations of the prediction function (using a post-order algorithm as suggested by
     Prof. Suchard), and a brute force method... we use this for unit tests.
     
 *   (in the `amcmc` R package) Convergence monitoring and automatic stop of the MCMC
-    algorithm
+    algorithm.
 
 
 ```{r dgp, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
@@ -186,8 +187,6 @@ ans <- aphylo_mcmc(x ~ mu + psi + Pi, priors = bprior())
 plot(prediction_score(ans), main = "", which.fun=1L)
 ```
 
-
-
 ## Flexible model specification
 
 Automatic specification of the likelihood function, e.g.
@@ -216,33 +215,136 @@ ans
 
 \normalsize
 
+## Simulation study
 
-## Results on the new specification (adventure)
+Using the panther dataset, we applied our model's data generating process
+to annotate trees
 
-The data generating process was `x ~ mu + psi + eta + Pi` (`eta` are the propensity
-to publication parameters).
+\pause
+Four different scenarios:\pause
+
+1.  Gold standard: Estimation of the model on fully annotated trees\pause
+
+2.  Missing data: Estimation of the model with missing annotations [from 10% to 90% missigness]\pause
+
+3.  Propensity to report (a): Same data as scenario 2, but we drop more observations
+    with probabilities $\reportzero, \reportone$. Estimation does not include $\eta$.\pause
+    
+4.  Propensity to report (b): Sames as scenario 3, but we include $\eta$.
+
+
+## Gold standard: Bias (small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=small.pdf}
+\end{figure}
+
+## Gold standard: Bias (mid-small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=mid-small.pdf}
+\end{figure}
+
+## Gold standard: Bias (mid-large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=mid-large.pdf}
+\end{figure}
+
+## Gold standard: Bias (large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=large.pdf}
+\end{figure}
+
+
+## Gold standard: Prediction {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-auc.pdf}
+\end{figure}
+
+## Gold standard: Convergence {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-gelman.pdf}
+\end{figure}
+
+<!----------------------------------------------------------------------------->
+<!--02-MISSING ---------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+
+## Missing data: Bias (small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=small.pdf}
+\end{figure}
+
+## Missing data: Bias (mid-small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=mid-small.pdf}
+\end{figure}
+
+## Missing data: Bias (mid-large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=mid-large.pdf}
+\end{figure}
+
+## Missing data: Bias (large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=large.pdf}
+\end{figure}
+
+
+## Missing data: Prediction {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/02-missing-auc.pdf}
+\end{figure}
+
+## Missing data: Convergence {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/02-missing-gelman.pdf}
+\end{figure}
+
+
+<!----------------------------------------------------------------------------->
+<!--03 and 04 ----------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+
+## Does $\eta$ improves the model? Prediction
 
 \begincols
 
-\begincol{.40\linewidth}
+\begincol{.49\linewidth}
 
 \begin{figure}\centering
-\caption{Correct specification (includes `eta`)}
-\includegraphics[width=1\linewidth]{bad-full-model.png}
+\includegraphics[width=.65\textheight]{fig/03-pub-bias-auc.pdf}
+\caption{Misspecified model (does not include $\eta$)}
 \end{figure}
+
 
 \endcol
 
-\begincol{.40\linewidth}
+\begincol{.49\linewidth}
 
 \begin{figure}\centering
-\caption{Miss specified model (does not include `eta`). Missigness is confounded with propensity to fail to report}
-\includegraphics[width=1\linewidth]{bad-pub-prop.png}
+\includegraphics[width=.65\textheight]{fig/04-full-model-auc.pdf}
+\caption{Correct specification (includes $\eta$)}
 \end{figure}
 
 \endcol
 
 \endcols
+
+## Status of the paper {.t}
+
+\centering
+\includegraphics[width=1\linewidth]{pages.pdf}
 
 ## Concluding remarks
 
