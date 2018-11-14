@@ -36,6 +36,41 @@ knitr::opts_chunk$set(
   out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
 ```
 
+
+```{r dgp, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+library(aphylo)
+
+# Setting the seed and simulating the data
+set.seed(2)
+x <- sim_annotated_tree(40, P = 2)
+
+# Droping some annotations
+x <- rdrop_annotations(x, .5)
+```
+
+## The problem
+
+```{r tree, fig.cap="Annotated Phylogenetic Tree"}
+plot(x, main = "")
+```
+
+
+## Last year's EAC
+
+In brief
+
+*   Prof. Suchard observations on our model.
+
+*   In the summary, the EAC pointed out that taxon constraints should be included.
+
+*   Also, we need to develop a strategy to raise awareness about our work: algorithms and
+    software.
+
+*   Finally, both Project 2 and Core B would benefit from reaching out with other
+    experts on data and research groups working on nearby research areas.
+
+
+
 ## Notation {.t}
 
 \begincols
@@ -58,7 +93,7 @@ $\Ann \equiv \{\ann{n}\}_{n\in\nodes}$ & True annotations.\\
 $\AnnObs \equiv \{\annObs{n}\}_{n\in\nodes}$ & Experimental annotations.\\
 $\aphylo \equiv (\phylo, \Ann)$ & Annotated Phylogenetic Tree.\\
 $\aphyloObs \equiv (\phylo, \AnnObs)$ & Experimentally Annotated Phylogenetic Tree.\\
-$\aphyloObs_n$ & Induced Experimentally Annotated Subtree of node $n$. \\
+$\aphyloObs_n$ & Induced Experimentally Annotated Sub-tree of node $n$. \\
 $\aphyloObs_n^c$ & Complement of $\aphyloObs_n$. \\
 \bottomrule
 \end{tabular}
@@ -129,7 +164,7 @@ From the formal (statistical) stand point
 
 By-products generated during the implementation
 
-*   The `sluRm` R package: A light-weight interface to slurm.
+*   The `sluRm` R package: A light-weight interface to Slurm.
 
 *   Improvements on the `amcmc` R package, notably: automatic stop.
 
@@ -142,7 +177,7 @@ Features:
 
 *   Integrates the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
     
-*   Implements the loglikelihood calculation of our model (with C++ under-the-hood).\pause
+*   Implements the log-likelihood calculation of our model (with C++ under-the-hood).\pause
 
 Some new features
 
@@ -157,24 +192,7 @@ Some new features
     algorithm.
 
 
-```{r dgp, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
-library(aphylo)
-
-# Setting the seed and simulating the data
-set.seed(2)
-x <- sim_annotated_tree(40, P = 2)
-
-# Droping some annotations
-x <- rdrop_annotations(x, .5)
-```
-
 ## Nice visualizations
-
-```{r tree, fig.cap="Annotated Phylogenetic Tree"}
-plot(x, main = "")
-```
-
-----
 
 ```{r likelihood, fig.cap="Surface of the likelihood of a given annotated tree."}
 plot_logLik(x ~ mu + psi + Pi)
@@ -217,10 +235,9 @@ ans
 
 ## Simulation study
 
-Using the panther dataset, we applied our model's data generating process
-to annotate trees
+Using the entire Panther data set (~13,000 families), we applied our model's data
+generating process to annotate trees.\pause
 
-\pause
 Four different scenarios:\pause
 
 1.  Gold standard: Estimation of the model on fully annotated trees\pause
@@ -350,7 +367,7 @@ Four different scenarios:\pause
 
 A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 ~~week~~ hour with ~~10~~ 240 processors ~~only~~).\pause 
 
--   Already implemented, we are currently in the stage of ~~writing the paper and setting up the simulation study~~ finishing and submiting the paper.\pause
+-   Already implemented, we are currently in the stage of ~~writing the paper and setting up the simulation study~~ finishing and submitting the paper.\pause
 
 -   For the next steps, we are evaluating whether to include or how to include:\pause
     
@@ -364,7 +381,7 @@ A parsimonious model of gene functions: easy to apply on a large scale (we alrea
     
     *   Hierarchical model: Use fully annotated trees by curators as prior information.
     
--   We are still unsure about how to procede with the software: R journal? Journal of Open Source Software? Journal of Statistical Software? Bioinformatics? etc.
+-   We are still unsure about how to proceed with the software: R journal? Journal of Open Source Software? Journal of Statistical Software? Bioinformatics? etc.
 
 ----
 
