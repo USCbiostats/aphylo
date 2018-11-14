@@ -186,6 +186,10 @@ aphylo_mle <- function(
   
   if (any(model$fixed))
     warnings("Fixing parameters is ignored in MLE estimation.")
+
+  # If all are 9s, then, there's nothing to do with it.
+  if (all(model$dat$tip.annotation == 9L))
+    stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
   
   # Reducing the peeling sequence
   # This only happens if the eta parameter is not included
@@ -205,6 +209,7 @@ aphylo_mle <- function(
     )
     
   }
+
   
   # If the models is uninformative, then it will return with error
   if (check.informative)
@@ -383,6 +388,10 @@ aphylo_mcmc <- function(
   env   <- parent.frame()
   model <- aphylo_formula(model, params, priors, env = env)
 
+  # If all are 9s, then, there's nothing to do with it.
+  if (all(model$dat$tip.annotation == 9L))
+    stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+ 
   # Reducing the peeling sequence
   # This only happens if the eta parameter is not included
   if ("eta0" %in% names(model$fixed))
