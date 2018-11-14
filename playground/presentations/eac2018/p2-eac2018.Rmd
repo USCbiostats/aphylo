@@ -36,44 +36,8 @@ knitr::opts_chunk$set(
   out.width = ".7\\linewidth", fig.align = "center", fig.width = 7, fig.height = 5)
 ```
 
-## Changes from last year
 
-Particular of the model
-
-*   Flexible model especification
-
-*   Prediction function
-
-*   New set of parameters
-
-By products
-
-*   The `sluRm` R package: A light weight interface to slurm.
-
-*   Improvements on the `amcmc` R package, notably: automatic convergence.
-
-## Recap: Notation
-
-\begin{table}[tb]
-\centering
-\begin{tabular}{ll}
-\toprule
-Parameter & Description \\ \midrule
-$\pi$ & Probability that the root node has the function \\
-$\gain$ & Probability of gaining a function \\
-$\loss$ & Probability of loosing a function \\
-$\misszero$ & Probability of mislabeling a 0 \\
-$\missone$ & Probability of mislabeling a 1 \\ \bottomrule
-\end{tabular}
-\caption{Model parameters\label{tab:parameters}}
-\end{table}
-
-
-## A walk using the R package
-
-Simulating data
-
-```{r dgp}
+```{r dgp, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
 library(aphylo)
 
 # Setting the seed and simulating the data
@@ -84,13 +48,151 @@ x <- sim_annotated_tree(40, P = 2)
 x <- rdrop_annotations(x, .5)
 ```
 
-## Nice visualizations
+## The problem
 
 ```{r tree, fig.cap="Annotated Phylogenetic Tree"}
 plot(x, main = "")
 ```
 
-----
+
+## Last year's EAC
+
+In brief
+
+*   Prof. Suchard observations on our model.
+
+*   In the summary, the EAC pointed out that taxon constraints should be included.
+
+*   Also, we need to develop a strategy to raise awareness about our work: algorithms and
+    software.
+
+*   Finally, both Project 2 and Core B would benefit from reaching out with other
+    experts on data and research groups working on nearby research areas.
+
+
+
+## Notation {.t}
+
+\begincols
+
+\begincol{.25\linewidth}
+\includegraphics[height=.8\textheight]{fig/annotated-tree.pdf}
+\endcol
+
+\begincol{.74\linewidth}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{lm{.7\linewidth}}
+\toprule
+Symbol & Description \\ \midrule 
+$\phylo \equiv (\nodes, \edges)$ & Phylogenetic Tree.\\
+$\parent{n}$ & Parent of node $n$. \\
+$\offspring{n}$ & Offspring of node $n$.\\
+$\Ann \equiv \{\ann{n}\}_{n\in\nodes}$ & True annotations.\\
+$\AnnObs \equiv \{\annObs{n}\}_{n\in\nodes}$ & Experimental annotations.\\
+$\aphylo \equiv (\phylo, \Ann)$ & Annotated Phylogenetic Tree.\\
+$\aphyloObs \equiv (\phylo, \AnnObs)$ & Experimentally Annotated Phylogenetic Tree.\\
+$\aphyloObs_n$ & Induced Experimentally Annotated Sub-tree of node $n$. \\
+$\aphyloObs_n^c$ & Complement of $\aphyloObs_n$. \\
+\bottomrule
+\end{tabular}
+\caption{Mathematical Notation\label{tab:notation}}
+\end{table}
+
+\endcol
+\endcols
+
+## Recap: Model {.t}
+
+\begincols
+
+\begincol{.475\linewidth}
+
+\begin{enumerate}
+\item A probabilistic model of gene function evolution,
+
+\item The probability that the root node has the function is $\pi$,
+
+\item Conditional on its parent state, the probabilities that any given node has to
+    either gain or lose a function are $(\gain,\loss)$,
+    
+\item \only<1>{Finally}\only<2->{\sout{Finally}}, at the leaf node, the probability that a node with no function
+    is mislabeled as having the function is $\misszero$. Conversely, the
+    probability that a node with a function is mislabeled as not having
+    the function is $\missone$.
+    
+\only<2>{\item Finally, curators will report their discovery of function
+    \emph{present}/\emph{absent} with probability $\reportzero/\reportone$.}
+\end{enumerate}
+    
+\endcol
+
+\begincol{.475\linewidth}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{lm{.7\linewidth}}
+\toprule
+Parameter & Probability \\ \midrule
+$\pi$ & The root node has the function \\
+$\gain$ & Gaining a function \\
+$\loss$ & losing a function \\
+$\misszero$ & Mislabeling a 0 \\
+$\missone$ & Mislabeling a 1 \\ 
+\only<2>{$\reportzero$} & \only<2>{Propensity to report a 0} \\
+\only<2>{$\reportone$} & \only<2>{Propensity to report a 1} \\
+\bottomrule
+\end{tabular}
+\caption{Model parameters\label{tab:parameters}}
+\end{table}
+
+\endcol
+    
+\endcols
+
+
+## Changes from last year
+
+From the formal (statistical) stand point
+
+*   Prediction function: Right mathematical definition of the model prediction.
+
+*   New set of parameters: Propensity to report a finding.
+
+*   Flexible model specification: Definition of the likelihood function for different sets of parameters
+
+By-products generated during the implementation
+
+*   The `sluRm` R package: A light-weight interface to Slurm.
+
+*   Improvements on the `amcmc` R package, notably: automatic stop.
+
+
+## Recap: The aphylo R package
+
+Features:
+
+*   Provides a representation of _annotated_ partially ordered trees. \pause
+
+*   Integrates the `ape` package (most used Phylogenetics R package with ~25K downloads/month) \pause
+    
+*   Implements the log-likelihood calculation of our model (with C++ under-the-hood).\pause
+
+Some new features
+
+*   Model specification via formula.
+
+*   Added the $\eta$ parameter.
+
+*   Two implementations of the prediction function (using a post-order algorithm as suggested by
+    Prof. Suchard), and a brute force method... we use this for unit tests.
+    
+*   (in the `amcmc` R package) Convergence monitoring and automatic stop of the MCMC
+    algorithm.
+
+
+## Nice visualizations
 
 ```{r likelihood, fig.cap="Surface of the likelihood of a given annotated tree."}
 plot_logLik(x ~ mu + psi + Pi)
@@ -98,16 +200,14 @@ plot_logLik(x ~ mu + psi + Pi)
 
 ----
 
-```{r pred, fig.cap="Prediction Accuracy: Observed versus predicted values", cache=TRUE}
+```{r pred, fig.cap="Prediction Accuracy: Observed versus predicted values", cache=TRUE, out.width=".5\\linewidth"}
 ans <- aphylo_mcmc(x ~ mu + psi + Pi, priors = bprior())
-plot(prediction_score(ans), main = "", )
+plot(prediction_score(ans), main = "", which.fun=1L)
 ```
 
+## Flexible model specification
 
-
-## Flexible model especification
-
-Automatic especification of the likelihood function, e.g.
+Automatic specification of the likelihood function, e.g.
 
 \small
 
@@ -123,7 +223,7 @@ Automatic especification of the likelihood function, e.g.
 
 \normalsize
 
-## Flexible model especification
+## Flexible model specification
 
 \footnotesize
 
@@ -131,33 +231,143 @@ Automatic especification of the likelihood function, e.g.
 ans
 ```
 
-
 \normalsize
 
-## Model prediction
+## Simulation study
 
-## Results on the new especification (adventure)
+Using the entire Panther data set (~13,000 families), we applied our model's data
+generating process to annotate trees.\pause
 
-A bad plot goes here
+Four different scenarios:\pause
 
-----
+1.  Gold standard: Estimation of the model on fully annotated trees\pause
 
-Our problem:\pause Missigness is confounded with propensity to fail to report
+2.  Missing data: Estimation of the model with missing annotations [from 10% to 90% missigness]\pause
 
-## Next steps
+3.  Propensity to report (a): Same data as scenario 2, but we drop more observations
+    with probabilities $\reportzero, \reportone$. Estimation does not include $\eta$.\pause
+    
+4.  Propensity to report (b): Sames as scenario 3, but we include $\eta$.
 
-*   Finish the manuscript 
 
-*   Send to ...
+## Gold standard: Bias (small trees) {.t}
 
-*   Prepare pieces of software to publication
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=small.pdf}
+\end{figure}
+
+## Gold standard: Bias (mid-small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=mid-small.pdf}
+\end{figure}
+
+## Gold standard: Bias (mid-large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=mid-large.pdf}
+\end{figure}
+
+## Gold standard: Bias (large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-bias_plots_tree-size=large.pdf}
+\end{figure}
+
+
+## Gold standard: Prediction {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-auc.pdf}
+\end{figure}
+
+## Gold standard: Convergence {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/01-gold-standard-gelman.pdf}
+\end{figure}
+
+<!----------------------------------------------------------------------------->
+<!--02-MISSING ---------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+
+## Missing data: Bias (small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=small.pdf}
+\end{figure}
+
+## Missing data: Bias (mid-small trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=mid-small.pdf}
+\end{figure}
+
+## Missing data: Bias (mid-large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=mid-large.pdf}
+\end{figure}
+
+## Missing data: Bias (large trees) {.t}
+
+\begin{figure}\centering
+\includegraphics[height=.8\textheight]{fig/02-missing-bias_plots_tree-size=large.pdf}
+\end{figure}
+
+
+## Missing data: Prediction {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/02-missing-auc.pdf}
+\end{figure}
+
+## Missing data: Convergence {.t}
+
+\begin{figure}
+\includegraphics[height=.8\textheight]{fig/02-missing-gelman.pdf}
+\end{figure}
+
+
+<!----------------------------------------------------------------------------->
+<!--03 and 04 ----------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
+
+## Does $\eta$ improves the model? Prediction
+
+\begincols
+
+\begincol{.49\linewidth}
+
+\begin{figure}\centering
+\includegraphics[width=.65\textheight]{fig/03-pub-bias-auc.pdf}
+\caption{Misspecified model (does not include $\eta$)}
+\end{figure}
+
+
+\endcol
+
+\begincol{.49\linewidth}
+
+\begin{figure}\centering
+\includegraphics[width=.65\textheight]{fig/04-full-model-auc.pdf}
+\caption{Correct specification (includes $\eta$)}
+\end{figure}
+
+\endcol
+
+\endcols
+
+## Status of the paper {.t}
+
+\centering
+\includegraphics[width=1\linewidth]{pages.pdf}
 
 ## Concluding remarks
 
-A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 week with 10 processors only).\pause 
+A parsimonious model of gene functions: easy to apply on a large scale (we already ran some simulations using all 13,000 trees from PantherDB... and it took us less than 1 ~~week~~ hour with ~~10~~ 240 processors ~~only~~).\pause 
 
--   Already implemented, we are currently in the stage of writing the paper and setting up the simulation study.\pause
-
+-   Already implemented, we are currently in the stage of ~~writing the paper and setting up the simulation study~~ finishing and submitting the paper.\pause
 
 -   For the next steps, we are evaluating whether to include or how to include:\pause
     
@@ -167,9 +377,11 @@ A parsimonious model of gene functions: easy to apply on a large scale (we alrea
     
     *   Correlation structure between functions
     
-    *   Using Taxon Constraints to improve predictions
+    *   ~~Using Taxon Constraints to improve predictions~~
     
     *   Hierarchical model: Use fully annotated trees by curators as prior information.
+    
+-   We are still unsure about how to proceed with the software: R journal? Journal of Open Source Software? Journal of Statistical Software? Bioinformatics? etc.
 
 ----
 

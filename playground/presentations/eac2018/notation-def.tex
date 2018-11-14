@@ -1,5 +1,7 @@
 \usepackage{booktabs}
 \usepackage{amsmath, amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{pdfpages}
 
 % Mathematical functions
 \newcommand{\isone}[1]{{\boldsymbol{1}\left( #1 \right)}}
@@ -51,4 +53,25 @@
 \newcommand{\loss}{\mu_{10}{}}
 \newcommand{\misszero}{\psi_{01}{}}
 \newcommand{\missone}{\psi_{10}{}}
-\newcommand{\proot}{\pi}
+\newcommand{\proot}{\pi{}}
+\newcommand{\reportzero}{\eta_{0}{}}
+\newcommand{\reportone}{\eta_{1}{}}
+
+
+% tricks for two column
+\def\begincols{\begin{columns}[T]}
+\def\begincol{\begin{column}[T]}
+\def\endcol{\end{column}}
+\def\endcols{\end{columns}}
+
+\usepackage{tabularx}
+
+\usepackage{tikz}
+
+\newcommand{\includetikz}[2]{
+\begin{figure}
+\scalebox{#2}{
+\input{#1}
+}
+\end{figure}
+}

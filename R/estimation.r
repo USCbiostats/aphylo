@@ -310,7 +310,7 @@ print.aphylo_estimates <- function(x, ...) {
       "\nESTIMATION OF ANNOTATED PHYLOGENETIC TREE\n",
       "\n Call: ", paste(deparse(x$call), sep="\n", collapse="\n"), 
       sprintf(
-        "\n ll: %-9.4f,\n Method used: %s (%i iterations)", ll, method, x$counts),
+        "\n ll: %-9.4f,\n Method used: %s (%i steps)", ll, method, x$counts),
       if (method == "mcmc") 
         NULL
       else
@@ -459,7 +459,7 @@ aphylo_mcmc <- function(
     par         = par,
     hist        = ans,
     ll          = ll,
-    counts      = coda::niter(ans),
+    counts      = as.integer(rownames(ans[[1]])[coda::niter(ans)]),
     convergence = NA,
     message     = NA,
     fun         = model$fun,
