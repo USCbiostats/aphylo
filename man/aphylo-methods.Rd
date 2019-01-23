@@ -5,6 +5,7 @@
 \alias{plot.aphylo}
 \alias{print.aphylo}
 \alias{summary.aphylo}
+\alias{[.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
 \method{plot}{aphylo}(x, y = NULL, prop = 0.15, ...)
@@ -12,6 +13,8 @@
 \method{print}{aphylo}(x, ...)
 
 \method{summary}{aphylo}(object, ...)
+
+\method{[}{aphylo}(x, i)
 }
 \arguments{
 \item{x}{An object of class \code{aphylo}.}
@@ -36,6 +39,9 @@ Plot and print methods for \code{aphylo} objects
 }
 \details{
 The \code{plot.aphylo} function is a wrapper of \link[ape:plot.phylo]{ape::plot.phylo}.
+
+The subsetting method allows selecting one or more annotations from
+the \code{aphylo} object.
 }
 \seealso{
 Other aphylo methods: \code{\link{aphylo-class}}
