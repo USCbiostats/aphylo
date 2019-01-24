@@ -1,7 +1,16 @@
-library(aphylo)
-
+#' Leave-one-out Cross Validation
+#' @param model As passed to [aphylo_mcmc].
+#' @param ... Further arguments passed to the method.
+#' @return An object of class `aphylo_cv` with the following components:
+#' - `pred_out` Out of sample prediction.
+#' - `expected` Expected annotations
+#' - `call` The call
+#' - `ids` Integer vector with the ids of the leafs used in the loo process.
+#' @export
 aphylo_cv <- function(...) UseMethod("aphylo_cv")
 
+#' @export
+#' @rdname aphylo_cv
 aphylo_cv.formula <- function(model, ...) {
   
   # First run of the model
@@ -14,8 +23,8 @@ aphylo_cv.formula <- function(model, ...) {
   m <- as.formula(model, env = sys.frame())
   m[[2]] <- bquote(tree1)
   
-  msg <- sprintf("%s\nLeave-one-out cross validation of aphylo model with %i cases",
-                 paste0(rep("-", 80L), collapse=""), nhas)
+  cat(sprintf("%s\nLeave-one-out cross validation of aphylo model with %i cases\n",
+                 paste0(rep("-", 80L), collapse=""), nhas))
   pcents <- floor((1:nhas)/nhas*100)
   
   # Output matrix
@@ -25,8 +34,8 @@ aphylo_cv.formula <- function(model, ...) {
     dimnames = list(
       c(rownames(ans0$dat$tip.annotation), rownames(ans0$dat$node.annotation)),
       colnames(ans0$dat$node.annotation)
-      )
     )
+  )
   
   for (i in seq_along(has_ann)) {
     
@@ -39,7 +48,7 @@ aphylo_cv.formula <- function(model, ...) {
     
     # Communicating status
     if (interactive())
-      cat(sprintf("\f%s\n %i of %i (% 3i%%) done...%s", msg, i, nhas, pcents[i], c("\\", "/")[1 + i %% 2]))
+      cat(sprintf("\r %i of %i (% 3i%%) done...%s", i, nhas, pcents[i], c("\\", "/")[1 + i %% 2]))
     else
       message(sprintf("% 3i done...", has_ann[i]), appendLF = FALSE)
     
@@ -51,19 +60,9 @@ aphylo_cv.formula <- function(model, ...) {
       expected  = with(ans0$dat, rbind(tip.annotation, node.annotation)),
       call      = sys.call(),
       ids       = has_ann
-      ),
+    ),
     class="aphylo_cv"
-    )
-    
+  )
+  
   
 }
-
-# print.aphylo_cv
-
-set.seed(123)
-x <- sim_annotated_tree(20)
-# x <- rdrop_annotations(x, .8, informative = TRUE)
-ans <- aphylo_cv(x ~ psi + mu + Pi, priors = bprior())
-# 
-# "0        20        40        60        80       100"
-# "|---------|---------|---------|---------|---------|"
