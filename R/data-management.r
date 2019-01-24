@@ -450,22 +450,7 @@ summary.aphylo <- function(object, ...) {
   
 }
 
-#' @details The subsetting method allows selecting one or more annotations from
-#' the `aphylo` object.
-#' @export
-#' @rdname aphylo-methods
-`[.aphylo` <- function(x, i) {
-  
-  # if (any(!(i %in% 1:ncol(x$tip.annotation))))
-  #   stop("One or more elements of i do not range the number of observed annotations.",
-  #        call. = FALSE)
-  
-  x$tip.annotation <- x$tip.annotation[,i,drop=FALSE]
-  x$node.annotation <- x$node.annotation[,i,drop=FALSE]
-  
-  x
-  
-}
+
 
 
 # This list sets the default plotting parameters when calling

@@ -48,6 +48,7 @@ Collate:
     'plot_logLik.r'
     'estimation.r'
     'formulas.r'
+    'indexing.r'
     'loglike.r'
     'panther.r'
     'predict-bis.r'
