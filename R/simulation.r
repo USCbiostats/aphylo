@@ -363,8 +363,10 @@ rdrop_annotations <- function(
   prob.drop.0 <- max(.0001, min(prob.drop.0, .9999))
 
   # We do this for each function
-  prob.drop.0     <- c(prob.drop.0, 1 - prob.drop.0)
-  prob.drop.0[8L] <- 0L
+  prob.drop.0      <- structure(
+    c(prob.drop.0, 1 - prob.drop.0, 0.0),
+    names = c("0", "1", "9")
+  )
   for (p in 1L:ncol(x$tip.annotation)) {
     
     # How many non 9 are there?
@@ -376,7 +378,7 @@ rdrop_annotations <- function(
       n, 
       size    = min(nleft, nremove),
       replace = FALSE,
-      prob    = prob.drop.0[x$tip.annotation[,p] + 1L]
+      prob    = prob.drop.0[as.character(x$tip.annotation[,p])]
       )
     
     # Only removing if must keep informative

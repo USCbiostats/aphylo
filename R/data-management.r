@@ -27,8 +27,6 @@ list_offspring.phylo <- function(x) {
   .list_offspring(x$edge, x$Nnode + length(x$tip.label))
 }
 
-
-
 map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
   
   # Retrieving information about the tree 
@@ -312,7 +310,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   op <- graphics::par(mai = graphics::par("mai")*c(0, 1, 1, 0) + c(labwidth, 0, 0, labwidth))
   
   on.exit(graphics::par(op))
-  do.call(plot, c(list(x=phylo), dots))
+  do.call(graphics::plot, c(list(x=phylo), dots))
   
   # Capturing the parameters from the `ape` package
   plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
@@ -329,11 +327,11 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
     )
   on.exit(graphics::par(op2), add=TRUE)
   
-  plot.window(c(0, 1), range(tips[,2]), new=FALSE, xaxs = "i")
+  graphics::plot.window(c(0, 1), range(tips[,2]), new=FALSE, xaxs = "i")
   
   nfun      <- ncol(x$tip.annotation)
   yran      <- range(tips[,2])
-  rect(
+  graphics::rect(
     xleft   = -.1,
     ybottom = yran[1] - .1*yinch() - yspacing,
     xright  = 1.1,
@@ -346,7 +344,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   for (f in 1:nfun) {
 
     # Drawing rectangles
-    rect(
+    graphics::rect(
       xleft   = (f - 1)/nfun,
       ybottom = tips[,2] - yspacing,
       xright  = f/nfun,
@@ -373,7 +371,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   graphics::par(op2)
   graphics::par(mai = c(0,0,dev_size[2] - op2$mai[1], dev_size[1]*prop))
   graphics::plot.window(c(0,1), c(0,1))
-  legend(
+  graphics::legend(
     "center",
     legend  = c("No function", "Function", "no information"),
     fill    = blue(c(0,1,9)),
@@ -451,6 +449,9 @@ summary.aphylo <- function(object, ...) {
   invisible(ans)
   
 }
+
+
+
 
 # This list sets the default plotting parameters when calling
 # the plot.phylo function.
