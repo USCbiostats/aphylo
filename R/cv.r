@@ -20,7 +20,7 @@ aphylo_cv.formula <- function(model, ...) {
   nhas    <- length(has_ann)
   
   # Model
-  m <- as.formula(model, env = sys.frame())
+  m <- as.formula(model, env = environment())
   m[[2]] <- bquote(tree1)
   
   cat(sprintf("%s\nLeave-one-out cross validation of aphylo model with %i cases\n",
