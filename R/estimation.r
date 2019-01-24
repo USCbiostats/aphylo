@@ -181,7 +181,7 @@ aphylo_mle <- function(
   cl <- match.call()
   
   # Parsing the formula
-  env   <- parent.frame()
+  env   <- environment(model)
   model <- aphylo_formula(model, params, priors, env = env)
   
   if (any(model$fixed))
@@ -385,7 +385,7 @@ aphylo_mcmc <- function(
   cl <- match.call()
   
   # Parsing the formula
-  env   <- parent.frame()
+  env   <- environment(model)
   model <- aphylo_formula(model, params, priors, env = env)
 
   # If all are 9s, then, there's nothing to do with it.
