@@ -6,6 +6,19 @@
 
 using namespace Rcpp;
 
+// auc
+List auc(NumericVector pred, IntegerVector labels, int nc);
+RcppExport SEXP _aphylo_auc(SEXP predSEXP, SEXP labelsSEXP, SEXP ncSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type pred(predSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type labels(labelsSEXP);
+    Rcpp::traits::input_parameter< int >::type nc(ncSEXP);
+    rcpp_result_gen = Rcpp::wrap(auc(pred, labels, nc));
+    return rcpp_result_gen;
+END_RCPP
+}
 // approx_geodesic
 arma::umat approx_geodesic(const arma::umat& edges, unsigned int nsteps, bool undirected, bool warn);
 RcppExport SEXP _aphylo_approx_geodesic(SEXP edgesSEXP, SEXP nstepsSEXP, SEXP undirectedSEXP, SEXP warnSEXP) {
@@ -196,6 +209,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 3},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},

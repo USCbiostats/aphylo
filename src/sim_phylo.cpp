@@ -76,8 +76,8 @@ IntegerMatrix sim_fun_on_tree(
   // Creating a nice set of names
   StringVector fnames(P);
   for (int p = 0; p<P ; p++) {
-    char name[10];
-    sprintf(&(name[0]), "fun%04i", p);
+    char name[15];
+    sprintf(&(name[0]), "fun%04i", (unsigned short) p);
     fnames[p] = name;
   }
   

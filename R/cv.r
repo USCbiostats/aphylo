@@ -45,7 +45,7 @@ aphylo_cv.formula <- function(model, ...) {
     tree1[has_ann[i],] <- NA
     
     ans1 <- suppressWarnings(suppressMessages(aphylo_mcmc(m, ...)))
-    pred[has_ann[i],] <- predict(ans1)[has_ann[i],,drop=FALSE]
+    pred[has_ann[i],] <- predict.aphylo_estimates(ans1)[has_ann[i],,drop=FALSE]
     
     # Communicating status
     if (interactive())
@@ -60,10 +60,46 @@ aphylo_cv.formula <- function(model, ...) {
       pred_out  = pred,
       expected  = with(ans0$dat, rbind(tip.annotation, node.annotation)),
       call      = sys.call(),
-      ids       = has_ann
+      ids       = has_ann,
+      estimates = ans0
     ),
     class="aphylo_cv"
   )
   
+  
+}
+
+#' @export
+#' @param x An object of class `aphylo_auc`.
+#' @param ... Further arguments passed to the method.
+#' @rdname auc
+print.aphylo_auc <- function(x, ...) {
+  
+  with(x, {
+    cat(sprintf("Number of observations     : %i\n", n_used))
+    cat(sprintf("Area Under The Curve (AUC) : %03.2f\n", auc))
+    cat("Rates can be accessed via the $ operator.\n")
+  })
+  
+  invisible(x)
+  
+}
+
+#' @export
+#' @param y Ignored.
+#' @rdname auc
+plot.aphylo_auc <- function(x, y=NULL, ...) {
+  
+  dots <- list(...)
+  if (!length(dots$xlab)) dots$xlab <- "False Positive Rate"
+  if (!length(dots$ylab)) dots$ylab <- "True Positive Rate"
+  if (!length(dots$main)) dots$main <- "Receiver Operating Characteristic"
+  if (!length(dots$type)) dots$type <- "l"
+  
+  dots$x <- x$fpr
+  dots$y <- x$tpr
+  
+  do.call(graphics::plot, dots)
+  graphics::abline(a=0, b=1, col = "gray", lty="dashed", lwd=1.5)
   
 }
