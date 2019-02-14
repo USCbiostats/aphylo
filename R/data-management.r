@@ -275,6 +275,7 @@ as_aphylo <- function(
 #' @param ... Further arguments passed to [ape::plot.phylo].
 #' @param prop Numeric scalar between 0 and 1. Proportion of the device that the
 #' annotations use in `plot.aphylo`.
+#' @param rect.args List of arguments passed to [graphics::rect].
 #' @name aphylo-methods
 #' @details The `plot.aphylo` function is a wrapper of [ape::plot.phylo].
 #' 
@@ -282,7 +283,9 @@ as_aphylo <- function(
 #' @return In the case of `plot.aphylo`, `NULL`.
 #' @family aphylo methods
 #' @export
-plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
+plot.aphylo <- function(
+  x, y = NULL, prop = .15, 
+  rect.args = list(), ...) {
   
   # Coercing into phylo
   phylo <- as.phylo(x)
@@ -307,7 +310,9 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   # How much space for the annotations
   labwidth <- dev_size[1]*prop
 
-  op <- graphics::par(mai = graphics::par("mai")*c(0, 1, 1, 0) + c(labwidth, 0, 0, labwidth))
+  op <- graphics::par(
+    mai = graphics::par("mai")*c(0, 1, 1, 0) + c(labwidth, 0, 0, labwidth)
+    )
   
   on.exit(graphics::par(op))
   do.call(graphics::plot, c(list(x=phylo), dots))
@@ -331,6 +336,7 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   
   nfun      <- ncol(x$tip.annotation)
   yran      <- range(tips[,2])
+  
   graphics::rect(
     xleft   = -.1,
     ybottom = yran[1] - .1*yinch() - yspacing,
@@ -343,17 +349,21 @@ plot.aphylo <- function(x, y = NULL, prop = .15, ...) {
   
   for (f in 1:nfun) {
 
+    rect.args$xleft   <- (f - 1)/nfun
+    rect.args$ybottom <- tips[,2] - yspacing
+    rect.args$xright  <- f/nfun
+    rect.args$ytop    <- tips[,2] + yspacing
+    rect.args$xpd     <- NA
+    
+    if (!length(rect.args$xpd)) rect.args$xpd <- NA
+    if (!length(rect.args$col)) rect.args$col <- blue(x$tip.annotation[,f])
+    if (!length(rect.args$border)) rect.args$border <- blue(x$tip.annotation[,f])
+    if (!length(rect.args$lwd)) rect.args$lwd<-.5
+    if (!length(rect.args$density)) rect.args$density <- 
+      ifelse(x$tip.annotation[,f] == 9L, 10, NA)
+    
     # Drawing rectangles
-    graphics::rect(
-      xleft   = (f - 1)/nfun,
-      ybottom = tips[,2] - yspacing,
-      xright  = f/nfun,
-      ytop    = tips[,2] + yspacing, xpd=NA,
-      col     = blue(x$tip.annotation[,f]),
-      density = ifelse(x$tip.annotation[,f] == 9L, 10, NA),
-      border  = blue(x$tip.annotation[,f]),
-      lwd     = .5
-    )
+    do.call(graphics::rect, rect.args)
     
     # Adding function label
     graphics::text(

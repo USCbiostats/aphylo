@@ -60,7 +60,8 @@ aphylo_cv.formula <- function(model, ...) {
       pred_out  = pred,
       expected  = with(ans0$dat, rbind(tip.annotation, node.annotation)),
       call      = sys.call(),
-      ids       = has_ann
+      ids       = has_ann,
+      estimates = ans0
     ),
     class="aphylo_cv"
   )

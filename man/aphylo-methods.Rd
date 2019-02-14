@@ -7,7 +7,8 @@
 \alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
-\method{plot}{aphylo}(x, y = NULL, prop = 0.15, ...)
+\method{plot}{aphylo}(x, y = NULL, prop = 0.15, rect.args = list(),
+  ...)
 
 \method{print}{aphylo}(x, ...)
 
@@ -20,6 +21,8 @@
 
 \item{prop}{Numeric scalar between 0 and 1. Proportion of the device that the
 annotations use in \code{plot.aphylo}.}
+
+\item{rect.args}{List of arguments passed to \link[graphics:rect]{graphics::rect}.}
 
 \item{...}{Further arguments passed to \link[ape:plot.phylo]{ape::plot.phylo}.}
 
