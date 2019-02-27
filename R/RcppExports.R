@@ -10,6 +10,7 @@
 #' @param labels An integer vector with the labels (truth). Values should be either
 #' 0 or 1.
 #' @param nc Integer. Number of cutoffs to use for computing the rates and AUC.
+#' @param nine_na Logical. When `TRUE`, 9 is treated as `NA`.
 #' @return A list:
 #' - `tpr` A vector of length `nc` with the True Positive Rates.
 #' - `tnr` A vector of length `nc` with the True Negative Rates.
@@ -18,8 +19,8 @@
 #' - `auc` A numeric value. Area Under the Curve.
 #' - `cutoffs` A vector of length `nc` with the cutoffs used.
 #' @export
-auc <- function(pred, labels, nc = 200L) {
-    .Call(`_aphylo_auc`, pred, labels, nc)
+auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
+    .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
 #' Approximation of Geodesic distances using Matrix Powers

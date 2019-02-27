@@ -7,15 +7,16 @@
 using namespace Rcpp;
 
 // auc
-List auc(NumericVector pred, IntegerVector labels, int nc);
-RcppExport SEXP _aphylo_auc(SEXP predSEXP, SEXP labelsSEXP, SEXP ncSEXP) {
+List auc(NumericVector pred, IntegerVector labels, int nc, bool nine_na);
+RcppExport SEXP _aphylo_auc(SEXP predSEXP, SEXP labelsSEXP, SEXP ncSEXP, SEXP nine_naSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type pred(predSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type labels(labelsSEXP);
     Rcpp::traits::input_parameter< int >::type nc(ncSEXP);
-    rcpp_result_gen = Rcpp::wrap(auc(pred, labels, nc));
+    Rcpp::traits::input_parameter< bool >::type nine_na(nine_naSEXP);
+    rcpp_result_gen = Rcpp::wrap(auc(pred, labels, nc, nine_na));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -209,7 +210,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 3},
+    {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 4},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},

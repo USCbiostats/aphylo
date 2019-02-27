@@ -6,7 +6,7 @@
 \alias{plot.aphylo_auc}
 \title{Area Under the Curve and Receiving Operating Curve}
 \usage{
-auc(pred, labels, nc = 200L)
+auc(pred, labels, nc = 200L, nine_na = TRUE)
 
 \method{print}{aphylo_auc}(x, ...)
 
@@ -20,6 +20,8 @@ range between 0 and 1.}
 0 or 1.}
 
 \item{nc}{Integer. Number of cutoffs to use for computing the rates and AUC.}
+
+\item{nine_na}{Logical. When \code{TRUE}, 9 is treated as \code{NA}.}
 
 \item{x}{An object of class \code{aphylo_auc}.}
 

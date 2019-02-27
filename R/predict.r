@@ -16,11 +16,14 @@ predict.aphylo_estimates <- function(object, ...) {
   pred
 }
 
-#' @rdname aphylo_estimates-class
+#' Calculate prediction score (quality of prediction)
+#' 
+#' @param x An object of class [aphylo_estimates] or a numeric matrix.
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
 #' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
 #' used to compute the random imputation score.
 #' @param W A square matrix. Must have as many rows as genes in `expected`.
+#' @param ... Further arguments passed to [predict.aphylo_estimates]
 #' @export
 #' @details In the case of `prediction_score`, `...` are passed to
 #' `predict.aphylo_estimates`.
@@ -37,15 +40,55 @@ predict.aphylo_estimates <- function(object, ...) {
 #'                    
 #' pr <- prediction_score(ans)
 #' with(pr, cbind(Expected = expected, Predicted = predicted))
-prediction_score <- function(
+prediction_score <- function(x, expected, alpha = .5, W = NULL)
+  UseMethod("prediction_score")
+
+#' @export
+#' @rdname prediction_score
+prediction_score.default <- function(x, expected, alpha = .5, W = NULL) {
+  
+  if (is.null(W))
+    W <- diag(ifelse(is.matrix(x), nrow(x), length(x)))
+  
+  obs <- sqrt(rowSums((x - expected)^2))
+  obs <- t(obs) %*% W %*% obs
+  
+  # Best case
+  best <- 0
+  
+  # Worst case
+  worse <- sum(W)*ncol(x)
+  
+  # Random case
+  rand  <- prediction_score_rand(expected, W, alpha)
+  
+  structure(
+    list(
+      obs       = obs,
+      worse     = worse,
+      predicted = x,
+      expected  = expected,
+      random    = rand,
+      alpha     = alpha,
+      obs.ids   = NULL,
+      leaf.ids  = NULL,
+      tree      = NULL
+    ), class = "aphylo_prediction_score"
+  )
+  
+}
+
+#' @export
+#' @rdname prediction_score
+prediction_score.aphylo_estimates <- function(
   x,
-  expected = NULL,
+  expected,
   alpha    = mean(x$dat$tip.annotation == 1L, na.rm = TRUE),
   W        = NULL,
   ...) {
   
   # Finding relevant ids
-  if (!length(expected)) {
+  if (missing(expected)) {
     expected <- with(x$dat, rbind(tip.annotation, node.annotation))
     dimnames(expected) <- with(x$dat, list(c(tree$tip.label, tree$node.label), colnames(tip.annotation)))
   } else {
@@ -77,35 +120,22 @@ prediction_score <- function(
   }
   
   
-  # Observed score
-  if (!length(expected))
-    expected <- x$dat$annotations[ids, ]
-  
-  obs <- sqrt(rowSums((pred[ids,,drop=FALSE] - expected[ids,,drop = FALSE])^2))
-  obs <- t(obs) %*% G_inv %*% obs
-  
-  # Best case
-  best <- 0
-  
-  # Worst case
-  worse <- sum(G_inv)*ncol(pred[ids,,drop=FALSE])
-  
-  # Random case
-  rand  <- prediction_score_rand(expected[ids,,drop=FALSE], G_inv, alpha)
-  
-  structure(
-    list(
-      obs       = obs,
-      worse     = worse,
-      predicted = pred,
-      expected  = expected,
-      random    = rand,
-      alpha     = alpha,
-      obs.ids   = ids,
-      leaf.ids  = 1L:nrow(x$dat$tip.annotation),
-      tree      = x$dat$tree
-    ), class = "aphylo_prediction_score"
+  ans <- prediction_score(
+    x        = pred[ids,,drop=FALSE],
+    expected = expected[ids,,drop = FALSE],
+    alpha    = alpha,
+    W        = G_inv  
   )
+  
+  # Adding missing info
+  ans$obs.ids   <- as.character(ids)
+  ans$leaf.ids  <- as.character(1L:Ntip(x$dat))
+  ans$tree      <- x$dat$tree
+  
+  ans$predicted <- pred
+  ans$expected  <- expected
+  
+  ans
   
 }
 
@@ -171,10 +201,13 @@ plot.aphylo_prediction_score <- function(
   ...
   ) {
   
+  if (is.null(x$tree))
+    stop("This method is only available for trees.", call. = FALSE)
+  
   # Should we plot only the leafs?
-  if (leafs_only)
+  if (leafs_only) {
     idx <- x$leaf.ids
-  else
+  } else
     idx <- 1:nrow(x$predicted)
   
   predicted <- x$predicted[idx,,drop=FALSE]

@@ -9,7 +9,6 @@
 \alias{vcov.aphylo_estimates}
 \alias{aphylo_mcmc}
 \alias{predict.aphylo_estimates}
-\alias{prediction_score}
 \alias{print.aphylo_prediction_score}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
@@ -29,9 +28,6 @@ aphylo_mcmc(model, params, priors = uprior(), control = list(),
   reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
-
-prediction_score(x, expected = NULL, alpha = mean(x$dat$tip.annotation
-  == 1L, na.rm = TRUE), W = NULL, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }
@@ -61,13 +57,6 @@ to \code{FALSE}.}
 \item{...}{Further arguments passed to the method}
 
 \item{object, x}{An object of class \code{aphylo_estimates}.}
-
-\item{expected}{Integer vector of length \eqn{n}. Expected values (either 0 or 1).}
-
-\item{alpha}{Numeric scalar. Prior belief of the parameter of the bernoulli distribution
-used to compute the random imputation score.}
-
-\item{W}{A square matrix. Must have as many rows as genes in \code{expected}.}
 }
 \value{
 A list of class \code{aphylo_estimates} with the following elements:
@@ -105,9 +94,6 @@ The default values of \code{control} are:
 \code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
 \code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
 }
-
-In the case of \code{prediction_score}, \code{...} are passed to
-\code{predict.aphylo_estimates}.
 }
 \examples{
 
@@ -157,15 +143,4 @@ ans_mcmc <- aphylo_mcmc(
 )
 }
 
-# Example with prediction_score ---------------------------------------------
-set.seed(1312)
-ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
-ans <- aphylo_mcmc(
-  ap ~ mu + eta + psi + Pi,
-  control = list(nsteps=2e4, thin=100),
-  priors  = function(x) dbeta(x, 1, 30)
-  )
-                   
-pr <- prediction_score(ans)
-with(pr, cbind(Expected = expected, Predicted = predicted))
 }

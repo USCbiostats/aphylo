@@ -55,17 +55,20 @@ aphylo_cv.formula <- function(model, ...) {
     
   }
   
+  expected <- with(ans0$dat, rbind(tip.annotation, node.annotation))
+  
   structure(
     list(
       pred_out  = pred,
-      expected  = with(ans0$dat, rbind(tip.annotation, node.annotation)),
+      expected  = expected,
       call      = sys.call(),
       ids       = has_ann,
-      estimates = ans0
+      estimates = ans0,
+      auc       = auc(pred, expected),
+      pscore    = prediction_score(pred, expected)
     ),
     class="aphylo_cv"
   )
-  
   
 }
 

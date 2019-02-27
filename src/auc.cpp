@@ -10,6 +10,7 @@ using namespace Rcpp;
 //' @param labels An integer vector with the labels (truth). Values should be either
 //' 0 or 1.
 //' @param nc Integer. Number of cutoffs to use for computing the rates and AUC.
+//' @param nine_na Logical. When `TRUE`, 9 is treated as `NA`.
 //' @return A list:
 //' - `tpr` A vector of length `nc` with the True Positive Rates.
 //' - `tnr` A vector of length `nc` with the True Negative Rates.
@@ -22,7 +23,8 @@ using namespace Rcpp;
 List auc(
     NumericVector pred,
     IntegerVector labels,
-    int nc = 200
+    int nc = 200,
+    bool nine_na = true
 ) {
   
   // Checking the dimension
@@ -43,6 +45,7 @@ List auc(
     if (!IntegerVector::is_na(labels[j])) {
       if (labels[j] == 0) ++n0;
       else if (labels[j] == 1) ++n1;
+      else if (nine_na && labels[j] == 9) continue;
       else 
         stop("Only values 0/1 are supported.");
     } else
