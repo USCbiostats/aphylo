@@ -153,7 +153,7 @@ sim_fun_on_tree <- function(
   eta,
   Pi,
   P           = 1L,
-  informative = getOption("aphylo.informative", FALSE),
+  informative = getOption("aphylo_informative", FALSE),
   maxtries    = 20L
 ) {
   
@@ -236,7 +236,7 @@ sim_annotated_tree <- function(
   mu          = c(.1,.05),
   eta         = c(1.0, 1.0),
   Pi          = 1.0,
-  informative = getOption("aphylo.informative", FALSE),
+  informative = getOption("aphylo_informative", FALSE),
   maxtries    = 20L
   ) {
   
@@ -352,7 +352,7 @@ mislabel <- function(atree, psi) {
 rdrop_annotations <- function(
   x, pcent,
   prob.drop.0 = .5,
-  informative = getOption("aphylo.informative", FALSE)
+  informative = getOption("aphylo_informative", FALSE)
   ) {
   
   # Number of leafs

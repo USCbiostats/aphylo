@@ -63,7 +63,7 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
     aphylo_mcmc(dat ~ mu + psi + eta(0,1) + Pi,
                 params = c(rep(2/12, 4), .5, .5,2/12),
                 priors = function(x) dbeta(x, 2, 10),
-                control = list(nsteps = 2e4, burnin=1e4, nchains=2), check.informative = FALSE)
+                control = list(nsteps = 2e4, burnin=1e4, nchains=2), check_informative = FALSE)
     )
   
   ans2 <- suppressWarnings(
@@ -71,7 +71,7 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
       dat ~ mu + psi + eta(0,1) + Pi,
       params = c(rep(2/22, 4), .5,.5,2/22), 
       priors = function(x) dbeta(x, 2, 20),
-      control = list(nsteps = 2e4, burnin=1e4, nchains=2), check.informative = FALSE)
+      control = list(nsteps = 2e4, burnin=1e4, nchains=2), check_informative = FALSE)
   )
   
   

@@ -31,7 +31,7 @@ try_solve <- function(x, ...) {
 #' details).
 #' @param lower,upper Numeric vectors defining the lower and upper bounds respectively.
 #' @param object,x An object of class `aphylo_estimates`.
-#' @param check.informative Logical scalar. When `TRUE` the algorithm
+#' @param check_informative Logical scalar. When `TRUE` the algorithm
 #' stops with an error when the annotations are uninformative (either 0s or 1s).
 #' @param reduced_pseq Logical. When `TRUE` it will use a reduced peeling sequence
 #' in which it drops unannotated leafs. If the model includes `eta` this is set
@@ -173,7 +173,7 @@ aphylo_mle <- function(
   control           = list(),
   lower             = 1e-10,
   upper             = 1 - 1e-10,
-  check.informative = getOption("aphylo.informative", FALSE),
+  check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
 ) {
   
@@ -188,8 +188,12 @@ aphylo_mle <- function(
     warnings("Fixing parameters is ignored in MLE estimation.")
 
   # If all are 9s, then, there's nothing to do with it.
-  if (all(model$dat$tip.annotation == 9L))
-    stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+  if (all(model$dat$tip.annotation == 9L)) {
+    if (check_informative)
+      stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+    else
+      warning("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+  }
   
   # Reducing the peeling sequence
   # This only happens if the eta parameter is not included
@@ -212,7 +216,7 @@ aphylo_mle <- function(
 
   
   # If the models is uninformative, then it will return with error
-  if (check.informative)
+  if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
   
   # Both available for ABC
@@ -377,7 +381,7 @@ aphylo_mcmc <- function(
   params,
   priors            = uprior(),
   control           = list(),
-  check.informative = getOption("aphylo.informative", FALSE),
+  check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
 ) {
   
@@ -389,8 +393,12 @@ aphylo_mcmc <- function(
   model <- aphylo_formula(model, params, priors, env = env)
 
   # If all are 9s, then, there's nothing to do with it.
-  if (all(model$dat$tip.annotation == 9L))
-    stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+  if (all(model$dat$tip.annotation == 9L)) {
+    if (check_informative)
+      stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+    else
+      warning("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
+  }
  
   # Reducing the peeling sequence
   # This only happens if the eta parameter is not included
@@ -418,7 +426,7 @@ aphylo_mcmc <- function(
     control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error
-  if (check.informative)
+  if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
   
   # Running the MCMC

@@ -6,7 +6,7 @@
 \usage{
 sim_annotated_tree(n = NULL, tree = NULL, P = 1L, psi = c(0.05,
   0.05), mu = c(0.1, 0.05), eta = c(1, 1), Pi = 1,
-  informative = getOption("aphylo.informative", FALSE), maxtries = 20L)
+  informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}

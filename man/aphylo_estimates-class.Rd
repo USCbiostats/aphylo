@@ -14,7 +14,7 @@
 \usage{
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
   control = list(), lower = 1e-10, upper = 1 - 1e-10,
-  check.informative = getOption("aphylo.informative", FALSE),
+  check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{print}{aphylo_estimates}(x, ...)
@@ -24,7 +24,7 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 \method{vcov}{aphylo_estimates}(object, ...)
 
 aphylo_mcmc(model, params, priors = uprior(), control = list(),
-  check.informative = getOption("aphylo.informative", FALSE),
+  check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
 
 \method{predict}{aphylo_estimates}(object, ...)
@@ -47,7 +47,7 @@ details).}
 
 \item{lower, upper}{Numeric vectors defining the lower and upper bounds respectively.}
 
-\item{check.informative}{Logical scalar. When \code{TRUE} the algorithm
+\item{check_informative}{Logical scalar. When \code{TRUE} the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).}
 
 \item{reduced_pseq}{Logical. When \code{TRUE} it will use a reduced peeling sequence

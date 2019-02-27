@@ -5,7 +5,7 @@
 \title{Simulate functions on a ginven tree}
 \usage{
 sim_fun_on_tree(tree, psi, mu, eta, Pi, P = 1L,
-  informative = getOption("aphylo.informative", FALSE), maxtries = 20L)
+  informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}

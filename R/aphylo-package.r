@@ -78,7 +78,9 @@ release_questions <- function() {
 #' 
 NULL
 
-options(
-  aphylo.informative = FALSE,
-  aphylo_reduce_pseq = TRUE
-  )
+.onLoad <- function(libname, pkgname) {
+  options(
+    aphylo_informative = FALSE,
+    aphylo_reduce_pseq = TRUE
+    )
+}
