@@ -174,7 +174,7 @@ aphylo_mle <- function(
   lower             = 1e-10,
   upper             = 1 - 1e-10,
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
+  reduced_pseq      = getOption("aphylo_reduce_pseq", TRUE)
 ) {
   
   # Getting the call
@@ -200,20 +200,11 @@ aphylo_mle <- function(
   if (length(model$fixed["eta0"]))
     reduced_pseq <- FALSE
   
-  # Short the pruning sequence?
-  if (reduced_pseq) {
-    
-    # Saving
-    old_pseq <- model$dat$pseq
-    
-    model$dat$pseq <- reduce_pseq(
-      model$dat$pseq,
-      with(model$dat, rbind(tip.annotation, node.annotation)),
-      model$dat$offspring
-    )
-    
+  # Use the longer the pruning sequence?
+  if (!reduced_pseq) {
+    old_reduced_pseq       <- model$dat$reduced_pseq
+    model$dat$reduced_pseq <- model$dat$pseq
   }
-
   
   # If the models is uninformative, then it will return with error
   if (check_informative)
@@ -250,20 +241,6 @@ aphylo_mle <- function(
     counts      = ans$counts["function"]
     )
   
-  # If changed, we need to set back the original peeling sequence.
-  if (reduced_pseq) {
-    
-    model$dat$pseq <- old_pseq
-    
-    ans$value <- model$fun(
-      p        = ans$par,
-      dat      = model$dat,
-      priors   = priors,
-      verb_ans = FALSE
-    )
-    
-  }
-  
   # Computing the hessian (information matrix)
   hessian <- stats::optimHess(
     ans$par, model$fun, dat = model$dat, priors = priors, verb_ans = FALSE,
@@ -272,6 +249,10 @@ aphylo_mle <- function(
   
   # Hessian for observed information matrix
   dimnames(hessian) <- list(names(ans$par), names(ans$par))
+  
+  # Going back to the original reduced pseq
+  if (!reduced_pseq) 
+    model$dat$reduced_pseq <- old_reduced_pseq
   
   # Returning
   new_aphylo_estimates(
@@ -382,7 +363,7 @@ aphylo_mcmc <- function(
   priors            = uprior(),
   control           = list(),
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq      = getOption("aphylo_reduce_pseq", FALSE)
+  reduced_pseq      = getOption("aphylo_reduce_pseq", TRUE)
 ) {
   
   # Getting the call
@@ -405,14 +386,10 @@ aphylo_mcmc <- function(
   if ("eta0" %in% names(model$fixed))
     reduced_pseq <- FALSE
     
-  if (reduced_pseq) {
-    old_pseq <- model$dat$pseq
-    
-    model$dat$pseq <- reduce_pseq(
-      model$dat$pseq,
-      with(model$dat, rbind(tip.annotation, node.annotation)),
-      model$dat$offspring
-    )
+  # Use the longer the pruning sequence?
+  if (!reduced_pseq) {
+    old_reduced_pseq       <- model$dat$reduced_pseq
+    model$dat$reduced_pseq <- model$dat$pseq
   }
   
   # Checking control
@@ -451,16 +428,16 @@ aphylo_mcmc <- function(
   # Working on answer
   par <- colMeans(do.call(rbind, ans))
   
-  # If changed, we need to set back the original peeling sequence.
-  if (reduced_pseq) 
-    model$dat$pseq <- old_pseq
-
   ll <- model$fun(
     p        = par,
     dat      = model$dat,
     priors   = priors,
     verb_ans = FALSE
   )
+  
+  # Use the longer the pruning sequence?
+  if (!reduced_pseq) 
+    model$dat$reduced_pseq <- old_reduced_pseq
   
   # Returning
   new_aphylo_estimates(

@@ -15,7 +15,7 @@
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
   control = list(), lower = 1e-10, upper = 1 - 1e-10,
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -25,7 +25,7 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 
 aphylo_mcmc(model, params, priors = uprior(), control = list(),
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", FALSE))
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
 
 \method{predict}{aphylo_estimates}(object, ...)
 

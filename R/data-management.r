@@ -217,7 +217,7 @@ as_aphylo <- function(
   tip.annotation,
   node.annotation,
   tree,
-  checks     = TRUE
+  checks = TRUE
   ) {
   
   if (checks) {
@@ -250,13 +250,17 @@ as_aphylo <- function(
   pseq <- ape::postorder(tree)
   pseq <- c(tree$edge[pseq, 2], length(tree$tip.label) + 1L)
   
+  offspring <- list_offspring(tree)
+  
   structure(
     c(
       list(tree            = tree),
       list(tip.annotation  = tip.annotation),
       list(node.annotation = node.annotation),
-      list(offspring       = list_offspring(tree)),
-      list(pseq            = pseq)
+      list(offspring       = offspring),
+      list(pseq            = pseq),
+      list(reduced_pseq    = reduce_pseq(pseq, rbind(tip.annotation, node.annotation), offspring))
+      
     ),
     class = c("aphylo")
   )

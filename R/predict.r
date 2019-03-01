@@ -47,10 +47,25 @@ prediction_score <- function(x, expected, alpha = .5, W = NULL)
 #' @rdname prediction_score
 prediction_score.default <- function(x, expected, alpha = .5, W = NULL) {
   
-  if (is.null(W))
-    W <- diag(ifelse(is.matrix(x), nrow(x), length(x)))
+  # Checking dimensions
+  if (length(x) != length(expected))
+    stop("`x` and `expected` differ in length. These must match.", call.=FALSE)
   
-  obs <- sqrt(rowSums((x - expected)^2))
+  # Counting complete cases
+  ids <- expected[cbind(1:nrow(expected),max.col(expected))]
+  ids <- which((ids == 1L) | (ids == 0L))
+  
+  if (length(ids) != nrow(expected)) {
+    expected <- expected[ids, , drop=FALSE]
+    x        <- x[ids, , drop=FALSE]
+  }
+  
+  if (is.null(W))
+    W <- diag(length(ids))
+  else
+    W <- W[ids, ids, drop=FALSE]
+  
+  obs <- rowSums(x - expected)
   obs <- t(obs) %*% W %*% obs
   
   # Best case

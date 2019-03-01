@@ -78,7 +78,7 @@ predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
     l <- .LogLike(
       annotations = with(x, rbind(tip.annotation, node.annotation))[,i,drop=FALSE],
       offspring   = x$offspring,
-      pseq        = x$pseq,
+      pseq        = x$reduced_pseq,
       psi         = psi,
       mu          = mu,
       eta         = eta,

@@ -55,7 +55,7 @@ LogLike <- function(
   .LogLike(
     annotations = with(tree, rbind(tip.annotation, node.annotation)),
     offspring   = tree$offspring,
-    pseq        = tree$pseq,
+    pseq        = tree$reduced_pseq,
     psi         = psi,
     mu          = mu,
     eta         = eta,
