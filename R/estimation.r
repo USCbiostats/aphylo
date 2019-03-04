@@ -256,19 +256,19 @@ aphylo_mle <- function(
   
   # Returning
   new_aphylo_estimates(
-    par        = ans$par,
-    hist       = NULL,
-    ll         = ans$value,
-    counts     = ans$counts,
+    par         = ans$par,
+    hist        = NULL,
+    ll          = ans$value,
+    counts      = ans$counts,
     convergence = ans$convergence,
-    message    = ans$message,
-    fun        = model$fun,
-    priors     = priors,
-    dat        = model$dat,
-    par0       = model$params,
-    method     = method,
-    varcovar   = try_solve(-hessian, tol = 1e-100),
-    call       = cl
+    message     = ans$message,
+    fun         = model$fun,
+    priors      = priors,
+    dat         = model$dat,
+    par0        = model$params,
+    method      = method,
+    varcovar    = try_solve(-hessian, tol = 1e-100),
+    call        = cl
   )
 }
 
@@ -295,7 +295,9 @@ print.aphylo_estimates <- function(x, ...) {
       "\nESTIMATION OF ANNOTATED PHYLOGENETIC TREE\n",
       "\n Call: ", paste(deparse(x$call), sep="\n", collapse="\n"), 
       sprintf(
-        "\n ll: %-9.4f,\n Method used: %s (%i steps)", ll, method, x$counts),
+        "\n LogLik%s: %-9.4f\n Method used: %s (%i steps)",
+        if (prod(priors(par)) != 1) " (unnormalized)" else "",
+        ll, method, x$counts),
       if (method == "mcmc") 
         NULL
       else

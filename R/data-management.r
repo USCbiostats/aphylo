@@ -263,7 +263,7 @@ as_aphylo <- function(
       list(offspring       = offspring),
       list(pseq            = pseq),
       list(reduced_pseq    = pseq_reduced),
-      list(Ntips.annotated = length(setdiff(1:nrow(tip.annotation), pseq_reduced + 1L)))
+      list(Ntips.annotated = length(intersect(1:nrow(tip.annotation), pseq_reduced)))
       
     ),
     class = c("aphylo")
