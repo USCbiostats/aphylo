@@ -70,6 +70,18 @@ arma::mat probabilities(
   typedef arma::ivec::const_iterator iviter;
   typedef IntegerVector::const_iterator Riviter;
   
+#ifdef APHYLO_DEBUG_ON
+  // Printing annotations that will be used
+  arma::imat annsub(pseq.size(), annotations.n_cols);
+  
+  for (int i=0; i<pseq.size(); ++i)
+    annsub.row(i) = annotations.row(pseq.at(i) - 1u);
+  
+  Rprintf("[probabilities] Observed annotations:\n");
+  print(wrap(annsub));
+  
+#endif
+  
   for (iviter n = pseq.begin(); n != pseq.end(); ++n) {
     
     // Rprintf("Looping in n=%i\n", n);
@@ -91,9 +103,24 @@ arma::mat probabilities(
             ;
             continue;
           }
+          
             
           Pr.at(*n - 1u, s) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p))*
             eta.at(annotations.at(*n - 1u, p));
+
+          
+#ifdef APHYLO_DEBUG_ON
+          Rprintf(
+            "[probabilities] (n, s, p): (%3i, %3i, %3i); Pr.at(.): %04.2f;",
+            *n, s, p, Pr.at(*n - 1u, s)
+          );
+          Rprintf(
+            " annotations(n-1, p): %1i; eta(.): %04.2f; psi(.): %04.2f\n",
+            annotations.at(*n - 1u, p),
+            eta.at(annotations.at(*n - 1u, p)),
+            PSI.at(S.at(s, p), 0u) 
+          );
+#endif
           
         }
         continue;
@@ -103,6 +130,16 @@ arma::mat probabilities(
     // Obtaining list of offspring <- this can be improved (speed)
     // can create an std vector of size n
     IntegerVector O(offspring.at(*n - 1u));
+    
+#ifdef APHYLO_DEBUG_ON
+    Rprintf("[probabilities] List of springs:\n");
+    
+    for (Riviter o_n = O.begin(); o_n != O.end(); ++o_n)
+      Rprintf("%i, ", *o_n);
+    
+    Rprintf("\n");
+      
+#endif
     
     // Parent node states integration
     for (int s=0; s<nstates; s++) {
@@ -127,6 +164,12 @@ arma::mat probabilities(
         }
         
         // Multiplying with other offspring
+#ifdef APHYLO_DEBUG_ON
+        
+        Rprintf("[probabilities] offspring_likelihood: %04.2f; offspring_joint_likelihood: %04.2f; o_n: %i; s: %i\n",
+                offspring_likelihood, offspring_joint_likelihood, *o_n, s);
+        
+#endif
         offspring_joint_likelihood *= offspring_likelihood;
         
       }
@@ -196,6 +239,18 @@ List LogLike(
   // Computing likelihood
   arma::mat Pr  = probabilities(annotations, pseq, psi, mu, eta, S, offspring);
 
+#ifdef APHYLO_DEBUG_ON
+  // Printing resulting probabilities
+  arma::mat prsub(pseq.size(), nstates);
+  
+  for (int i=0; i<pseq.size(); ++i)
+    prsub.row(i) = Pr.row(pseq.at(i) - 1u);
+  
+  Rprintf("[LogLike] Observed probabilities:\n");
+  print(wrap(prsub));
+  
+#endif
+  
   // We only use the root node
   double ll = 0.0;
 

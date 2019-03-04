@@ -246,11 +246,14 @@ as_aphylo <- function(
       )
     )
   
-  # Calculating the pruning sequence
-  pseq <- ape::postorder(tree)
-  pseq <- c(tree$edge[pseq, 2], length(tree$tip.label) + 1L)
-  
+  # Listing offpring
   offspring <- list_offspring(tree)
+  
+  # Calculating the pruning sequence
+  pseq         <- ape::postorder(tree)
+  pseq         <- c(tree$edge[pseq, 2], length(tree$tip.label) + 1L)
+  pseq_reduced <- reduce_pseq(pseq, rbind(tip.annotation, node.annotation), offspring)
+  
   
   structure(
     c(
@@ -259,7 +262,8 @@ as_aphylo <- function(
       list(node.annotation = node.annotation),
       list(offspring       = offspring),
       list(pseq            = pseq),
-      list(reduced_pseq    = reduce_pseq(pseq, rbind(tip.annotation, node.annotation), offspring))
+      list(reduced_pseq    = pseq_reduced),
+      list(Ntips.annotated = length(setdiff(1:nrow(tip.annotation), pseq_reduced + 1L)))
       
     ),
     class = c("aphylo")

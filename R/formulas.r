@@ -61,7 +61,7 @@ aphylo_call <- function(params, priors) {
           )
         
         # Correcting for eta
-        ans$ll <- ans$ll + log(2^prod(dim(dat$tip.annotation)))
+        ans$ll <- ans$ll + 0.69314718055994528623*ncol(dat$tip.annotation)*dat$Ntips.annotated
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
