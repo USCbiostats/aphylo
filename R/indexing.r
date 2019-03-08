@@ -19,9 +19,18 @@ Nedge.aphylo <- function(phy) ape::Nedge(phy$tree)
 #' @export
 Nnode.aphylo <- function(phy, ...) ape::Nnode(phy$tree, ...)
 
+
+#'@export
+#'@rdname ape-methods
+Nnode.aphylo_estimates <- function(phy) ape::Nnode(phy$dat, ...)
+
 #' @rdname ape-methods
 #' @export
 Ntip.aphylo <- function(phy) ape::Ntip(phy$tree)
+
+#' @export
+#' @rdname ape-methods
+Ntip.aphylo_estimates <- function(phy) ape::Ntip(phy$dat)
 
 
 
@@ -38,6 +47,12 @@ Nann.aphylo <- function(phy) ncol(phy$tip.annotation)
 Nann.phylo <- function(phy) {
   warning("phylo objects have no annotations.", call. = FALSE)
   0L
+}
+
+#' @export
+#' @rdname ape-methods
+Nann.aphylo_estimates <- function(phy) {
+  Nann(phy$dat)
 }
 
 #' @rdname ape-methods

@@ -40,12 +40,12 @@ predict.aphylo_estimates <- function(object, ...) {
 #'                    
 #' pr <- prediction_score(ans)
 #' with(pr, cbind(Expected = expected, Predicted = predicted))
-prediction_score <- function(x, expected, alpha = .5, W = NULL)
+prediction_score <- function(x, expected, alpha = NULL, W = NULL)
   UseMethod("prediction_score")
 
 #' @export
 #' @rdname prediction_score
-prediction_score.default <- function(x, expected, alpha = .5, W = NULL) {
+prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
   
   # Checking dimensions
   if (length(x) != length(expected))
@@ -59,6 +59,11 @@ prediction_score.default <- function(x, expected, alpha = .5, W = NULL) {
     expected <- expected[ids, , drop=FALSE]
     x        <- x[ids, , drop=FALSE]
   }
+  
+  # Computing the expected value of 1s. We will use this to compute the random
+  # score.
+  if (!length(alpha))
+    alpha <- mean(expected)
   
   if (is.null(W))
     W <- diag(length(ids))
@@ -98,7 +103,7 @@ prediction_score.default <- function(x, expected, alpha = .5, W = NULL) {
 prediction_score.aphylo_estimates <- function(
   x,
   expected,
-  alpha    = mean(x$dat$tip.annotation == 1L, na.rm = TRUE),
+  alpha    = mean(x$dat$tip.annotation != 9L, na.rm = TRUE),
   W        = NULL,
   ...) {
   
@@ -154,10 +159,20 @@ prediction_score.aphylo_estimates <- function(
   
 }
 
-predict_random <- function(P, A, G_inv) {
+predict_random <- function(P, A, G_inv, alpha) {
   n <- nrow(G_inv)
   sapply(1:10000, function(x) {
-    A_hat <- matrix(sample(c(0,1), P*n, TRUE), ncol = P)
+    
+    A_hat <- matrix(
+      data = sample(
+        x       = c(0, 1),
+        size    = P * n,
+        replace = TRUE,
+        prob    = c(1 - alpha, alpha)
+        ),
+      ncol = P
+      )
+    
     obs   <- sqrt(rowSums((A - A_hat)^2))
     t(obs) %*% G_inv %*% obs
   })

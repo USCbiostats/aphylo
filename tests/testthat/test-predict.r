@@ -64,3 +64,34 @@ test_that("Calling the prediction function works", {
   expect_equivalent(ans0, ans1)
   
 })
+
+# Prediction score function ----------------------------------------------------
+
+test_that("Best vs Worse Prediction score", {
+  
+  set.seed(123)
+  y <- sample(c(0,1), 20, replace = TRUE)
+  
+  # Perfect prediction score
+  ans0 <- prediction_score(cbind(y), cbind(y))
+  expect_equivalent(ans0$obs/ans0$worse, 0)
+  
+  # Worse
+  ans1 <- prediction_score(cbind(y), 1 - cbind(y))
+  expect_equivalent(ans1$obs/ans1$worse, 1)
+  
+})
+
+test_that("Random prediction score", {
+  
+  set.seed(123)
+  y <- cbind(sample(c(0,1), 20, replace = TRUE, prob = c(.8, .2)))
+  a <- .3
+  
+  p0 <- mean(aphylo:::predict_random(1, y, diag(20), alpha = a))
+  p1 <- aphylo:::prediction_score_rand(y, diag(20), a)
+  
+  expect_equivalent(p0, p1, tol = 1e-1)
+  
+})
+

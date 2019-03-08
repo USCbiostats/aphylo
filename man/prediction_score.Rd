@@ -6,12 +6,12 @@
 \alias{prediction_score.aphylo_estimates}
 \title{Calculate prediction score (quality of prediction)}
 \usage{
-prediction_score(x, expected, alpha = 0.5, W = NULL)
+prediction_score(x, expected, alpha = NULL, W = NULL)
 
-\method{prediction_score}{default}(x, expected, alpha = 0.5, W = NULL)
+\method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL)
 
 \method{prediction_score}{aphylo_estimates}(x, expected,
-  alpha = mean(x$dat$tip.annotation == 1L, na.rm = TRUE), W = NULL,
+  alpha = mean(x$dat$tip.annotation != 9L, na.rm = TRUE), W = NULL,
   ...)
 }
 \arguments{

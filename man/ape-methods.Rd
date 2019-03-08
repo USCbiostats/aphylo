@@ -4,10 +4,13 @@
 \alias{ape-methods}
 \alias{Nedge.aphylo}
 \alias{Nnode.aphylo}
+\alias{Nnode.aphylo_estimates}
 \alias{Ntip.aphylo}
+\alias{Ntip.aphylo_estimates}
 \alias{Nann}
 \alias{Nann.aphylo}
 \alias{Nann.phylo}
+\alias{Nann.aphylo_estimates}
 \alias{Nann.multiPhylo}
 \title{APE wrappers}
 \usage{
@@ -15,13 +18,19 @@
 
 \method{Nnode}{aphylo}(phy, ...)
 
+\method{Nnode}{aphylo_estimates}(phy)
+
 \method{Ntip}{aphylo}(phy)
+
+\method{Ntip}{aphylo_estimates}(phy)
 
 Nann(phy)
 
 \method{Nann}{aphylo}(phy)
 
 \method{Nann}{phylo}(phy)
+
+\method{Nann}{aphylo_estimates}(phy)
 
 \method{Nann}{multiPhylo}(phy)
 }

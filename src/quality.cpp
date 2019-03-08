@@ -34,23 +34,40 @@ double prediction_score_rand(
     // states data, ah and au. Will work on that later
     
     for (u = 0; u <= h; u++) 
+      
       // Multiplying states
-      for (ah=0; ah<P2; ah++)
+      for (ah=0; ah<P2; ah++) {
+    
+        if (h != u) {
         
-        for (au=0; au<P2; au++) {
+          for (au=0; au<P2; au++) {
+            prods = 0.0;
+            
+            // Product within PxP
+            for (p = 0; p < P; p++)
+              for (r = 0; r < P; r++)
+                prods += powf((A.at(h, p) - S.at(ah, p))*(A.at(u, r) - S.at(au, r)), 2.0);
+            
+            // // Score at the ah, au level
+            // if (u != h) score += Pa.at(ah)*Pa.at(au)*powf(prods, 0.5)*W.at(h, u)*2.0;
+            // else        score += Pa.at(ah)*Pa.at(au)*powf(prods, 0.5)*W.at(h, u);
+            
+            score += Pa.at(ah)*Pa.at(au)*powf(prods, 0.5)*W.at(h, u)*2.0;
+            
+          }
+        } else {
+          
           prods = 0.0;
           
           // Product within PxP
           for (p = 0; p < P; p++)
-            for (r = 0; r < P; r++)
-              prods += powf((A.at(h, p) - S.at(ah, p))*(A.at(u, r) - S.at(au, r)), 2.0);
+              prods += powf((A.at(h, p) - S.at(ah, p)), 4.0);
           
-          // Score at the ah, au level
-          if (u != h) score += Pa.at(ah)*Pa.at(au)*powf(prods, 0.5)*W.at(h, u)*2;
-          else score += Pa.at(ah)*Pa.at(au)*powf(prods, 0.5)*W.at(h, u);
+          score += Pa.at(ah)*powf(prods, 0.5)*W.at(h, u);
           
-        }
-    
+        } 
+        
+      }
     
   
   return score;

@@ -57,7 +57,7 @@ arma::mat probabilities(
     const arma::vec  & mu,
     const arma::vec  & eta,
     const arma::imat & S,
-    const List       & offspring
+    const ListOf<IntegerVector> & offspring
 ) {
   
   // Obtaining relevant constants
@@ -86,7 +86,7 @@ arma::mat probabilities(
     
     // Rprintf("Looping in n=%i\n", n);
     // Only for internal nodes
-    if (! (bool) Rf_length(offspring.at(*n - 1u))) {
+    if (! (bool) Rf_length(offspring[*n - 1u])) {
       
       for (int s=0; s<nstates; s++)
         for (int p=0; p<P; p++) {
@@ -129,7 +129,7 @@ arma::mat probabilities(
       
     // Obtaining list of offspring <- this can be improved (speed)
     // can create an std vector of size n
-    IntegerVector O(offspring.at(*n - 1u));
+    IntegerVector O(offspring[*n - 1u]);
     
 #ifdef APHYLO_DEBUG_ON
     Rprintf("[probabilities] List of springs:\n");
@@ -187,7 +187,7 @@ arma::mat probabilities(
 // [[Rcpp::export(name = ".LogLike", rng = false)]]
 List LogLike(
     const arma::imat & annotations,
-    const List       & offspring,
+    const ListOf<IntegerVector> & offspring,
     const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,

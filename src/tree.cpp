@@ -78,7 +78,7 @@ arma::uvec fast_table_using_labels(
 typedef std::vector< std::vector<int> > stdintvec;
 
 // [[Rcpp::export(name = ".list_offspring")]]
-List list_offspring(IntegerMatrix E, int n) {
+ListOf<IntegerVector> list_offspring(IntegerMatrix E, int n) {
   stdintvec ans(n);
   
   for (int i = 0; i < E.nrow(); i++)
@@ -88,5 +88,5 @@ List list_offspring(IntegerMatrix E, int n) {
   for (int i = 0; i < n; i++)
     O.at(i) = Rcpp::wrap(ans.at(i));
   
-  return O;
+  return wrap(O);
 }

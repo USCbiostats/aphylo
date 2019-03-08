@@ -280,7 +280,7 @@ print.aphylo_estimates <- function(x, ...) {
   
   sderrors   <- sqrt(diag(x$varcovar))
   
-  ans <- sprintf("\n Leafs:\n # of Functions %i", ncol(x$dat$tip.annotation))
+  ans <- sprintf("\n # of Leafs: %i\n # of Functions %i", Ntip(x), Nann(x))
   ans <- c(ans, sprintf("\n %-6s  %6s  %6s", "", "Estimate", "Std. Err."))
   for (p in names(x$par)) {
     ans <- c(
