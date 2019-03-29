@@ -10,9 +10,8 @@ prediction_score(x, expected, alpha = NULL, W = NULL)
 
 \method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL)
 
-\method{prediction_score}{aphylo_estimates}(x, expected,
-  alpha = mean(x$dat$tip.annotation != 9L, na.rm = TRUE), W = NULL,
-  ...)
+\method{prediction_score}{aphylo_estimates}(x, expected, alpha = NULL,
+  W = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \link{aphylo_estimates} or a numeric matrix.}
@@ -32,11 +31,16 @@ Calculate prediction score (quality of prediction)
 \details{
 In the case of \code{prediction_score}, \code{...} are passed to
 \code{predict.aphylo_estimates}.
+
+In the case of the method for aphylo estimates, the function takes as
+a reference using alpha equal to the proportion of observed tip annotations that
+are equal to 1, this is:\preformatted{mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
+}
 }
 \examples{
 # Example with prediction_score ---------------------------------------------
 set.seed(1312)
-ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
+ap  <- raphylo(10, P = 1, Pi=.2, mu=c(.05,.02))
 ans <- aphylo_mcmc(
   ap ~ mu + eta + psi + Pi,
   control = list(nsteps=2e4, thin=100),

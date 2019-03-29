@@ -42,7 +42,7 @@ library(aphylo)
 
 # Setting the seed and simulating the data
 set.seed(2)
-x <- sim_annotated_tree(40, P = 2)
+x <- raphylo(40, P = 2)
 
 # Droping some annotations
 x <- rdrop_annotations(x, .5)

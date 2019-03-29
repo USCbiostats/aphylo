@@ -614,7 +614,7 @@ tree
 \begincol{.48\textwidth}
 
 ```{r example_sim_ann_tree, echo=TRUE}
-atree <- sim_annotated_tree(
+atree <- raphylo(
   tree = tree, P = 2,
   psi  = c(.05, .05),
   mu   = c(.2, .1),
@@ -712,7 +712,7 @@ tree <- dat$tree
 
 # Simulating a function
 set.seed(123)
-atree <- sim_annotated_tree(
+atree <- raphylo(
   tree= as_po_tree(tree),
   Pi = .05, mu = c(.1, .05), psi = c(.01, .02)
 )

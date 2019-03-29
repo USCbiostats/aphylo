@@ -71,7 +71,7 @@ try_solve <- function(x, ...) {
 #' 
 #' # Using simulated data ------------------------------------------------------
 #' set.seed(19)
-#' dat <- sim_annotated_tree(100)
+#' dat <- raphylo(100)
 #' dat <- rdrop_annotations(dat, .4)
 #' 
 #' # Computing Estimating the parameters 
@@ -99,7 +99,7 @@ try_solve <- function(x, ...) {
 #' tree <- sim_tree(200)
 #' 
 #' # Simulating functions
-#' dat <- sim_annotated_tree(
+#' dat <- raphylo(
 #'   tree = tree,
 #'   psi  = c(.01, .03),
 #'   mu   = c(.05, .02),

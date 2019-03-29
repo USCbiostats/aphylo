@@ -11,7 +11,7 @@ test_that("As phylo conversion and methods", {
   expect_s3_class(as.phylo(ans), "phylo")
   expect_null(plot(ans))
   expect_output(summary(as.phylo(ans)), "Phylogenetic tree")
-  expect_output(summary(sim_annotated_tree(10, P=4)), "Distri")
+  expect_output(summary(raphylo(10, P=4)), "Distri")
 })
 
 # Conversion -------------------------------------------------------------------

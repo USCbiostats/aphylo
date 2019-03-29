@@ -13,7 +13,7 @@
 #' 
 #' @examples
 #' set.seed(12)
-#' x <- sim_annotated_tree(10)
+#' x <- raphylo(10)
 #' 
 #' # Baseline model
 #' aphylo_formula(x ~ mu)

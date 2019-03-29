@@ -10,7 +10,7 @@ test_that("x ~ mu", {
 
   # Data generating process
   set.seed(7223)
-  x <- rdrop_annotations(sim_annotated_tree(40), .6)
+  x <- rdrop_annotations(raphylo(40), .6)
 
   mypriors <- function(z) dbeta(z, 2, 10)
 
@@ -56,7 +56,7 @@ test_that("x ~ mu + psi + Pi", {
   
   # Data generating process
   set.seed(7223)
-  x <- rdrop_annotations(sim_annotated_tree(40), .6)
+  x <- rdrop_annotations(raphylo(40), .6)
   
   mypriors <- function(z) dbeta(z, 2, 10)
   

@@ -3,7 +3,7 @@ context("Formulae")
 test_that("Formulas create the right model", {
   
   set.seed(0772)
-  x <- rdrop_annotations(sim_annotated_tree(100), .5)
+  x <- rdrop_annotations(raphylo(100), .5)
 
   suppressWarnings({  
   m_mu <- aphylo_formula(x ~ mu)
@@ -20,7 +20,7 @@ test_that("Formulas create the right model", {
 test_that("Errors are caught", {
   
   set.seed(071)
-  x <- rdrop_annotations(sim_annotated_tree(100), .5)
+  x <- rdrop_annotations(raphylo(100), .5)
   
   expect_error(suppressWarnings(aphylo_formula(y ~ psi)), "be found")
   y <- 1
@@ -39,7 +39,7 @@ test_that("Multiple chains formulas work", {
   
   set.seed(121)
   
-  x <- sim_annotated_tree(30)
+  x <- raphylo(30)
   p <- matrix(runif(7*2), nrow=2, dimnames = NULL)
   
   expect_warning(

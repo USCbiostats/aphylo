@@ -61,7 +61,7 @@ aphylo_cv.formula <- function(model, ...) {
 # print.aphylo_cv
 
 set.seed(123)
-x <- sim_annotated_tree(20)
+x <- raphylo(20)
 # x <- rdrop_annotations(x, .8, informative = TRUE)
 ans <- aphylo_cv(x ~ psi + mu + Pi, priors = bprior())
 # 

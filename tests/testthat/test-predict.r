@@ -33,7 +33,7 @@ test_that("Prediction works", {
   
   # Random test
   set.seed(122331)
-  atree <- sim_annotated_tree(4, psi = psi, mu = mu, eta = eta, Pi = Pi)
+  atree <- raphylo(4, psi = psi, mu = mu, eta = eta, Pi = Pi)
   
   ans0 <- predict_brute_force(atree, psi, mu, Pi)
   ans1 <- predict_pre_order(atree, psi, mu, eta, Pi)
@@ -46,7 +46,7 @@ test_that("Calling the prediction function works", {
   
   set.seed(137245)
   
-  x <- sim_annotated_tree(10)
+  x <- raphylo(10)
   x_obs <- rdrop_annotations(x, .5)
   res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu + Pi, priors = bprior()))
   

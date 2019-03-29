@@ -22,7 +22,7 @@ Switch labels acoording to mislabeling probabilities
 \examples{
 
 set.seed(131)
-x <- sim_annotated_tree(5, P=2, psi=c(0,0))
+x <- raphylo(5, P=2, psi=c(0,0))
 x$tip.annotation
 
 # Flipping 0s to 1s and vice versa

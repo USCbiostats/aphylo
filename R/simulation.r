@@ -226,9 +226,9 @@ sim_fun_on_tree <- function(
 #' # A simple example ----------------------------------------------------------
 #' 
 #' set.seed(1231)
-#' ans <- sim_annotated_tree(n=500)
+#' ans <- raphylo(n=500)
 #' 
-sim_annotated_tree <- function(
+raphylo <- function(
   n           = NULL,
   tree        = NULL,
   P           = 1L,
@@ -285,7 +285,7 @@ sim_annotated_tree <- function(
 #' @examples 
 #' 
 #' set.seed(131)
-#' x <- sim_annotated_tree(5, P=2, psi=c(0,0))
+#' x <- raphylo(5, P=2, psi=c(0,0))
 #' x$tip.annotation
 #' 
 #' # Flipping 0s to 1s and vice versa
@@ -339,7 +339,7 @@ mislabel <- function(atree, psi) {
 #' # The following tree has roughtly the same proportion of 0s and 1s
 #' # and 0 mislabeling.
 #' set.seed(1)
-#' x <- sim_annotated_tree(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
+#' x <- raphylo(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
 #' summary(x)
 #' 
 #' # Dropping half of the annotations

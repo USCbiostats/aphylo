@@ -31,7 +31,7 @@ predict.aphylo_estimates <- function(object, ...) {
 #' @examples 
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(1312)
-#' ap  <- sim_annotated_tree(10, P = 1, Pi=.2, mu=c(.05,.02))
+#' ap  <- raphylo(10, P = 1, Pi=.2, mu=c(.05,.02))
 #' ans <- aphylo_mcmc(
 #'   ap ~ mu + eta + psi + Pi,
 #'   control = list(nsteps=2e4, thin=100),
@@ -100,12 +100,23 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
 
 #' @export
 #' @rdname prediction_score
+#' @details In the case of the method for aphylo estimates, the function takes as
+#' a reference using alpha equal to the proportion of observed tip annotations that
+#' are equal to 1, this is:
+#' 
+#' ```
+#' mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
+#' ```
 prediction_score.aphylo_estimates <- function(
   x,
   expected,
-  alpha    = mean(x$dat$tip.annotation != 9L, na.rm = TRUE),
+  alpha    = NULL,
   W        = NULL,
   ...) {
+  
+  # If null, then we take the true (observed) proportion of ones to compare
+  if (is.null(alpha))
+    alpha <- mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
   
   # Finding relevant ids
   if (missing(expected)) {
@@ -159,9 +170,15 @@ prediction_score.aphylo_estimates <- function(
   
 }
 
-predict_random <- function(P, A, G_inv, alpha) {
+#' Calculates the ramdon prediction score by simulationss
+#' @param P Number of functions
+#' @param A Observed annotations
+#' @param G_inv Weighting matrix
+#' @noRd
+#' 
+predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
   n <- nrow(G_inv)
-  sapply(1:10000, function(x) {
+  sapply(1:R, function(x) {
     
     A_hat <- matrix(
       data = sample(

@@ -22,7 +22,7 @@ Nnode.aphylo <- function(phy, ...) ape::Nnode(phy$tree, ...)
 
 #'@export
 #'@rdname ape-methods
-Nnode.aphylo_estimates <- function(phy) ape::Nnode(phy$dat, ...)
+Nnode.aphylo_estimates <- function(phy, ...) ape::Nnode(phy$dat, ...)
 
 #' @rdname ape-methods
 #' @export

@@ -18,7 +18,7 @@
 
 \method{Nnode}{aphylo}(phy, ...)
 
-\method{Nnode}{aphylo_estimates}(phy)
+\method{Nnode}{aphylo_estimates}(phy, ...)
 
 \method{Ntip}{aphylo}(phy)
 

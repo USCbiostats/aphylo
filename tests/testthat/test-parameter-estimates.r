@@ -8,7 +8,7 @@ psi <- c(.01, .01)
 mu  <- c(.02, .05)
 Pi  <- .2
 
-dat <- sim_annotated_tree(n, P=P, psi = psi, mu = mu, Pi = Pi)
+dat <- raphylo(n, P=P, psi = psi, mu = mu, Pi = Pi)
 
 # Estimation via L-BFGS-B
 
@@ -56,7 +56,7 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   
   set.seed(1)
-  dat <- suppressWarnings(sim_annotated_tree(200, Pi=0, mu=c(0, 0), psi=c(0,0)))
+  dat <- suppressWarnings(raphylo(200, Pi=0, mu=c(0, 0), psi=c(0,0)))
   dat$tip.annotation[] <- 9L
   
   ans1 <- suppressWarnings(

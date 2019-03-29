@@ -97,7 +97,7 @@ output: html_document
     
     # Simulating and dropping annotations
     set.seed(3)
-    dat <- sim_annotated_tree(40, eta = c(.7, .9)) 
+    dat <- raphylo(40, eta = c(.7, .9)) 
 
     # Doing some viz
     plot(dat)

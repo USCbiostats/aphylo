@@ -30,7 +30,7 @@ checkout_annotations <- function(x) {
 test_that("Simulating informative annotated trees", {
   
   set.seed(1)
-  ans <- lapply(1:100, function(i) sim_annotated_tree(5, informative = TRUE))
+  ans <- lapply(1:100, function(i) raphylo(5, informative = TRUE))
   ans <- checkout_annotations(ans)
   
   # There must be zeros and ones in all trees!
@@ -42,7 +42,7 @@ test_that("Simulating informative annotated trees", {
 test_that("Dropping annotations", {
   set.seed(1)
   sizes <- ceiling(runif(1e3, .01)*200)
-  ans <- lapply(sizes, sim_annotated_tree, Pi = .5, psi=c(0,0), mu=c(.5, .5))
+  ans <- lapply(sizes, raphylo, Pi = .5, psi=c(0,0), mu=c(.5, .5))
   ans0 <- checkout_annotations(ans)
   
   # Dropping half of it and keeping informative
@@ -71,7 +71,7 @@ test_that("Mislabeling", {
   
   # Ramdom tree (fully annotated) ---------------------------------------------
   set.seed(1)
-  x <- sim_annotated_tree(20, P=4, Pi=.02)
+  x <- raphylo(20, P=4, Pi=.02)
   
   # All are ones/zeros
   all_ones <- mislabel(x, psi = c(1, 0))

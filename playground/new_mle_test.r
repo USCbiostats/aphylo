@@ -9,7 +9,7 @@ set.seed(1122)
 n          <- 2e3
 parameters <- lapply(1:n, function(x) rbeta(5, 1, 10))# runif(5))
 datasets   <- lapply(parameters, function(x) {
-  aphylo::sim_annotated_tree(100, psi=x[1:2], mu=x[3:4], Pi = x[5])
+  aphylo::raphylo(100, psi=x[1:2], mu=x[3:4], Pi = x[5])
 })
 
 try_phylo_mle <- function(...)

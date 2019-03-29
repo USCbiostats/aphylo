@@ -2,7 +2,7 @@ context("plot_LogLike")
 
 test_that("plotll", {
   set.seed(1)
-  dat <- sim_annotated_tree(20)
+  dat <- raphylo(20)
   
   # aphylo method
   expect_null(plot_logLik(dat))

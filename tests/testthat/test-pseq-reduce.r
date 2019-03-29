@@ -3,7 +3,7 @@ context("Reducing pruning sequence")
 test_that("Same results", {
   
   set.seed(1235541)
-  x <- sim_annotated_tree(100)
+  x <- raphylo(100)
   x <- rdrop_annotations(x, .5)
   
   control. <- list(multicore = TRUE, nchains=1, autostop=0L, nsteps=1000, burnin=0)

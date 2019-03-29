@@ -99,7 +99,7 @@ The default values of \code{control} are:
 
 # Using simulated data ------------------------------------------------------
 set.seed(19)
-dat <- sim_annotated_tree(100)
+dat <- raphylo(100)
 dat <- rdrop_annotations(dat, .4)
 
 # Computing Estimating the parameters 
@@ -127,7 +127,7 @@ set.seed(1233)
 tree <- sim_tree(200)
 
 # Simulating functions
-dat <- sim_annotated_tree(
+dat <- raphylo(
   tree = tree,
   psi  = c(.01, .03),
   mu   = c(.05, .02),

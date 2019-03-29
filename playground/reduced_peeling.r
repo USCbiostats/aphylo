@@ -4,7 +4,7 @@ rm(list = ls())
 
 # Checking whether reducing the peeling sequence helps
 set.seed(1)
-x <- sim_annotated_tree(400)
+x <- raphylo(400)
 x$node.annotation[] <- 9
 x$tip.annotation[sample.int(400, 300)] <- 9
 x0 <- x
