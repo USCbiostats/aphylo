@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fake Phylogenetic Tree — faketree • aphylo</title>
+<title>Area Under the Curve and Receiving Operating Curve — auc • aphylo</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Fake Phylogenetic Tree — faketree" />
+<meta property="og:title" content="Area Under the Curve and Receiving Operating Curve — auc" />
 
-<meta property="og:description" content="A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only." />
+<meta property="og:description" content="The AUC values are computed by approximation using the area of the polygons formed
+under the ROC curve." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,39 +103,81 @@ This dataset is inteded for testing only." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fake Phylogenetic Tree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/aphylo-package.r'><code>R/aphylo-package.r</code></a></small>
-    <div class="hidden name"><code>faketree.Rd</code></div>
+    <h1>Area Under the Curve and Receiving Operating Curve</h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/RcppExports.R'><code>R/RcppExports.R</code></a>, <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/cv.r'><code>R/cv.r</code></a></small>
+    <div class="hidden name"><code>auc.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only.</p>
+    <p>The AUC values are computed by approximation using the area of the polygons formed
+under the ROC curve.</p>
     
     </div>
 
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>auc</span>(<span class='no'>pred</span>, <span class='no'>labels</span>, <span class='kw'>nc</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='kw'>nine_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-    <p>A data frame with 6 rows and 2 variables:</p><dl class='dl-horizontal'>
-<dt>NodeId</dt><dd><p>Integer, ID of the offspring.</p></dd>
-<dt>ParentId</dt><dd><p>Integer, ID of the parent.</p></dd>
-</dl>
+<span class='co'># S3 method for aphylo_auc</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo_auc</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pred</th>
+      <td><p>A numeric vector with the predictions of the model. Values must
+range between 0 and 1.</p></td>
+    </tr>
+    <tr>
+      <th>labels</th>
+      <td><p>An integer vector with the labels (truth). Values should be either
+0 or 1.</p></td>
+    </tr>
+    <tr>
+      <th>nc</th>
+      <td><p>Integer. Number of cutoffs to use for computing the rates and AUC.</p></td>
+    </tr>
+    <tr>
+      <th>nine_na</th>
+      <td><p>Logical. When <code>TRUE</code>, 9 is treated as <code>NA</code>.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>An object of class <code>aphylo_auc</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments passed to the method.</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>Ignored.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>BiostatsUSC</p>
+    <p>A list:</p><ul>
+<li><p><code>tpr</code> A vector of length <code>nc</code> with the True Positive Rates.</p></li>
+<li><p><code>tnr</code> A vector of length <code>nc</code> with the True Negative Rates.</p></li>
+<li><p><code>fpr</code> A vector of length <code>nc</code> with the False Positive Rates.</p></li>
+<li><p><code>fnr</code> A vector of length <code>nc</code> with the False Negative Rates.</p></li>
+<li><p><code>auc</code> A numeric value. Area Under the Curve.</p></li>
+<li><p><code>cutoffs</code> A vector of length <code>nc</code> with the cutoffs used.</p></li>
+</ul>
+
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#source">Source</a></li>
+      <li><a href="#value">Value</a></li>
           </ul>
 
   </div>

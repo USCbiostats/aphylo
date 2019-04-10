@@ -46,9 +46,8 @@ try_solve <- function(x, ...) {
 #' 
 #' \tabular{ll}{
 #' `nsteps` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
-#' `scale` \tab Numeric scalar. Default `0.01`. \cr
-#' `lb` \tab Numeric vector. Default `rep(1e-20, 5)`. \cr
-#' `ub` \tab Numeric vector. Default `rep(1 - 1e-20, 5)`. \cr
+#' `kernel` \tab A call to the function [amcmc::kernel_reflective] with the
+#' following parameters, `lb = 0`, `ub = 1`, and `scale = 0.01`. \cr
 #' }
 #' 
 #' @return 
@@ -111,7 +110,7 @@ try_solve <- function(x, ...) {
 #' 
 #' ans_mcmc <- aphylo_mcmc(
 #'   dat ~ mu + psi + eta + Pi,
-#'   control = list(nsteps = 2e5, burnin=1000, thin=200, scale=2e-2)
+#'   control = list(nsteps = 2e5, burnin=1000, thin=200)
 #' )
 #' }
 #' 
@@ -346,12 +345,8 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
   nsteps    = 1e5L,
   burnin    = 1e4L,
   thin      = 20L,
-  scale     = .01,
-  ub        = 1,
-  lb        = 0,
   nchains   = 2L,
   multicore = TRUE,
-  useCpp    = FALSE,
   autostop  = 5e3
 )
 
@@ -399,14 +394,20 @@ aphylo_mcmc <- function(
     if (!length(control[[n]]))
       control[[n]] <- APHYLO_DEFAULT_MCMC_CONTROL[[n]]
   }
-  
-  # Fixed parameters
-  if (!length(control$fixed))
-    control$fixed  <- model$fixed
 
   # If the models is uninformative, then it will return with error
   if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
+  
+  # Checking kernel
+  if (!length(control$kernel))
+    control$kernel <- amcmc::kernel_reflective(
+      k         = length(model$fixed),
+      scale     = .01,
+      ub        = 1,
+      lb        = 0,
+      fixed     = model$fixed
+    )
   
   # Running the MCMC
   ans <- do.call(

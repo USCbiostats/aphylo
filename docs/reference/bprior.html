@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fake Phylogenetic Tree — faketree • aphylo</title>
+<title>Default priors for <a href='aphylo_estimates-class.html'>aphylo_mcmc</a> — bprior • aphylo</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Fake Phylogenetic Tree — faketree" />
+<meta property="og:title" content="Default priors for <a href='aphylo_estimates-class.html'>aphylo_mcmc</a> — bprior" />
 
-<meta property="og:description" content="A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only." />
+<meta property="og:description" content="Convenient wrappers to be used with the aphylo estimation methods." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,40 +102,54 @@ This dataset is inteded for testing only." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fake Phylogenetic Tree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/aphylo-package.r'><code>R/aphylo-package.r</code></a></small>
-    <div class="hidden name"><code>faketree.Rd</code></div>
+    <h1>Default priors for <a href='aphylo_estimates-class.html'>aphylo_mcmc</a></h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/priors.R'><code>R/priors.R</code></a></small>
+    <div class="hidden name"><code>bprior.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only.</p>
+    <p>Convenient wrappers to be used with the <code>aphylo</code> estimation methods.</p>
     
     </div>
 
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>bprior</span>(<span class='kw'>shape1</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>shape2</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='no'>...</span>)
 
-    <p>A data frame with 6 rows and 2 variables:</p><dl class='dl-horizontal'>
-<dt>NodeId</dt><dd><p>Integer, ID of the offspring.</p></dd>
-<dt>ParentId</dt><dd><p>Integer, ID of the parent.</p></dd>
-</dl>
+<span class='fu'>uprior</span>()</pre>
     
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>shape1, shape2, ...</th>
+      <td><p>Arguments passed to <a href='https://www.rdocumentation.org/packages/stats/topics/Beta'>stats::dbeta</a></p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>BiostatsUSC</p>
+    <p>In the case of <code>bprior</code>, a wrapper of the function <a href='https://www.rdocumentation.org/packages/stats/topics/Beta'>stats::dbeta</a>.
+<code>uprior</code> returns a function <code>function(p) 1</code> (the uniform prior)</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>bprior</span>(<span class='fl'>1</span>, <span class='fl'>9</span>)</div><div class='output co'>#&gt; function(p) {
+#&gt;     
+#&gt;     stats::dbeta(p, shape1 = shape1, shape2 = shape2, ...)
+#&gt;     
+#&gt;   }
+#&gt; &lt;environment: 0xee377f8&gt;</div><div class='input'><span class='fu'>uprior</span>()</div><div class='output co'>#&gt; function(p) 1
+#&gt; &lt;environment: 0xee99df0&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#source">Source</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

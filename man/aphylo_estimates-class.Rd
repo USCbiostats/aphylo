@@ -90,9 +90,8 @@ The default values of \code{control} are:
 
 \tabular{ll}{
 \code{nsteps} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
-\code{scale} \tab Numeric scalar. Default \code{0.01}. \cr
-\code{lb} \tab Numeric vector. Default \code{rep(1e-20, 5)}. \cr
-\code{ub} \tab Numeric vector. Default \code{rep(1 - 1e-20, 5)}. \cr
+\code{kernel} \tab A call to the function \link[amcmc:kernel_reflective]{amcmc::kernel_reflective} with the
+following parameters, \code{lb = 0}, \code{ub = 1}, and \code{scale = 0.01}. \cr
 }
 }
 \examples{
@@ -139,7 +138,7 @@ set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
   dat ~ mu + psi + eta + Pi,
-  control = list(nsteps = 2e5, burnin=1000, thin=200, scale=2e-2)
+  control = list(nsteps = 2e5, burnin=1000, thin=200)
 )
 }
 

@@ -3,7 +3,7 @@ Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"), email="g.vegayon@gmail.com",
   comment = c(ORCID = "0000-0002-3171-0844"))
 Version: 0.1.99
-Date: 2018-06-05
+Date: 2019-04-10
 Description: The `aphylo` R package implements estimation and data imputation
   methods for Functional Annotations in Phylogenetic Trees. The core function
   consists on the computation of the log-likelihood of observing a given
@@ -23,7 +23,6 @@ Imports:
     polygons,
     amcmc,
     utils,
-    viridisLite,
     MASS
 Suggests:
     covr,

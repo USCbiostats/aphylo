@@ -42,7 +42,8 @@ test_that("x ~ mu", {
       amcmc::MCMC, c(
         list(
           fun = fun,
-          initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu0", "mu1")]
+          initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu0", "mu1")],
+          kernel  = amcmc::kernel_reflective(2, lb = 0, ub = 1, scale = 0.01)
         ),
         pars
       ))
@@ -92,7 +93,8 @@ test_that("x ~ mu + psi + Pi", {
       amcmc::MCMC, c(
         list(
           fun = fun,
-          initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(5:6)]
+          initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(5:6)],
+          kernel  = amcmc::kernel_reflective(5, lb = 0, ub = 1, scale = 0.01)
           ),
         pars
       ))

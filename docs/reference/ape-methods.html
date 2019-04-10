@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fake Phylogenetic Tree — faketree • aphylo</title>
+<title>APE wrappers — ape-methods • aphylo</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Fake Phylogenetic Tree — faketree" />
+<meta property="og:title" content="APE wrappers — ape-methods" />
 
-<meta property="og:description" content="A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only." />
+<meta property="og:description" content="APE wrappers" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,39 +102,75 @@ This dataset is inteded for testing only." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fake Phylogenetic Tree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/aphylo-package.r'><code>R/aphylo-package.r</code></a></small>
-    <div class="hidden name"><code>faketree.Rd</code></div>
+    <h1>APE wrappers</h1>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/indexing.r'><code>R/indexing.r</code></a></small>
+    <div class="hidden name"><code>ape-methods.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A fake dataset containing the parent-offspring relations between genes.
-This dataset is inteded for testing only.</p>
+    <p>APE wrappers</p>
     
     </div>
 
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='co'># S3 method for aphylo</span>
+<span class='fu'>Nedge</span>(<span class='no'>phy</span>)
 
-    <p>A data frame with 6 rows and 2 variables:</p><dl class='dl-horizontal'>
-<dt>NodeId</dt><dd><p>Integer, ID of the offspring.</p></dd>
-<dt>ParentId</dt><dd><p>Integer, ID of the parent.</p></dd>
-</dl>
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>Nnode</span>(<span class='no'>phy</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>Nnode</span>(<span class='no'>phy</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>Ntip</span>(<span class='no'>phy</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>Ntip</span>(<span class='no'>phy</span>)
+
+<span class='fu'>Nann</span>(<span class='no'>phy</span>)
+
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>Nann</span>(<span class='no'>phy</span>)
+
+<span class='co'># S3 method for phylo</span>
+<span class='fu'>Nann</span>(<span class='no'>phy</span>)
+
+<span class='co'># S3 method for aphylo_estimates</span>
+<span class='fu'>Nann</span>(<span class='no'>phy</span>)
+
+<span class='co'># S3 method for multiPhylo</span>
+<span class='fu'>Nann</span>(<span class='no'>phy</span>)</pre>
     
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>phy</th>
+      <td><p>An object of class <a href='aphylo-class.html'>aphylo</a> (see <a href='https://www.rdocumentation.org/packages/ape/topics/summary.phylo'>ape::Nnode</a>).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments passed to the method.</p>
+<p>Functions <code>Nedge</code>, <code>Nnode</code>, and <code>Ntip</code> have S3 methods in the <code>ape</code> package.</p>
+<p>The function <code>Nann</code>, which reports the number of annotations that the tree has,
+is not a function present in ape, but has a method for
+both <code>phylo</code> and <code>multiPhylo</code> objects which returns a warning an 0L.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>BiostatsUSC</p>
+    <p>Integer with the number of edges, nodes, or tips accordignly.</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#source">Source</a></li>
+      <li><a href="#value">Value</a></li>
           </ul>
 
   </div>

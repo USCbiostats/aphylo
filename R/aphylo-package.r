@@ -10,7 +10,6 @@
 #' @importFrom amcmc MCMC
 #' @importFrom ape as.phylo plot.phylo Nnode Ntip Nedge
 #' @importFrom polygons colorkey colorRamp2 piechart circle
-#' @importFrom viridisLite viridis
 #' @importFrom MASS ginv
 NULL
 
