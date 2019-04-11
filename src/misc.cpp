@@ -3,31 +3,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-//' Approximation of Geodesic distances using Matrix Powers
-//' 
-//' Given an adjacency matrix \eqn{A}, the geodesic can be approximated using
-//' its powers, since each \eqn{(i,j)} element of \eqn{A^p} corresponds to the
-//' number of \eqn{p} length steps between nodes \eqn{i} and \eqn{j}.
-//' 
-//' @template edges
-//' @param nsteps Integer scalar. Number of maximum steps for the approximation.
-//' @param warn Logical scalar. When \code{TRUE} shows a warning after no further
-//' steps are needed.
-//' @param undirected Logical scalar. When \code{TRUE} (default), the edgelist is treated
-//' as undirected (see details).
-//' @return A square matrix of size \eqn{n} with the shortest path between each
-//' pair of nodes.
-//' 
-//' @details
-//' When \code{undirected = TRUE}, the function extends \code{edges} such that
-//' \code{edges = rbind(edges, edges[,2:1])}.
-//' 
-//' @author George G. Vega Yon
-//' @references
-//' This is a modified version of the function of the same name in the
-//' R package \CRANpkg{netdiffuseR}.
-//' @export
-//[[Rcpp::export]]
+//[[Rcpp::export(name = "approx_geodesic.")]]
 arma::umat approx_geodesic(
     const arma::umat & edges,
     unsigned int nsteps = 5e3,
@@ -36,7 +12,7 @@ arma::umat approx_geodesic(
 ) {
   
   // Size of the tree
-  int n = 1 + (int) arma::max(arma::max(edges));
+  int n = 1 + (int) arma::max(arma::max(edges)) ;
   
   // It is undirected
   arma::umat edges2 = edges;
@@ -58,23 +34,14 @@ arma::umat approx_geodesic(
   // Going through the steps
   arma::sp_mat pG = G;
   arma::sp_mat G0 = G;
-  int change_count = 0;
-  nsteps++;
+  nsteps = ((unsigned int) n) > nsteps ? nsteps : (int) n;
   for (unsigned int i=1u; i<nsteps; i++) {
     
     // Computing nsteps
     
     for (spiter it = pG.begin(); it != pG.end(); ++it)
       if (ans.at(it.row(), it.col()) == 0u)
-        ans.at(it.row(), it.col()) += i,
-          ++change_count;
-      
-      // Was there any change?
-      if (!change_count) {
-        if (warn)
-          warning("The algorithm stopped at %i iterations.", i);
-        break;
-      } else change_count = 0;
+        ans.at(it.row(), it.col()) += i;
       
       // Graph power
       pG *= G0;

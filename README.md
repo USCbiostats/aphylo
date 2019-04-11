@@ -1,6 +1,7 @@
 aphylo: Statistical Inference of Annotated Phylogenetic Trees
 ================
 
+[![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis-CI Build
 Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo)
 [![Build
@@ -226,7 +227,7 @@ ans2 <- aphylo_mcmc(
     ## Warning: A single initial point has been passed via `initial`: c(0.1, 0.1,
     ## 0.1, 0.1, 0.9, 0.9). The values will be recycled.
 
-    ## Convergence has been reached with 5100 steps (250 final count of observations).
+    ## Convergence has been reached with 1100 steps (50 final count of observations).
 
 ``` r
 ans2
@@ -238,17 +239,17 @@ ans2
     ##  Call: aphylo_mcmc(model = dat ~ mu + psi + eta, priors = function(p) dbeta(p, 
     ##     2, 20), control = list(nsteps = 10000, burnin = 100, thin = 20, 
     ##     nchains = 5))
-    ##  LogLik (unnormalized): -425.5212
-    ##  Method used: mcmc (5100 steps)
+    ##  LogLik (unnormalized): -425.5128
+    ##  Method used: mcmc (1100 steps)
     ##  # of Leafs: 200
     ##  # of Functions 2
     ##          Estimate  Std. Err.
-    ##  psi0    0.0803    0.0429
-    ##  psi1    0.0446    0.0274
-    ##  mu0     0.1167    0.0252
-    ##  mu1     0.0931    0.0228
-    ##  eta0    0.6811    0.0365
-    ##  eta1    0.7965    0.0339
+    ##  psi0    0.0879    0.0475
+    ##  psi1    0.0438    0.0272
+    ##  mu0     0.1139    0.0262
+    ##  mu1     0.0929    0.0218
+    ##  eta0    0.6770    0.0349
+    ##  eta1    0.8006    0.0320
 
 ``` r
 plot(ans2)
@@ -265,47 +266,47 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##      Point est. Upper C.I.
-    ## psi0       1.01       1.02
-    ## psi1       1.00       1.01
-    ## mu0        1.00       1.00
-    ## mu1        1.00       1.01
-    ## eta0       1.03       1.09
-    ## eta1       1.01       1.03
+    ## psi0       1.03       1.09
+    ## psi1       1.02       1.08
+    ## mu0        1.03       1.10
+    ## mu1        1.01       1.05
+    ## eta0       1.08       1.22
+    ## eta1       1.01       1.04
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.04
+    ## 1.11
 
 ``` r
 summary(ans2$hist)
 ```
 
     ## 
-    ## Iterations = 120:5100
+    ## Iterations = 120:1100
     ## Thinning interval = 20 
     ## Number of chains = 5 
-    ## Sample size per chain = 250 
+    ## Sample size per chain = 50 
     ## 
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##         Mean      SD  Naive SE Time-series SE
-    ## psi0 0.08033 0.04286 0.0012124      0.0029867
-    ## psi1 0.04459 0.02744 0.0007762      0.0015877
-    ## mu0  0.11666 0.02524 0.0007140      0.0013441
-    ## mu1  0.09310 0.02276 0.0006438      0.0009425
-    ## eta0 0.68112 0.03646 0.0010312      0.0024279
-    ## eta1 0.79652 0.03393 0.0009598      0.0018961
+    ##         Mean      SD Naive SE Time-series SE
+    ## psi0 0.08789 0.04745 0.003001       0.006267
+    ## psi1 0.04376 0.02715 0.001717       0.002065
+    ## mu0  0.11386 0.02619 0.001656       0.003464
+    ## mu1  0.09293 0.02183 0.001381       0.001936
+    ## eta0 0.67703 0.03495 0.002210       0.003062
+    ## eta1 0.80062 0.03205 0.002027       0.002872
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##          2.5%     25%     50%     75%  97.5%
-    ## psi0 0.013898 0.04691 0.07651 0.10873 0.1736
-    ## psi1 0.006886 0.02266 0.04104 0.05945 0.1069
-    ## mu0  0.070852 0.09930 0.11505 0.13371 0.1675
-    ## mu1  0.049828 0.07780 0.09273 0.10808 0.1382
-    ## eta0 0.609969 0.65659 0.68127 0.70529 0.7514
-    ## eta1 0.724272 0.77520 0.79825 0.82008 0.8580
+    ## psi0 0.015681 0.05758 0.07854 0.11911 0.1945
+    ## psi1 0.003866 0.02378 0.03856 0.06099 0.1095
+    ## mu0  0.064390 0.09719 0.11336 0.13285 0.1652
+    ## mu1  0.054532 0.07710 0.09142 0.10847 0.1320
+    ## eta0 0.611915 0.65315 0.67380 0.70114 0.7434
+    ## eta1 0.737275 0.78161 0.80163 0.82253 0.8594
 
 # Prediction
 

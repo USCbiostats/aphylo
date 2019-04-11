@@ -166,28 +166,28 @@ are equal to 1, this is:</p><pre>mean(x$dat$tip.annotation[x$dat$tip.annotation 
   <span class='no'>ap</span> ~ <span class='no'>mu</span> + <span class='no'>eta</span> + <span class='no'>psi</span> + <span class='no'>Pi</span>,
   <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>nsteps</span><span class='kw'>=</span><span class='fl'>2e4</span>, <span class='kw'>thin</span><span class='kw'>=</span><span class='fl'>100</span>),
   <span class='kw'>priors</span>  <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Beta'>dbeta</a></span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>30</span>)
-  )</div><div class='output co'>#&gt; <span class='message'>No parameters were specified. Default will be used instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: A single initial point has been passed via `initial`: c(0.1, 0.1, 0.1, 0.1, 0.9, 0.9, 0.1). The values will be recycled.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: No convergence reached.</span></div><div class='input'>
+  )</div><div class='output co'>#&gt; <span class='message'>No parameters were specified. Default will be used instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: A single initial point has been passed via `initial`: c(0.1, 0.1, 0.1, 0.1, 0.9, 0.9, 0.1). The values will be recycled.</span></div><div class='output co'>#&gt; <span class='message'>Convergence has been reached with 16000 steps (55 final count of observations).</span></div><div class='input'>
 <span class='no'>pr</span> <span class='kw'>&lt;-</span> <span class='fu'>prediction_score</span>(<span class='no'>ans</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/with'>with</a></span>(<span class='no'>pr</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='kw'>Expected</span> <span class='kw'>=</span> <span class='no'>expected</span>, <span class='kw'>Predicted</span> <span class='kw'>=</span> <span class='no'>predicted</span>))</div><div class='output co'>#&gt;    fun0000      fun0000
-#&gt; 1        0 6.821321e-04
-#&gt; 2        0 6.820773e-04
-#&gt; 3        0 6.821321e-04
-#&gt; 4        0 6.821321e-04
-#&gt; 5        0 6.821321e-04
-#&gt; 6        0 6.831787e-04
-#&gt; 7        0 6.636686e-04
-#&gt; 8        0 6.820773e-04
-#&gt; 9        0 6.831787e-04
-#&gt; 10       0 6.650647e-04
-#&gt; 11       0 4.229657e-05
-#&gt; 12       0 4.937040e-05
-#&gt; 13       0 3.143282e-05
-#&gt; 14       0 3.033997e-05
-#&gt; 15       0 8.840930e-05
-#&gt; 16       0 8.852538e-05
-#&gt; 17       0 5.233099e-05
-#&gt; 18       0 9.074499e-05
-#&gt; 19       0 8.852538e-05</div></pre>
+#&gt; 1        0 8.593588e-04
+#&gt; 2        0 8.593128e-04
+#&gt; 3        0 8.593588e-04
+#&gt; 4        0 8.593588e-04
+#&gt; 5        0 8.593588e-04
+#&gt; 6        0 8.607876e-04
+#&gt; 7        0 8.340264e-04
+#&gt; 8        0 8.593128e-04
+#&gt; 9        0 8.607876e-04
+#&gt; 10       0 8.362862e-04
+#&gt; 11       0 3.073605e-05
+#&gt; 12       0 5.198681e-05
+#&gt; 13       0 3.128361e-05
+#&gt; 14       0 3.047520e-05
+#&gt; 15       0 1.017682e-04
+#&gt; 16       0 1.018586e-04
+#&gt; 17       0 5.643579e-05
+#&gt; 18       0 1.046716e-04
+#&gt; 19       0 1.018586e-04</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

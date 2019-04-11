@@ -105,7 +105,7 @@ number of \(p\) length steps between nodes \(i\) and \(j\)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Approximation of Geodesic distances using Matrix Powers</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/RcppExports.R'><code>R/RcppExports.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/phylogenetic/blob/master/R/geodesic.r'><code>R/geodesic.r</code></a></small>
     <div class="hidden name"><code>approx_geodesic.Rd</code></div>
     </div>
 
@@ -117,8 +117,22 @@ number of \(p\) length steps between nodes \(i\) and \(j\).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>approx_geodesic</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>5000L</span>, <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>approx_geodesic</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>shortest_path</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for aphylo</span>
+<span class='fu'>approx_geodesic</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
+  <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for phylo</span>
+<span class='fu'>approx_geodesic</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
+  <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>approx_geodesic</span>(<span class='no'>edges</span>, <span class='kw'>nsteps</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
+  <span class='kw'>undirected</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

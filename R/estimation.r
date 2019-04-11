@@ -344,10 +344,10 @@ logLik.aphylo_estimates <- function(object, ...) {
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
   nsteps    = 1e5L,
   burnin    = 1e4L,
-  thin      = 20L,
+  thin      = 10L,
   nchains   = 2L,
   multicore = TRUE,
-  autostop  = 5e3
+  autostop  = 1e3L
 )
 
 #' @rdname aphylo_estimates-class
@@ -394,20 +394,18 @@ aphylo_mcmc <- function(
     if (!length(control[[n]]))
       control[[n]] <- APHYLO_DEFAULT_MCMC_CONTROL[[n]]
   }
+  
+  if (!("kernel" %in% control))
+    control$kernel <- amcmc::kernel_reflective(
+      scale     = .05,
+      ub        = 1,
+      lb        = 0,
+      fixed     = FALSE
+    )
 
   # If the models is uninformative, then it will return with error
   if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
-  
-  # Checking kernel
-  if (!length(control$kernel))
-    control$kernel <- amcmc::kernel_reflective(
-      k         = length(model$fixed),
-      scale     = .01,
-      ub        = 1,
-      lb        = 0,
-      fixed     = model$fixed
-    )
   
   # Running the MCMC
   ans <- do.call(
