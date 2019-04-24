@@ -68,7 +68,7 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
                 priors = function(x) dbeta(x, 2, 10),
                 control = list(
                   nsteps = 4e4, burnin=1e4, nchains=2,
-                  kernel = amcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
+                  kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
                   ),
                 check_informative = FALSE
                 )
@@ -81,7 +81,7 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
       priors = function(x) dbeta(x, 2, 20),
       control = list(
         nsteps = 4e4, burnin=1e4, nchains=2,
-        kernel = amcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
+        kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
         ),
       check_informative = FALSE
       )

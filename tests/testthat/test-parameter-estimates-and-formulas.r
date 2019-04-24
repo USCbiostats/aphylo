@@ -39,11 +39,11 @@ test_that("x ~ mu", {
   
   ans1 <- suppressWarnings({
     do.call(
-      amcmc::MCMC, c(
+      fmcmc::MCMC, c(
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu0", "mu1")],
-          kernel  = amcmc::kernel_reflective(lb = 0, ub = 1, scale = 0.05)
+          kernel  = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = 0.05)
         ),
         pars
       ))
@@ -90,11 +90,11 @@ test_that("x ~ mu + psi + Pi", {
   ans1 <- suppressWarnings({
     
     do.call(
-      amcmc::MCMC, c(
+      fmcmc::MCMC, c(
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(5:6)],
-          kernel  = amcmc::kernel_reflective(lb = 0, ub = 1, scale = 0.05)
+          kernel  = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = 0.05)
           ),
         pars
       ))

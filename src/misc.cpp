@@ -4,7 +4,7 @@ using namespace Rcpp;
 // [[Rcpp::depends(RcppArmadillo)]]
 
 //[[Rcpp::export(name = "approx_geodesic.")]]
-arma::umat approx_geodesic(
+arma::imat approx_geodesic(
     const arma::umat & edges,
     unsigned int nsteps = 5e3,
     bool undirected = true,
@@ -26,25 +26,30 @@ arma::umat approx_geodesic(
   arma::colvec values(edges2.n_rows, arma::fill::ones);
   
   // Filling the matrix
-  arma::sp_mat G(edges2.t(), values, n, n, true, false);
-  arma::umat ans(n,n, arma::fill::zeros);
+  arma::imat G(n, n, arma::fill::zeros);
   
-  typedef arma::sp_mat::const_iterator spiter;
+  // Filling the matrix
+  for (int i = 0; i < edges2.n_rows; ++i)
+    G.at(edges2.at(i, 0u), edges2.at(i, 1u)) = 1;
+  
+  arma::imat ans(n,n);
+  ans.fill(-1);
   
   // Going through the steps
-  arma::sp_mat pG = G;
-  arma::sp_mat G0 = G;
+  arma::imat pG = G;
   nsteps = ((unsigned int) n) > nsteps ? nsteps : (int) n;
-  for (unsigned int i=1u; i<nsteps; i++) {
+  for (int iter = 0; iter < (int) nsteps; ++iter) {
     
     // Computing nsteps
-    
-    for (spiter it = pG.begin(); it != pG.end(); ++it)
-      if (ans.at(it.row(), it.col()) == 0u)
-        ans.at(it.row(), it.col()) += i;
+    for (int i = 0; i < n; ++i)
+      for (int j = 0; j < n; ++j) {
+        if (i != j && pG.at(i, j) != 0 && (ans.at(i, j) == -1)) 
+          ans.at(i, j) = iter + 1;
+      }
       
-      // Graph power
-      pG *= G0;
+      
+    // Graph power
+    pG *= G;
   }
   
   // Filling diagonal with zeros

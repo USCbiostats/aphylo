@@ -40,13 +40,13 @@ try_solve <- function(x, ...) {
 #' 
 #' @details 
 #' 
-#' `phylo_mcmc` is a wrapper of [amcmc::MCMC], so, instead of treating the
+#' `phylo_mcmc` is a wrapper of [fmcmc::MCMC], so, instead of treating the
 #' problem as a maximization problem, `phylo_mcmc` generates a **Markov Chain**.
 #' The default values of `control` are:
 #' 
 #' \tabular{ll}{
 #' `nsteps` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
-#' `kernel` \tab A call to the function [amcmc::kernel_reflective] with the
+#' `kernel` \tab A call to the function [fmcmc::kernel_reflective] with the
 #' following parameters, `lb = 0`, `ub = 1`, and `scale = 0.01`. \cr
 #' }
 #' 
@@ -347,7 +347,7 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
   thin      = 10L,
   nchains   = 2L,
   multicore = TRUE,
-  autostop  = 1e3L
+  autostop  = 5e3L
 )
 
 #' @rdname aphylo_estimates-class
@@ -396,7 +396,7 @@ aphylo_mcmc <- function(
   }
   
   if (!("kernel" %in% control))
-    control$kernel <- amcmc::kernel_reflective(
+    control$kernel <- fmcmc::kernel_reflective(
       scale     = .05,
       ub        = 1,
       lb        = 0,
@@ -409,7 +409,7 @@ aphylo_mcmc <- function(
   
   # Running the MCMC
   ans <- do.call(
-    amcmc::MCMC, 
+    fmcmc::MCMC, 
     c(
       list(
         fun      = model$fun,

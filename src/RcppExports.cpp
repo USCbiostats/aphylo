@@ -21,7 +21,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // approx_geodesic
-arma::umat approx_geodesic(const arma::umat& edges, unsigned int nsteps, bool undirected, bool warn);
+arma::imat approx_geodesic(const arma::umat& edges, unsigned int nsteps, bool undirected, bool warn);
 RcppExport SEXP _aphylo_approx_geodesic(SEXP edgesSEXP, SEXP nstepsSEXP, SEXP undirectedSEXP, SEXP warnSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

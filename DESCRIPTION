@@ -21,7 +21,7 @@ Imports:
     coda,
     stringr,
     polygons,
-    amcmc,
+    fmcmc,
     utils,
     MASS
 Suggests:
@@ -39,7 +39,7 @@ BugReports: https://github.com/USCbiostats/phylogenetic/issues
 Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
-Remotes: USCbiostats/polygons, USCbiostats/amcmc
+Remotes: USCbiostats/polygons, USCbiostats/fmcmc
 Collate: 
     'RcppExports.R'
     'ape.r'

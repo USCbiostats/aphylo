@@ -7,7 +7,7 @@
 #'  points segments polygon rect yinch image
 #' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
-#' @importFrom amcmc MCMC
+#' @importFrom fmcmc MCMC
 #' @importFrom ape as.phylo plot.phylo Nnode Ntip Nedge
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 #' @importFrom MASS ginv
