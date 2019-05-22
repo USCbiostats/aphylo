@@ -128,14 +128,14 @@ prediction_score.aphylo_estimates <- function(
       stop(
         "`expected` must be a matrix of size ",
         length(with(x$dat$tree, c(tip.label, node.label))), "x",
-        ncol(x$dat$node.annotation), call. = FALSE)
+        Nann(x$dat), call. = FALSE)
   }
 
   # We will only focuse on those that we can actually asses
   ids <- which(apply(expected, 1L, function(x) all(x != 9L)))
   
   # And furthermore, only on the leafs
-  ids <- intersect(ids, 1L:nrow(x$dat$tip.annotation))
+  ids <- intersect(ids, 1L:Ntip(x$dat))
 
   # Prediction
   pred <- predict.aphylo_estimates(x, ...)
@@ -150,7 +150,6 @@ prediction_score.aphylo_estimates <- function(
       stop(sprintf("-W- must have be of dimmension dim(W) == c(%i, %1$i)", length(ids)))
   }
   
-  
   ans <- prediction_score(
     x        = pred[ids,,drop=FALSE],
     expected = expected[ids,,drop = FALSE],
@@ -159,8 +158,7 @@ prediction_score.aphylo_estimates <- function(
   )
   
   # Adding missing info
-  ans$obs.ids   <- as.character(ids)
-  ans$leaf.ids  <- as.character(1L:Ntip(x$dat))
+  ans$obs.ids   <- c(x$dat$tree$tip.label,x$dat$tree$node.label)[ids]
   ans$tree      <- x$dat$tree
   
   ans$predicted <- pred
@@ -253,7 +251,7 @@ plot.aphylo_prediction_score <- function(
   
   # Should we plot only the leafs?
   if (leafs_only) {
-    idx <- x$leaf.ids
+    idx <- x$tree$tip.label
   } else
     idx <- 1:nrow(x$predicted)
   
@@ -272,7 +270,7 @@ plot.aphylo_prediction_score <- function(
   # Getting the order
   grDevices::pdf(file = NULL);ape::plot.phylo(x$tree, plot=FALSE);grDevices::dev.off()
   plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
-  ord  <- order(plot_pars$last_plot.phylo$yy[idx])
+  ord  <- order(predicted[,1])#order(plot_pars$last_plot.phylo$yy[idx])
   
   oldpar <- graphics::par(mar=c(3,0,3,0))
   on.exit(graphics::par(oldpar))

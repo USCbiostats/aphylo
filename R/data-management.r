@@ -438,15 +438,16 @@ print.aphylo <- function(x, ...) {
 #' @rdname aphylo-methods
 summary.aphylo <- function(object, ...) {
   
+  ans <- list()
   for (x in c("tip.annotation", "node.annotation")) {
-    ans <- lapply(1:ncol(object[[x]]), function(i) table(object[[x]][,i]))
+    ans[[x]] <- lapply(1:ncol(object[[x]]), function(i) table(object[[x]][,i]))
     
-    if (!inherits(ans, "list"))
-      ans <- list(ans[,1,drop=TRUE])
+    if (!inherits(ans[[x]], "list"))
+      ans[[x]] <- list(ans[[x]][,1,drop=TRUE])
     
-    ans <- do.call(
+    ans[[x]] <- do.call(
       rbind, 
-      lapply(ans, function(x)
+      lapply(ans[[x]], function(x)
         data.frame(
           `0`  = unname(x["0"]),
           `1`  = unname(x["1"]),
@@ -456,13 +457,11 @@ summary.aphylo <- function(object, ...) {
       )
     )
     
-    ans[is.na(ans)] <- 0
-    rownames(ans) <- colnames(object[[x]])
+    ans[[x]][is.na(ans[[x]])] <- 0
+    rownames(ans[[x]]) <- colnames(object[[x]])
     cat("\nDistribution of functions in", x, ":\n")
-    print(ans)
+    print(ans[[x]])
   }
-  
-  
   
   invisible(ans)
   
