@@ -183,9 +183,7 @@ arma::mat probabilities(
   return Pr;
 }
 
-// Computes Log-likelihood
-// [[Rcpp::export(name = ".LogLike", rng = false)]]
-List LogLike(
+double LogLikei(
     const arma::imat & annotations,
     const ListOf<IntegerVector> & offspring,
     const arma::ivec & pseq,
@@ -193,8 +191,8 @@ List LogLike(
     const arma::vec  & mu,
     const arma::vec  & eta,
     double Pi,
-    bool verb_ans = false,
-    bool check_dims = true
+    bool check_dims,
+    arma::mat & Pr
 ) {
 
   // Checking dimmensions
@@ -237,7 +235,7 @@ List LogLike(
   int nstates   = (int) S.n_rows;
 
   // Computing likelihood
-  arma::mat Pr  = probabilities(annotations, pseq, psi, mu, eta, S, offspring);
+  Pr = probabilities(annotations, pseq, psi, mu, eta, S, offspring);
 
 #ifdef APHYLO_DEBUG_ON
   // Printing resulting probabilities
@@ -261,23 +259,57 @@ List LogLike(
   ll = std::log(ll);
   
   // return ll;
+  return ll;
+  
+}
+
+// Computes Log-likelihood (vectorized)
+// [[Rcpp::export(name = ".LogLike", rng = false)]]
+List LogLike(
+    const std::vector< arma::imat > & annotations,
+    const std::vector< ListOf<IntegerVector> > & offspring,
+    const std::vector< arma::ivec > & pseq,
+    const arma::vec & psi,
+    const arma::vec & mu,
+    const arma::vec & eta,
+    double Pi,
+    bool verb_ans = false,
+    bool check_dims = true
+) {
+
+  int ntrees = annotations.size();
+  std::vector< arma::mat > Pr(ntrees);
+  
+  double ll = 0.0;
+  arma::mat Pri;
+  
   if (verb_ans) {
     
-    List ans = List::create(
-      _["S"]   = S,
-      _["Pr"]   = Pr,
-      _["ll"]  = ll
-    );
-    ans.attr("class") = "phylo_LogLik";
-    return(ans);
+    for (int i = 0; i < ntrees; ++i) {
+      ll += LogLikei(
+        annotations[i], offspring[i], pseq[i], psi, mu, eta,
+        Pi, check_dims, Pri
+      );
+      
+      Pr.at(i) = Pri;
+    }
     
   } else {
     
-    List ans = List::create(_["ll"] = ll);
-    ans.attr("class") = "phylo_LogLik";
-    return(ans);
-    
+    for (int i = 0; i < ntrees; ++i) {
+      ll += LogLikei(
+        annotations[i], offspring[i], pseq[i], psi, mu, eta,
+        Pi, check_dims, Pri
+      );
+      
+    }
+  
   }
   
+  return List::create(
+    _["ll"] = ll,
+    _["Pr"] = Pr
+  );
+
 }
 

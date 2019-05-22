@@ -346,8 +346,8 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
   burnin    = 1e4L,
   thin      = 10L,
   nchains   = 2L,
-  multicore = TRUE,
-  autostop  = 5e3L
+  multicore = FALSE,
+  conv_checker = fmcmc::convergence_auto(500)
 )
 
 #' @rdname aphylo_estimates-class
@@ -391,7 +391,7 @@ aphylo_mcmc <- function(
   
   # Checking control
   for (n in names(APHYLO_DEFAULT_MCMC_CONTROL)) {
-    if (!length(control[[n]]))
+    if (!length(control[[n]]) && !(n %in% names(control)))
       control[[n]] <- APHYLO_DEFAULT_MCMC_CONTROL[[n]]
   }
   

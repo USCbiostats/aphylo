@@ -44,18 +44,26 @@ LogLike <- function(
   mu,
   eta,
   Pi, 
-  verb_ans = TRUE,
-  check_dims = TRUE
+  verb_ans    = TRUE,
+  check_dims  = TRUE
+) UseMethod("LogLike")
+
+#' @export
+#' @rdname LogLike
+LogLike.aphylo <- function(
+  tree,
+  psi,
+  mu,
+  eta,
+  Pi, 
+  verb_ans    = TRUE,
+  check_dims  = TRUE
 ) {
   
-  # Is this the right thing?
-  if (!inherits(tree, "aphylo"))
-    stop("`tree` should be an object of class 'aphylo'.", call. = FALSE)
-  
-  .LogLike(
-    annotations = with(tree, rbind(tip.annotation, node.annotation)),
-    offspring   = tree$offspring,
-    pseq        = tree$reduced_pseq,
+  ans <- .LogLike(
+    annotations = list(with(tree, rbind(tip.annotation, node.annotation))),
+    offspring   = list(tree$offspring),
+    pseq        = list(tree$reduced_pseq),
     psi         = psi,
     mu          = mu,
     eta         = eta,
@@ -63,4 +71,48 @@ LogLike <- function(
     verb_ans    = verb_ans,
     check_dims  = check_dims
   )
+  
+  if (verb_ans)
+    dim(ans$Pr[[1]]) <- c(
+      ape::Nnode(tree, internal.only = FALSE),
+      length(ans$Pr[[1]]) %/% ape::Nnode(tree, internal.only = FALSE)
+    )
+  
+  ans
+  
+}
+
+#' @export
+#' @rdname LogLike
+LogLike.multiAphylo <- function(
+  tree,
+  psi,
+  mu,
+  eta,
+  Pi, 
+  verb_ans    = TRUE,
+  check_dims  = TRUE
+) {
+  
+  ans <- .LogLike(
+    annotations = lapply(tree, function(t.) with(t., rbind(tip.annotation, node.annotation))),
+    offspring   = lapply(tree, "[[", "offspring"),
+    pseq        = lapply(tree, "[[", "reduced_pseq"),
+    psi         = psi,
+    mu          = mu,
+    eta         = eta,
+    Pi          = Pi,
+    verb_ans    = verb_ans,
+    check_dims  = check_dims
+  )
+  
+  if (verb_ans)
+    for (i in seq_along(ans$Pr))
+    dim(ans$Pr[[i]]) <- c(
+      ape::Nnode(tree[[i]], internal.only = FALSE),
+      length(ans$Pr[[i]]) %/% ape::Nnode(tree[[i]], internal.only = FALSE)
+    )
+  
+  ans
+  
 }

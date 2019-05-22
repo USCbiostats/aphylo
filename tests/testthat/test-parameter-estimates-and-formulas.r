@@ -6,7 +6,11 @@ test_that("x ~ mu", {
   
   # Setting the default with no multicore
   pars <- aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
-  pars$multicore <- FALSE
+  pars$nsteps  <- 2e3
+  pars$burnin  <- 1e3
+  pars$nchains <- 1L
+  pars$conv_checker <- NULL
+  pars <- c(pars, list(conv_checker = NULL))
 
   # Data generating process
   set.seed(7223)
@@ -15,7 +19,7 @@ test_that("x ~ mu", {
   mypriors <- function(z) dbeta(z, 2, 10)
 
   set.seed(1)
-  ans0 <- suppressWarnings(aphylo_mcmc(x ~ mu, priors = mypriors, control = pars))
+  ans0 <- aphylo_mcmc(x ~ mu, priors = mypriors, control = pars)
   
 
   fun <- function(p) {
@@ -61,9 +65,22 @@ test_that("x ~ mu + psi + Pi", {
   
   mypriors <- function(z) dbeta(z, 2, 10)
   
+  pars <- aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
+  pars$nsteps  <- 2e3
+  pars$burnin  <- 1e3
+  pars$nchains <- 1L
+  pars$conv_checker <- NULL
+  pars <- c(pars, list(conv_checker = NULL))
+  
   set.seed(1)
-  ans0 <- suppressWarnings(aphylo_mcmc(x ~ mu + psi + Pi, priors = mypriors,
-                                       control = list(multicore=FALSE)))
+  ans0 <- suppressWarnings(
+    aphylo_mcmc(
+      x ~ mu + psi + Pi,
+      params = aphylo:::APHYLO_PARAM_DEFAULT[-c(5:6)],
+      priors = mypriors,
+      control = pars
+      )
+  )
   
   
   fun <- function(p) {
@@ -84,8 +101,11 @@ test_that("x ~ mu + psi + Pi", {
   
   # Running the raw MCMC
   pars <- aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
-  pars$multicore <- FALSE
-  # pars$nchains   <- 1L
+  pars$nsteps  <- 2e3
+  pars$burnin  <- 1e3
+  pars$nchains <- 1L
+  pars$conv_checker <- NULL
+  pars <- c(pars, list(conv_checker = NULL))
   set.seed(1)
   ans1 <- suppressWarnings({
     

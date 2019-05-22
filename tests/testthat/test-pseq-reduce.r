@@ -6,7 +6,7 @@ test_that("Same results", {
   x <- raphylo(100)
   x <- rdrop_annotations(x, .5)
   
-  control. <- list(multicore = TRUE, nchains=1, autostop=0L, nsteps=1000, burnin=0)
+  control. <- list(multicore = FALSE, nchains=1, nsteps=1000, burnin=0)
   
   set.seed(1)
   ans0 <- aphylo_mcmc(x ~ psi + Pi + mu, priors = bprior(), reduced_pseq = FALSE,

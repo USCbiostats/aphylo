@@ -24,7 +24,7 @@ test_that("Errors are caught", {
   
   expect_error(suppressWarnings(aphylo_formula(y ~ psi)), "be found")
   y <- 1
-  expect_error(suppressWarnings(aphylo_formula(y ~ psi)), "should be an")
+  expect_error(suppressWarnings(aphylo_formula(y ~ psi)), "should be either")
   
   expect_error(aphylo_formula(x ~ mu, c(mu0=1, mu1=1, psi1=0)), "overspecified")
   expect_error(aphylo_formula(x ~ mu, c(mu0=1)), "missing")
@@ -43,7 +43,11 @@ test_that("Multiple chains formulas work", {
   p <- matrix(runif(7*2), nrow=2, dimnames = NULL)
   
   expect_warning(
-    ans <- aphylo_mcmc(x~psi+mu+eta+Pi, params = p, control = list(nchains=2, nsteps=500, burnin=10)),
+    ans <- aphylo_mcmc(
+      x~psi+mu+eta+Pi, params = p,
+      control = list(
+        nchains=2, nsteps=500, burnin=10,
+        conv_checker = NULL)),
     "matched by position"
   )
   

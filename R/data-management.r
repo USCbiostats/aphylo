@@ -96,6 +96,8 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #'   annotations.}
 #' \item{offspring}{A list. List of offspring of each node.}
 #' \item{pseq}{Integer vector. The pruning sequence (postorder).}
+#' \item{reduced_pseq}{Integer vector. The reduced version of `pseq`.}
+#' \item{Ntips.annotated}{Integer. Number of tips with annotations.}
 #' 
 #' @examples 
 #' # A simple example ----------------------------------------------------------
@@ -487,4 +489,8 @@ set.default.plot.phylo.params <- function(dots) {
     if (!length(env[[dots]][[p]]))
       env[[dots]][[p]] <- APHYLO_DEFAULT_PLOT_PARAMS[[p]]
 }
+
+
+is.aphylo <- function(x)      inherits(x, "aphylo")
+is.multiAphylo <- function(x) inherits(x, "multiAphylo") 
 

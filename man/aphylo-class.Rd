@@ -21,6 +21,8 @@ A list of class \code{aphylo} with the following elements:
 annotations.}
 \item{offspring}{A list. List of offspring of each node.}
 \item{pseq}{Integer vector. The pruning sequence (postorder).}
+\item{reduced_pseq}{Integer vector. The reduced version of \code{pseq}.}
+\item{Ntips.annotated}{Integer. Number of tips with annotations.}
 }
 \description{
 The \code{aphylo} class tree holds both the tree structure represented as a
@@ -39,7 +41,7 @@ ans <- new_aphylo(fakeexperiment[,2:3], faketree)
 plot(ans)
 }
 \seealso{
-Other aphylo methods: \code{\link{aphylo-methods}}
+Other aphylo methods: \code{\link{Nann.aphylo_estimates}}
 }
 \concept{Data management functions}
 \concept{aphylo methods}

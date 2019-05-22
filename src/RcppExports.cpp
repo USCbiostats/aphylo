@@ -98,13 +98,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // LogLike
-List LogLike(const arma::imat& annotations, const ListOf<IntegerVector>& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, const arma::vec& eta, double Pi, bool verb_ans, bool check_dims);
+List LogLike(const std::vector< arma::imat >& annotations, const std::vector< ListOf<IntegerVector> >& offspring, const std::vector< arma::ivec >& pseq, const arma::vec& psi, const arma::vec& mu, const arma::vec& eta, double Pi, bool verb_ans, bool check_dims);
 RcppExport SEXP _aphylo_LogLike(SEXP annotationsSEXP, SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verb_ansSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< const arma::imat& >::type annotations(annotationsSEXP);
-    Rcpp::traits::input_parameter< const ListOf<IntegerVector>& >::type offspring(offspringSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
+    Rcpp::traits::input_parameter< const std::vector< arma::imat >& >::type annotations(annotationsSEXP);
+    Rcpp::traits::input_parameter< const std::vector< ListOf<IntegerVector> >& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const std::vector< arma::ivec >& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type eta(etaSEXP);

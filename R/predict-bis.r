@@ -30,6 +30,19 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
   
   dots <- list(...)
   
+  if (Ntrees(x) > 1) {
+    
+    ans <- vector("list", Ntrees(x))
+    x.  <- x
+    for (t. in seq_along(ans)) {
+      x.$dat <- x$dat[[t.]]
+      ans[[t.]] <-predict_pre_order(x., params = x$par, ...)
+    }
+    
+    return(ans)
+  }
+    
+  
   # Checking parameters
   if (!("Pi" %in% names(params)))
     Pi <- params["mu0"]/(params["mu0"] + params["mu1"])
@@ -39,13 +52,11 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
   mu <- params[c("mu0", "mu1")]
   
   # Looping through the variables
-  p   <- ncol(x$dat$tip.annotation)
+  p   <- Nann(x)
   ans <- lapply(1:p, function(i) {
     
     # Updating tree (we only need a single function)
-    tmpdat <- x$dat
-    tmpdat$tip.annotation  <- tmpdat$tip.annotation[,i,drop=FALSE]
-    tmpdat$node.annotation <- tmpdat$node.annotation[,i,drop=FALSE]
+    tmpdat <- x$dat[i]
     
     dots$dat      <- tmpdat
     dots$p        <- params
@@ -59,7 +70,7 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
     l <- do.call(x$fun, dots)
     
     # Returning posterior probability
-    .posterior_prob(l$Pr, mu, Pi, x$dat$pseq, x$dat$offspring)$posterior
+    .posterior_prob(l$Pr[[1]], mu, Pi, x$dat$pseq, x$dat$offspring)$posterior
     
   })
   
@@ -71,24 +82,35 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
 #' @export
 predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
   
+  if (Ntrees(x) > 1) {
+    
+    ans <- vector("list", Ntrees(x))
+    x.  <- x
+    for (t. in seq_along(ans)) {
+      x.$dat <- x$dat[[t.]]
+      ans[[t.]] <- predict_pre_order(x., psi, mu, eta, Pi, ...)
+    }
+    
+    return(ans)
+      
+  }
+  
   p <- ncol(x$tip.annotation)
   ans <- lapply(1:p, function(i) {
     
     # Computing loglike
-    l <- .LogLike(
-      annotations = with(x, rbind(tip.annotation, node.annotation))[,i,drop=FALSE],
-      offspring   = x$offspring,
-      pseq        = x$reduced_pseq,
-      psi         = psi,
-      mu          = mu,
-      eta         = eta,
-      Pi          = Pi,
-      verb_ans    = TRUE,
-      check_dims  = FALSE
+    l <- LogLike(
+      tree       = x[i],
+      psi        = psi,
+      mu         = mu,
+      eta        = eta,
+      Pi         = Pi,
+      verb_ans   = TRUE,
+      check_dims = FALSE
     )
     
     # Returning posterior probability
-    .posterior_prob(l$Pr, mu, Pi, x$pseq, x$offspring)$posterior
+    .posterior_prob(l$Pr[[1L]], mu, Pi, x$pseq, x$offspring)$posterior
     
   })
     

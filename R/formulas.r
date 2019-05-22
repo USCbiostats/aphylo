@@ -61,7 +61,8 @@ aphylo_call <- function(params, priors) {
           )
         
         # Correcting for eta
-        ans$ll <- ans$ll + 0.69314718055994528623*ncol(dat$tip.annotation)*dat$Ntips.annotated
+        ans$ll <- ans$ll +
+          0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
@@ -317,9 +318,12 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
   # Is the LHS an aphylo object?
   if (!exists(as.character(val[[2]]), envir = env))
     stop("The object -", as.character(val[[2]]), "- can't be found.", call. = FALSE)
-    
-  if (!inherits(eval(val[[2]], envir = env), "aphylo"))
-    stop("The LHS of the equation should be an `aphylo` object.", call. = FALSE)
+  
+  LHS <- eval(val[[2]], envir = env)
+  if (!is.aphylo(LHS) && !is.multiAphylo(LHS))
+    stop(
+      "The LHS of the equation should be either a list or a single ",
+      "aphylo object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
   for (i in 3:length(val))

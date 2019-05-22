@@ -43,6 +43,7 @@ Remotes: USCbiostats/polygons, USCbiostats/fmcmc
 Collate: 
     'RcppExports.R'
     'ape.r'
+    'aphylo-ape-info.r'
     'aphylo-package.r'
     'cv.r'
     'data-management.r'
@@ -52,6 +53,7 @@ Collate:
     'geodesic.r'
     'indexing.r'
     'loglike.r'
+    'multiaphylo.r'
     'panther.r'
     'predict-bis.r'
     'predict.r'

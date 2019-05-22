@@ -21,17 +21,29 @@ arma::mat probabilities(
     const List       & offspring
 );
 
-List LogLike(
-    const arma::imat & Z,
-    const List       & offspring,
-    const arma::imat & pseq,
+double LogLikei(
+    const arma::imat & annotations,
+    const ListOf<IntegerVector> & offspring,
+    const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu,
     const arma::vec  & eta,
-    const arma::vec  & Pi,
-    bool verb_ans = false
+    double Pi,
+    bool check_dims,
+    arma::mat & Pr
   );
 
+double LogLike(
+    const std::vector< arma::imat > & annotations,
+    const std::vector< ListOf<IntegerVector> > & offspring,
+    const std::vector< arma::ivec > & pseq,
+    const arma::vec & psi,
+    const arma::vec & mu,
+    const arma::vec & eta,
+    double Pi,
+    bool verb_ans = false,
+    bool check_dims = true
+);
 
   
 #endif
