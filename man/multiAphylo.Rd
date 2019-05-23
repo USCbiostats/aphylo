@@ -3,15 +3,18 @@
 \name{multiAphylo}
 \alias{multiAphylo}
 \alias{c.aphylo}
-\alias{c.multiAphylo}
+\alias{print.multiAphylo}
 \title{Building Lists of Annotated Trees}
 \usage{
 \method{c}{aphylo}(...)
 
-\method{c}{multiAphylo}(...)
+\method{print}{multiAphylo}(x, ...)
 }
 \arguments{
-\item{...}{One or several object of class \code{aphylo} or \code{multiAPhylo}.}
+\item{...}{One or several object of class \code{aphylo} or \code{multiAPhylo}. Ignored
+in the case of \code{print.multiAphylo}.}
+
+\item{x}{An object of class \code{multiAphylo}}
 }
 \description{
 This is equivalent to what \link[ape:c.phylo]{ape::c.phylo} does.

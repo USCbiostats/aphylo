@@ -9,9 +9,22 @@ predict.aphylo_estimates <- function(object, ...) {
   pred <- predict_pre_order.aphylo_estimates(object, ...)
   
   # Adding names
-  dimnames(pred) <- list(
-    with(object$dat$tree, c(tip.label, node.label)),
-    colnames(object$dat$tip.annotation))
+  if (is.aphylo(object$dat)) {
+    
+    dimnames(pred) <- list(
+      with(object$dat$tree, c(tip.label, node.label)),
+      colnames(object$dat$tip.annotation))
+    
+  } else {
+    
+    for (i in seq_along(pred)) {
+      dimnames(pred[[i]]) <- list(
+        with(object$dat[[i]]$tree, c(tip.label, node.label)),
+        colnames(object$dat[[i]]$tip.annotation))
+    }
+    
+  }
+  
   
   pred
 }

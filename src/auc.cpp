@@ -40,7 +40,7 @@ List auc(
   locations.reserve(nobs);
   int n0 = 0, n1 = 0;
   
-  for (int j = 0; j < nobs; ++j) {
+  for (unsigned int j = 0; j < nobs; ++j) {
     
     if (!IntegerVector::is_na(labels[j])) {
       if (labels[j] == 0) ++n0;

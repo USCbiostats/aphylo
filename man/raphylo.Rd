@@ -2,11 +2,14 @@
 % Please edit documentation in R/simulation.r
 \name{raphylo}
 \alias{raphylo}
+\alias{rmultiAphylo}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
 raphylo(n = NULL, tree = NULL, P = 1L, psi = c(0.05, 0.05),
   mu = c(0.1, 0.05), eta = c(1, 1), Pi = 1,
   informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
+
+rmultiAphylo(R, ...)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
@@ -24,6 +27,8 @@ raphylo(n = NULL, tree = NULL, P = 1L, psi = c(0.05, 0.05),
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{informative, maxtries}{Passed to \link{sim_fun_on_tree}.}
+
+\item{R}{Integer, number of replicates}
 }
 \value{
 An object of class \link{aphylo}
@@ -32,6 +37,9 @@ An object of class \link{aphylo}
 Simulation of Annotated Phylogenetic Trees
 
 \code{}
+}
+\details{
+The \code{rmultiAphylo} function is a wrapper around \code{raphylo}.
 }
 \examples{
 # A simple example ----------------------------------------------------------

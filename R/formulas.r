@@ -186,21 +186,21 @@ validate_aphylo_formula <- function(fm) {
   
   # Analyzing the terms, are all 
   TNAMES <- unique(gsub("[0-9]", "", APHYLO_PARAM_NAMES))
-  test <- which(!(term_names %in% TNAMES))
+  test. <- which(!(term_names %in% TNAMES))
   
-  if (length(test)) {
+  if (length(test.)) {
     stop("The following terms in the formula are not supported by `aphylo`: '",
-         paste0(vars[test], collapse = "', '"), "'. ", 
+         paste0(vars[test.], collapse = "', '"), "'. ", 
          "Only `", paste(TNAMES, collapse="()`, `"), "()` are allowed.",
          call. = FALSE)
   }
   
   # Is there any repeated term?
-  test <- table(term_names)
-  test <- names(test)[which(test > 1)]
-  if (length(test)) {
+  test. <- table(term_names)
+  test. <- names(test.)[which(test. > 1)]
+  if (length(test.)) {
     stop("Some terms are repeated more than once: '",
-         paste0(vars[term_names %in% test], collapse = "', '"), "'.",
+         paste0(vars[term_names %in% test.], collapse = "', '"), "'.",
          call. = FALSE
          )
   }
@@ -266,12 +266,12 @@ validate_parameters <- function(fm, params) {
     }
     
     # More than needed
-    test <- which(!(pnames %in% vars))
-    if (length(test)) {
+    test. <- which(!(pnames %in% vars))
+    if (length(test.)) {
       stop(
         "The initial parametes must match those specified in the model. ",
         "The following parameters have been overspecified: '",
-        paste(pnames[test], collapse = "', '"), "'. These should ",
+        paste(pnames[test.], collapse = "', '"), "'. These should ",
         "match the following set of parameters: '",
         paste(vars, collapse = "', '"), "'.", 
         call. = FALSE
@@ -279,12 +279,12 @@ validate_parameters <- function(fm, params) {
     }
     
     # Less than required
-    test <- which(!(vars %in% pnames))
-    if (length(test)) {
+    test. <- which(!(vars %in% pnames))
+    if (length(test.)) {
       stop(
         "The initial parametes must match those specified in the model. ",
         "The following parameters are missing: '",
-        paste(vars[test], collapse = "', '"), "'. These should ",
+        paste(vars[test.], collapse = "', '"), "'. These should ",
         "match the following set of parameters: '",
         paste(vars, collapse = "', '"), "'.", 
         call. = FALSE

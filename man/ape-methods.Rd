@@ -23,7 +23,7 @@
 
 \method{Nnode}{aphylo_estimates}(phy, ...)
 
-\method{Nnode}{multiAphylo}(phy)
+\method{Nnode}{multiAphylo}(phy, ...)
 
 \method{Ntip}{aphylo}(phy)
 

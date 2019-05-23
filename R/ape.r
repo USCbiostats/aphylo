@@ -84,10 +84,10 @@ as.phylo.matrix <- function(
   inner <- nodes[ideg == 1 & odeg > 0]
   
   # Multiple parents
-  test <- which(ideg > 1)
-  if (length(test))
+  test. <- which(ideg > 1)
+  if (length(test.))
     stop("Multiple parents are not supported. The following nodes have multiple parents: ",
-         paste(nodes[test], collapse=", "))
+         paste(nodes[test.], collapse=", "))
   
   # Finding roots
   if (length(roots) > 1)
@@ -101,24 +101,23 @@ as.phylo.matrix <- function(
   # 3. Root is n+1
   # 4. Interior nodes are from n+2 to m
   nleafs <- length(leafs)
-  test   <- is.numeric(nodes) &&
+  test.   <- is.numeric(nodes) &&
     all(sort(leafs) == 1:length(leafs)) &&
     (roots == (nleafs + 1L))
   
   # Case in which the only inner node is the root!
-  test <- ifelse(
+  test. <- ifelse(
     length(inner) > 0,
-    test && (sort(inner) == (nleafs + 2L):length(nodes)),
-    test
+    test. & (sort(inner) == (nleafs + 2L):length(nodes)),
+    test.
     )
     
-  
   # Defining the labels:
   #  - Leafs go from 1 to n
   #  - Root node is n + 1
   #  - And the inner goes from n + 2 to length(nodes)
   # This doest it smoothly
-  if (!test) {
+  if (!test.) {
     nodes <- c(leafs, roots, inner)
     
     # Finding indexes and corresponding new labels

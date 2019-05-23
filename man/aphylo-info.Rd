@@ -5,6 +5,7 @@
 \alias{Nann}
 \alias{Nann.aphylo}
 \alias{Nann.multiAphylo}
+\alias{Nann.aphylo_estimates}
 \alias{Nannotated}
 \alias{Nannotated.aphylo}
 \alias{Nannotated.multiAphylo}
@@ -20,6 +21,8 @@ Nann(phy)
 \method{Nann}{aphylo}(phy)
 
 \method{Nann}{multiAphylo}(phy)
+
+\method{Nann}{aphylo_estimates}(phy)
 
 Nannotated(phy)
 

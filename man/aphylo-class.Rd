@@ -41,7 +41,7 @@ ans <- new_aphylo(fakeexperiment[,2:3], faketree)
 plot(ans)
 }
 \seealso{
-Other aphylo methods: \code{\link{Nann.aphylo_estimates}}
+Other aphylo methods: \code{\link{aphylo-methods}}
 }
 \concept{Data management functions}
 \concept{aphylo methods}

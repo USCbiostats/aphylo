@@ -213,6 +213,7 @@ sim_fun_on_tree <- function(
 #' @param n Integer scalar. Number of leafs. If not specified, then 
 #' @param tree An object of class [phylo][ape::read.tree].
 #' @param P Integer scalar. Number of functions to generate.
+#' @param ... Further arguments passed to `raphylo`
 #' @template parameters
 #' @templateVar .psi 1
 #' @templateVar .mu 1
@@ -272,6 +273,16 @@ raphylo <- function(
     node.annotation = ans[(nleaf + 1L):nrow(ans), , drop=FALSE],
     tree            = tree
   )
+  
+}
+
+#' @export
+#' @rdname raphylo
+#' @param R Integer, number of replicates
+#' @details The `rmultiAphylo` function is a wrapper around `raphylo`.
+rmultiAphylo <- function(R, ...) {
+  
+  do.call(c, replicate(n = R, raphylo(...), simplify = FALSE))
   
 }
 

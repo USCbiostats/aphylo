@@ -93,11 +93,15 @@ LogLike.multiAphylo <- function(
   verb_ans    = TRUE,
   check_dims  = TRUE
 ) {
-  
+ 
+  annotations. <- lapply(tree, function(t.) with(t., rbind(tip.annotation, node.annotation)))
+  offspring. <- lapply(tree, "[[", "offspring")
+  pseq. <- lapply(tree, "[[", "reduced_pseq")
+   
   ans <- .LogLike(
-    annotations = lapply(tree, function(t.) with(t., rbind(tip.annotation, node.annotation))),
-    offspring   = lapply(tree, "[[", "offspring"),
-    pseq        = lapply(tree, "[[", "reduced_pseq"),
+    annotations = annotations.,
+    offspring   = offspring.,
+    pseq        = pseq.,
     psi         = psi,
     mu          = mu,
     eta         = eta,

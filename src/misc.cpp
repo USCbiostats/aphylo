@@ -29,7 +29,7 @@ arma::imat approx_geodesic(
   arma::imat G(n, n, arma::fill::zeros);
   
   // Filling the matrix
-  for (int i = 0; i < edges2.n_rows; ++i)
+  for (unsigned int i = 0; i < edges2.n_rows; ++i)
     G.at(edges2.at(i, 0u), edges2.at(i, 1u)) = 1;
   
   arma::imat ans(n,n);

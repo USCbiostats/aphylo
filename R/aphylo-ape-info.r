@@ -75,7 +75,7 @@ Nann.multiAphylo <- function(phy) sapply(phy, Nann)
 
 
 #' @export
-#' @rdname aphylo-methods
+#' @rdname aphylo-info
 Nann.aphylo_estimates <- function(phy) {
   Nann(phy$dat)
 }

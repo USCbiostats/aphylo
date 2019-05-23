@@ -6,14 +6,13 @@
 \alias{LogLike.multiAphylo}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, psi, mu, eta, Pi, verb_ans = TRUE, check_dims = TRUE,
-  check_class = TRUE)
+LogLike(tree, psi, mu, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 
 \method{LogLike}{aphylo}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
-  check_dims = TRUE, check_class = TRUE)
+  check_dims = TRUE)
 
 \method{LogLike}{multiAphylo}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
-  check_dims = TRUE, check_class = TRUE)
+  check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link{aphylo}.}

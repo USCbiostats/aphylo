@@ -74,7 +74,7 @@ arma::mat probabilities(
   // Printing annotations that will be used
   arma::imat annsub(pseq.size(), annotations.n_cols);
   
-  for (int i=0; i<pseq.size(); ++i)
+  for (unsigned int i=0; i < pseq.size(); ++i)
     annsub.row(i) = annotations.row(pseq.at(i) - 1u);
   
   Rprintf("[probabilities] Observed annotations:\n");
@@ -103,7 +103,6 @@ arma::mat probabilities(
             ;
             continue;
           }
-          
             
           Pr.at(*n - 1u, s) *= PSI.at(S.at(s, p), annotations.at(*n - 1u, p))*
             eta.at(annotations.at(*n - 1u, p));
@@ -128,7 +127,8 @@ arma::mat probabilities(
     }
       
     // Obtaining list of offspring <- this can be improved (speed)
-    // can create an std vector of size n
+    // can create an std vector of size n.
+    // But this is already moving pointers around, so it should be OK.
     IntegerVector O(offspring[*n - 1u]);
     
 #ifdef APHYLO_DEBUG_ON
@@ -142,7 +142,7 @@ arma::mat probabilities(
 #endif
     
     // Parent node states integration
-    for (int s=0; s<nstates; s++) {
+    for (int s = 0; s < nstates; s++) {
       
       // Loop through offspring
       double offspring_joint_likelihood = 1.0;
@@ -151,7 +151,8 @@ arma::mat probabilities(
         
         // Offspring states integration
         double offspring_likelihood = 0.0;
-        for (int s_n=0; s_n<nstates; s_n++) {
+        for (int s_n = 0; s_n < nstates; s_n++) {
+          
           double s_n_sum = 1.0;
           
           // Loop through functions
@@ -241,7 +242,7 @@ double LogLikei(
   // Printing resulting probabilities
   arma::mat prsub(pseq.size(), nstates);
   
-  for (int i=0; i<pseq.size(); ++i)
+  for (unsigned int i = 0; i < pseq.size(); ++i)
     prsub.row(i) = Pr.row(pseq.at(i) - 1u);
   
   Rprintf("[LogLike] Observed probabilities:\n");
@@ -253,8 +254,8 @@ double LogLikei(
   double ll = 0.0;
 
   arma::vec PiP = root_node_prob(Pi, S);  
-  for (int s = 0; s<nstates; s++)
-    ll += PiP.at(s)*Pr.at(pseq.at(pseq.size() - 1u) - 1u, s);
+  for (int s = 0; s < nstates; s++)
+    ll += PiP.at(s) * Pr.at(pseq.at(pseq.size() - 1u) - 1u, s);
   
   ll = std::log(ll);
   
@@ -305,6 +306,11 @@ List LogLike(
     }
   
   }
+  
+#ifdef APHYLO_DEBUG_ON
+  Rprintf("Pr(verb_ans = %i) equals: \n", verb_ans?1:0);
+  print(wrap(Pr));
+#endif
   
   return List::create(
     _["ll"] = ll,

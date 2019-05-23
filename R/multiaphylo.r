@@ -2,7 +2,8 @@
 #' 
 #' This is equivalent to what [ape::c.phylo] does.
 #' 
-#' @param ... One or several object of class `aphylo` or `multiAPhylo`.
+#' @param ... One or several object of class `aphylo` or `multiAPhylo`. Ignored
+#' in the case of `print.multiAphylo`.
 #' @name multiAphylo
 #' @examples 
 #' data(fakeexperiment)
@@ -50,9 +51,16 @@ c.aphylo <- function(...) {
 }
 
 #' @export
-#' @rdname multiAphylo
 c.multiAphylo <- c.aphylo
 
+#' @export
+`[.multiAphylo` <- function(x, i, drop = FALSE) {
+  structure(unclass(x)[i], class = "multiAphylo")
+}
+
+#' @export
+#' @param x An object of class `multiAphylo`
+#' @rdname multiAphylo
 print.multiAphylo <- function(x, ...) {
   
   N <- length(x)
