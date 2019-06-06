@@ -22,7 +22,6 @@
 #'   \item Use `edge.length(2*n - 1)` (simulating branch lengths).
 #' }
 #' 
-#' 
 #' @return An object of class [ape::phylo] with the edgelist as a postorderd,
 #' `node.label` and `edge.length`.
 #' 

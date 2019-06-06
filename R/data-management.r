@@ -470,8 +470,6 @@ summary.aphylo <- function(object, ...) {
 }
 
 
-
-
 # This list sets the default plotting parameters when calling
 # the plot.phylo function.
 APHYLO_DEFAULT_PLOT_PARAMS <- list(

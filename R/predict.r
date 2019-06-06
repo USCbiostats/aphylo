@@ -405,8 +405,6 @@ plot.aphylo_prediction_score <- function(
       main= main, font.main=1
     )
   }
-  
-  
 
 }
   

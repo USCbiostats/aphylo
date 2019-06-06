@@ -344,3 +344,28 @@ test_that("Leaf Probabilities", {
   expect_equal((exp(ll0)/exp(ll1))^(1/(2*4)), 0.5, tol = errtol)
   
 })
+
+
+# ------------------------------------------------------------------------------
+test_that("Joint loglike for multiAphylo", {
+  
+  set.seed(113)
+  trees <- lapply(sample(20:50, 10, TRUE), raphylo)
+  trees <- do.call(c, trees)
+  
+  psi  <- c(0.01, 0.05)
+  mu   <- c(0.03, 0.10)
+  Pi   <- .2
+  eta  <- c(.7, .9)
+  ans0 <- LogLike(trees, psi = psi, mu = mu, Pi = Pi, eta = eta, verb_ans = FALSE)
+  ans1 <- 0
+  for (i in seq_along(trees)) {
+    
+    ans1 <- ans1 +
+      LogLike(trees[[i]], psi = psi, mu = mu, Pi = Pi, eta = eta, verb_ans = FALSE)$ll
+    
+  }
+  
+  expect_equal(ans1, ans0$ll)
+  
+})

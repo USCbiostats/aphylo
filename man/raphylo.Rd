@@ -29,6 +29,8 @@ rmultiAphylo(R, ...)
 \item{informative, maxtries}{Passed to \link{sim_fun_on_tree}.}
 
 \item{R}{Integer, number of replicates}
+
+\item{...}{Further arguments passed to \code{raphylo}}
 }
 \value{
 An object of class \link{aphylo}
