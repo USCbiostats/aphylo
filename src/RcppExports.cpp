@@ -20,6 +20,55 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Tree_new
+SEXP Tree_new(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& Ntype);
+RcppExport SEXP _aphylo_Tree_new(SEXP edgelistSEXP, SEXP ASEXP, SEXP NtypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type edgelist(edgelistSEXP);
+    Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type Ntype(NtypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_new(edgelist, A, Ntype));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LogLike2
+List LogLike2(SEXP tree_ptr, const std::vector< double >& mu, const std::vector< double >& psi, const std::vector< double >& eta, const double& pi, bool verb);
+RcppExport SEXP _aphylo_LogLike2(SEXP tree_ptrSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP piSEXP, SEXP verbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type tree_ptr(tree_ptrSEXP);
+    Rcpp::traits::input_parameter< const std::vector< double >& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const std::vector< double >& >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< const std::vector< double >& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< bool >::type verb(verbSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLike2(tree_ptr, mu, psi, eta, pi, verb));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_get_offspring
+std::vector< std::vector< unsigned int > > Tree_get_offspring(const SEXP& tree_ptr);
+RcppExport SEXP _aphylo_Tree_get_offspring(SEXP tree_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_offspring(tree_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_get_parents
+std::vector< std::vector< unsigned int > > Tree_get_parents(const SEXP& tree_ptr);
+RcppExport SEXP _aphylo_Tree_get_parents(SEXP tree_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_parents(tree_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // approx_geodesic
 arma::imat approx_geodesic(const arma::umat& edges, unsigned int nsteps, bool undirected, bool warn);
 RcppExport SEXP _aphylo_approx_geodesic(SEXP edgesSEXP, SEXP nstepsSEXP, SEXP undirectedSEXP, SEXP warnSEXP) {
@@ -211,6 +260,10 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 4},
+    {"_aphylo_Tree_new", (DL_FUNC) &_aphylo_Tree_new, 3},
+    {"_aphylo_LogLike2", (DL_FUNC) &_aphylo_LogLike2, 6},
+    {"_aphylo_Tree_get_offspring", (DL_FUNC) &_aphylo_Tree_get_offspring, 1},
+    {"_aphylo_Tree_get_parents", (DL_FUNC) &_aphylo_Tree_get_parents, 1},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},

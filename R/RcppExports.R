@@ -23,6 +23,22 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
+Tree_new <- function(edgelist, A, Ntype) {
+    .Call(`_aphylo_Tree_new`, edgelist, A, Ntype)
+}
+
+.LogLike2 <- function(tree_ptr, mu, psi, eta, pi, verb = TRUE) {
+    .Call(`_aphylo_LogLike2`, tree_ptr, mu, psi, eta, pi, verb)
+}
+
+Tree_get_offspring <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_offspring`, tree_ptr)
+}
+
+Tree_get_parents <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_parents`, tree_ptr)
+}
+
 approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
     .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }

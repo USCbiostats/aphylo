@@ -50,6 +50,36 @@ LogLike <- function(
 
 #' @export
 #' @rdname LogLike
+LogLike.externalptr <- function(
+  tree,
+  psi,
+  mu,
+  eta,
+  Pi, 
+  verb_ans    = TRUE,
+  check_dims  = TRUE
+) {
+  
+  ans <- .LogLike2(
+    tree_ptr = tree,
+    psi      = psi,
+    mu       = mu,
+    eta      = eta,
+    pi       = Pi,
+    verb     = verb_ans,
+  )
+  
+  if (verb_ans)
+    dim(ans$Pr[[1]]) <- c(
+      ape::Nnode(tree, internal.only = FALSE),
+      length(ans$Pr[[1]]) %/% ape::Nnode(tree, internal.only = FALSE)
+    )
+  
+  ans
+  
+}
+#' @export
+#' @rdname LogLike
 LogLike.aphylo <- function(
   tree,
   psi,
