@@ -35,6 +35,19 @@ Nnode.multiAphylo <- function(phy, ...) sapply(phy, ape::Nnode, ...)
 
 #' @rdname ape-methods
 #' @export
+Nnode.aphylo_pruner <- function(phy, ...) {
+  
+  dots <- list(...)
+  if ("internal.only" %in% names(dots))
+    .Nnode_aphylo_pruner(phy, internal_only = dots$internal.only)
+  else
+    .Nnode_aphylo_pruner(phy, internal_only = TRUE)
+  
+  
+}
+
+#' @rdname ape-methods
+#' @export
 Ntip.aphylo <- function(phy) ape::Ntip(phy$tree)
 
 #' @export

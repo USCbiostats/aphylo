@@ -20,30 +20,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Tree_new
-SEXP Tree_new(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& Ntype);
-RcppExport SEXP _aphylo_Tree_new(SEXP edgelistSEXP, SEXP ASEXP, SEXP NtypeSEXP) {
+// new_aphylo_pruner
+SEXP new_aphylo_pruner(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& Ntype);
+RcppExport SEXP _aphylo_new_aphylo_pruner(SEXP edgelistSEXP, SEXP ASEXP, SEXP NtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type edgelist(edgelistSEXP);
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type A(ASEXP);
     Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type Ntype(NtypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(Tree_new(edgelist, A, Ntype));
+    rcpp_result_gen = Rcpp::wrap(new_aphylo_pruner(edgelist, A, Ntype));
     return rcpp_result_gen;
 END_RCPP
 }
-// LogLike2
-List LogLike2(SEXP tree_ptr, const std::vector< double >& mu, const std::vector< double >& psi, const std::vector< double >& eta, const double& pi, bool verb);
-RcppExport SEXP _aphylo_LogLike2(SEXP tree_ptrSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP piSEXP, SEXP verbSEXP) {
+// LogLike_pruner
+List LogLike_pruner(SEXP tree_ptr, const std::vector< double >& mu, const std::vector< double >& psi, const std::vector< double >& eta, const double& Pi, bool verb, bool check_dims);
+RcppExport SEXP _aphylo_LogLike_pruner(SEXP tree_ptrSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verbSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type tree_ptr(tree_ptrSEXP);
     Rcpp::traits::input_parameter< const std::vector< double >& >::type mu(muSEXP);
     Rcpp::traits::input_parameter< const std::vector< double >& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const std::vector< double >& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< const double& >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< bool >::type verb(verbSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike2(tree_ptr, mu, psi, eta, pi, verb));
+    Rcpp::traits::input_parameter< bool >::type check_dims(check_dimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLike_pruner(tree_ptr, mu, psi, eta, Pi, verb, check_dims));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -66,6 +67,40 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
     rcpp_result_gen = Rcpp::wrap(Tree_get_parents(tree_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_Nnode
+unsigned int Tree_Nnode(const SEXP& tree_ptr, bool internal_only);
+RcppExport SEXP _aphylo_Tree_Nnode(SEXP tree_ptrSEXP, SEXP internal_onlySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
+    Rcpp::traits::input_parameter< bool >::type internal_only(internal_onlySEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_Nnode(tree_ptr, internal_only));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_Ntip
+unsigned int Tree_Ntip(const SEXP& phy);
+RcppExport SEXP _aphylo_Tree_Ntip(SEXP phySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type phy(phySEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_Ntip(phy));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_Nann
+unsigned int Tree_Nann(const SEXP& phy);
+RcppExport SEXP _aphylo_Tree_Nann(SEXP phySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type phy(phySEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_Nann(phy));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -260,10 +295,13 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 4},
-    {"_aphylo_Tree_new", (DL_FUNC) &_aphylo_Tree_new, 3},
-    {"_aphylo_LogLike2", (DL_FUNC) &_aphylo_LogLike2, 6},
+    {"_aphylo_new_aphylo_pruner", (DL_FUNC) &_aphylo_new_aphylo_pruner, 3},
+    {"_aphylo_LogLike_pruner", (DL_FUNC) &_aphylo_LogLike_pruner, 7},
     {"_aphylo_Tree_get_offspring", (DL_FUNC) &_aphylo_Tree_get_offspring, 1},
     {"_aphylo_Tree_get_parents", (DL_FUNC) &_aphylo_Tree_get_parents, 1},
+    {"_aphylo_Tree_Nnode", (DL_FUNC) &_aphylo_Tree_Nnode, 2},
+    {"_aphylo_Tree_Ntip", (DL_FUNC) &_aphylo_Tree_Ntip, 1},
+    {"_aphylo_Tree_Nann", (DL_FUNC) &_aphylo_Tree_Nann, 1},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},

@@ -2,11 +2,15 @@
 % Please edit documentation in R/loglike.r
 \name{LogLike}
 \alias{LogLike}
+\alias{LogLike.aphylo_pruner}
 \alias{LogLike.aphylo}
 \alias{LogLike.multiAphylo}
 \title{Computes Log-likelihood}
 \usage{
 LogLike(tree, psi, mu, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
+
+\method{LogLike}{aphylo_pruner}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
+  check_dims = TRUE)
 
 \method{LogLike}{aphylo}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
   check_dims = TRUE)

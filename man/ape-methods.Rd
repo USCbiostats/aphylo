@@ -8,6 +8,7 @@
 \alias{Nnode.aphylo}
 \alias{Nnode.aphylo_estimates}
 \alias{Nnode.multiAphylo}
+\alias{Nnode.aphylo_pruner}
 \alias{Ntip.aphylo}
 \alias{Ntip.aphylo_estimates}
 \alias{Ntip.multiAphylo}
@@ -24,6 +25,8 @@
 \method{Nnode}{aphylo_estimates}(phy, ...)
 
 \method{Nnode}{multiAphylo}(phy, ...)
+
+\method{Nnode}{aphylo_pruner}(phy, ...)
 
 \method{Ntip}{aphylo}(phy)
 

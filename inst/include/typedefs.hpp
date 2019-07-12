@@ -12,8 +12,8 @@ inline void print_vector(const std::vector< T > & V) {
 
 #endif
 
-#ifndef H_TYPEDEFS
-#define H_TYPEDEFS
+#ifndef H_PRUNER_TYPEDEFS
+#define H_PRUNER_TYPEDEFS
 
 //! @file typedefs.h
 

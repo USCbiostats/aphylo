@@ -56,6 +56,7 @@ protected:
   // Constant
   uint N_NODES;
   uint N_EDGES;
+  uint N_TIPS;
   
   //! Postorder sequence
   /**
@@ -115,8 +116,14 @@ public:
   vv_uint get_offspring() const {return this->offspring;};
   v_uint get_postorder()  const {return this->POSTORDER;};
   v_uint get_preorder()   const;
+  
+  //! Returns the numner of nodes.
   uint n_nodes()          const {return this->N_NODES;};
+  //! Returns the numner of edges.
   uint n_edges()          const {return this->N_EDGES;};
+  //! Return the number of tips defined as nodes with no offspring.
+  uint n_tips() const;
+  
   vv_uint get_edgelist()  const;
   
   void print(bool details = true) const;

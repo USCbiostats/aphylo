@@ -22,11 +22,11 @@ inline void reset_values(std::vector< std::vector< T > > & vec, const T val) {
   
 }
 
-inline vv_uint states_mat(uint P) {
+inline std::vector< std::vector< unsigned int > > states_mat(uint P) {
   
   // Creating output matrix
   uint nstates = (uint) pow(2, P);
-  vv_uint ans = new_vector_array(nstates, P, 0u);
+  std::vector< std::vector< unsigned int > > ans = new_vector_array(nstates, P, 0u);
   
   // Go through states
   for (uint i = 0u; i < nstates; ++i) {
@@ -42,7 +42,9 @@ inline vv_uint states_mat(uint P) {
   return ans;
 }
 
-inline void prob_mat(const v_dbl & pr, vv_dbl & ans) {
+inline void prob_mat(
+    const std::vector< double > & pr,
+    std::vector< std::vector< double > > & ans) {
   
   for (uint i = 0u; i < 2u; ++i)
     for (uint j = 0u; j < 2u; ++j)
@@ -55,22 +57,26 @@ inline void prob_mat(const v_dbl & pr, vv_dbl & ans) {
   
 }
 
-inline vv_dbl prob_mat(const v_dbl & pr) {
+inline std::vector< std::vector< double > > prob_mat(const std::vector< double > & pr) {
   
-  vv_dbl ans = new_vector_array(2u, 2u, 0.0);
+  std::vector< std::vector< double > > ans = new_vector_array(2u, 2u, 0.0);
   
   prob_mat(pr, ans);
   
   return ans;
 }
 
-inline vv_dbl probabilities(uint N, uint nstates) {
+inline std::vector< std::vector< double > > probabilities(uint N, uint nstates) {
   
   return new_vector_array(N, nstates, 1.0);
   
 }
 
-inline void root_node_pr(v_dbl & Pr_root, double pi, const vv_uint & S) {
+inline void root_node_pr(
+    std::vector< double > & Pr_root,
+    double pi,
+    const std::vector< std::vector< unsigned int > > & S
+  ) {
   
   for (uint s = 0u; s < S.size(); ++s) {
     Pr_root[s] = 1.0;

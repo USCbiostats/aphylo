@@ -357,4 +357,16 @@ inline void Tree::prune_preorder(v_uint & seq) {
   
 }
 
+inline uint Tree::n_tips() const {
+  
+  uint count = 0u;
+  for (auto i = this->offspring.begin(); i != offspring.end(); ++i)
+    if (i->size() > 0u)
+      ++count;
+  
+  return count;
+  
+}
+
 #endif
+

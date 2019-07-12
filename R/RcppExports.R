@@ -23,12 +23,30 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
-Tree_new <- function(edgelist, A, Ntype) {
-    .Call(`_aphylo_Tree_new`, edgelist, A, Ntype)
+#' Pointer to `pruner`.
+#' @param edgelist a List two integer vectors.
+#' @param A a list of length `N` (annotations).
+#' @param Ntype An integer vector of types of size `N`.
+#' @examples
+#' set.seed(1)
+#' x  <- raphylo(10)
+#' el <- x$tree$edge - 1L
+#' el <- list(el[,1], el[,2])
+#' A  <- lapply(1:19, function(i) with(x, rbind(tip.annotation, node.annotation))[i,]) 
+#' nt <- integer(19)
+#' 
+#' pruner <- new_aphylo_pruner(el, A, nt)
+#' 
+#' # Computing loglike
+#' LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))
+#' 
+#' @export
+new_aphylo_pruner <- function(edgelist, A, Ntype) {
+    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, Ntype)
 }
 
-.LogLike2 <- function(tree_ptr, mu, psi, eta, pi, verb = TRUE) {
-    .Call(`_aphylo_LogLike2`, tree_ptr, mu, psi, eta, pi, verb)
+.LogLike_pruner <- function(tree_ptr, mu, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
+    .Call(`_aphylo_LogLike_pruner`, tree_ptr, mu, psi, eta, Pi, verb, check_dims)
 }
 
 Tree_get_offspring <- function(tree_ptr) {
@@ -37,6 +55,20 @@ Tree_get_offspring <- function(tree_ptr) {
 
 Tree_get_parents <- function(tree_ptr) {
     .Call(`_aphylo_Tree_get_parents`, tree_ptr)
+}
+
+.Nnode_aphylo_pruner <- function(tree_ptr, internal_only = TRUE) {
+    .Call(`_aphylo_Tree_Nnode`, tree_ptr, internal_only)
+}
+
+#' @export
+Ntip.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Ntip`, phy)
+}
+
+#' @export
+Nann.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Nann`, phy)
 }
 
 approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
