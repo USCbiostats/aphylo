@@ -12,6 +12,8 @@ r:
   - release
   - oldrel
 
+bioc_packages: PANTHER.db
+
 os:
   - linux
   - osx
