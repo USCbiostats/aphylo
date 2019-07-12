@@ -1,69 +1,79 @@
 #include <Rcpp.h>
+#include <unordered_map>
 using namespace Rcpp;
+
+// Rcpp::plugins(cpp11)
 
 typedef unsigned int uint;
 typedef std::vector< uint > v_uint;
 
-class aphylo_node;
+template <class T>
+class NodeAnnotated;
+
 class aphylo_edge;
-class aphylo_edgelist;
+class aphylo_tree;
 
 // Basic structure: NODE -------------------------------------------------------
-class aphylo_node {
-  
+class Node {
 private:
   uint id;
-  uint type;
-  std::string label;
+  template <class T>
+  friend class NodeAnnotated;
   friend class aphylo_edge;
-  friend class aphylo_edgelist;
-
+  friend class aphylo_tree;
 public:
-  ~aphylo_node() {};
-  aphylo_node() {};
-  // Generic init
-  aphylo_node(uint id_, uint type_, std::string label_):
-    id(id_), type(type_), label(label_) {};
-  
-  aphylo_node(uint id_):
-    id(id_), type(0u), label("") {};
-  
-  // Copy constructor
-  aphylo_node(const aphylo_node &n):
-    id(n.id), type(n.type), label(n.label) {};
-  
-  // Assignmen operator
-  aphylo_node& operator= (const aphylo_node& n) {
-    
-    id    = n.id;
-    type  = n.type;
-    label = n.label;
-    
-    return *this;
-  };
+  ~Node() {};
+  Node() {};
+  Node(uint id_):
+    id(id_) {};
   
   void print();
   
 };
 
-inline void aphylo_node::print() {
-  Rprintf("aphylo_node: id(%d) type(%d) label(%s)\n",
-          id, type, label);
-}
+inline void Node::print() {
+  Rprintf("a node with id %~04d.\n", id);
+};
+
+template < class T >
+class NodeAnnotated : public Node {
+  
+private:
+  std::vector< T > annotation;
+
+public:
+  ~NodeAnnotated() {};
+  NodeAnnotated() {};
+  // Generic init
+  NodeAnnotated(uint id_, std::vector< T > annotation_):
+    Node(id_), annotation(annotation_) {};
+  
+  // If a single annotation
+  NodeAnnotated(uint id_, T annotation_): Node(id_) {
+    annotation.push_back(annotation_);
+  };
+  
+  void print(){
+    Rprintf("id: %~04d, N annotations: %d) \n", id, annotation.size());
+  };
+  
+};
+
+
 
 // Basic structure: EDGE -------------------------------------------------------
 class aphylo_edge {
   
 private:
-  aphylo_node source;
-  aphylo_node target;
+  int source;
+  int target;
   uint type;
-  friend class aphylo_edgelist;
+  friend class aphylo_tree;
   
 public:
   ~aphylo_edge() {};
   
-  aphylo_edge(aphylo_node source_, aphylo_node target_, uint type_):
+  aphylo_edge(int source_, int target_, uint type_):
     source(source_), target(target_), type(type_) {};
   
   aphylo_edge(uint source_, uint target_);
@@ -73,8 +83,8 @@ public:
 
 inline aphylo_edge::aphylo_edge(uint source_, uint target_) {
 
-  aphylo_node s(source_);
-  aphylo_node t(target_);
+  int s(source_);
+  int t(target_);
   source = s;
   target = t;
   type   = 0u;
@@ -88,33 +98,43 @@ inline aphylo_edge::aphylo_edge(uint source_, uint target_) {
 // }
 
 // More complex structure: EDGELIST --------------------------------------------
-class aphylo_edgelist {
+typedef std::unordered_map< unsigned int, Node > Nodes;
+typedef std::vector< aphylo_edge > aphylo_edges;
+class aphylo_tree {
 
 private:
-  std::vector< aphylo_edge > E;
+  Nodes nodes;
+  aphylo_edges edges;
   
 public:
-  ~aphylo_edgelist() {};
-  aphylo_edgelist() {};
-  aphylo_edgelist(const v_uint& source, const v_uint& target);
-  
-  void add_edge(aphylo_edge e) {
-    E.push_back(e);
-    return;
-  };
+  ~aphylo_tree() {};
+  aphylo_tree() {};
+  aphylo_tree(const v_uint& source, const v_uint& target);
   
   void add_edge(uint source, uint target) {
+    
+    // Checking if it exists
+    if (!this->nodes.count(source)) 
+      nodes[source] = *(new Node(source));
+    
+    if (!this->nodes.count(target)) {
+      nodes[target] = *(new Node(target));
+    }
+    
     // Should I use smart pointers here?
     aphylo_edge x(source, target);
-    E.push_back(x);
+    edges.push_back(x);
     return;
   };
   
   void print();
-  
+  void print_nodes();
+
 };
 
-inline aphylo_edgelist::aphylo_edgelist(
+
+
+inline aphylo_tree::aphylo_tree(
     const v_uint& source,
     const v_uint& target
   ) {
@@ -126,11 +146,21 @@ inline aphylo_edgelist::aphylo_edgelist(
 
 }
 
-inline void aphylo_edgelist::print() {
+inline void aphylo_tree::print_nodes() {
+  
+  Nodes::iterator n;
+  for (n = nodes.begin(); n != nodes.end(); ++n)
+    n->second.print();
+  
+  return;
+}
+
+inline void aphylo_tree::print() {
   
   Rprintf("This edgelist has the following contents:\n");
-  for (int i = 0; i < E.size(); ++i)
-    Rprintf("[%4d, %4d]\n", E[i].source.id, E[i].target.id);
+  aphylo_edges::const_iterator e;
+  for (e = edges.begin(); e != edges.end(); ++e)
+    Rprintf("[%4d, %4d]\n", e->source, e->target);
   
   return;
 }
@@ -143,10 +173,10 @@ inline void aphylo_edgelist::print() {
 // [[Rcpp::export]]
 int create_and_delete(uint id, uint type, std::string label) {
   
-  aphylo_node x(id, type, label);
+  Node x(id);
   x.print();
   
-  aphylo_node y(id);
+  NodeAnnotated< uint > y(id, type);
   y.print();
   
   return 1;
@@ -156,8 +186,9 @@ int create_and_delete(uint id, uint type, std::string label) {
 // [[Rcpp::export]]
 int create2(std::vector< uint > source, std::vector< uint > target) {
   
-  aphylo_edgelist E(source, target);
+  aphylo_tree E(source, target);
   E.print();
+  E.print_nodes();
   
   return 1;
   
@@ -166,6 +197,6 @@ int create2(std::vector< uint > source, std::vector< uint > target) {
 /*** R
 # timesTwo(42)
 create_and_delete(1, 2, "George")
-x <- ape::rtree(10)
+set.seed(1);x <- ape::rtree(5)
 create2(x$edge[,1], x$edge[,2])
 */
