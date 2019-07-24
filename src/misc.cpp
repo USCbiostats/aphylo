@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-//[[Rcpp::export(name = "approx_geodesic.")]]
+//[[Rcpp::export(name = "approx_geodesic.", rng=false)]]
 arma::imat approx_geodesic(
     const arma::umat & edges,
     unsigned int nsteps = 5e3,
@@ -66,7 +66,7 @@ arma::imat approx_geodesic(
 //' @examples
 //' states(3)
 //' @export
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 arma::imat states(
     int P
 ) {
@@ -99,7 +99,7 @@ arma::imat states(
 // @return a 2x2 matrix with 0/1 probabilities, with rows and columns
 // corresponding to states (0,1) of parent and offspring respectively.
 // @export
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 arma::mat prob_mat(
     const arma::vec & pr
 ) {
@@ -115,10 +115,29 @@ arma::mat prob_mat(
   return ans;
 }
 
+// [[Rcpp::export(rng = false)]]
+arma::vec root_node_prob(
+    double Pi,
+    const arma::imat & S
+) {
+  // Obtaining relevant constants
+  int P       = S.n_cols;
+  int nstates = S.n_rows;
+  
+  arma::vec ans(nstates);
+  ans.ones();
+  
+  for (int s=0; s<nstates; s++)
+    for (int p=0; p<P; p++)
+      ans.at(s) *= (S.at(s,p) == 0)? (1.0 - Pi) : Pi;
+  
+  return ans;
+}
+
 //' Reduces the peeling sequence so that only nodes that have something to contribute
 //' are included in the sequence.
 //' @noRd
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 IntegerVector reduce_pseq(
     const arma::ivec & pseq,
     const arma::mat  & A,

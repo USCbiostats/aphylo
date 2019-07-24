@@ -1,13 +1,23 @@
 #include <Rcpp.h>
 #include "pruner.hpp"
-#include "likelihood.hpp"
+// #include "likelihood.hpp"
 #include "TreeData.hpp" // TreeData definition
 using namespace Rcpp;
+
+// #define DEBUG_LIKELIHOOD
 
 void likelihood(
     pruner::sptr_treedata D,
     pruner::TreeIterator & n
 ) {
+  
+#ifdef DEBUG_LIKELIHOOD
+  printf("Entering likelihood at node %d with pruneseq:\n", *n);
+  pruner::v_uint xx = n.tree->get_postorder();
+  for (auto iter = xx.begin(); iter != xx.end(); ++iter)
+    printf("%i, ", *iter);
+  printf("\n");
+#endif
   
   if (n.is_leaf()) {
     
@@ -85,10 +95,21 @@ void likelihood(
 
 // Tree constructor ------------------------------------------------------------
 
-//' Pointer to `pruner`.
+//' Pointer to `pruner`
+//' 
+//' Creates an external pointer to an object of class `aphylo_pruner`. This is mostly
+//' used to compute the model's likelihood function faster by reusing underlying
+//' C++ class objects to store probability matrices and data. This is intended
+//' for internal use only
+//' 
 //' @param edgelist a List two integer vectors.
-//' @param A a list of length `N` (annotations).
 //' @param Ntype An integer vector of types of size `N`.
+//' @aliases aphylo_pruner
+//' 
+//' @details The underlying implementation of the pruning function is based on the
+//' pruner C++ library that implements Felsenstein's tree pruning algorithm.
+//' See ttps://github.com/USCbiostats/pruner.
+//' 
 //' @examples
 //' set.seed(1)
 //' x  <- raphylo(10)
@@ -102,19 +123,20 @@ void likelihood(
 //' # Computing loglike
 //' LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))
 //' 
-//' @export
-// [[Rcpp::export(name = "new_aphylo_pruner", rng = false)]]
+//' @name new_aphylo_pruner
+// [[Rcpp::export(name = "new_aphylo_pruner.", rng = false)]]
 SEXP new_aphylo_pruner(
     const std::vector< std::vector< unsigned int > > & edgelist,
     const std::vector< std::vector< unsigned int > > & A,
-    const std::vector< unsigned int >  & Ntype
+    const std::vector< unsigned int >  & Ntype,
+    unsigned int nannotated
 ) {
   
   // Initializing the tree
   uint res;
   Rcpp::XPtr< pruner::Tree > xptr(new pruner::Tree(edgelist[0], edgelist[1], res), true);
   
-  xptr->args = std::make_shared< pruner::TreeData >(A, Ntype);
+  xptr->args = std::make_shared< pruner::TreeData >(A, Ntype, nannotated);
   xptr->fun  = likelihood;
   
   xptr.attr("class") = "aphylo_pruner";
@@ -150,12 +172,15 @@ List LogLike_pruner(
       for (unsigned int j = 0u; j < p->args->nstates; ++j)
         Pr(i, j) = p->args->Pr[i][j];
     
-    return List::create(_["Pr"] = Pr, _["ll"] = wrap(p->args->ll));
+    return List::create(
+      _["Pr"] = List::create(Pr),
+      _["ll"] = wrap(p->args->ll)
+      );
   } else
     return List::create(_["ll"] = wrap(p->args->ll));
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 std::vector< std::vector< unsigned int > > Tree_get_offspring(const SEXP & tree_ptr) {
   
   Rcpp::XPtr< pruner::Tree > p(tree_ptr);
@@ -163,7 +188,7 @@ std::vector< std::vector< unsigned int > > Tree_get_offspring(const SEXP & tree_
   
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 std::vector< std::vector< unsigned int > > Tree_get_parents(const SEXP & tree_ptr) {
   
   Rcpp::XPtr< pruner::Tree > p(tree_ptr);
@@ -172,7 +197,7 @@ std::vector< std::vector< unsigned int > > Tree_get_parents(const SEXP & tree_pt
 }
 
 
-// [[Rcpp::export(name=".Nnode_aphylo_pruner")]]
+// [[Rcpp::export(name=".Nnode_aphylo_pruner", rng = false)]]
 unsigned int Tree_Nnode(const SEXP & tree_ptr, bool internal_only = true) {
   
   Rcpp::XPtr< pruner::Tree > p(tree_ptr);
@@ -186,7 +211,8 @@ unsigned int Tree_Nnode(const SEXP & tree_ptr, bool internal_only = true) {
 }
 
 //' @export
-// [[Rcpp::export(name="Ntip.aphylo_pruner")]]
+//' @rdname ape-methods
+// [[Rcpp::export(name="Ntip.aphylo_pruner", rng = false)]]
 unsigned int Tree_Ntip(const SEXP & phy) {
   
   Rcpp::XPtr< pruner::Tree > p(phy);
@@ -194,13 +220,39 @@ unsigned int Tree_Ntip(const SEXP & phy) {
   return p->n_tips();
 }
 
+
+//' @rdname ape-methods
 //' @export
-// [[Rcpp::export(name="Nann.aphylo_pruner")]]
+// [[Rcpp::export(name="Nannotated.aphylo_pruner", rng = false)]]
+unsigned int Tree_Nannotated(const SEXP & phy) {
+  
+  Rcpp::XPtr< pruner::Tree > p(phy);
+  
+  return p->args->nannotated;
+}
+
+//' @rdname ape-methods
+//' @export
+// [[Rcpp::export(name="Nann.aphylo_pruner", rng = false)]]
 unsigned int Tree_Nann(const SEXP & phy) {
   
   Rcpp::XPtr< pruner::Tree > p(phy);
   
   return p->args->nfuns;
+}
+
+
+// [[Rcpp::export]]
+std::vector< double > root_node_pr(
+  double Pi,
+  const std::vector< std::vector<unsigned int> > & S
+) {
+  
+  std::vector< double > pi_probs(S.size());
+  root_node_pr(pi_probs, Pi, S);
+  
+  return pi_probs;
+  
 }
 
 

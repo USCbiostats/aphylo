@@ -10,11 +10,14 @@ class Tree;
 class TreeIterator {
   
 private:
+  
   uint current_node;
   uint pos_in_pruning_sequence;
-  Tree* tree;
+  
   friend class Tree;
 public:
+  
+  Tree* tree;
   
   ~TreeIterator() {};
   TreeIterator() {};

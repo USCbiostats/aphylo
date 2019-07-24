@@ -7,14 +7,16 @@ test_that("x ~ mu", {
   # Setting the default with no multicore
   pars <- aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
   pars$nsteps  <- 2e3
-  pars$burnin  <- 1e3
+  pars$burnin  <- 0L
   pars$nchains <- 1L
+  pars$thin    <- 1L
   pars$conv_checker <- NULL
   pars <- c(pars, list(conv_checker = NULL))
 
   # Data generating process
   set.seed(7223)
-  x <- rdrop_annotations(raphylo(40), .6)
+  # x <- rdrop_annotations(raphylo(40), .6)
+  x <- raphylo(40)
 
   mypriors <- function(z) dbeta(z, 2, 10)
 
@@ -30,7 +32,7 @@ test_that("x ~ mu", {
       eta  = c(.5, .5),
       Pi   = p["mu0"]/(p["mu0"] + p["mu1"]),
       verb_ans = FALSE 
-      )$ll + sum(log(mypriors(p))) + log(2^prod(dim(x$tip.annotation)))
+      )$ll + sum(log(mypriors(p))) + + 0.693147180559945 * sum(Nann(x)) * sum(Nannotated(x))
 
     if (is.infinite(ans))
       ans <- .Machine$double.xmax * sign(ans) * 1e-10
@@ -40,7 +42,7 @@ test_that("x ~ mu", {
 
   # Running the raw MCMC
   set.seed(1)
-  
+  x$reduced_pseq <- x$pseq
   ans1 <- suppressWarnings({
     do.call(
       fmcmc::MCMC, c(

@@ -407,13 +407,37 @@ aphylo_mcmc <- function(
   if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
   
+  if ("multicore" %in% names(control) && control$multicore) {
+    
+    # Initalizing the cluster
+    cl_object <- parallel::makePSOCKcluster(control$nchains)
+    on.exit(parallel::stopCluster(cl_object))
+    
+    # Setting up the package
+    parallel::clusterEvalQ(cl_object, library(aphylo))
+    parallel::clusterExport(cl_object, c("model", "priors"))
+    parallel::clusterEvalQ(cl_object, {
+      dat0 <- aphylo::new_aphylo_pruner(model$dat)
+    })
+    
+    # Appending to the set of controls
+    control$cl <- cl_object
+    
+  } else {
+    
+    dat0 <- new_aphylo_pruner(model$dat)
+    
+  }
+  # dat0 <- model$dat
+    
+  
   # Running the MCMC
   ans <- do.call(
     fmcmc::MCMC, 
     c(
       list(
         fun      = model$fun,
-        dat      = model$dat,
+        dat      = dat0,
         priors   = priors,
         verb_ans = FALSE,
         initial  = model$params
@@ -431,7 +455,7 @@ aphylo_mcmc <- function(
   
   ll <- model$fun(
     p        = par,
-    dat      = model$dat,
+    dat      = dat0,
     priors   = priors,
     verb_ans = FALSE
   )

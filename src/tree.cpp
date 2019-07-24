@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 IntegerMatrix fast_table(
     const arma::ivec & x
   ) {
@@ -39,7 +39,7 @@ IntegerMatrix fast_table(
   return ans;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 arma::uvec fast_table_using_labels(
     const arma::ivec & x,
     const arma::ivec & ids
@@ -77,7 +77,7 @@ arma::uvec fast_table_using_labels(
 
 typedef std::vector< std::vector<int> > stdintvec;
 
-// [[Rcpp::export(name = ".list_offspring")]]
+// [[Rcpp::export(name = ".list_offspring", rng=false)]]
 ListOf<IntegerVector> list_offspring(IntegerMatrix E, int n) {
   stdintvec ans(n);
   

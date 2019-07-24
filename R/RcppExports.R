@@ -23,10 +23,21 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
-#' Pointer to `pruner`.
+#' Pointer to `pruner`
+#' 
+#' Creates an external pointer to an object of class `aphylo_pruner`. This is mostly
+#' used to compute the model's likelihood function faster by reusing underlying
+#' C++ class objects to store probability matrices and data. This is intended
+#' for internal use only
+#' 
 #' @param edgelist a List two integer vectors.
-#' @param A a list of length `N` (annotations).
 #' @param Ntype An integer vector of types of size `N`.
+#' @aliases aphylo_pruner
+#' 
+#' @details The underlying implementation of the pruning function is based on the
+#' pruner C++ library that implements Felsenstein's tree pruning algorithm.
+#' See ttps://github.com/USCbiostats/pruner.
+#' 
 #' @examples
 #' set.seed(1)
 #' x  <- raphylo(10)
@@ -40,9 +51,9 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
 #' # Computing loglike
 #' LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))
 #' 
-#' @export
-new_aphylo_pruner <- function(edgelist, A, Ntype) {
-    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, Ntype)
+#' @name new_aphylo_pruner
+new_aphylo_pruner. <- function(edgelist, A, Ntype, nannotated) {
+    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, Ntype, nannotated)
 }
 
 .LogLike_pruner <- function(tree_ptr, mu, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
@@ -62,13 +73,25 @@ Tree_get_parents <- function(tree_ptr) {
 }
 
 #' @export
+#' @rdname ape-methods
 Ntip.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Ntip`, phy)
 }
 
+#' @rdname ape-methods
+#' @export
+Nannotated.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Nannotated`, phy)
+}
+
+#' @rdname ape-methods
 #' @export
 Nann.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Nann`, phy)
+}
+
+root_node_pr <- function(Pi, S) {
+    .Call(`_aphylo_root_node_pr`, Pi, S)
 }
 
 approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
@@ -91,41 +114,15 @@ prob_mat <- function(pr) {
     .Call(`_aphylo_prob_mat`, pr)
 }
 
+root_node_prob <- function(Pi, S) {
+    .Call(`_aphylo_root_node_prob`, Pi, S)
+}
+
 #' Reduces the peeling sequence so that only nodes that have something to contribute
 #' are included in the sequence.
 #' @noRd
 reduce_pseq <- function(pseq, A, offspring) {
     .Call(`_aphylo_reduce_pseq`, pseq, A, offspring)
-}
-
-root_node_prob <- function(Pi, S) {
-    .Call(`_aphylo_root_node_prob`, Pi, S)
-}
-
-#' State probabilities
-#' 
-#' Compute the state probabilities for each node in the tree using the peeling
-#' algorithm. This function is the horse-power of the function \code{\link{LogLike}}
-#' so it is not intended to be used directly.
-#' 
-#' @template parameters
-#' @templateVar .annotations 1
-#' @templateVar .mu 1
-#' @templateVar .psi 1
-#' @templateVar .eta 1
-#' @templateVar .S 1
-#' @templateVar .offspring 1
-#' @param Pr A matrix.
-#' 
-#' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
-#' probabilities for each node.
-#' @noRd
-probabilities <- function(annotations, pseq, psi, mu, eta, S, offspring) {
-    .Call(`_aphylo_probabilities`, annotations, pseq, psi, mu, eta, S, offspring)
-}
-
-.LogLike <- function(annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans, check_dims)
 }
 
 .posterior_prob <- function(Pr_postorder, mu, Pi, pseq, offspring) {

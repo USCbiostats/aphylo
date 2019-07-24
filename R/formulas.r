@@ -46,19 +46,14 @@ aphylo_call <- function(params, priors) {
       fun = function(p, dat, priors, verb_ans = FALSE) {
         
         # Arguments
-        args <- list(
+        ans <- LogLike(
           tree = dat,
           psi  = c(0, 0),
           mu   = c(p["mu0"], p["mu1"]),
           eta  = c(.5, .5),
-          Pi   = p["mu0"]/(p["mu0"] + p["mu1"])
+          Pi   = p["mu0"]/(p["mu0"] + p["mu1"]),
+          verb_ans = verb_ans
         )
-        
-        # Call
-        ans <- do.call(
-          what = aphylo::LogLike,
-          args = args
-          )
         
         # Correcting for eta
         ans$ll <- ans$ll +
@@ -122,7 +117,7 @@ eta <- function(..., env) {
   env$fixed[c("eta0", "eta1")] <- FALSE
   
   # Removing the eta correction
-  body(env$fun)[[4]] <- NULL
+  body(env$fun)[[3]] <- NULL
   
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))

@@ -54,6 +54,6 @@ number of annotated leaves (\code{Nannotated}), number of unnanotated leaves
 (\code{Nunannotated}), and number of trees (\code{Ntrees}).
 }
 \seealso{
-Other information: \code{\link{ape-methods}}
+Other information: \code{\link{Ntip.aphylo_pruner}}
 }
 \concept{information}

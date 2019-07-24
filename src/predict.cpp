@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export(name = ".posterior_prob")]]
+// [[Rcpp::export(name = ".posterior_prob", rng=false)]]
 List posterior_prob(
     const arma::mat  & Pr_postorder,
     const arma::vec  & mu,

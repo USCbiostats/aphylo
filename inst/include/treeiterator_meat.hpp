@@ -68,11 +68,13 @@ inline int TreeIterator::operator--() {return this->up();}
 
 inline void TreeIterator::top() {
   this->current_node = this->tree->POSTORDER[this->tree->POSTORDER.size() - 1u];
+  this->pos_in_pruning_sequence = this->tree->POSTORDER.size() - 1u;
   return;
 }
 
 inline void TreeIterator::bottom() {
   this->current_node = this->tree->POSTORDER[0u];
+  this->pos_in_pruning_sequence = 0;
   return;
 }
 

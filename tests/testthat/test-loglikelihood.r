@@ -16,9 +16,17 @@ errtol <- 1e-15
 O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = faketree)
 
 S  <- states(2)
-Pr <- aphylo:::probabilities(
-  with(O, rbind(tip.annotation, node.annotation)),
-  O$pseq, psi, mu, eta, S, O$offspring)
+Pr <- LogLike(new_aphylo_pruner(O), psi = psi, mu =mu,eta=eta, Pi = Pi)$Pr[[1]]
+  
+  # aphylo:::probabilities(
+  # with(O, rbind(tip.annotation, node.annotation)),
+  # O$pseq, psi, mu, eta, S, O$offspring)
+
+# Pr1 <- LogLike(O, psi = psi, mu =mu,eta=eta, Pi = Pi)
+# Pr2 <- LogLike(new_aphylo_pruner(O), psi = psi, mu =mu,eta=eta, Pi = Pi)
+# 
+# Pr2$Pr - Pr1$Pr[[1]]
+
 
 # Checking Leaf Probabilities --------------------------------------------------
 test_that("Leaf Probabilities", {
@@ -344,7 +352,6 @@ test_that("Leaf Probabilities", {
   expect_equal((exp(ll0)/exp(ll1))^(1/(2*4)), 0.5, tol = errtol)
   
 })
-
 
 # ------------------------------------------------------------------------------
 test_that("Joint loglike for multiAphylo", {

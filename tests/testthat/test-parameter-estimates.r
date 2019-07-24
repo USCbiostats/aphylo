@@ -39,7 +39,10 @@ test_that("MCMC", {
   ans1 <- suppressWarnings(
     aphylo_mcmc(dat ~ mu + psi + eta + Pi, params = ans0$par,
                 priors = function(p) 1,
-                control = list(nsteps = 1e4, burnin=5e3, thin=20)
+                control = list(
+                  nsteps = 1e4, burnin=5e3, thin=20,
+                  conv_checker = NULL, nchains=1
+                  )
                 )
   )
   
@@ -68,7 +71,8 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
                 priors = function(x) dbeta(x, 2, 10),
                 control = list(
                   nsteps = 4e4, burnin=1e4, nchains=2,
-                  kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
+                  kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05),
+                  conv_checker = NULL
                   ),
                 check_informative = FALSE
                 )
@@ -81,7 +85,8 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
       priors = function(x) dbeta(x, 2, 20),
       control = list(
         nsteps = 4e4, burnin=1e4, nchains=2,
-        kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05)
+        kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05),
+        conv_checker = NULL
         ),
       check_informative = FALSE
       )

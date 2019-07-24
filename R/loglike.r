@@ -60,7 +60,7 @@ LogLike.aphylo_pruner <- function(
   check_dims  = TRUE
 ) {
   
-  ans <- .LogLike_pruner(
+  .LogLike_pruner(
     tree_ptr = tree,
     mu       = mu,
     psi      = psi,
@@ -68,8 +68,6 @@ LogLike.aphylo_pruner <- function(
     Pi       = Pi,
     verb     = verb_ans
   )
-  
-  ans
   
 }
 #' @export
@@ -84,25 +82,15 @@ LogLike.aphylo <- function(
   check_dims  = TRUE
 ) {
   
-  ans <- .LogLike(
-    annotations = list(with(tree, rbind(tip.annotation, node.annotation))),
-    offspring   = list(tree$offspring),
-    pseq        = list(tree$reduced_pseq),
-    psi         = psi,
-    mu          = mu,
-    eta         = eta,
-    Pi          = Pi,
-    verb_ans    = verb_ans,
-    check_dims  = check_dims
+  tree_ptr <- new_aphylo_pruner(tree)
+  .LogLike_pruner(
+    tree_ptr = tree_ptr,
+    mu       = mu,
+    psi      = psi,
+    eta      = eta,
+    Pi       = Pi,
+    verb     = verb_ans
   )
-  
-  if (verb_ans)
-    dim(ans$Pr[[1]]) <- c(
-      ape::Nnode(tree, internal.only = FALSE),
-      length(ans$Pr[[1]]) %/% ape::Nnode(tree, internal.only = FALSE)
-    )
-  
-  ans
   
 }
 
@@ -118,29 +106,23 @@ LogLike.multiAphylo <- function(
   check_dims  = TRUE
 ) {
  
-  annotations. <- lapply(tree, function(t.) with(t., rbind(tip.annotation, node.annotation)))
-  offspring.   <- lapply(tree, "[[", "offspring")
-  pseq.        <- lapply(tree, "[[", "reduced_pseq")
-   
-  ans <- .LogLike(
-    annotations = annotations.,
-    offspring   = offspring.,
-    pseq        = pseq.,
-    psi         = psi,
-    mu          = mu,
-    eta         = eta,
-    Pi          = Pi,
-    verb_ans    = verb_ans,
-    check_dims  = check_dims
-  )
-  
-  if (verb_ans)
-    for (i in seq_along(ans$Pr))
-    dim(ans$Pr[[i]]) <- c(
-      ape::Nnode(tree[[i]], internal.only = FALSE),
-      length(ans$Pr[[i]]) %/% ape::Nnode(tree[[i]], internal.only = FALSE)
-    )
-  
-  ans
+  res <- list(ll = 0.0, Pr = NULL)
+  for (i in seq_along(tree)) {
+    
+    tmp <- LogLike(
+      tree[[i]],
+      mu   = mu,
+      psi  = psi,
+      eta  = eta,
+      Pi   = Pi,
+      verb = verb_ans
+      )
+    
+    res$ll <- res$ll + tmp$ll
+    if (verb_ans)
+      res$Pr <- c(res$Pr, tmp$Pr)
+    
+  }
+  res
   
 }
