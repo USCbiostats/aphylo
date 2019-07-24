@@ -44,13 +44,8 @@ See ttps://github.com/USCbiostats/pruner.
 }
 \examples{
 set.seed(1)
-x  <- raphylo(10)
-el <- x$tree$edge - 1L
-el <- list(el[,1], el[,2])
-A  <- lapply(1:19, function(i) with(x, rbind(tip.annotation, node.annotation))[i,]) 
-nt <- integer(19)
-
-pruner <- new_aphylo_pruner(el, A, nt)
+x  <- raphylo(10) 
+pruner <- new_aphylo_pruner(x)
 
 # Computing loglike
 LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))

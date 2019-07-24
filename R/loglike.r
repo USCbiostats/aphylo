@@ -23,8 +23,9 @@
 #' \eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
 #' \eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
 #' respectively.}
-#' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
-#' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+#' \item{\code{mu_d}, \code{mu_s}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
+#' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.
+#' The subscript d denotes duplication nodes and s speciation node.}
 #' \item{\code{eta}: A vector of length 2 with \eqn{\eta_0}{eta[0]} and
 #' \eqn{\eta_1}{eta[1]} which are the annotation bias probabilities.}
 #' \item{\code{Pi}: A numeric scalar which for which equals the probability
@@ -41,7 +42,8 @@
 LogLike <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
@@ -53,7 +55,8 @@ LogLike <- function(
 LogLike.aphylo_pruner <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
@@ -62,7 +65,8 @@ LogLike.aphylo_pruner <- function(
   
   .LogLike_pruner(
     tree_ptr = tree,
-    mu       = mu,
+    mu_d      = mu_d,
+    mu_s      = mu_s,
     psi      = psi,
     eta      = eta,
     Pi       = Pi,
@@ -75,7 +79,8 @@ LogLike.aphylo_pruner <- function(
 LogLike.aphylo <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
@@ -85,7 +90,8 @@ LogLike.aphylo <- function(
   tree_ptr <- new_aphylo_pruner(tree)
   .LogLike_pruner(
     tree_ptr = tree_ptr,
-    mu       = mu,
+    mu_d      = mu_d,
+    mu_s      = mu_s,
     psi      = psi,
     eta      = eta,
     Pi       = Pi,
@@ -99,7 +105,8 @@ LogLike.aphylo <- function(
 LogLike.multiAphylo <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
@@ -111,7 +118,8 @@ LogLike.multiAphylo <- function(
     
     tmp <- LogLike(
       tree[[i]],
-      mu   = mu,
+      mu_d   = mu_d,
+      mu_s   = mu_s,
       psi  = psi,
       eta  = eta,
       Pi   = Pi,
@@ -126,3 +134,4 @@ LogLike.multiAphylo <- function(
   res
   
 }
+

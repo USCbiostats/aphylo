@@ -97,6 +97,7 @@ public:
   uint n;
   uint nfuns;
   uint nannotated;
+  double prop_type_d;
   
   // Annotations
   const pruner::vv_uint A;
@@ -108,10 +109,14 @@ public:
   double ll;
   
   // Model parameters
-  vv_dbl PSI, MU;
+  vv_dbl PSI,
+    // Duplication and Speciation mu
+    MU_d, MU_s;
+  std::vector< vv_dbl* > MU;
   v_dbl eta, Pi;  
   
-  void  set_mu(const v_dbl & mu_) {transition_mat(mu_, this->MU);return;}
+  void set_mu_d(const v_dbl & mu_d_) {transition_mat(mu_d_, this->MU_d);return;}
+  void set_mu_s(const v_dbl & mu_s_) {transition_mat(mu_s_, this->MU_s);return;}
   void set_psi(const v_dbl & psi_) {transition_mat(psi_, this->PSI);return;}
   void set_eta(const v_dbl & eta_) {this->eta = eta_;return;}
   void  set_pi(double pi_) {root_node_pr(this->Pi, pi_, states);return;}
@@ -136,12 +141,32 @@ public:
     eta.resize(2u, 0.0);
     Pi.resize(nstates, 0.0);
     
-    MU.resize(2u);
-    MU[0].resize(2u);
-    MU[1].resize(2u);
+    MU_d.resize(2u);
+    MU_d[0].resize(2u);
+    MU_d[1].resize(2u);
+    
+    MU_s.resize(2u);
+    MU_s[0].resize(2u);
+    MU_s[1].resize(2u);
+    
+    MU[0] = &MU_d;
+    MU[1] = &MU_s;
+    
     PSI.resize(2u);
     PSI[0].resize(2u);
     PSI[1].resize(2u);
+    
+    // Counting the proportion of type 0
+    double increments = 1.0/this->n;
+    this->prop_type_d = 0.0;
+    for (auto iter = Ntype.begin(); iter != Ntype.end(); ++iter) {
+      
+      if (*iter == 0u) {
+        this->prop_type_d =+ increments;
+      } else if (*iter != 1u)
+        stop("Values in the type of node should be either 0 or 1.");
+      
+    }
     
     ll = 0.0;
     

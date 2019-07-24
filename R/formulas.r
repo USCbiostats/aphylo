@@ -16,24 +16,27 @@
 #' x <- raphylo(10)
 #' 
 #' # Baseline model
-#' aphylo_formula(x ~ mu)
+#' aphylo_formula(x ~ mud)
 #' 
 #' # Mislabeling probabilities
-#' aphylo_formula(x ~ mu + psi)
+#' aphylo_formula(x ~ mud + psi)
 #' 
 #' # Mislabeling probabilities and etas(fixed)
-#' aphylo_formula(x ~ mu + psi + eta(0, 1))
+#' aphylo_formula(x ~ mud + psi + eta(0, 1))
 #' 
 #' # Mislabeling probabilities and Pi 
-#' aphylo_formula(x ~ mu + psi + Pi)
+#' aphylo_formula(x ~ mud + psi + Pi)
 #' 
 #' @name aphylo-model
 #' @aliases aphylo-formula
 NULL
 
-APHYLO_PARAM_NAMES <- c("psi0", "psi1", "mu0", "mu1", "eta0", "eta1", "Pi")
+APHYLO_PARAM_NAMES <- c(
+  "psi0", "psi1", "mu_d0", "mu_d1", "mu_s0", "mu_s1",
+  "eta0", "eta1", "Pi"
+  )
 APHYLO_PARAM_DEFAULT <- structure(
-  .Data = c(.1, .1, .1, .1, .9, .9, .1),
+  .Data = c(.1, .1, .9, .9, .1, .1, .9, .9, .1),
   names = APHYLO_PARAM_NAMES
 )
 
@@ -49,9 +52,10 @@ aphylo_call <- function(params, priors) {
         ans <- LogLike(
           tree = dat,
           psi  = c(0, 0),
-          mu   = c(p["mu0"], p["mu1"]),
+          mu_d = c(p["mu_d0"], p["mu_d1"]),
+          mu_s = c(p["mu_s0"], p["mu_s1"]),
           eta  = c(.5, .5),
-          Pi   = p["mu0"]/(p["mu0"] + p["mu1"]),
+          Pi   = -1, # Negative default means compute it using the approx
           verb_ans = verb_ans
         )
         
@@ -158,15 +162,27 @@ Pi <- function(..., env) {
 }
 
 #' @rdname aphylo-model
-mu <- function(..., env) {
+mu_d <- function(..., env) {
 
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))
   for (f in dots)
-    env$fixed[paste0("mu", f)] <- TRUE
+    env$fixed[paste0("mu_s", f)] <- TRUE
   
   invisible()
 }
+
+#' @rdname aphylo-model
+mu_s <- function(..., env) {
+  
+  # Updating
+  dots <- validate_dots_in_term(..., expected = c(0,1))
+  for (f in dots)
+    env$fixed[paste0("mu_s", f)] <- TRUE
+  
+  invisible()
+}
+
 
 #' Basic validations:
 #' 1. Are all terms valid terms?
@@ -201,8 +217,8 @@ validate_aphylo_formula <- function(fm) {
   }
   
   # Is mu present?
-  if (!("mu" %in% term_names))
-    fm <- stats::update.formula(fm, ~. + mu)
+  if (!("mu_d" %in% term_names))
+    fm <- stats::update.formula(fm, ~. + mu_d)
   
   fm
   

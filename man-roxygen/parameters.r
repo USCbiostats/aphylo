@@ -3,7 +3,7 @@
 #' <%=ifelse(exists(".annotations"),    "@param annotations Matrix of size \\eqn{n\\times P}{n*P}. Annotation data, each column is a functional annotation coded as \\code{1} if the node has the function, \\code{0} if the node doesn't has the function and \\code{9} or \\code{NA} otherwise (no information).", "") %>
 #' <%=ifelse(exists(".tip.annotation"), "@param tip.annotation,node.annotation Annotation data. See [aphylo-class].", "") %>
 #' <%=ifelse(exists(".psi"),         "@param psi Numeric vector of length 2. Misclasification probabilities. (see \\code{\\link{LogLike}}).", "") %>
-#' <%=ifelse(exists(".mu"),          "@param mu Numeric vector of length 2. Gain/loss probabilities (see \\code{\\link{LogLike}}).", "") %>
+#' <%=ifelse(exists(".mu"),          "@param mu_d,mu_s Numeric vector of length 2. Gain/loss probabilities (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists(".eta"),         "@param eta Numeric vector of length 2. Annotation bias probabilities (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists(".Pi"),          "@param Pi Numeric scalar. Root node probability of having the function (see \\code{\\link{LogLike}}).", "") %>
 #' <%=ifelse(exists(".offspring"),   "@param offspring List of length \\eqn{n}. Offspring of each node (see \\code{\\link{new_aphylo}}).", "") %>

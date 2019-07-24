@@ -64,7 +64,7 @@ void likelihood(
           
           s_n_sum = 1.0;
           for (p_n = 0u; p_n < D->nfuns; ++p_n)
-            s_n_sum *= D->MU[D->states[s][p_n]][D->states[s_n][p_n]];
+            s_n_sum *= D->MU[D->states[s][p_n]]->at(D->states[s_n][p_n]);
           
           // Multiplying by off's probability
           offspring_ll += (s_n_sum) * D->Pr[*o_n][s_n];
@@ -112,13 +112,8 @@ void likelihood(
 //' 
 //' @examples
 //' set.seed(1)
-//' x  <- raphylo(10)
-//' el <- x$tree$edge - 1L
-//' el <- list(el[,1], el[,2])
-//' A  <- lapply(1:19, function(i) with(x, rbind(tip.annotation, node.annotation))[i,]) 
-//' nt <- integer(19)
-//' 
-//' pruner <- new_aphylo_pruner(el, A, nt)
+//' x  <- raphylo(10) 
+//' pruner <- new_aphylo_pruner(x)
 //' 
 //' # Computing loglike
 //' LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))
@@ -149,7 +144,8 @@ SEXP new_aphylo_pruner(
 // [[Rcpp::export(name = ".LogLike_pruner", rng = false)]]
 List LogLike_pruner(
     SEXP tree_ptr,
-    const std::vector< double > & mu,
+    const std::vector< double > & mu_d,
+    const std::vector< double > & mu_s,
     const std::vector< double > & psi,
     const std::vector< double > & eta,
     const double & Pi,
@@ -159,10 +155,21 @@ List LogLike_pruner(
   Rcpp::XPtr< pruner::Tree > p(tree_ptr);
   
   // Setting the parameters
-  p->args->set_mu(mu);
+  p->args->set_mu_d(mu_d);
+  p->args->set_mu_s(mu_s);
   p->args->set_psi(psi);
-  p->args->set_pi(Pi);
+  
   p->args->set_eta(eta);
+  
+  // In the case of Pi, if it is negative, then it means that we are using
+  // the stationary value of the transition probabilities.
+  if (Pi < 0.0) {
+    p->args->set_pi(
+        (1 - p->args->prop_type_d)* mu_s[0]/(mu_s[0] + mu_s[1]) +
+          p->args->prop_type_d * mu_d[0]/(mu_d[0] + mu_d[1])
+    );
+  } else 
+    p->args->set_pi(Pi);
   
   p->prune_postorder();
   
