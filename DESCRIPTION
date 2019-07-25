@@ -28,7 +28,8 @@ Suggests:
     covr,
     testthat,
     rncl,
-    knitr
+    knitr,
+    AUC
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.1.1

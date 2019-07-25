@@ -12,7 +12,7 @@ r:
   - release
   - oldrel
 
-bioc_packages: PANTHER.db
+# bioc_packages: PANTHER.db
 
 os:
   - linux
