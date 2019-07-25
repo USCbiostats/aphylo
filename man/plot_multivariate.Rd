@@ -50,7 +50,7 @@ plot_multivariate(
   function(...) {
     ans$fun(unlist(list(...)), priors = ans$priors, dat = ans$dat, verb_ans = FALSE)
   },
-  sets = matrix(c("mu0", "mu1", "psi0", "psi1"), ncol=2),
+  sets = matrix(c("mu_d0", "mu_d1", "psi0", "psi1"), ncol=2),
   params = ans$par
 )
 }

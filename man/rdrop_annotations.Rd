@@ -32,7 +32,7 @@ a 0 with respecto to a 1.
 # The following tree has roughtly the same proportion of 0s and 1s
 # and 0 mislabeling.
 set.seed(1)
-x <- raphylo(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
+x <- raphylo(200, Pi=.5, mu_d=c(.5,.5), psi=c(0,0))
 summary(x)
 
 # Dropping half of the annotations

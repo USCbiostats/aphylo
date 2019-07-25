@@ -87,6 +87,7 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' 
 #' @template parameters
 #' @templateVar .tree 1
+#' @templateVar .types 1
 #' @templateVar .tip.annotation 1
 #' 
 #' @return A list of class `aphylo` with the following elements:

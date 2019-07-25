@@ -54,15 +54,19 @@ set.seed(12)
 x <- raphylo(10)
 
 # Baseline model
-aphylo_formula(x ~ mud)
+aphylo_formula(x ~ mu_d)
 
 # Mislabeling probabilities
-aphylo_formula(x ~ mud + psi)
+aphylo_formula(x ~ mu_d + psi)
+
+# Different probabilities for speciation and duplication node
+# (only works if you have both types)
+aphylo_formula(x ~ mu_d + mu_s + psi)
 
 # Mislabeling probabilities and etas(fixed)
-aphylo_formula(x ~ mud + psi + eta(0, 1))
+aphylo_formula(x ~ mu_d + psi + eta(0, 1))
 
 # Mislabeling probabilities and Pi 
-aphylo_formula(x ~ mud + psi + Pi)
+aphylo_formula(x ~ mu_d + psi + Pi)
 
 }

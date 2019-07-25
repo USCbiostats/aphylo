@@ -44,7 +44,7 @@ predict.aphylo_estimates <- function(object, ...) {
 #' @examples 
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(1312)
-#' ap  <- raphylo(10, P = 1, Pi=.2, mu=c(.05,.02))
+#' ap  <- raphylo(10, P = 1, Pi=.2, mu_d=c(.05,.02))
 #' ans <- aphylo_mcmc(
 #'   ap ~ mu_d + eta + psi + Pi,
 #'   control = list(nsteps=2e4, thin=100),

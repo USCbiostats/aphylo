@@ -68,6 +68,7 @@ sim_tree <- function(n, edge.length = NULL) {
 #' @templateVar .mu 1
 #' @templateVar .eta 1
 #' @templateVar .Pi 1
+#' @templateVar .types 1
 #' @param P Integer scalar. Number of functions to simulate.
 #' 
 #' @details
@@ -89,10 +90,11 @@ sim_tree <- function(n, edge.length = NULL) {
 #' # Simulating
 #' ans <- sim_fun_on_tree(
 #'   newtree,
-#'   psi = c(.001, .05),
-#'   mu = c(.01, .05),
-#'   Pi = c(.5, .5),
-#'   eta = c(1, 1)
+#'   psi  = c(.01, .05),
+#'   mu_d = c(.90, .80),
+#'   mu_s = c(.1, .05),
+#'   Pi   = .5,
+#'   eta  = c(1, 1)
 #' )
 #' 
 #' # Tabulating results
@@ -227,6 +229,7 @@ sim_fun_on_tree <- function(
 #' @templateVar .mu 1
 #' @templateVar .eta 1
 #' @templateVar .Pi 1
+#' @templateVar .types 1
 #' @param informative,maxtries Passed to [sim_fun_on_tree].
 #' @return An object of class [aphylo]
 #' @family Simulation Functions 
@@ -264,8 +267,7 @@ raphylo <- function(
     
     if (is.null(types))
       types <- tree$types
-    
-    
+    tree <- as.phylo(tree)
     
   } else {
     
@@ -381,7 +383,7 @@ mislabel <- function(atree, psi) {
 #' # The following tree has roughtly the same proportion of 0s and 1s
 #' # and 0 mislabeling.
 #' set.seed(1)
-#' x <- raphylo(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
+#' x <- raphylo(200, Pi=.5, mu_d=c(.5,.5), psi=c(0,0))
 #' summary(x)
 #' 
 #' # Dropping half of the annotations

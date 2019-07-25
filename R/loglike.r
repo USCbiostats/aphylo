@@ -118,12 +118,12 @@ LogLike.multiAphylo <- function(
     
     tmp <- LogLike(
       tree[[i]],
-      mu_d   = mu_d,
-      mu_s   = mu_s,
-      psi  = psi,
-      eta  = eta,
-      Pi   = Pi,
-      verb = verb_ans
+      mu_d     = mu_d,
+      mu_s     = mu_s,
+      psi      = psi,
+      eta      = eta,
+      Pi       = Pi,
+      verb_ans = verb_ans
       )
     
     res$ll <- res$ll + tmp$ll

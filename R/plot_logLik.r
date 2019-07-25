@@ -12,7 +12,7 @@
 #' plot_logLik(O)
 #' 
 #' # No psi parameter
-#' plot_logLik(O ~ mu + Pi + eta)
+#' plot_logLik(O ~ mu_d + Pi + eta)
 #' 
 #' @export
 
@@ -65,7 +65,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
   if (missing(sets)) {
     
     sets <- NULL
-    for (p in c("psi", "mu_d", "mu_s", "eta"))
+    for (p in c("psi", "mu_d", "eta"))
       if (any(grepl(p, names(x$par))))
         sets <- cbind(sets, paste0(p, 0:1))
 
@@ -158,11 +158,11 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
   
   # For later on
   # pmat <- plotfun(
-  #   MU,
-  #   MU,
+  #   mu_d,
+  #   mu_d,
   #   mu_z,
-  #   xlab = expression(mu[0]),
-  #   ylab = expression(mu[1]),
+  #   xlab = expression(mu_d[0]),
+  #   ylab = expression(mu_d[1]),
   #   main = bquote(psi[0] == .(spsi[1]) ~ psi[1] == .(spsi[2]) ~ and ~ pi == .(sPi)),
   #   theta = theta, shade = shade, border = border, phi = phi, scale = scale,
   #   ...
@@ -202,7 +202,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
 #'   function(...) {
 #'     ans$fun(unlist(list(...)), priors = ans$priors, dat = ans$dat, verb_ans = FALSE)
 #'   },
-#'   sets = matrix(c("mu0", "mu1", "psi0", "psi1"), ncol=2),
+#'   sets = matrix(c("mu_d0", "mu_d1", "psi0", "psi1"), ncol=2),
 #'   params = ans$par
 #' )
 plot_multivariate <- function(

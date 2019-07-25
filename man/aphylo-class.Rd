@@ -12,6 +12,8 @@ new_aphylo(tip.annotation, tree, types = NULL, node.annotation = NULL)
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
 
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
+
+\item{types}{An integer vector with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
