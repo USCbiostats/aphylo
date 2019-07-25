@@ -22,11 +22,12 @@ void likelihood(
   if (n.is_leaf()) {
     
     // Iterating through the states
-    for (uint s = 0u; s < D->states.size(); ++s) {
+    pruner::uint s, p;
+    for (s = 0u; s < D->states.size(); ++s) {
       
       // Throught the functions
       D->Pr[*n][s] = 1.0; // Initializing
-      for (uint p = 0u; p < D->nfuns; ++p) {
+      for (p = 0u; p < D->nfuns; ++p) {
         
         // ETA PARAMETER
         if (D->A[*n][p] == 9u) {
@@ -51,11 +52,11 @@ void likelihood(
     D->MU[1] = &(D->MU_s);
     
     std::vector< unsigned int >::const_iterator o_n;
-    uint s_n, p_n;
+    pruner::uint s_n, p_n, s;
     double offspring_ll, s_n_sum;
     
     // Looping through states
-    for (uint s = 0u; s < D->nstates; ++s) {
+    for (s = 0u; s < D->nstates; ++s) {
       
       // Now through offspring
       D->Pr[*n][s] = 1.0;
@@ -87,7 +88,7 @@ void likelihood(
     // Computing the joint likelihood
     if (*n == n.back()) {
       D->ll = 0.0;
-      for (uint s = 0; s < D->nstates; ++s) 
+      for (s = 0; s < D->nstates; ++s) 
         D->ll += D->Pi[s] * D->Pr[*n][s];
       D->ll = log(D->ll);
     }
@@ -110,7 +111,7 @@ SEXP new_aphylo_pruner(
 ) {
   
   // Initializing the tree
-  uint res;
+  pruner::uint res;
   Rcpp::XPtr< pruner::Tree > xptr(new pruner::Tree(edgelist[0], edgelist[1], res), true);
   
   xptr->args = std::make_shared< pruner::TreeData >(A, types, nannotated);

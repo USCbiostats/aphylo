@@ -25,7 +25,7 @@ inline std::vector< std::vector< unsigned int > > states_mat(
   std::vector< std::vector< unsigned int > > ans = new_vector_array(nstates, P, 0u);
   
   // Go through states
-  for (uint i = 0u; i < nstates; ++i) {
+  for (pruner::uint i = 0u; i < nstates; ++i) {
     pruner::uint x = i;
     
     // Go through functions
@@ -75,9 +75,9 @@ inline void root_node_pr(
     const std::vector< std::vector< unsigned int > > & S
 ) {
   
-  for (uint s = 0u; s < S.size(); ++s) {
+  for (pruner::uint s = 0u; s < S.size(); ++s) {
     Pr_root[s] = 1.0;
-    for (uint p = 0u; p < S[0].size(); ++p)
+    for (pruner::uint p = 0u; p < S[0].size(); ++p)
       Pr_root[s] *= (S[s][p] == 0u)? (1.0 - pi) : pi;
   }
   
@@ -113,7 +113,7 @@ public:
     // Duplication and Speciation mu
     MU_d, MU_s;
   std::vector< pruner::vv_dbl* > MU;
-  v_dbl eta, Pi;  
+  pruner::v_dbl eta, Pi;  
   
   void set_mu_d(const pruner::v_dbl & mu_d_) {transition_mat(mu_d_, this->MU_d);return;}
   void set_mu_s(const pruner::v_dbl & mu_s_) {transition_mat(mu_s_, this->MU_s);return;}
