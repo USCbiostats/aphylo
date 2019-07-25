@@ -6,4 +6,4 @@ CXX_STD = CXX11
 
 # Besides of the -fopenmp flag, here I'm telling armadillo to use
 # 64BIT_WORD which removes the matrix size limit constraint.
-PKG_CXXFLAGS=$(SHLIB_OPENMP_CXXFLAGS) -DARMA_USE_OPENMP -I../inst/include/
+PKG_CXXFLAGS=$(SHLIB_OPENMP_CXXFLAGS) -I../inst/include/

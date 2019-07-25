@@ -5,7 +5,7 @@ using namespace Rcpp;
 // This function creates pre-filled arrays
 template <class T>
 inline std::vector< std::vector< T > > new_vector_array(
-    uint n, uint m, const T val
+    pruner::uint n, pruner::uint m, const T val
 ) {
   
   typedef std::vector< std::vector< T > > vvt;
@@ -17,19 +17,19 @@ inline std::vector< std::vector< T > > new_vector_array(
 
 // Generates matrix of possible sets f states
 inline std::vector< std::vector< unsigned int > > states_mat(
-    uint P
+    pruner::uint P
   ) {
   
   // Creating output matrix
-  uint nstates = (uint) pow(2, P);
+  pruner::uint nstates = (pruner::uint) pow(2, P);
   std::vector< std::vector< unsigned int > > ans = new_vector_array(nstates, P, 0u);
   
   // Go through states
   for (uint i = 0u; i < nstates; ++i) {
-    uint x = i;
+    pruner::uint x = i;
     
     // Go through functions
-    for (uint p = 0u; p < P; ++p) {
+    for (pruner::uint p = 0u; p < P; ++p) {
       ans[i][p] = x%2; 
       x /= 2;
     } 
@@ -44,8 +44,8 @@ inline void transition_mat(
     std::vector< std::vector< double > > & ans
   ) {
   
-  for (uint i = 0u; i < 2u; ++i)
-    for (uint j = 0u; j < 2u; ++j)
+  for (pruner::uint i = 0u; i < 2u; ++i)
+    for (pruner::uint j = 0u; j < 2u; ++j)
       ans[i][j] =
         !i?
         (  j? pr[0] : (1.0-pr[0]) ):
@@ -93,10 +93,10 @@ class pruner::TreeData {
   
 public:
   
-  uint nstates;
-  uint n;
-  uint nfuns;
-  uint nannotated;
+  pruner::uint nstates;
+  pruner::uint n;
+  pruner::uint nfuns;
+  pruner::uint nannotated;
   double prop_type_d;
   
   // Annotations
@@ -104,26 +104,26 @@ public:
   const pruner::v_uint types;
   
   // Temporal storage ----------------------------------------------------------
-  vv_uint states;
-  vv_dbl Pr;
+  pruner::vv_uint states;
+  pruner::vv_dbl Pr;
   double ll;
   
   // Model parameters
-  vv_dbl PSI,
+  pruner::vv_dbl PSI,
     // Duplication and Speciation mu
     MU_d, MU_s;
-  std::vector< vv_dbl* > MU;
+  std::vector< pruner::vv_dbl* > MU;
   v_dbl eta, Pi;  
   
-  void set_mu_d(const v_dbl & mu_d_) {transition_mat(mu_d_, this->MU_d);return;}
-  void set_mu_s(const v_dbl & mu_s_) {transition_mat(mu_s_, this->MU_s);return;}
-  void set_psi(const v_dbl & psi_) {transition_mat(psi_, this->PSI);return;}
-  void set_eta(const v_dbl & eta_) {this->eta = eta_;return;}
+  void set_mu_d(const pruner::v_dbl & mu_d_) {transition_mat(mu_d_, this->MU_d);return;}
+  void set_mu_s(const pruner::v_dbl & mu_s_) {transition_mat(mu_s_, this->MU_s);return;}
+  void set_psi(const pruner::v_dbl & psi_) {transition_mat(psi_, this->PSI);return;}
+  void set_eta(const pruner::v_dbl & eta_) {this->eta = eta_;return;}
   void  set_pi(double pi_) {root_node_pr(this->Pi, pi_, states);return;}
   
   // Destructor and constructor ------------------------------------------------
   ~TreeData() {};
-  TreeData(const vv_uint A_, const v_uint Ntype_, uint nannotated) : A(A_), types(Ntype_) {
+  TreeData(const pruner::vv_uint A_, const pruner::v_uint Ntype_, pruner::uint nannotated) : A(A_), types(Ntype_) {
     
     // Initializing data
     // this->A       = A;
