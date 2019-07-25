@@ -47,6 +47,9 @@ void likelihood(
     
   } else {
     
+    D->MU[0] = &(D->MU_d);
+    D->MU[1] = &(D->MU_s);
+    
     std::vector< unsigned int >::const_iterator o_n;
     uint s_n, p_n;
     double offspring_ll, s_n_sum;
@@ -64,7 +67,10 @@ void likelihood(
           
           s_n_sum = 1.0;
           for (p_n = 0u; p_n < D->nfuns; ++p_n)
-            s_n_sum *= D->MU[D->states[s][p_n]]->at(D->states[s_n][p_n]);
+            // s_n_sum *= (D->MU[D->types[*n]]).at(D->states[s][p_n]).at(D->states[s_n][p_n]);
+            s_n_sum *= (D->types[*n] == 0u)?
+              D->MU_d[D->states[s][p_n]][D->states[s_n][p_n]] :
+              D->MU_s[D->states[s][p_n]][D->states[s_n][p_n]];
           
           // Multiplying by off's probability
           offspring_ll += (s_n_sum) * D->Pr[*o_n][s_n];
@@ -103,7 +109,7 @@ void likelihood(
 //' for internal use only
 //' 
 //' @param edgelist a List two integer vectors.
-//' @param Ntype An integer vector of types of size `N`.
+//' @param types An integer vector of types of size `N`.
 //' @aliases aphylo_pruner
 //' 
 //' @details The underlying implementation of the pruning function is based on the
@@ -123,7 +129,7 @@ void likelihood(
 SEXP new_aphylo_pruner(
     const std::vector< std::vector< unsigned int > > & edgelist,
     const std::vector< std::vector< unsigned int > > & A,
-    const std::vector< unsigned int >  & Ntype,
+    const std::vector< unsigned int >  & types,
     unsigned int nannotated
 ) {
   
@@ -131,7 +137,7 @@ SEXP new_aphylo_pruner(
   uint res;
   Rcpp::XPtr< pruner::Tree > xptr(new pruner::Tree(edgelist[0], edgelist[1], res), true);
   
-  xptr->args = std::make_shared< pruner::TreeData >(A, Ntype, nannotated);
+  xptr->args = std::make_shared< pruner::TreeData >(A, types, nannotated);
   xptr->fun  = likelihood;
   
   xptr.attr("class") = "aphylo_pruner";
@@ -277,7 +283,7 @@ Pi  <- .5
 tree_ptr <- aphylo:::new_Tree(
   edgelist = with(dat$tree, list(edge[,1] - 1, edge[,2] - 1)),
   A        = as.list(A),
-  Ntype    = A
+  types    = A
 )
 
 aphylo_ll <- aphylo::LogLike

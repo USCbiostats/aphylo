@@ -8,7 +8,7 @@ int sample_int(int n) {
 // [[Rcpp::export(name=".sim_fun_on_tree")]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,
-    const arma::ivec & Ntype, 
+    const arma::ivec & types, 
     const arma::ivec & pseq,
     const arma::vec  & psi,
     const arma::vec  & mu_d,
@@ -21,7 +21,7 @@ IntegerMatrix sim_fun_on_tree(
   
   // Vessels
   int N = offspring.size(), N_o;
-  std::vector< arma::vec* > mu(2u);
+  std::vector< const arma::vec* > mu(2u);
   mu[0] = & mu_d;
   mu[1] = & mu_s;
   IntegerMatrix ans(N,P);
@@ -69,9 +69,9 @@ IntegerMatrix sim_fun_on_tree(
         
         // If there is a function
         if (ans.at(*i - 1u, p) == 1u)      // Loss probabilities
-          ans.at(*o - 1u, p) = (mu[Ntype[*i]]->at(1u) > unif_rand())? 0u : 1u; 
+          ans.at(*o - 1u, p) = (mu[types[*i - 1u]]->at(1u) > unif_rand())? 0u : 1u; 
         else if (ans.at(*i - 1, p) == 0u) // Gain Probabilities
-          ans.at(*o - 1u, p) = (mu[Ntype[*i]]->at(0u) > unif_rand())? 1u : 0u; 
+          ans.at(*o - 1u, p) = (mu[types[*i - 1u]]->at(0u) > unif_rand())? 1u : 0u; 
         else
           stop("Skipping an internal node.");
       }

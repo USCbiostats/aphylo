@@ -21,31 +21,32 @@ BEGIN_RCPP
 END_RCPP
 }
 // new_aphylo_pruner
-SEXP new_aphylo_pruner(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& Ntype, unsigned int nannotated);
-RcppExport SEXP _aphylo_new_aphylo_pruner(SEXP edgelistSEXP, SEXP ASEXP, SEXP NtypeSEXP, SEXP nannotatedSEXP) {
+SEXP new_aphylo_pruner(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& types, unsigned int nannotated);
+RcppExport SEXP _aphylo_new_aphylo_pruner(SEXP edgelistSEXP, SEXP ASEXP, SEXP typesSEXP, SEXP nannotatedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type edgelist(edgelistSEXP);
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type Ntype(NtypeSEXP);
+    Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type types(typesSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type nannotated(nannotatedSEXP);
-    rcpp_result_gen = Rcpp::wrap(new_aphylo_pruner(edgelist, A, Ntype, nannotated));
+    rcpp_result_gen = Rcpp::wrap(new_aphylo_pruner(edgelist, A, types, nannotated));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogLike_pruner
-List LogLike_pruner(SEXP tree_ptr, const std::vector< double >& mu, const std::vector< double >& psi, const std::vector< double >& eta, const double& Pi, bool verb, bool check_dims);
-RcppExport SEXP _aphylo_LogLike_pruner(SEXP tree_ptrSEXP, SEXP muSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verbSEXP, SEXP check_dimsSEXP) {
+List LogLike_pruner(SEXP tree_ptr, const std::vector< double >& mu_d, const std::vector< double >& mu_s, const std::vector< double >& psi, const std::vector< double >& eta, const double& Pi, bool verb, bool check_dims);
+RcppExport SEXP _aphylo_LogLike_pruner(SEXP tree_ptrSEXP, SEXP mu_dSEXP, SEXP mu_sSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verbSEXP, SEXP check_dimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type tree_ptr(tree_ptrSEXP);
-    Rcpp::traits::input_parameter< const std::vector< double >& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const std::vector< double >& >::type mu_d(mu_dSEXP);
+    Rcpp::traits::input_parameter< const std::vector< double >& >::type mu_s(mu_sSEXP);
     Rcpp::traits::input_parameter< const std::vector< double >& >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< const std::vector< double >& >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< const double& >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< bool >::type verb(verbSEXP);
     Rcpp::traits::input_parameter< bool >::type check_dims(check_dimsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLike_pruner(tree_ptr, mu, psi, eta, Pi, verb, check_dims));
+    rcpp_result_gen = Rcpp::wrap(LogLike_pruner(tree_ptr, mu_d, mu_s, psi, eta, Pi, verb, check_dims));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -179,16 +180,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // posterior_prob
-List posterior_prob(const arma::mat& Pr_postorder, const arma::vec& mu, const double& Pi, const arma::ivec& pseq, const List& offspring);
-RcppExport SEXP _aphylo_posterior_prob(SEXP Pr_postorderSEXP, SEXP muSEXP, SEXP PiSEXP, SEXP pseqSEXP, SEXP offspringSEXP) {
+List posterior_prob(const arma::mat& Pr_postorder, const std::vector< unsigned int >& types, const arma::vec& mu_d, const arma::vec& mu_s, const double& Pi, const arma::ivec& pseq, const List& offspring);
+RcppExport SEXP _aphylo_posterior_prob(SEXP Pr_postorderSEXP, SEXP typesSEXP, SEXP mu_dSEXP, SEXP mu_sSEXP, SEXP PiSEXP, SEXP pseqSEXP, SEXP offspringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Pr_postorder(Pr_postorderSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type types(typesSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu_d(mu_dSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu_s(mu_sSEXP);
     Rcpp::traits::input_parameter< const double& >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
-    rcpp_result_gen = Rcpp::wrap(posterior_prob(Pr_postorder, mu, Pi, pseq, offspring));
+    rcpp_result_gen = Rcpp::wrap(posterior_prob(Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -206,19 +209,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // sim_fun_on_tree
-IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu, const arma::vec& eta, const arma::vec& Pi, int P);
-RcppExport SEXP _aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP muSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP PSEXP) {
+IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& types, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu_d, const arma::vec& mu_s, const arma::vec& eta, const arma::vec& Pi, int P);
+RcppExport SEXP _aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP typesSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP mu_dSEXP, SEXP mu_sSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const List& >::type offspring(offspringSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type types(typesSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type pseq(pseqSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu_d(mu_dSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type mu_s(mu_sSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Pi(PiSEXP);
     Rcpp::traits::input_parameter< int >::type P(PSEXP);
-    rcpp_result_gen = Rcpp::wrap(sim_fun_on_tree(offspring, pseq, psi, mu, eta, Pi, P));
+    rcpp_result_gen = Rcpp::wrap(sim_fun_on_tree(offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -271,7 +276,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_auc", (DL_FUNC) &_aphylo_auc, 4},
     {"_aphylo_new_aphylo_pruner", (DL_FUNC) &_aphylo_new_aphylo_pruner, 4},
-    {"_aphylo_LogLike_pruner", (DL_FUNC) &_aphylo_LogLike_pruner, 7},
+    {"_aphylo_LogLike_pruner", (DL_FUNC) &_aphylo_LogLike_pruner, 8},
     {"_aphylo_Tree_get_offspring", (DL_FUNC) &_aphylo_Tree_get_offspring, 1},
     {"_aphylo_Tree_get_parents", (DL_FUNC) &_aphylo_Tree_get_parents, 1},
     {"_aphylo_Tree_Nnode", (DL_FUNC) &_aphylo_Tree_Nnode, 2},
@@ -284,9 +289,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},
     {"_aphylo_root_node_prob", (DL_FUNC) &_aphylo_root_node_prob, 2},
     {"_aphylo_reduce_pseq", (DL_FUNC) &_aphylo_reduce_pseq, 3},
-    {"_aphylo_posterior_prob", (DL_FUNC) &_aphylo_posterior_prob, 5},
+    {"_aphylo_posterior_prob", (DL_FUNC) &_aphylo_posterior_prob, 7},
     {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
-    {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 7},
+    {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 9},
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
     {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
     {"_aphylo_fast_table_using_labels", (DL_FUNC) &_aphylo_fast_table_using_labels, 2},

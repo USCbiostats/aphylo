@@ -31,7 +31,7 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
 #' for internal use only
 #' 
 #' @param edgelist a List two integer vectors.
-#' @param Ntype An integer vector of types of size `N`.
+#' @param types An integer vector of types of size `N`.
 #' @aliases aphylo_pruner
 #' 
 #' @details The underlying implementation of the pruning function is based on the
@@ -47,12 +47,12 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
 #' LogLike(pruner, psi = c(.1, .2), mu = c(.1, .05), Pi = .5, eta = c(.9, .8))
 #' 
 #' @name new_aphylo_pruner
-new_aphylo_pruner. <- function(edgelist, A, Ntype, nannotated) {
-    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, Ntype, nannotated)
+new_aphylo_pruner. <- function(edgelist, A, types, nannotated) {
+    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, types, nannotated)
 }
 
-.LogLike_pruner <- function(tree_ptr, mu, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
-    .Call(`_aphylo_LogLike_pruner`, tree_ptr, mu, psi, eta, Pi, verb, check_dims)
+.LogLike_pruner <- function(tree_ptr, mu_d, mu_s, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
+    .Call(`_aphylo_LogLike_pruner`, tree_ptr, mu_d, mu_s, psi, eta, Pi, verb, check_dims)
 }
 
 Tree_get_offspring <- function(tree_ptr) {
@@ -120,16 +120,16 @@ reduce_pseq <- function(pseq, A, offspring) {
     .Call(`_aphylo_reduce_pseq`, pseq, A, offspring)
 }
 
-.posterior_prob <- function(Pr_postorder, mu, Pi, pseq, offspring) {
-    .Call(`_aphylo_posterior_prob`, Pr_postorder, mu, Pi, pseq, offspring)
+.posterior_prob <- function(Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring) {
+    .Call(`_aphylo_posterior_prob`, Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring)
 }
 
 prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }
 
-.sim_fun_on_tree <- function(offspring, pseq, psi, mu, eta, Pi, P = 1L) {
-    .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, eta, Pi, P)
+.sim_fun_on_tree <- function(offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P = 1L) {
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P)
 }
 
 .sim_tree <- function(n, f, branches) {

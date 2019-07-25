@@ -26,8 +26,8 @@ test_that("Errors are caught", {
   y <- 1
   expect_error(suppressWarnings(aphylo_formula(y ~ psi)), "should be either")
   
-  expect_error(aphylo_formula(x ~ mu_d, c(mu0=1, mu1=1, psi1=0)), "overspecified")
-  expect_error(aphylo_formula(x ~ mu_d, c(mu0=1)), "missing")
+  expect_error(aphylo_formula(x ~ mu_d, c(mu_d0=1, mu_d1=1, psi1=0)), "overspecified")
+  expect_error(aphylo_formula(x ~ mu_d, c(mu_d0=1)), "missing")
   
   expect_error(suppressWarnings(aphylo_formula(x~mu_d(9))), "Arguments passed to")
   expect_error(suppressWarnings(aphylo_formula(x~mu_d + I(x))), "supported")

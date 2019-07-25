@@ -29,7 +29,7 @@ plot_logLik.aphylo <- function(x, sets, ...) {
   if (inherits(x, "formula"))
     model <- aphylo_formula(x, env = env)
   else {
-    x <- substitute(x ~ psi + mu + eta, list(x = substitute(x)))
+    x <- substitute(x ~ psi + mu_d + mu_s + eta, list(x = substitute(x)))
     x <- stats::as.formula(x, env)
     model <- aphylo_formula(x, env = env)
   }
@@ -65,7 +65,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
   if (missing(sets)) {
     
     sets <- NULL
-    for (p in c("psi", "mu", "eta"))
+    for (p in c("psi", "mu_d", "mu_s", "eta"))
       if (any(grepl(p, names(x$par))))
         sets <- cbind(sets, paste0(p, 0:1))
 

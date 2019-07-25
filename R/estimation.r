@@ -109,7 +109,7 @@ try_solve <- function(x, ...) {
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   dat ~ mu + psi + eta + Pi,
+#'   dat ~ mu_d + psi + eta + Pi,
 #'   control = list(nsteps = 2e5, burnin=1000, thin=200)
 #' )
 #' }

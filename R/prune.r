@@ -6,7 +6,7 @@ new_aphylo_pruner <- function(...) UseMethod("new_aphylo_pruner")
 #' @export
 #' @param annotation a list of length `N` (annotations).
 #' @rdname new_aphylo_pruner
-new_aphylo_pruner.matrix <- function(edgelist, annotation, Ntype = NULL, ...) {
+new_aphylo_pruner.matrix <- function(edgelist, annotation, types = NULL, ...) {
   
   n <- max(edgelist)
   P <- ncol(annotation)
@@ -17,9 +17,9 @@ new_aphylo_pruner.matrix <- function(edgelist, annotation, Ntype = NULL, ...) {
   if (nrow(annotation) != n)
     stop("`nrow(annotation) != nrow(edge`", call. = FALSE)
   
-  if (is.null(Ntype))
-    Ntype <- rep(1L, n)
-  else if (length(Ntype) != n)
+  if (is.null(types))
+    types <- rep(1L, n)
+  else if (length(types) != n)
     stop("`nrow(annotation) != nrow(edge`", call. = FALSE)
     
   # Checking the complete cases
@@ -33,7 +33,7 @@ new_aphylo_pruner.matrix <- function(edgelist, annotation, Ntype = NULL, ...) {
   new_aphylo_pruner.(
     edgelist = list(edgelist[, 1L] - 1L, edgelist[, 2L] - 1L),
     A        = annotation,
-    Ntype    = Ntype
+    types    = types
     )
   
 }
@@ -47,9 +47,9 @@ new_aphylo_pruner.aphylo <- function(x, ...) {
   annotation <- lapply(seq_len(nrow(annotation)), function(i) annotation[i, ])
   
   new_aphylo_pruner.(
-    edgelist = list(x$tree$edge[, 1L] - 1L, x$tree$edge[, 2L] - 1L),
-    A        = annotation,
-    Ntype    = rep(1L, length(annotation)), 
+    edgelist   = list(x$tree$edge[, 1L] - 1L, x$tree$edge[, 2L] - 1L),
+    A          = annotation,
+    types      = x$types, 
     nannotated = x$Ntips.annotated
   )
   

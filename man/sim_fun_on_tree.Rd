@@ -4,7 +4,7 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(tree, psi, mu, eta, Pi, P = 1L,
+sim_fun_on_tree(tree, types, psi, mu_d, mu_s, eta, Pi, P = 1L,
   informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 }
 \arguments{
@@ -12,7 +12,7 @@ sim_fun_on_tree(tree, psi, mu, eta, Pi, P = 1L,
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+\item{mu_d, mu_s}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 

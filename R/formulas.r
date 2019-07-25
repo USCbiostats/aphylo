@@ -53,7 +53,7 @@ aphylo_call <- function(params, priors) {
           tree = dat,
           psi  = c(0, 0),
           mu_d = c(p["mu_d0"], p["mu_d1"]),
-          mu_s = c(p["mu_s0"], p["mu_s1"]),
+          mu_s = c(p["mu_d0"], p["mu_d1"]),
           eta  = c(.5, .5),
           Pi   = -1, # Negative default means compute it using the approx
           verb_ans = verb_ans
@@ -179,6 +179,8 @@ mu_s <- function(..., env) {
   dots <- validate_dots_in_term(..., expected = c(0,1))
   for (f in dots)
     env$fixed[paste0("mu_s", f)] <- TRUE
+  
+  body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
   
   invisible()
 }

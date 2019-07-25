@@ -5,8 +5,9 @@
 \alias{rmultiAphylo}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
-raphylo(n = NULL, tree = NULL, P = 1L, psi = c(0.05, 0.05),
-  mu = c(0.1, 0.05), eta = c(1, 1), Pi = 1,
+raphylo(n = NULL, tree = NULL, types = NULL, P = 1L,
+  psi = c(0.05, 0.05), mu_d = c(0.9, 0.9), mu_s = c(0.1, 0.05),
+  eta = c(1, 1), Pi = 1,
   informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 
 rmultiAphylo(R, ...)
@@ -20,7 +21,7 @@ rmultiAphylo(R, ...)
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+\item{mu_d, mu_s}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 

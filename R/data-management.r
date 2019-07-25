@@ -183,6 +183,7 @@ check_annotations <- function(x) {
 new_aphylo <- function(
   tip.annotation,
   tree, 
+  types           = NULL,
   node.annotation = NULL
   ) {
   
@@ -202,12 +203,22 @@ new_aphylo <- function(
     stop("The number of `node.annotation` differs with the number of internal nodes in `tree`.",
          call. = FALSE)
   
+  if (is.null(types))
+    types <- integer(ape::Nnode(tree, internal.only = FALSE))
+  
+  # ORDER!!!
+  ORD <- as.integer(with(tree, c(tip.label, node.label)))
+  tip.annotation  <- tip.annotation[as.integer(tree$tip.label) - ape::Nnode(tree), , drop = FALSE]
+  node.annotation <- node.annotation[as.integer(tree$node.label), , drop = FALSE]
+  types           <- types[ORD]
+  
   # Returning
   as_aphylo(
     tip.annotation  = tip.annotation,
     node.annotation = node.annotation,
-    tree             = tree,
-    checks           = FALSE
+    tree            = tree,
+    types           = types,
+    checks          = FALSE
   )
   
 }
@@ -219,6 +230,7 @@ as_aphylo <- function(
   tip.annotation,
   node.annotation,
   tree,
+  types,
   checks = TRUE
   ) {
   
@@ -234,6 +246,9 @@ as_aphylo <- function(
       stopifnot(is.matrix(node.annotation))
       stopifnot(nrow(node.annotation) == tree$Nnode)
     } 
+    
+    # The nunmber of types should be of the same size of data points
+    stopifnot(length(types) == ape::Nnode(tree, internal.only = FALSE))
       
   }
   
@@ -265,8 +280,8 @@ as_aphylo <- function(
       list(offspring       = offspring),
       list(pseq            = pseq),
       list(reduced_pseq    = pseq_reduced),
-      list(Ntips.annotated = length(intersect(1:nrow(tip.annotation), pseq_reduced)))
-      
+      list(Ntips.annotated = length(intersect(1:nrow(tip.annotation), pseq_reduced))),
+      list(types           = types)
     ),
     class = c("aphylo")
   )

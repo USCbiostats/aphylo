@@ -44,12 +44,17 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
     
   
   # Checking parameters
-  if (!("Pi" %in% names(params)))
-    Pi <- params["mu0"]/(params["mu0"] + params["mu1"])
-  else 
+  types <- x$dat$types
+  if (!("Pi" %in% names(params))) {
+    p0 <- mean(types == 0L)
+    Pi <-
+      p0 * params["mu_d0"]/(params["mu_d0"] + params["mu_d1"]) +
+      (1-p0) * params["mu_s0"]/(params["mu_s0"] + params["mu_s1"])
+  } else 
     Pi <- params["Pi"]
   
-  mu <- params[c("mu0", "mu1")]
+  mu_d <- params[c("mu_d0", "mu_d1")]
+  mu_s <- params[c("mu_s0", "mu_s1")]
   
   # Looping through the variables
   p   <- Nann(x)
@@ -70,7 +75,15 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
     l <- do.call(x$fun, dots)
     
     # Returning posterior probability
-    .posterior_prob(l$Pr[[1]], mu, Pi, x$dat$pseq, x$dat$offspring)$posterior
+    .posterior_prob(
+      Pr_postorder = l$Pr[[1]],
+      types        = types,
+      mu_d         = mu_d,
+      mu_s         = mu_s,
+      Pi           = Pi,
+      pseq         = x$dat$pseq,
+      offspring    = x$dat$offspring
+      )$posterior
     
   })
   
@@ -80,7 +93,7 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
 
 #' @rdname posterior-probabilities
 #' @export
-predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
+predict_pre_order.aphylo <- function(x, psi, mu_d, mu_s, eta, Pi, ...) {
   
   if (Ntrees(x) > 1) {
     
@@ -88,7 +101,7 @@ predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
     x.  <- x
     for (t. in seq_along(ans)) {
       x.$dat <- x$dat[[t.]]
-      ans[[t.]] <- predict_pre_order(x., psi, mu, eta, Pi, ...)
+      ans[[t.]] <- predict_pre_order(x., psi, mu_d, mu_s, eta, Pi, ...)
     }
     
     return(ans)
@@ -102,7 +115,8 @@ predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
     l <- LogLike(
       tree       = x[i],
       psi        = psi,
-      mu         = mu,
+      mu_d       = mu_d,
+      mu_s       = mu_s,
       eta        = eta,
       Pi         = Pi,
       verb_ans   = TRUE,
@@ -110,7 +124,14 @@ predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
     )
     
     # Returning posterior probability
-    .posterior_prob(l$Pr[[1L]], mu, Pi, x$pseq, x$offspring)$posterior
+    .posterior_prob(
+      Pr_postorder = l$Pr[[1L]],
+      types        = x$types,
+      mu_d      = mu_d,
+      mu_s      = mu_s,
+      Pi        = Pi,
+      pseq      = x$pseq,
+      offspring = x$offspring)$posterior
     
   })
     
@@ -120,7 +141,7 @@ predict_pre_order.aphylo <- function(x, psi, mu, eta, Pi, ...) {
 
 #' @rdname posterior-probabilities
 #' @export
-predict_brute_force <- function(atree, psi, mu, Pi) {
+predict_brute_force <- function(atree, psi, mu_d, mu_s, Pi) {
   
   # Should be aphylo
   if (!inherits(atree, "aphylo"))
@@ -140,14 +161,14 @@ predict_brute_force <- function(atree, psi, mu, Pi) {
   # Computing matrix of probabilities --------------------------------------------
   # 2^(ntips + nnodes) 
   PSI <- prob_mat(psi)
-  MU  <- prob_mat(mu)
+  MU  <- list(prob_mat(mu_d), prob_mat(mu_s))
   
   # For
   Pr <- Pi[states[, ape::Ntip(tree) + 1] + 1]
   for (i in 1:nrow(tree$edge)) {
     e <- tree$edge[i,]
     Pr <- Pr *
-      MU[cbind(states[, e[1]], states[, e[2]]) + 1]
+      MU[[ atree$types[e[1]] + 1L ]][cbind(states[, e[1]], states[, e[2]]) + 1]
   }
   
   # Computing for each possible annotation of the tips
@@ -183,3 +204,4 @@ predict_brute_force <- function(atree, psi, mu, Pi) {
   )
   
 }
+

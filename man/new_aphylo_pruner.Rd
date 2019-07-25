@@ -9,11 +9,11 @@
 \alias{new_aphylo_pruner.multiAphylo}
 \title{Pointer to \code{pruner}}
 \usage{
-\method{new_aphylo_pruner}{}(edgelist, A, Ntype, nannotated)
+\method{new_aphylo_pruner}{}(edgelist, A, types, nannotated)
 
 new_aphylo_pruner(...)
 
-\method{new_aphylo_pruner}{matrix}(edgelist, annotation, Ntype = NULL,
+\method{new_aphylo_pruner}{matrix}(edgelist, annotation, types = NULL,
   ...)
 
 \method{new_aphylo_pruner}{aphylo}(x, ...)
@@ -23,7 +23,7 @@ new_aphylo_pruner(...)
 \arguments{
 \item{edgelist}{a List two integer vectors.}
 
-\item{Ntype}{An integer vector of types of size \code{N}.}
+\item{types}{An integer vector of types of size \code{N}.}
 
 \item{...}{Further arguments passed to the method}
 

@@ -6,7 +6,7 @@
 \alias{new_aphylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
-new_aphylo(tip.annotation, tree, node.annotation = NULL)
+new_aphylo(tip.annotation, tree, types = NULL, node.annotation = NULL)
 }
 \arguments{
 \item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}

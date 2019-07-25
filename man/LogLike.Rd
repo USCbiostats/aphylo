@@ -7,23 +7,24 @@
 \alias{LogLike.multiAphylo}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, psi, mu, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
-
-\method{LogLike}{aphylo_pruner}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
+LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
   check_dims = TRUE)
 
-\method{LogLike}{aphylo}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
+\method{LogLike}{aphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi,
+  verb_ans = TRUE, check_dims = TRUE)
+
+\method{LogLike}{aphylo}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
   check_dims = TRUE)
 
-\method{LogLike}{multiAphylo}(tree, psi, mu, eta, Pi, verb_ans = TRUE,
-  check_dims = TRUE)
+\method{LogLike}{multiAphylo}(tree, psi, mu_d, mu_s, eta, Pi,
+  verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link{aphylo}.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+\item{mu_d, mu_s}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 
@@ -57,8 +58,9 @@ The parameters to estimate are described as follows:
 \eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
 \eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
 respectively.}
-\item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
-\eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+\item{\code{mu_d}, \code{mu_s}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
+\eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.
+The subscript d denotes duplication nodes and s speciation node.}
 \item{\code{eta}: A vector of length 2 with \eqn{\eta_0}{eta[0]} and
 \eqn{\eta_1}{eta[1]} which are the annotation bias probabilities.}
 \item{\code{Pi}: A numeric scalar which for which equals the probability

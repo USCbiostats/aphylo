@@ -7,7 +7,9 @@ using namespace Rcpp;
 // [[Rcpp::export(name = ".posterior_prob", rng=false)]]
 List posterior_prob(
     const arma::mat  & Pr_postorder,
-    const arma::vec  & mu,
+    const std::vector< unsigned int > & types,
+    const arma::vec  & mu_d,
+    const arma::vec  & mu_s,
     const double     & Pi,
     const arma::ivec & pseq,
     const List       & offspring
@@ -19,7 +21,9 @@ List posterior_prob(
   arma::vec Posterior(preorder.n_elem);
   
   // Creating Matrix of probabilities
-  arma::mat M   = prob_mat(mu);
+  std::vector< const arma::vec * > mu(2);
+  mu[0] = & mu_d;
+  mu[1] = & mu_s;
   
   // Generating the preorder
   std::reverse_copy(pseq.begin(), pseq.end(), preorder.begin());
@@ -60,14 +64,14 @@ List posterior_prob(
       D_n_complement_x_n = 
         Pr_preorder.at(*n - 1u, 0) / 
         (
-            Pr_postorder.at(*o - 1u, 1)*mu.at(0) + 
-              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu.at(0))
-        ) * (1 -mu.at(0)) +
+            Pr_postorder.at(*o - 1u, 1)*mu[types[*n - 1u]]->at(0) + 
+              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu[types[*n - 1u]]->at(0))
+        ) * (1 -mu[types[*n - 1u]]->at(0)) +
           Pr_preorder.at(*n - 1u, 1) / 
           (
-              Pr_postorder.at(*o - 1u, 1)*(1.0-mu.at(1)) + 
-                Pr_postorder.at(*o - 1u, 0)*mu.at(1)
-          ) * mu.at(1)
+              Pr_postorder.at(*o - 1u, 1)*(1.0-mu[types[*n - 1u]]->at(1)) + 
+                Pr_postorder.at(*o - 1u, 0)*mu[types[*n - 1u]]->at(1)
+          ) * mu[types[*n - 1u]]->at(1)
       ;
       
       
@@ -78,14 +82,14 @@ List posterior_prob(
       D_n_complement_x_n = 
         Pr_preorder.at(*n - 1u, 0) / 
         (
-            Pr_postorder.at(*o - 1u, 1)*mu.at(0) + 
-              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu.at(0))
-        ) * mu.at(0) +
+            Pr_postorder.at(*o - 1u, 1)*mu[types[*n - 1u]]->at(0) + 
+              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu[types[*n - 1u]]->at(0))
+        ) * mu[types[*n - 1u]]->at(0) +
           Pr_preorder.at(*n - 1u, 1) / 
           (
-              Pr_postorder.at(*o - 1u, 1)*(1.0-mu.at(1)) + 
-                Pr_postorder.at(*o - 1u, 0)*mu.at(1)
-          ) * (1 - mu.at(1))
+              Pr_postorder.at(*o - 1u, 1)*(1.0-mu[types[*n - 1u]]->at(1)) + 
+                Pr_postorder.at(*o - 1u, 0)*mu[types[*n - 1u]]->at(1)
+          ) * (1 - mu[types[*n - 1u]]->at(1))
         ;
       
       

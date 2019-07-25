@@ -101,7 +101,7 @@ public:
   
   // Annotations
   const pruner::vv_uint A;
-  const pruner::v_uint Ntype;
+  const pruner::v_uint types;
   
   // Temporal storage ----------------------------------------------------------
   vv_uint states;
@@ -123,11 +123,11 @@ public:
   
   // Destructor and constructor ------------------------------------------------
   ~TreeData() {};
-  TreeData(const vv_uint A_, const v_uint Ntype_, uint nannotated) : A(A_), Ntype(Ntype_) {
+  TreeData(const vv_uint A_, const v_uint Ntype_, uint nannotated) : A(A_), types(Ntype_) {
     
     // Initializing data
     // this->A       = A;
-    // this->Ntype   = Ntype;
+    // this->types   = types;
     
     // Getting meta info, and initializing containers
     this->nfuns      = A[0].size();
@@ -149,8 +149,7 @@ public:
     MU_s[0].resize(2u);
     MU_s[1].resize(2u);
     
-    MU[0] = &MU_d;
-    MU[1] = &MU_s;
+    MU.resize(2u);
     
     PSI.resize(2u);
     PSI[0].resize(2u);
@@ -159,7 +158,7 @@ public:
     // Counting the proportion of type 0
     double increments = 1.0/this->n;
     this->prop_type_d = 0.0;
-    for (auto iter = Ntype.begin(); iter != Ntype.end(); ++iter) {
+    for (auto iter = types.begin(); iter != types.end(); ++iter) {
       
       if (*iter == 0u) {
         this->prop_type_d =+ increments;

@@ -9,19 +9,19 @@ test_that("Same results", {
   control. <- list(multicore = FALSE, nchains=1, nsteps=1000, burnin=0)
   
   set.seed(1)
-  ans0 <- aphylo_mcmc(x ~ psi + Pi + mu, priors = bprior(), reduced_pseq = FALSE,
+  ans0 <- aphylo_mcmc(x ~ psi + Pi + mu_d, priors = bprior(), reduced_pseq = FALSE,
                       control = control.)
   set.seed(1)
-  ans1 <- aphylo_mcmc(x ~ psi + Pi + mu, priors = bprior(), reduced_pseq = TRUE,
+  ans1 <- aphylo_mcmc(x ~ psi + Pi + mu_d, priors = bprior(), reduced_pseq = TRUE,
                       control = control.)
   
   expect_identical(ans0$hist, ans1$hist)
   
   set.seed(1)
-  ans0 <- aphylo_mcmc(x ~ psi + Pi + mu + eta, priors = bprior(), reduced_pseq = FALSE,
+  ans0 <- aphylo_mcmc(x ~ psi + Pi + mu_d + eta, priors = bprior(), reduced_pseq = FALSE,
                       control = control.)
   set.seed(1)
-  ans1 <- aphylo_mcmc(x ~ psi + Pi + mu + eta, priors = bprior(), reduced_pseq = TRUE,
+  ans1 <- aphylo_mcmc(x ~ psi + Pi + mu_d + eta, priors = bprior(), reduced_pseq = TRUE,
                       control = control.)
   
   expect_identical(ans0$hist, ans1$hist)
