@@ -206,11 +206,17 @@ new_aphylo <- function(
   if (is.null(types))
     types <- integer(ape::Nnode(tree, internal.only = FALSE))
   
-  # ORDER!!!
-  ORD <- as.integer(with(tree, c(tip.label, node.label)))
-  tip.annotation  <- tip.annotation[as.integer(tree$tip.label) - ape::Nnode(tree), , drop = FALSE]
-  node.annotation <- node.annotation[as.integer(tree$node.label), , drop = FALSE]
-  types           <- types[ORD]
+  # During the creation of the phylo object... things get sorted around
+  # so we need to rearrange things in order to match the original order.
+  # we use the generated labels duringn the call to as.phylo.matrix
+  tip.annotation <- tip.annotation[
+    order(as.integer(tree$tip.label)), , drop = FALSE
+    ]
+  
+  if (length(node.annotation))
+    node.annotation <- node.annotation[as.integer(tree$node.label), , drop = FALSE]
+  
+  types <- types[as.integer(with(tree, c(tip.label, node.label)))]
   
   # Returning
   as_aphylo(

@@ -260,12 +260,23 @@ raphylo <- function(
       stop("When -tree- is not specified, -n- must be specified.")
     tree  <- sim_tree(n)
     
-  } else {
+  } else if (is.aphylo(tree)) {
     
-    if (is.aphylo(tree) && is.null(types))
+    if (is.null(types))
       types <- tree$types
     
+    
+    
+  } else {
+    
+    # Getting a tree out of it
     tree <- as.phylo(tree)
+    
+    # Now the labels (will need to reorder)
+    if (length(types)) 
+      types <- types[as.integer(with(tree, c(tip.label, node.label)))]
+    
+    
   }
   
   if (is.null(types))
