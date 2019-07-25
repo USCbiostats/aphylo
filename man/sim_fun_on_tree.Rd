@@ -4,15 +4,17 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(tree, psi, mu, eta, Pi, P = 1L,
+sim_fun_on_tree(tree, types, psi, mu_d, mu_s, eta, Pi, P = 1L,
   informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
 
+\item{types}{An integer vector with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+\item{mu_d, mu_s}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 
@@ -57,10 +59,11 @@ newtree <- sim_tree(1e3)
 # Simulating
 ans <- sim_fun_on_tree(
   newtree,
-  psi = c(.001, .05),
-  mu = c(.01, .05),
-  Pi = c(.5, .5),
-  eta = c(1, 1)
+  psi  = c(.01, .05),
+  mu_d = c(.90, .80),
+  mu_s = c(.1, .05),
+  Pi   = .5,
+  eta  = c(1, 1)
 )
 
 # Tabulating results

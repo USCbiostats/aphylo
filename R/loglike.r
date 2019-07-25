@@ -23,8 +23,9 @@
 #' \eqn{\psi_1}{psi[1]}, which are the misclassification probabilities fo
 #' \eqn{s_p=0}{s[p]=0} and \eqn{s_p=1}{s[p]=1}
 #' respectively.}
-#' \item{\code{mu}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
-#' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.}
+#' \item{\code{mu_d}, \code{mu_s}: A vector of length 2 with \eqn{\mu_0}{mu[0]} and
+#' \eqn{\mu_1}{mu[1]} which are the gain and loss probabilities respectively.
+#' The subscript d denotes duplication nodes and s speciation node.}
 #' \item{\code{eta}: A vector of length 2 with \eqn{\eta_0}{eta[0]} and
 #' \eqn{\eta_1}{eta[1]} which are the annotation bias probabilities.}
 #' \item{\code{Pi}: A numeric scalar which for which equals the probability
@@ -41,7 +42,8 @@
 LogLike <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
@@ -50,35 +52,51 @@ LogLike <- function(
 
 #' @export
 #' @rdname LogLike
-LogLike.aphylo <- function(
+LogLike.aphylo_pruner <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
   check_dims  = TRUE
 ) {
   
-  ans <- .LogLike(
-    annotations = list(with(tree, rbind(tip.annotation, node.annotation))),
-    offspring   = list(tree$offspring),
-    pseq        = list(tree$reduced_pseq),
-    psi         = psi,
-    mu          = mu,
-    eta         = eta,
-    Pi          = Pi,
-    verb_ans    = verb_ans,
-    check_dims  = check_dims
+  .LogLike_pruner(
+    tree_ptr = tree,
+    mu_d      = mu_d,
+    mu_s      = mu_s,
+    psi      = psi,
+    eta      = eta,
+    Pi       = Pi,
+    verb     = verb_ans
   )
   
-  if (verb_ans)
-    dim(ans$Pr[[1]]) <- c(
-      ape::Nnode(tree, internal.only = FALSE),
-      length(ans$Pr[[1]]) %/% ape::Nnode(tree, internal.only = FALSE)
-    )
+}
+#' @export
+#' @rdname LogLike
+LogLike.aphylo <- function(
+  tree,
+  psi,
+  mu_d,
+  mu_s,
+  eta,
+  Pi, 
+  verb_ans    = TRUE,
+  check_dims  = TRUE
+) {
   
-  ans
+  tree_ptr <- new_aphylo_pruner(tree)
+  .LogLike_pruner(
+    tree_ptr = tree_ptr,
+    mu_d      = mu_d,
+    mu_s      = mu_s,
+    psi      = psi,
+    eta      = eta,
+    Pi       = Pi,
+    verb     = verb_ans
+  )
   
 }
 
@@ -87,36 +105,33 @@ LogLike.aphylo <- function(
 LogLike.multiAphylo <- function(
   tree,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi, 
   verb_ans    = TRUE,
   check_dims  = TRUE
 ) {
  
-  annotations. <- lapply(tree, function(t.) with(t., rbind(tip.annotation, node.annotation)))
-  offspring.   <- lapply(tree, "[[", "offspring")
-  pseq.        <- lapply(tree, "[[", "reduced_pseq")
-   
-  ans <- .LogLike(
-    annotations = annotations.,
-    offspring   = offspring.,
-    pseq        = pseq.,
-    psi         = psi,
-    mu          = mu,
-    eta         = eta,
-    Pi          = Pi,
-    verb_ans    = verb_ans,
-    check_dims  = check_dims
-  )
-  
-  if (verb_ans)
-    for (i in seq_along(ans$Pr))
-    dim(ans$Pr[[i]]) <- c(
-      ape::Nnode(tree[[i]], internal.only = FALSE),
-      length(ans$Pr[[i]]) %/% ape::Nnode(tree[[i]], internal.only = FALSE)
-    )
-  
-  ans
+  res <- list(ll = 0.0, Pr = NULL)
+  for (i in seq_along(tree)) {
+    
+    tmp <- LogLike(
+      tree[[i]],
+      mu_d     = mu_d,
+      mu_s     = mu_s,
+      psi      = psi,
+      eta      = eta,
+      Pi       = Pi,
+      verb_ans = verb_ans
+      )
+    
+    res$ll <- res$ll + tmp$ll
+    if (verb_ans)
+      res$Pr <- c(res$Pr, tmp$Pr)
+    
+  }
+  res
   
 }
+

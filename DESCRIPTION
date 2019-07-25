@@ -29,8 +29,7 @@ Suggests:
     testthat,
     rncl,
     knitr,
-    AUC,
-    PANTHER.db
+    AUC
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.1.1

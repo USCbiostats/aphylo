@@ -23,6 +23,48 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
+new_aphylo_pruner. <- function(edgelist, A, types, nannotated) {
+    .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, types, nannotated)
+}
+
+.LogLike_pruner <- function(tree_ptr, mu_d, mu_s, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
+    .Call(`_aphylo_LogLike_pruner`, tree_ptr, mu_d, mu_s, psi, eta, Pi, verb, check_dims)
+}
+
+Tree_get_offspring <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_offspring`, tree_ptr)
+}
+
+Tree_get_parents <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_parents`, tree_ptr)
+}
+
+.Nnode_aphylo_pruner <- function(tree_ptr, internal_only = TRUE) {
+    .Call(`_aphylo_Tree_Nnode`, tree_ptr, internal_only)
+}
+
+#' @export
+#' @rdname ape-methods
+Ntip.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Ntip`, phy)
+}
+
+#' @rdname ape-methods
+#' @export
+Nannotated.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Nannotated`, phy)
+}
+
+#' @rdname ape-methods
+#' @export
+Nann.aphylo_pruner <- function(phy) {
+    .Call(`_aphylo_Tree_Nann`, phy)
+}
+
+root_node_pr <- function(Pi, S) {
+    .Call(`_aphylo_root_node_pr`, Pi, S)
+}
+
 approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
     .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }
@@ -43,6 +85,10 @@ prob_mat <- function(pr) {
     .Call(`_aphylo_prob_mat`, pr)
 }
 
+root_node_prob <- function(Pi, S) {
+    .Call(`_aphylo_root_node_prob`, Pi, S)
+}
+
 #' Reduces the peeling sequence so that only nodes that have something to contribute
 #' are included in the sequence.
 #' @noRd
@@ -50,46 +96,16 @@ reduce_pseq <- function(pseq, A, offspring) {
     .Call(`_aphylo_reduce_pseq`, pseq, A, offspring)
 }
 
-root_node_prob <- function(Pi, S) {
-    .Call(`_aphylo_root_node_prob`, Pi, S)
-}
-
-#' State probabilities
-#' 
-#' Compute the state probabilities for each node in the tree using the peeling
-#' algorithm. This function is the horse-power of the function \code{\link{LogLike}}
-#' so it is not intended to be used directly.
-#' 
-#' @template parameters
-#' @templateVar .annotations 1
-#' @templateVar .mu 1
-#' @templateVar .psi 1
-#' @templateVar .eta 1
-#' @templateVar .S 1
-#' @templateVar .offspring 1
-#' @param Pr A matrix.
-#' 
-#' @return A numeric matrix of size \eqn{n\times 2^P}{n * 2^P} with state
-#' probabilities for each node.
-#' @noRd
-probabilities <- function(annotations, pseq, psi, mu, eta, S, offspring) {
-    .Call(`_aphylo_probabilities`, annotations, pseq, psi, mu, eta, S, offspring)
-}
-
-.LogLike <- function(annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans = FALSE, check_dims = TRUE) {
-    .Call(`_aphylo_LogLike`, annotations, offspring, pseq, psi, mu, eta, Pi, verb_ans, check_dims)
-}
-
-.posterior_prob <- function(Pr_postorder, mu, Pi, pseq, offspring) {
-    .Call(`_aphylo_posterior_prob`, Pr_postorder, mu, Pi, pseq, offspring)
+.posterior_prob <- function(Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring) {
+    .Call(`_aphylo_posterior_prob`, Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring)
 }
 
 prediction_score_rand <- function(A, W, alpha) {
     .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
 }
 
-.sim_fun_on_tree <- function(offspring, pseq, psi, mu, eta, Pi, P = 1L) {
-    .Call(`_aphylo_sim_fun_on_tree`, offspring, pseq, psi, mu, eta, Pi, P)
+.sim_fun_on_tree <- function(offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P = 1L) {
+    .Call(`_aphylo_sim_fun_on_tree`, offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P)
 }
 
 .sim_tree <- function(n, f, branches) {

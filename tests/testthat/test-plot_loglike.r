@@ -8,7 +8,7 @@ test_that("plotll", {
   expect_null(plot_logLik(dat))
 
   # phylo_mle method
-  ans <- suppressWarnings(aphylo_mle(dat ~ mu + psi))
+  ans <- suppressWarnings(aphylo_mle(dat ~ mu_d + psi))
   expect_null(plot_logLik(ans))
   
 })

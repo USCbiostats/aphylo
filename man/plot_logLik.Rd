@@ -40,6 +40,6 @@ O <- new_aphylo(fakeexperiment[,2:3], faketree)
 plot_logLik(O)
 
 # No psi parameter
-plot_logLik(O ~ mu + Pi + eta)
+plot_logLik(O ~ mu_d + Pi + eta)
 
 }

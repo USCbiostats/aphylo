@@ -24,8 +24,8 @@ test_that("Prediction works", {
   )[with(atree$tree, c(tip.label, node.label))]
   
   # Computing brute-force and using the pre-order
-  ans1 <- predict_brute_force(atree, psi, mu, Pi)
-  ans2 <- predict_pre_order(atree, psi, mu, eta, Pi)
+  ans1 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+  ans2 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi)
   
   
   expect_equivalent(ans0, ans1$posterior)
@@ -33,10 +33,10 @@ test_that("Prediction works", {
   
   # Random test
   set.seed(122331)
-  atree <- raphylo(4, psi = psi, mu = mu, eta = eta, Pi = Pi)
+  atree <- raphylo(4, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)
   
-  ans0 <- predict_brute_force(atree, psi, mu, Pi)
-  ans1 <- predict_pre_order(atree, psi, mu, eta, Pi)
+  ans0 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+  ans1 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi)
   
   expect_equivalent(ans0$posterior, ans1[,1])
   
@@ -48,14 +48,15 @@ test_that("Calling the prediction function works", {
   
   x <- raphylo(10)
   x_obs <- rdrop_annotations(x, .5)
-  res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu + Pi, priors = bprior()))
+  res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu_d + Pi, priors = bprior()))
   
   ans0 <- predict_pre_order(
-    x   = x_obs,
-    psi = res$par[c("psi0", "psi1")],
-    mu  = res$par[c("mu0", "mu1")],
-    eta = c(1,1)/2, #res$par[c("eta0", "eta1")],
-    Pi  = res$par["Pi"]
+    x    = x_obs,
+    psi  = res$par[c("psi0", "psi1")],
+    mu_d = res$par[c("mu_d0", "mu_d1")],
+    mu_s = res$par[c("mu_d0", "mu_d1")],
+    eta  = c(1,1)/2, #res$par[c("eta0", "eta1")],
+    Pi   = res$par["Pi"]
     )
   
   ans1 <- predict(res)

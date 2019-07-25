@@ -68,6 +68,7 @@ sim_tree <- function(n, edge.length = NULL) {
 #' @templateVar .mu 1
 #' @templateVar .eta 1
 #' @templateVar .Pi 1
+#' @templateVar .types 1
 #' @param P Integer scalar. Number of functions to simulate.
 #' 
 #' @details
@@ -89,10 +90,11 @@ sim_tree <- function(n, edge.length = NULL) {
 #' # Simulating
 #' ans <- sim_fun_on_tree(
 #'   newtree,
-#'   psi = c(.001, .05),
-#'   mu = c(.01, .05),
-#'   Pi = c(.5, .5),
-#'   eta = c(1, 1)
+#'   psi  = c(.01, .05),
+#'   mu_d = c(.90, .80),
+#'   mu_s = c(.1, .05),
+#'   Pi   = .5,
+#'   eta  = c(1, 1)
 #' )
 #' 
 #' # Tabulating results
@@ -147,8 +149,10 @@ sim_counts <- eval({
 #' @export
 sim_fun_on_tree <- function(
   tree,
+  types,
   psi,
-  mu,
+  mu_d,
+  mu_s,
   eta,
   Pi,
   P           = 1L,
@@ -160,6 +164,11 @@ sim_fun_on_tree <- function(
   if (!inherits(tree, "phylo") & !inherits(tree, "aphylo"))
     stop("`tree` must be of class `phylo` or `aphylo`.", call. = FALSE)
   
+  if (missing(types) || is.null(types)) {
+    if (is.aphylo(tree)) types <- tree$types
+    else types <- integer(ape::Nnode(tree, internal.only = FALSE))
+  }
+  
   tree <- ape::as.phylo(tree)
   
   # Generating the preorder sequence
@@ -169,7 +178,7 @@ sim_fun_on_tree <- function(
   # The preorder is just the inverse of the post order!
   # now, observe that the main function does the call using indexes starting
   # from 0, BUT, that's corrected in the function itself
-  pseq <- c(length(tree$tip.label) + 1L, pseq[length(pseq):1L])
+  pseq <- c(length(tree$tip.label) + 1L, rev(pseq))
   
   # Calling the c++ function that does the hard work
   has_both  <- FALSE
@@ -180,8 +189,10 @@ sim_fun_on_tree <- function(
     f <- .sim_fun_on_tree(
       offspring = offspring,
       pseq      = pseq,
+      types     = types,
       psi       = psi,
-      mu        = mu,
+      mu_d      = mu_d,
+      mu_s      = mu_s,
       eta       = eta,
       Pi        = Pi,
       P         = P
@@ -218,6 +229,7 @@ sim_fun_on_tree <- function(
 #' @templateVar .mu 1
 #' @templateVar .eta 1
 #' @templateVar .Pi 1
+#' @templateVar .types 1
 #' @param informative,maxtries Passed to [sim_fun_on_tree].
 #' @return An object of class [aphylo]
 #' @family Simulation Functions 
@@ -231,9 +243,11 @@ sim_fun_on_tree <- function(
 raphylo <- function(
   n           = NULL,
   tree        = NULL,
+  types       = NULL,
   P           = 1L,
   psi         = c(.05, .05),
-  mu          = c(.1,.05),
+  mu_d        = c(.90, .90),
+  mu_s        = c(.10, .05),
   eta         = c(1.0, 1.0),
   Pi          = 1.0,
   informative = getOption("aphylo_informative", FALSE),
@@ -249,15 +263,34 @@ raphylo <- function(
       stop("When -tree- is not specified, -n- must be specified.")
     tree  <- sim_tree(n)
     
-  } else 
+  } else if (is.aphylo(tree)) {
+    
+    if (is.null(types))
+      types <- tree$types
     tree <- as.phylo(tree)
+    
+  } else {
+    
+    # Getting a tree out of it
+    tree <- as.phylo(tree)
+    
+    # Now the labels (will need to reorder)
+    if (length(types)) 
+      types <- types[as.integer(with(tree, c(tip.label, node.label)))]
+    
+    
+  }
   
+  if (is.null(types))
+    types <- integer(ape::Nnode(tree, internal.only = FALSE))
   
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
     tree        = tree,
+    types       = types,
     psi         = psi,
-    mu          = mu,
+    mu_d        = mu_d,
+    mu_s        = mu_s,
     eta         = eta,
     Pi          = Pi,
     P           = P,
@@ -270,7 +303,8 @@ raphylo <- function(
   as_aphylo(
     tip.annotation  = ans[1L:nleaf, ,drop=FALSE],
     node.annotation = ans[(nleaf + 1L):nrow(ans), , drop=FALSE],
-    tree            = tree
+    tree            = tree,
+    types           = types
   )
   
 }
@@ -349,7 +383,7 @@ mislabel <- function(atree, psi) {
 #' # The following tree has roughtly the same proportion of 0s and 1s
 #' # and 0 mislabeling.
 #' set.seed(1)
-#' x <- raphylo(200, Pi=.5, mu=c(.5,.5), psi=c(0,0))
+#' x <- raphylo(200, Pi=.5, mu_d=c(.5,.5), psi=c(0,0))
 #' summary(x)
 #' 
 #' # Dropping half of the annotations

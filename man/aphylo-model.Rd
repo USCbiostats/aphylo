@@ -7,7 +7,8 @@
 \alias{eta}
 \alias{psi}
 \alias{Pi}
-\alias{mu}
+\alias{mu_d}
+\alias{mu_s}
 \alias{aphylo_formula}
 \title{Formulas in \code{aphylo}}
 \usage{
@@ -19,7 +20,9 @@ psi(..., env)
 
 Pi(..., env)
 
-mu(..., env)
+mu_d(..., env)
+
+mu_s(..., env)
 
 aphylo_formula(fm, params, priors, env = parent.frame())
 }
@@ -51,15 +54,19 @@ set.seed(12)
 x <- raphylo(10)
 
 # Baseline model
-aphylo_formula(x ~ mu)
+aphylo_formula(x ~ mu_d)
 
 # Mislabeling probabilities
-aphylo_formula(x ~ mu + psi)
+aphylo_formula(x ~ mu_d + psi)
+
+# Different probabilities for speciation and duplication node
+# (only works if you have both types)
+aphylo_formula(x ~ mu_d + mu_s + psi)
 
 # Mislabeling probabilities and etas(fixed)
-aphylo_formula(x ~ mu + psi + eta(0, 1))
+aphylo_formula(x ~ mu_d + psi + eta(0, 1))
 
 # Mislabeling probabilities and Pi 
-aphylo_formula(x ~ mu + psi + Pi)
+aphylo_formula(x ~ mu_d + psi + Pi)
 
 }

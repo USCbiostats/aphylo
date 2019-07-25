@@ -12,9 +12,9 @@ predict_pre_order(x, ...)
 
 \method{predict_pre_order}{aphylo_estimates}(x, params = x$par, ...)
 
-\method{predict_pre_order}{aphylo}(x, psi, mu, eta, Pi, ...)
+\method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
-predict_brute_force(atree, psi, mu, Pi)
+predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 }
 \arguments{
 \item{...}{Ignored.}
@@ -23,7 +23,7 @@ predict_brute_force(atree, psi, mu, Pi)
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
-\item{mu}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
+\item{mu_d, mu_s}{Numeric vector of length 2. Gain/loss probabilities (see \code{\link{LogLike}}).}
 
 \item{eta}{Numeric vector of length 2. Annotation bias probabilities (see \code{\link{LogLike}}).}
 

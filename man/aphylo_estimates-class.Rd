@@ -102,7 +102,7 @@ dat <- raphylo(100)
 dat <- rdrop_annotations(dat, .4)
 
 # Computing Estimating the parameters 
-ans  <- aphylo_mle(dat ~ psi + mu + eta + Pi)
+ans  <- aphylo_mle(dat ~ psi + mu_d + eta + Pi)
 ans
 
 # Plotting the path
@@ -113,7 +113,7 @@ mypriors <- function(params) {
     dbeta(params, c(2, 2, 2, 2, 1, 10, 2), rep(10, 7))
 }
 
-ans_dbeta <- aphylo_mle(dat ~ psi + mu + eta + Pi, priors = mypriors)
+ans_dbeta <- aphylo_mle(dat ~ psi + mu_d + eta + Pi, priors = mypriors)
 ans_dbeta
 
 
@@ -129,7 +129,7 @@ tree <- sim_tree(200)
 dat <- raphylo(
   tree = tree,
   psi  = c(.01, .03),
-  mu   = c(.05, .02),
+  mu_d = c(.05, .02),
   Pi   = .5
 )
 
@@ -137,7 +137,7 @@ dat <- raphylo(
 set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
-  dat ~ mu + psi + eta + Pi,
+  dat ~ mu_d + psi + eta + Pi,
   control = list(nsteps = 2e5, burnin=1000, thin=200)
 )
 }

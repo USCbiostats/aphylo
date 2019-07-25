@@ -74,7 +74,7 @@ try_solve <- function(x, ...) {
 #' dat <- rdrop_annotations(dat, .4)
 #' 
 #' # Computing Estimating the parameters 
-#' ans  <- aphylo_mle(dat ~ psi + mu + eta + Pi)
+#' ans  <- aphylo_mle(dat ~ psi + mu_d + eta + Pi)
 #' ans
 #' 
 #' # Plotting the path
@@ -85,7 +85,7 @@ try_solve <- function(x, ...) {
 #'     dbeta(params, c(2, 2, 2, 2, 1, 10, 2), rep(10, 7))
 #' }
 #' 
-#' ans_dbeta <- aphylo_mle(dat ~ psi + mu + eta + Pi, priors = mypriors)
+#' ans_dbeta <- aphylo_mle(dat ~ psi + mu_d + eta + Pi, priors = mypriors)
 #' ans_dbeta
 #' 
 #' 
@@ -101,7 +101,7 @@ try_solve <- function(x, ...) {
 #' dat <- raphylo(
 #'   tree = tree,
 #'   psi  = c(.01, .03),
-#'   mu   = c(.05, .02),
+#'   mu_d = c(.05, .02),
 #'   Pi   = .5
 #' )
 #' 
@@ -109,7 +109,7 @@ try_solve <- function(x, ...) {
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   dat ~ mu + psi + eta + Pi,
+#'   dat ~ mu_d + psi + eta + Pi,
 #'   control = list(nsteps = 2e5, burnin=1000, thin=200)
 #' )
 #' }
@@ -407,13 +407,37 @@ aphylo_mcmc <- function(
   if (check_informative)
     stop_ifuninformative(model$dat$tip.annotation)
   
+  if ("multicore" %in% names(control) && control$multicore) {
+    
+    # Initalizing the cluster
+    cl_object <- parallel::makePSOCKcluster(control$nchains)
+    on.exit(parallel::stopCluster(cl_object))
+    
+    # Setting up the package
+    parallel::clusterEvalQ(cl_object, library(aphylo))
+    parallel::clusterExport(cl_object, c("model", "priors"))
+    parallel::clusterEvalQ(cl_object, {
+      dat0 <- aphylo::new_aphylo_pruner(model$dat)
+    })
+    
+    # Appending to the set of controls
+    control$cl <- cl_object
+    
+  } else {
+    
+    dat0 <- new_aphylo_pruner(model$dat)
+    
+  }
+  # dat0 <- model$dat
+    
+  
   # Running the MCMC
   ans <- do.call(
     fmcmc::MCMC, 
     c(
       list(
         fun      = model$fun,
-        dat      = model$dat,
+        dat      = dat0,
         priors   = priors,
         verb_ans = FALSE,
         initial  = model$params
@@ -431,7 +455,7 @@ aphylo_mcmc <- function(
   
   ll <- model$fun(
     p        = par,
-    dat      = model$dat,
+    dat      = dat0,
     priors   = priors,
     verb_ans = FALSE
   )
