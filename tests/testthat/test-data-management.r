@@ -5,7 +5,9 @@ data(faketree)
 
 # As phylo methods -------------------------------------------------------------
 test_that("As phylo conversion and methods", {
-  ans <- new_aphylo(tip.annotation = fakeexperiment[,-1], tree = faketree)
+  
+  tree <- as.phylo(faketree)
+  ans <- new_aphylo(tip.annotation = fakeexperiment[,-1], tree = tree)
   
   expect_output(print(ans), "\\(leafs\\) annotations")
   expect_s3_class(as.phylo(ans), "phylo")

@@ -6,7 +6,7 @@ test_that("Prediction works", {
   tree  <- matrix(c(1, 2, 1, 3, 3, 4, 3, 5), ncol=2, byrow = TRUE)
   tree  <- as.phylo(tree)
   X     <- c(0, 0, 0)
-  atree <- new_aphylo(X, tree)
+  atree <- new_aphylo(tip.annotation = X, tree = tree)
   
   # Model parameters
   Pi  <- .3

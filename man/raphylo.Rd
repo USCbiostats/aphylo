@@ -5,9 +5,9 @@
 \alias{rmultiAphylo}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
-raphylo(n = NULL, tree = NULL, types = NULL, P = 1L,
-  psi = c(0.05, 0.05), mu_d = c(0.9, 0.9), mu_s = c(0.1, 0.05),
-  eta = c(1, 1), Pi = 1,
+raphylo(n = NULL, tree = NULL, tip.type = NULL, node.type = NULL,
+  P = 1L, psi = c(0.05, 0.05), mu_d = c(0.9, 0.9), mu_s = c(0.1,
+  0.05), eta = c(1, 1), Pi = 1,
   informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 
 rmultiAphylo(R, ...)
@@ -17,7 +17,7 @@ rmultiAphylo(R, ...)
 
 \item{tree}{An object of class \link[ape:read.tree]{phylo}.}
 
-\item{types}{An integer vector with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 
 \item{P}{Integer scalar. Number of functions to generate.}
 

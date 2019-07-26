@@ -13,7 +13,7 @@ eta    <- c(.9, .7)
 Pi     <- 1 - .3
 errtol <- 1e-15
 
-O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = faketree)
+O  <- new_aphylo(tip.annotation = fakeexperiment[,-1L], tree = as.phylo(faketree))
 
 S  <- states(2)
 Pr <- LogLike(
@@ -371,7 +371,15 @@ test_that("Joint loglike for multiAphylo", {
   for (i in seq_along(trees)) {
     
     ans1 <- ans1 +
-      LogLike(trees[[i]], psi = psi, mu_d = mu, mu_s = mu, Pi = Pi, eta = eta, verb_ans = FALSE)$ll
+      LogLike(
+        tree     = trees[[i]],
+        psi      = psi,
+        mu_d     = mu,
+        mu_s     = mu,
+        Pi       = Pi,
+        eta      = eta,
+        verb_ans = FALSE
+        )$ll
     
   }
   

@@ -4,16 +4,22 @@
 \alias{aphylo-class}
 \alias{aphylo}
 \alias{new_aphylo}
+\alias{new_aphylo.phylo}
 \title{Annotated Phylogenetic Tree}
 \usage{
-new_aphylo(tip.annotation, tree, types = NULL, node.annotation = NULL)
+new_aphylo(tree, tip.annotation, ...)
+
+\method{new_aphylo}{phylo}(tree, tip.annotation, node.annotation = NULL,
+  tip.type = NULL, node.type = NULL, ...)
 }
 \arguments{
-\item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
-
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
 
-\item{types}{An integer vector with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.annotation, node.annotation}{Annotation data. See \linkS4class{aphylo}.}
+
+\item{...}{Further argmuents passed to the method.}
+
+\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
@@ -37,7 +43,7 @@ package only uses the leaf annotations.
 
 data(fakeexperiment)
 data(faketree)
-ans <- new_aphylo(fakeexperiment[,2:3], faketree)
+ans <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
  
 # We can visualize it
 plot(ans)

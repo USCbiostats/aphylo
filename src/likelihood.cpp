@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 #include "pruner.hpp"
-// #include "likelihood.hpp"
 #include "TreeData.hpp" // TreeData definition
 using namespace Rcpp;
 

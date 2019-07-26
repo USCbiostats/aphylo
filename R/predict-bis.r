@@ -44,17 +44,20 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
     
   
   # Checking parameters
-  types <- x$dat$types
+  types <- with(x$dat, c(tip.type, node.type))
+  mu_d <- params[c("mu_d0", "mu_d1")]
+  if (!("mu_s0" %in% names(params)))
+    mu_s <- mu_d
+  else
+    mu_s <- params[c("mu_s0", "mu_s1")]
+  
   if (!("Pi" %in% names(params))) {
     p0 <- mean(types == 0L)
     Pi <-
-      p0 * params["mu_d0"]/(params["mu_d0"] + params["mu_d1"]) +
-      (1-p0) * params["mu_s0"]/(params["mu_s0"] + params["mu_s1"])
+      p0 * mu_d[1]/(mu_d[1] + mu_d[2]) +
+      (1-p0) * mu_s[1]/(mu_s[1] + mu_s[2])
   } else 
     Pi <- params["Pi"]
-  
-  mu_d <- params[c("mu_d0", "mu_d1")]
-  mu_s <- params[c("mu_s0", "mu_s1")]
   
   # Looping through the variables
   p   <- Nann(x)
@@ -98,7 +101,7 @@ predict_pre_order.aphylo <- function(x, psi, mu_d, mu_s, eta, Pi, ...) {
   if (Ntrees(x) > 1) {
     
     ans <- vector("list", Ntrees(x))
-    x.  <- x
+    # x.  <- x
     for (t. in seq_along(ans)) {
       x.$dat <- x$dat[[t.]]
       ans[[t.]] <- predict_pre_order(x., psi, mu_d, mu_s, eta, Pi, ...)
@@ -126,12 +129,13 @@ predict_pre_order.aphylo <- function(x, psi, mu_d, mu_s, eta, Pi, ...) {
     # Returning posterior probability
     .posterior_prob(
       Pr_postorder = l$Pr[[1L]],
-      types        = x$types,
-      mu_d      = mu_d,
-      mu_s      = mu_s,
-      Pi        = Pi,
-      pseq      = x$pseq,
-      offspring = x$offspring)$posterior
+      types        = with(x, c(tip.type, node.type)),
+      mu_d         = mu_d,
+      mu_s         = mu_s,
+      Pi           = Pi,
+      pseq         = x$pseq,
+      offspring    = x$offspring
+      )$posterior
     
   })
     
@@ -165,10 +169,11 @@ predict_brute_force <- function(atree, psi, mu_d, mu_s, Pi) {
   
   # For
   Pr <- Pi[states[, ape::Ntip(tree) + 1] + 1]
+  types <- with(atree, c(tip.type, node.type))
   for (i in 1:nrow(tree$edge)) {
     e <- tree$edge[i,]
     Pr <- Pr *
-      MU[[ atree$types[e[1]] + 1L ]][cbind(states[, e[1]], states[, e[2]]) + 1]
+      MU[[ types[e[1]] + 1L ]][cbind(states[, e[1]], states[, e[2]]) + 1]
   }
   
   # Computing for each possible annotation of the tips

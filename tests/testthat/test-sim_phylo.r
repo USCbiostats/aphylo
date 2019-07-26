@@ -113,7 +113,7 @@ test_that("Mislabeling", {
 test_that("Deterministic results including node types", {
   
   # Fake tree assuring evolution
-  dat2   <- matrix(c(1, 2, 1, 3, 2, 4, 2, 5), ncol=2, byrow = TRUE)
+  dat2   <- as.phylo(matrix(c(1, 2, 1, 3, 2, 4, 2, 5), ncol=2, byrow = TRUE))
   
   getann <- function(x) {
     ans <- structure(
@@ -122,7 +122,7 @@ test_that("Deterministic results including node types", {
     ans[order(as.integer(names(ans)))]
   }
   
-  tree2  <- new_aphylo(rbind(0,0,0), dat2, types=rep(0, 5))
+  tree2  <- new_aphylo(tip.annotation=rbind(0,0,0), tree = dat2)
   ans0 <- raphylo(tree = tree2, mu_d = c(1, 0), Pi = 1, psi = c(0,0), eta = c(1,1))
   ans1 <- raphylo(tree = tree2, mu_d = c(0, 1), Pi = 1, psi = c(0,0), eta = c(1,1))
   ans2 <- raphylo(tree = tree2, mu_d = c(1, 1), Pi = 1, psi = c(0,0), eta = c(1,1))
@@ -131,7 +131,13 @@ test_that("Deterministic results including node types", {
   expect_equivalent(getann(ans1), c(1, 0, 0, 0, 0)) # All losses
   expect_equivalent(getann(ans2), c(1, 0, 0, 1, 1)) # Mixed
   
-  tree3 <- new_aphylo(rbind(0,0,0), dat2, types= c(1, 0, 1, 1, 1))
+  types <- c(1, 0, 1, 1, 1)
+  tree3 <- new_aphylo(
+    tree = dat2, tip.annotation = rbind(0,0,0), 
+    node.type = types[dat2$node.label],
+    tip.type  = types[dat2$tip.label],
+    )
+  
   (ans3  <- raphylo(
     tree = tree3,
     mu_s = c(0, 0), # Nothing happens in speciation nodes (1)
@@ -143,7 +149,14 @@ test_that("Deterministic results including node types", {
   
   expect_equivalent(getann(ans3), c(0, 0, 0, 1, 1))
   
-  tree3 <- new_aphylo(rbind(0,0,0), dat2, types= c(1, 0, 1, 1, 1))
+  types <- c(1, 0, 1, 1, 1)
+  tree3 <- new_aphylo(
+    tree           = dat2,
+    tip.annotation = rbind(0,0,0), 
+    node.type = types[dat2$node.label],
+    tip.type  = types[dat2$tip.label],
+    )
+  
   (ans3  <- raphylo(
     tree = tree3,
     mu_s = c(0, 0), # Nothing happens in speciation nodes (1)
@@ -155,3 +168,4 @@ test_that("Deterministic results including node types", {
   
   expect_equivalent(getann(ans3), c(1, 1, 1, 0, 0))
 })
+

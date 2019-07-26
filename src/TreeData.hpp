@@ -129,6 +129,19 @@ public:
     // this->A       = A;
     // this->types   = types;
     
+    // Consistency checks
+    int current_size = -1;
+    for (auto iter = A.begin(); iter != A.end(); ++iter) {
+      
+      if (current_size < 0) {
+        current_size = iter->size();
+        continue;
+      }
+      
+      if (iter->size() != current_size)
+        stop("All function annotations in A have to have the same length.");
+    }
+    
     // Getting meta info, and initializing containers
     this->nfuns      = A[0].size();
     this->n          = A.size();

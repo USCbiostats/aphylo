@@ -8,7 +8,7 @@
 #' @examples 
 #' data(fakeexperiment)
 #' data(faketree)
-#' ans <- new_aphylo(fakeexperiment[,2:3], faketree)
+#' ans <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
 #' c(ans, ans)
 NULL
 

@@ -105,7 +105,7 @@ map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
 #' 
 #' data(fakeexperiment)
 #' data(faketree)
-#' ans <- new_aphylo(fakeexperiment[,2:3], faketree)
+#' ans <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
 #'  
 #' # We can visualize it
 #' plot(ans)
@@ -180,16 +180,20 @@ check_annotations <- function(x) {
 }
 
 #' @rdname aphylo-class
+#' @param ... Further argmuents passed to the method.
 #' @export
-new_aphylo <- function(
+new_aphylo <- function(tree, tip.annotation, ...) UseMethod("new_aphylo")
+
+#' @rdname aphylo-class
+#' @export
+new_aphylo.phylo <- function(
+  tree,
   tip.annotation,
-  tree, 
-  types           = NULL,
-  node.annotation = NULL
+  node.annotation = NULL,
+  tip.type        = NULL,
+  node.type       = NULL,
+  ...
   ) {
-  
-  # Coercing tree to a phylo object
-  tree <- ape::as.phylo(tree)
   
   # Checking annotations
   tip.annotation  <- check_annotations(tip.annotation)
@@ -204,27 +208,18 @@ new_aphylo <- function(
     stop("The number of `node.annotation` differs with the number of internal nodes in `tree`.",
          call. = FALSE)
   
-  if (is.null(types))
-    types <- integer(ape::Nnode(tree, internal.only = FALSE))
-  
-  # During the creation of the phylo object... things get sorted around
-  # so we need to rearrange things in order to match the original order.
-  # we use the generated labels duringn the call to as.phylo.matrix
-  tip.annotation <- tip.annotation[
-    order(as.integer(tree$tip.label)), , drop = FALSE
-    ]
-  
-  if (length(node.annotation))
-    node.annotation <- node.annotation[as.integer(tree$node.label), , drop = FALSE]
-  
-  types <- types[as.integer(with(tree, c(tip.label, node.label)))]
+  if (is.null(tip.type))
+    tip.type <- integer(ape::Ntip(tree))
+  if (is.null(node.type))
+    node.type <- integer(ape::Nnode(tree))
   
   # Returning
   as_aphylo(
     tip.annotation  = tip.annotation,
     node.annotation = node.annotation,
     tree            = tree,
-    types           = types,
+    tip.type        = tip.type,
+    node.type       = node.type,
     checks          = FALSE
   )
   
@@ -237,7 +232,8 @@ as_aphylo <- function(
   tip.annotation,
   node.annotation,
   tree,
-  types,
+  tip.type,
+  node.type,
   checks = TRUE
   ) {
   
@@ -255,8 +251,11 @@ as_aphylo <- function(
     } 
     
     # The nunmber of types should be of the same size of data points
-    stopifnot(length(types) == ape::Nnode(tree, internal.only = FALSE))
-      
+    if (length(tip.type))
+      stopifnot(length(tip.type) == ape::Ntip(tree))
+    if (length(node.type))
+      stopifnot(length(node.type) == ape::Nnode(tree))
+    
   }
   
   # PATCH FIX: FOR NOW WE NEED TO HAVE SOMETHING FOR NODES!
@@ -270,6 +269,12 @@ as_aphylo <- function(
       )
     )
   
+  # If empty, then we fill it. Otherwise the likelihood function will fail (badly)
+  if (!length(tip.type))
+    tip.type <- integer(ape::Ntip(tree))
+  if (!length(node.type))
+    node.type <- integer(ape::Nnode(tree))
+  
   # Listing offpring
   offspring <- list_offspring(tree)
   
@@ -277,7 +282,6 @@ as_aphylo <- function(
   pseq         <- ape::postorder(tree)
   pseq         <- c(tree$edge[pseq, 2], length(tree$tip.label) + 1L)
   pseq_reduced <- reduce_pseq(pseq, rbind(tip.annotation, node.annotation), offspring)
-  
   
   structure(
     c(
@@ -288,7 +292,8 @@ as_aphylo <- function(
       list(pseq            = pseq),
       list(reduced_pseq    = pseq_reduced),
       list(Ntips.annotated = length(intersect(1:nrow(tip.annotation), pseq_reduced))),
-      list(types           = types)
+      list(tip.type        = tip.type),
+      list(node.type       = node.type)
     ),
     class = c("aphylo")
   )

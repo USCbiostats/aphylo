@@ -6,7 +6,7 @@
 #' # Loading data
 #' data(fakeexperiment)
 #' data(faketree)
-#' O <- new_aphylo(fakeexperiment[,2:3], faketree)
+#' O <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
 #' 
 #' # Baseline plot (all parameters but Pi)
 #' plot_logLik(O)

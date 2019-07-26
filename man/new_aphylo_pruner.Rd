@@ -3,15 +3,11 @@
 \name{new_aphylo_pruner}
 \alias{new_aphylo_pruner}
 \alias{aphylo_pruner}
-\alias{new_aphylo_pruner.matrix}
 \alias{new_aphylo_pruner.aphylo}
 \alias{new_aphylo_pruner.multiAphylo}
 \title{Pointer to \code{pruner}}
 \usage{
 new_aphylo_pruner(...)
-
-\method{new_aphylo_pruner}{matrix}(edgelist, annotation, types = NULL,
-  ...)
 
 \method{new_aphylo_pruner}{aphylo}(x, ...)
 
@@ -19,12 +15,6 @@ new_aphylo_pruner(...)
 }
 \arguments{
 \item{...}{Further arguments passed to the method}
-
-\item{edgelist}{a List two integer vectors.}
-
-\item{annotation}{a list of length \code{N} (annotations).}
-
-\item{types}{An integer vector of types of size \code{N}.}
 
 \item{x}{An object of class \link{aphylo}.}
 }

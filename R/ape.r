@@ -73,6 +73,28 @@ as.phylo.matrix <- function(
   ...
 ) {
   
+  # Must be a two column matrix
+  if (ncol(x) != 2L)
+    stop(
+      "`x` must be a two-column matrix. It has ", ncol(x), " instead.",
+      call. = FALSE
+      )
+  
+  # Retrieving the labels
+  if (!inherits(x, "integer")) {
+    
+    label <- sort(unique(as.vector(x)))
+    
+    # Recasting as an integer vector
+    x <- matrix(match(as.vector(x), label), ncol=2L)
+    
+  } else {
+    
+    label <- range(as.vector(x))
+    label <- label[1]:label[2]
+    
+  }
+  
   # Computing degrees
   nodes <- unique(as.vector(x))
   ideg  <- fast_table_using_labels(x[,2], nodes)
@@ -140,9 +162,9 @@ as.phylo.matrix <- function(
   new_phylo(
     edge        = unname(x),
     edge.length = unname(edge.length),
-    tip.label   = unname(leafs),
+    tip.label   = unname(label[leafs]),
     Nnode       = length(inner) + 1L,
-    node.label  = unname(c(roots, inner)),
+    node.label  = unname(label[c(roots, inner)]),
     root.edge   = unname(root.edge)
     )
 }

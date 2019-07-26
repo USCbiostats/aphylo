@@ -149,7 +149,8 @@ sim_counts <- eval({
 #' @export
 sim_fun_on_tree <- function(
   tree,
-  types,
+  tip.type,
+  node.type,
   psi,
   mu_d,
   mu_s,
@@ -164,9 +165,14 @@ sim_fun_on_tree <- function(
   if (!inherits(tree, "phylo") & !inherits(tree, "aphylo"))
     stop("`tree` must be of class `phylo` or `aphylo`.", call. = FALSE)
   
-  if (missing(types) || is.null(types)) {
-    if (is.aphylo(tree)) types <- tree$types
-    else types <- integer(ape::Nnode(tree, internal.only = FALSE))
+  if (missing(tip.type) || is.null(tip.type)) {
+    if (is.aphylo(tree)) tip.type <- tree$tip.type
+    else tip.type <- integer(ape::Ntip(tree))
+  }
+  
+  if (missing(node.type) || is.null(node.type)) {
+    if (is.aphylo(tree)) node.type <- tree$node.type
+    else node.type <- integer(ape::Nnode(tree))
   }
   
   tree <- ape::as.phylo(tree)
@@ -189,7 +195,7 @@ sim_fun_on_tree <- function(
     f <- .sim_fun_on_tree(
       offspring = offspring,
       pseq      = pseq,
-      types     = types,
+      types     = c(tip.type, node.type),
       psi       = psi,
       mu_d      = mu_d,
       mu_s      = mu_s,
@@ -243,7 +249,8 @@ sim_fun_on_tree <- function(
 raphylo <- function(
   n           = NULL,
   tree        = NULL,
-  types       = NULL,
+  tip.type    = NULL,
+  node.type   = NULL,
   P           = 1L,
   psi         = c(.05, .05),
   mu_d        = c(.90, .90),
@@ -265,29 +272,34 @@ raphylo <- function(
     
   } else if (is.aphylo(tree)) {
     
-    if (is.null(types))
-      types <- tree$types
+    if (is.null(tip.type))
+      tip.type <- tree$tip.type
+    if (is.null(node.type))
+      node.type <- tree$node.type
+    
     tree <- as.phylo(tree)
     
-  } else {
-    
-    # Getting a tree out of it
-    tree <- as.phylo(tree)
-    
-    # Now the labels (will need to reorder)
-    if (length(types)) 
-      types <- types[as.integer(with(tree, c(tip.label, node.label)))]
-    
-    
-  }
+  } else if (!inherits(tree, "phylo")) 
+    stop("`tree` should be either an object of class `phylo` or `aphylo`.")
   
-  if (is.null(types))
-    types <- integer(ape::Nnode(tree, internal.only = FALSE))
+  # Checking types
+  if (is.null(tip.type))
+    tip.type <- integer(ape::Ntip(tree))
+  else if (length(tip.type) != ape::Ntip(tree))
+    stop("The length of `tip.type` does not match the number of tips on `tree`.",
+         call. = FALSE)
+  
+  if (is.null(node.type))
+    node.type <- integer(ape::Nnode(tree))
+  else if (length(node.type) != ape::Nnode(tree))
+    stop("The length of `node.type` does not match the number of nodes on `tree`.",
+         call. = FALSE)
   
   # Step 2: Simulate the annotations
   ans <- sim_fun_on_tree(
     tree        = tree,
-    types       = types,
+    tip.type    = tip.type,
+    node.type   = node.type,
     psi         = psi,
     mu_d        = mu_d,
     mu_s        = mu_s,
@@ -304,7 +316,8 @@ raphylo <- function(
     tip.annotation  = ans[1L:nleaf, ,drop=FALSE],
     node.annotation = ans[(nleaf + 1L):nrow(ans), , drop=FALSE],
     tree            = tree,
-    types           = types
+    tip.type        = tip.type,
+    node.type       = node.type
   )
   
 }

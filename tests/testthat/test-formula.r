@@ -42,12 +42,10 @@ test_that("Multiple chains formulas work", {
   x <- raphylo(30)
   p <- matrix(runif(7*2), nrow=2, dimnames = NULL)
   
+  ctrl <- list(nchains=2, nsteps=500, burnin=10, conv_checker = NULL)
+  
   expect_warning(
-    ans <- aphylo_mcmc(
-      x~psi+mu_d+eta+Pi, params = p,
-      control = list(
-        nchains=2, nsteps=500, burnin=10,
-        conv_checker = NULL)),
+    ans <- aphylo_mcmc(x ~ psi+ mu_d + eta + Pi, params = p, control = ctrl),
     "matched by position"
   )
   

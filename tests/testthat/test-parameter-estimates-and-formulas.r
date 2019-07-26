@@ -75,13 +75,9 @@ test_that("x ~ mu_d + mu_s + psi + Pi", {
   pars <- c(pars, list(conv_checker = NULL))
   
   set.seed(1)
+  dflts <- aphylo:::APHYLO_PARAM_DEFAULT[-c(7:8)]
   ans0 <- suppressWarnings(
-    aphylo_mcmc(
-      x ~ mu_d + mu_s + psi + Pi,
-      params = aphylo:::APHYLO_PARAM_DEFAULT[-c(7:8)],
-      priors = mypriors,
-      control = pars
-      )
+    aphylo_mcmc(x ~ mu_d + mu_s + psi + Pi, params = dflts, priors = mypriors, control = pars)
   )
   
   

@@ -101,26 +101,36 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
 
 test_that("mu_d and mu_s work", {
   
-  dat  <- c(1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 6, 7, 6, 8, 4, 9, 4, 10)
-  dat  <- matrix(dat, ncol=2, byrow = TRUE)
+  dat   <- c(1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 6, 7, 6, 8, 4, 9, 4, 10)
+  dat   <- as.phylo(matrix(dat, ncol=2, byrow = TRUE))
+  types <- c(1, 1, 1, 1, 1, 0, 1, 1, 1, 1)
+
   set.seed(1)
+  
   tree <- raphylo(
-    tree = dat, types = c(1, 1, 1, 1, 1, 0, 1, 1, 1, 1),
-    psi = c(0, 0), eta = c(1,1), mu_d = c(.9,0), mu_s = c(0,0), Pi = 0
-      )
+    tree      = dat,
+    tip.type  = types[dat$tip.label],
+    node.type = types[dat$node.label],
+    psi       = c(0, 0),
+    eta       = c(1,1),
+    mu_d      = c(.9,0),
+    mu_s      = c(0,0),
+    Pi        = 0
+  )
+  
   plot(tree)
   
-  ans_mcmc <- aphylo_mcmc(tree ~ mu_d + mu_s, priors = function(p) {
+  ans_mcmc <- suppressWarnings(aphylo_mcmc(tree ~ mu_d + mu_s, priors = function(p) {
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
-  })
+  }))
   
   ans_mle <- aphylo_mle(tree ~ mu_d + mu_s, priors = function(p) {
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
   })
   
-  expect_equivalent(predict(ans_mle), predict(ans_mcmc), tol=.1)
+  expect_equivalent(predict(ans_mle), predict(ans_mcmc), tol=.15)
   
   
 })
