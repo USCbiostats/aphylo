@@ -43,6 +43,14 @@ Tree_get_parents <- function(tree_ptr) {
     .Call(`_aphylo_Tree_Nnode`, tree_ptr, internal_only)
 }
 
+Tree_get_dist_tip2root <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_dist_tip2root`, tree_ptr)
+}
+
+Tree_get_tips <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_tips`, tree_ptr)
+}
+
 #' @export
 #' @rdname ape-methods
 Ntip.aphylo_pruner <- function(phy) {

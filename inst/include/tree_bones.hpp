@@ -8,7 +8,7 @@
 #define H_PRUNER_TREE_BONES
 
 #ifndef MAX_TREE_SIZE
-#define MAX_TREE_SIZE 20000
+#define MAX_TREE_SIZE 50000
 #endif
 
 // Arbtrary set of arguments, this is the class that the creator function should
@@ -39,6 +39,7 @@ private:
   bool is_dag_(int i = -1, int caller = -1, bool up_search = false);
   void postorder_(uint i);
   void postorder();
+  uint get_dist_tip2root_(uint start, uint count);
   TreeIterator iter;
   
 protected:
@@ -64,6 +65,10 @@ protected:
    * the tree. This is set at the moment during which the tree is created.
    */
   v_uint POSTORDER;
+  
+  //! List of tip (leaves) indices
+  v_uint TIPS;
+  v_uint DIST_TIPS2ROOT;
   
   friend class TreeData;
   friend class TreeIterator;
@@ -115,7 +120,14 @@ public:
   vv_uint get_parents()   const {return this->parents;};
   vv_uint get_offspring() const {return this->offspring;};
   v_uint get_postorder()  const {return this->POSTORDER;};
+  
   v_uint get_preorder()   const;
+  
+  //! List of tips position indices
+  v_uint get_tips()       const {return this->TIPS;};
+  
+  //! Distance of tips to the closest root
+  v_uint get_dist_tip2root();
   
   //! Returns the numner of nodes.
   uint n_nodes()          const {return this->N_NODES;};
@@ -131,7 +143,7 @@ public:
   // Checker functions ---------------------------------------------------------
   bool is_dag();
   bool is_connected() const {return this->POSTORDER.size() == this->N_NODES;};
-  
+
   // Setters -------------------------------------------------------------------
   void reset_visited() {
     std::fill(this->visited.begin(), this->visited.end(), false);

@@ -18,7 +18,7 @@ void likelihood(
   printf("\n");
 #endif
   
-  if (n.is_leaf()) {
+  if (n.is_tip()) {
     
     // Iterating through the states
     pruner::uint s, p;
@@ -113,6 +113,12 @@ SEXP new_aphylo_pruner(
   pruner::uint res;
   Rcpp::XPtr< pruner::Tree > xptr(new pruner::Tree(edgelist[0], edgelist[1], res), true);
   
+  if (res != 0u)
+    stop(
+      "An error of code %d happened while creating the pruner::Tree object.",
+      res
+    );
+  
   xptr->args = std::make_shared< pruner::TreeData >(A, types, nannotated);
   xptr->fun  = likelihood;
   
@@ -199,6 +205,24 @@ unsigned int Tree_Nnode(const SEXP & tree_ptr, bool internal_only = true) {
   return count;
 }
 
+// [[Rcpp::export]]
+std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP & tree_ptr) {
+  
+  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  
+  return p->get_dist_tip2root();
+  
+}
+
+// [[Rcpp::export]]
+std::vector< unsigned int > Tree_get_tips(const SEXP & tree_ptr) {
+  
+  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  
+  return p->get_tips();
+  
+}
+
 //' @export
 //' @rdname ape-methods
 // [[Rcpp::export(name="Ntip.aphylo_pruner", rng = false)]]
@@ -229,7 +253,6 @@ unsigned int Tree_Nann(const SEXP & phy) {
   
   return p->args->nfuns;
 }
-
 
 // [[Rcpp::export]]
 std::vector< double > root_node_pr(

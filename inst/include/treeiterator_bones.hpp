@@ -54,8 +54,8 @@ public:
   //! Check whether the current node is root
   bool is_root() const;
   
-  //! Checks whether the current node is a leaf or not
-  bool is_leaf() const;
+  //! Checks whether the current node is a tip (leaf) or not.
+  bool is_tip() const;
   
   uint front() const;
   uint back() const;
