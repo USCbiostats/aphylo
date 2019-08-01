@@ -42,3 +42,4 @@ expect_warning(
 
 expect_identical(class(ans), "aphylo_estimates")
   
+# aphylo_formula(x ~ psi + mu_d + mu_s + eta)$fun
