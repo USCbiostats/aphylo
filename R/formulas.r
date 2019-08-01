@@ -379,8 +379,8 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
       "aphylo object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
-  saveRDS(val, "~/Desktop/val.rds")
-  saveRDS(model_call, "~/Desktop/model_call.rds")
+  # saveRDS(val, "~/Desktop/val.rds")
+  # saveRDS(model_call, "~/Desktop/model_call.rds")
   for (i in 3:length(val))
     if (!is.call(val[[i]])) {
       eval(
