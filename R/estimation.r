@@ -345,7 +345,7 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
   nsteps    = 1e5L,
   burnin    = 1e4L,
   thin      = 10L,
-  nchains   = 2L,
+  nchains   = 1L, #2L,
   multicore = FALSE,
   conv_checker = fmcmc::convergence_auto(500)
 )
@@ -428,8 +428,6 @@ aphylo_mcmc <- function(
     dat0 <- new_aphylo_pruner(model$dat)
     
   }
-  # dat0 <- model$dat
-    
   
   # Running the MCMC
   ans <- do.call(

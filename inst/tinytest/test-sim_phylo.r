@@ -1,4 +1,4 @@
-context("Simulation of Annotated Phylogenetic Trees")
+# context("Simulation of Annotated Phylogenetic Trees")
 
 # Function to compute degree distribution
 degseq <- function(x) {
@@ -10,7 +10,7 @@ degseq <- function(x) {
   as.vector(table(ans$ind + ans$oud))
 }
 
-test_that("Simulating Trees", {
+# test_that("Simulating Trees", {
   set.seed(121)
   n <- 100
   d <- vector("integer", n)
@@ -18,7 +18,7 @@ test_that("Simulating Trees", {
   ds <- c(n, 1, n-2)
   
   expect_equivalent(ds, degseq(sim_tree(n)$edge))
-})
+# })
 
 checkout_annotations <- function(x) {
   sapply(
@@ -27,7 +27,7 @@ checkout_annotations <- function(x) {
   )
 }
 
-test_that("Simulating informative annotated trees", {
+# test_that("Simulating informative annotated trees", {
   
   set.seed(1)
   ans <- lapply(1:100, function(i) raphylo(5, informative = TRUE))
@@ -37,11 +37,11 @@ test_that("Simulating informative annotated trees", {
   expect_true(all(ans[1,] >= 1))
   expect_true(all(ans[2,] >= 1))
   
-})
+# })
 
-test_that("Dropping annotations", {
+# test_that("Dropping annotations", {
   set.seed(1)
-  sizes <- ceiling(runif(1e3, .01)*200)
+  sizes <- ceiling(runif(1e3, .01)*300)
   ans <- lapply(sizes, raphylo, Pi = .5, psi=c(0,0), mu_d=c(.5, .5), mu_s=c(.5, .5))
   ans0 <- checkout_annotations(ans)
   
@@ -63,11 +63,11 @@ test_that("Dropping annotations", {
   ans3 <- checkout_annotations(ans3)
   ans3 <- ans3[1,]/colSums(ans3)
   
-  expect_equal(mean(ans3), 1/3, tol = .1)
+  expect_equal(abs(mean(ans3) - .3333), 0, tol = .1)
   
-})
+# })
 
-test_that("Mislabeling", {
+# test_that("Mislabeling", {
   
   # Ramdom tree (fully annotated) ---------------------------------------------
   set.seed(1)
@@ -108,9 +108,9 @@ test_that("Mislabeling", {
   
   
   
-})
+# })
 
-test_that("Deterministic results including node types", {
+# test_that("Deterministic results including node types", {
   
   # Fake tree assuring evolution
   dat2   <- as.phylo(matrix(c(1, 2, 1, 3, 2, 4, 2, 5), ncol=2, byrow = TRUE))
@@ -167,5 +167,5 @@ test_that("Deterministic results including node types", {
   ))
   
   expect_equivalent(getann(ans3), c(1, 1, 1, 0, 0))
-})
+# })
 

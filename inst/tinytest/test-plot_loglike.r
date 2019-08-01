@@ -1,14 +1,14 @@
-context("plot_LogLike")
+# context("plot_LogLike")
 
-test_that("plotll", {
+# test_that("plotll", {
   set.seed(1)
   dat <- raphylo(20)
   
   # aphylo method
-  expect_null(plot_logLik(dat))
+  expect_true(is.null(plot_logLik(dat)))
 
   # phylo_mle method
   ans <- suppressWarnings(aphylo_mle(dat ~ mu_d + psi))
-  expect_null(plot_logLik(ans))
+  expect_true(is.null(plot_logLik(ans)))
   
-})
+# })

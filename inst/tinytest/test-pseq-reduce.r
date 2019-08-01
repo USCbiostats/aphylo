@@ -1,6 +1,6 @@
-context("Reducing pruning sequence")
+# context("Reducing pruning sequence")
 
-test_that("Same results", {
+# test_that("Same results", {
   
   set.seed(1235541)
   x <- raphylo(100)
@@ -26,7 +26,7 @@ test_that("Same results", {
   
   expect_identical(ans0$hist, ans1$hist)
   
-})
+# })
 
 # pseq1 <- x$pseq
 # pseq2 <- aphylo:::reduce_pseq(

@@ -1,4 +1,4 @@
-context("LogLikelihood function")
+# context("LogLikelihood function")
 
 data("faketree")
 data("fakeexperiment")
@@ -31,7 +31,7 @@ Pr <- LogLike(
 
 
 # Checking Leaf Probabilities --------------------------------------------------
-test_that("Leaf Probabilities", {
+# test_that("Leaf Probabilities", {
   # Checking cases compared to the states (0,0) (1,0) (0,1) (1,1)
   PrRaw   <- Pr
   PrRaw[] <- 1
@@ -62,11 +62,11 @@ test_that("Leaf Probabilities", {
   
   # These should be identical
   expect_equivalent(PrRaw[4:7,], Pr[c(5:7, 1:4),][4:7,])
-})
+# })
 
 
 # Checking Internal Probabilities ----------------------------------------------
-test_that("Internal Probabilities", {
+# test_that("Internal Probabilities", {
   M  <- aphylo:::prob_mat(mu)
   # Checking cases compared to the states (0,0) (1,0) (0,1) (1,1)
   
@@ -182,10 +182,10 @@ test_that("Internal Probabilities", {
   PrRaw[1,4] <- prod(of1)
   
   expect_equal(Pr[c(5:7, 1:4),], PrRaw)
-})
+# })
 
 # Likelihood of Rootnode -------------------------------------------------------
-test_that("Log-Likelihood", {
+# test_that("Log-Likelihood", {
   ll0 <- LogLike(O, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)$ll
   
   PI   <- aphylo:::root_node_prob(Pi, S)
@@ -193,14 +193,14 @@ test_that("Log-Likelihood", {
   ll1  <- log(sum(Pr[root, , drop = TRUE] * PI))
   
   expect_equal(abs(ll1 - ll0), 0, tol = errtol)
-})
+# })
 
 # Proportionally when fixing etas or psi ---------------------------------------
 # The baseline model, compared against the one with eta, when fixing
 # eta0 = eta1 = 1/2, the likelihoods should be proportional to a constant equal
 # to (1/2)^(P*#leafs).
 
-test_that("Leaf Probabilities", {
+# test_that("Leaf Probabilities", {
   
   # Setting eta to be 1/2
   eta    <- c(.5, .5)
@@ -353,10 +353,10 @@ test_that("Leaf Probabilities", {
   # This likelihoods are proportional to (1/2)^(P*#leafs)
   expect_equal((exp(ll0)/exp(ll1))^(1/(2*4)), 0.5, tol = errtol)
   
-})
+# })
 
 # ------------------------------------------------------------------------------
-test_that("Joint loglike for multiAphylo", {
+# test_that("Joint loglike for multiAphylo", {
   
   set.seed(113)
   trees <- lapply(sample(20:50, 10, TRUE), raphylo)
@@ -385,4 +385,4 @@ test_that("Joint loglike for multiAphylo", {
   
   expect_equal(ans1, ans0$ll)
   
-})
+# })

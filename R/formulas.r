@@ -70,14 +70,16 @@ aphylo_call <- function(params, priors) {
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
         
-        if (is.infinite(ans$ll))
+        if (is.infinite(ans$ll)) {
           ans$ll <- .Machine$double.xmax*sign(ans$ll)*1e-10
+        }
         
         # If verbose (not by default)
-        if (verb_ans)
+        if (verb_ans) {
           ans
-        else
+        } else {
           ans$ll
+        }
     },
     fixed = structure(
       .Data = rep(FALSE, length(params)),

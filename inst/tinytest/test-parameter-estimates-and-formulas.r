@@ -1,8 +1,6 @@
-context("The formulas are writing the right model")
-
 suppressMessages(library(coda))
 
-test_that("x ~ mu", {
+# test_that("x ~ mu", {
   
   # Setting the default with no multicore
   pars <- aphylo:::APHYLO_DEFAULT_MCMC_CONTROL
@@ -57,9 +55,9 @@ test_that("x ~ mu", {
     
   expect_equal(summary(ans1)$statistics[,"Mean"], ans0$par)
 
-})
+# })
 
-test_that("x ~ mu_d + mu_s + psi + Pi", {
+# test_that("x ~ mu_d + mu_s + psi + Pi", {
   
   # Data generating process
   set.seed(7223)
@@ -122,5 +120,5 @@ test_that("x ~ mu_d + mu_s + psi + Pi", {
   
   expect_equal(summary(ans1)$statistics[,"Mean"], ans0$par)
   
-})
+# })
 

@@ -1,6 +1,6 @@
-context("Area Under the Curve")
+# context("Area Under the Curve")
 
-test_that("Coincides with what the AUC::auc(roc()) function returns.", {
+# test_that("Coincides with what the AUC::auc(roc()) function returns.", {
   
   set.seed(1231)
   x <- rnorm(100)
@@ -13,6 +13,6 @@ test_that("Coincides with what the AUC::auc(roc()) function returns.", {
   
   expect_equal(ans0$auc, ans1, tol=0.01)
   
-})
+# })
 
 
