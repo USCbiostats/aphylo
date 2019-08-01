@@ -1,3 +1,12 @@
+#' Yeah... covr modifies the language of the objects, so I need to 
+#' know when this is happening in order for me to make the right change
+#' of the likelihood function... This is a bit nasty, but I can't think of a better
+#' whay to do this!
+on_covr <- function(env) {
+  any(grepl("covr[:]{2,3}", deparse(body(env$fun))))
+}
+
+
 #' Formulas in `aphylo`
 #' 
 #' @param ... Either 0, 1 or both. Depending on the parameter, the index of the
@@ -52,7 +61,7 @@ aphylo_call <- function(params, priors) {
     list(
       fun = function(p, dat, priors, verb_ans = FALSE) {
         
-        # Arguments
+        # Call
         ans <- LogLike(
           tree = dat,
           psi  = c(0, 0),
@@ -64,8 +73,7 @@ aphylo_call <- function(params, priors) {
         )
         
         # Correcting for eta
-        ans$ll <- ans$ll +
-          0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
+        ans$ll <- ans$ll + 0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
@@ -122,12 +130,22 @@ validate_dots_in_term <- function(..., expected) {
 #' @rdname aphylo-model
 eta <- function(..., env) {
   
+  # Updating parameters
+  if (on_covr(env)) {
+    body(env$fun)[[2]][[2]][[3]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
+    body(env$fun)[[3]][[2]][[3]] <- NULL
+  } else {
+    body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
+    body(env$fun)[[3]] <- NULL
+  }
+  
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
+  # body(env$fun)[[pos]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
   env$fixed[c("eta0", "eta1")] <- FALSE
   
   # Removing the eta correction
-  body(env$fun)[[3]] <- NULL
+  # pos <- findincode(body(env$fun), "sum[(]Nannotated[(]dat[)][)]")
+  # body(env$fun)[[pos]] <- NULL
   
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))
@@ -140,8 +158,14 @@ eta <- function(..., env) {
 #' @rdname aphylo-model
 psi <- function(..., env) {
   
+  # Finding position of the LogLike function
+  if (on_covr(env)) {
+    body(env$fun)[[2]][[2]][[3]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
+  } else {
+    body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
+  }
+  
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
   env$fixed[c("psi0", "psi1")] <- FALSE
 
   # Updating
@@ -156,7 +180,12 @@ psi <- function(..., env) {
 Pi <- function(..., env) {
   
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
+  if (on_covr(env)) {
+    body(env$fun)[[2]][[2]][[3]][[3]]$Pi <- bquote(p["Pi"])
+  } else {
+    body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
+  }
+  
   env$fixed["Pi"]            <- FALSE
   
   # Updating (if fixed, then we set whatever value should be included)
@@ -186,7 +215,12 @@ mu_s <- function(..., env) {
   for (f in dots)
     env$fixed[paste0("mu_s", f)] <- TRUE
   
-  body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  # Updating parameters
+  if (on_covr(env)) {
+    body(env$fun)[[2]][[2]][[3]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  } else {
+    body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  }
   
   invisible()
 }
@@ -345,6 +379,8 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
       "aphylo object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
+  saveRDS(val, "~/Desktop/val.rds")
+  saveRDS(model_call, "~/Desktop/model_call.rds")
   for (i in 3:length(val))
     if (!is.call(val[[i]])) {
       eval(
