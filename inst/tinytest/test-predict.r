@@ -1,6 +1,6 @@
-context("Prediction functions")
+# context("Prediction functions")
 
-test_that("Prediction works", {
+# test_that("Prediction works", {
   
   # Jmorr tree
   tree  <- matrix(c(1, 2, 1, 3, 3, 4, 3, 5), ncol=2, byrow = TRUE)
@@ -29,7 +29,7 @@ test_that("Prediction works", {
   
   
   expect_equivalent(ans0, ans1$posterior)
-  expect_equivalent(ans1$posterior, ans2)
+  expect_equivalent(ans1$posterior, ans2[,1])
   
   # Random test
   set.seed(122331)
@@ -40,9 +40,9 @@ test_that("Prediction works", {
   
   expect_equivalent(ans0$posterior, ans1[,1])
   
-})
+# })
 
-test_that("Calling the prediction function works", {
+# test_that("Calling the prediction function works", {
   
   set.seed(137245)
   
@@ -64,26 +64,26 @@ test_that("Calling the prediction function works", {
   expect_silent(plot(prediction_score(res)))
   expect_equivalent(ans0, ans1)
   
-})
+# })
 
 # Prediction score function ----------------------------------------------------
 
-test_that("Best vs Worse Prediction score", {
+# test_that("Best vs Worse Prediction score", {
   
   set.seed(123)
   y <- sample(c(0,1), 20, replace = TRUE)
   
   # Perfect prediction score
   ans0 <- prediction_score(cbind(y), cbind(y))
-  expect_equivalent(ans0$obs/ans0$worse, 0)
+  expect_equivalent((ans0$obs/ans0$worse)[1], 0)
   
   # Worse
   ans1 <- prediction_score(cbind(y), 1 - cbind(y))
-  expect_equivalent(ans1$obs/ans1$worse, 1)
+  expect_equivalent((ans1$obs/ans1$worse)[1], 1)
   
-})
+# })
 
-test_that("Random prediction score", {
+# test_that("Random prediction score", {
   
   set.seed(123)
   y <- cbind(sample(c(0,1), 20, replace = TRUE, prob = c(.8, .2)))
@@ -94,5 +94,5 @@ test_that("Random prediction score", {
   
   expect_equivalent(p0, p1, tol = 1e-1)
   
-})
+# })
 

@@ -1,3 +1,40 @@
+#' Fancy pattern for replacement:
+#' (
+#'   [a-zA-Z0-9]+\\[.+\\]: Something with brackets
+#'   c\\(.+\\): Something with a vector
+#'   [a-zA-Z0-9.]+: Just something
+#' )
+#' \\s*(?=$|[,]|\\)): Followed by a comma, parenthesis, line end, or )
+#'   
+#' PATTERN <- c("([a-zA-Z0-9]+\\[.+\\]|c\\(.+\\)|[a-zA-Z0-9.]+)\\s*(?=[,]|\\)|$)")
+update_fun_in_body <- function(f, var, replacement) {
+  
+  pattern <- c("([a-zA-Z0-9]+\\[.+\\]|c\\([a-zA-Z0-9\\.,\\s_\\\"]+\\)|[a-zA-Z0-9.-]+)\\s*(?=$|[,]|\\))")
+  
+  # Getting the data
+  f_txt <- deparse(f, width.cutoff = 500L)
+  
+  # Creating the match and replacement
+  replacement <- paste(var, "=", replacement)
+  var         <- paste0(var, "\\s*[=]\\s*", pattern)
+  
+  eval(parse(text = gsub(var, replacement, f_txt, perl = TRUE)))
+  
+}
+
+#' This function takes a pattern, looks for the matching line, and comments
+#' it out 
+comment_line_in_body <- function(f, pattern, ...) {
+  
+  f_txt <- deparse(f, width.cutoff = 500L)
+  test <- which(grepl(pattern, f_txt, ...))
+  if (length(test))
+    f_txt[test] <- "# "
+  eval(parse(text = f_txt))
+  
+}
+
+
 #' Formulas in `aphylo`
 #' 
 #' @param ... Either 0, 1 or both. Depending on the parameter, the index of the
@@ -52,32 +89,33 @@ aphylo_call <- function(params, priors) {
     list(
       fun = function(p, dat, priors, verb_ans = FALSE) {
         
-        # Arguments
+        # Call
         ans <- LogLike(
           tree = dat,
           psi  = c(0, 0),
-          mu_d = c(p["mu_d0"], p["mu_d1"]),
-          mu_s = c(p["mu_d0"], p["mu_d1"]),
+          mu_d = p[c("mu_d0", "mu_d1")],
+          mu_s = p[c("mu_d0", "mu_d1")],
           eta  = c(.5, .5),
           Pi   = -1, # Negative default means compute it using the approx
           verb_ans = verb_ans
         )
         
         # Correcting for eta
-        ans$ll <- ans$ll +
-          0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
+        ans$ll <- ans$ll + 0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
         
-        if (is.infinite(ans$ll))
+        if (is.infinite(ans$ll)) {
           ans$ll <- .Machine$double.xmax*sign(ans$ll)*1e-10
+        }
         
         # If verbose (not by default)
-        if (verb_ans)
+        if (verb_ans) {
           ans
-        else
+        } else {
           ans$ll
+        }
     },
     fixed = structure(
       .Data = rep(FALSE, length(params)),
@@ -120,12 +158,15 @@ validate_dots_in_term <- function(..., expected) {
 #' @rdname aphylo-model
 eta <- function(..., env) {
   
-  # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$eta  <- bquote(c(p["eta0"], p["eta1"]))
-  env$fixed[c("eta0", "eta1")] <- FALSE
+  # Updating parameters
+  env$fun <- update_fun_in_body(env$fun, "eta", "c(p[\"eta0\"], p[\"eta1\"])")
   
   # Removing the eta correction
-  body(env$fun)[[3]] <- NULL
+  env$fun <- comment_line_in_body(env$fun, "sum(Nann(dat))", fixed = TRUE)
+  
+  # Adding eta to the objective function
+  env$fixed[c("eta0", "eta1")] <- FALSE
+  
   
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))
@@ -138,8 +179,16 @@ eta <- function(..., env) {
 #' @rdname aphylo-model
 psi <- function(..., env) {
   
+  # if (on_covr(env)) {
+  #   body(env$fun)[[2]][[2]][[3]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
+  # } else {
+  #   body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
+  # }
+
+  # Updating the likelihood function  
+  env$fun <- update_fun_in_body(env$fun, "psi", "c(p[\"psi0\"], p[\"psi1\"])")
+  
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
   env$fixed[c("psi0", "psi1")] <- FALSE
 
   # Updating
@@ -154,8 +203,15 @@ psi <- function(..., env) {
 Pi <- function(..., env) {
   
   # Adding eta to the objective function
-  body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
-  env$fixed["Pi"]            <- FALSE
+  # if (on_covr(env)) {
+  #   body(env$fun)[[2]][[2]][[3]][[3]]$Pi <- bquote(p["Pi"])
+  # } else {
+  #   body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
+  # }
+  # Updating the likelihood function  
+  env$fun <- update_fun_in_body(env$fun, "Pi", "p[\"Pi\"]")
+  
+  env$fixed["Pi"] <- FALSE
   
   # Updating (if fixed, then we set whatever value should be included)
   dots <- validate_dots_in_term(..., expected = 0)
@@ -184,7 +240,13 @@ mu_s <- function(..., env) {
   for (f in dots)
     env$fixed[paste0("mu_s", f)] <- TRUE
   
-  body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  # Updating parameters
+  # if (on_covr(env)) {
+  #   body(env$fun)[[2]][[2]][[3]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  # } else {
+  #   body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
+  # }
+  env$fun <- update_fun_in_body(env$fun, "mu_s", "c(p[\"mu_s0\"], p[\"mu_s1\"])")
   
   invisible()
 }
@@ -248,8 +310,8 @@ validate_parameters <- function(fm, params) {
   # what the formula is.
   if (missing(params)) {
     
-    message("No parameters were specified. Default will be used instead.")
-    APHYLO_PARAM_DEFAULT[vars]
+    # message("No parameters were specified. Default will be used instead.")
+    return(APHYLO_PARAM_DEFAULT[vars])
     
   } else {
     
@@ -343,6 +405,8 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
       "aphylo object.", call. = FALSE)
   
   # Mofiying the likelihood function and the parameters for the mcmc
+  # saveRDS(val, "~/Desktop/val.rds")
+  # saveRDS(model_call, "~/Desktop/model_call.rds")
   for (i in 3:length(val))
     if (!is.call(val[[i]])) {
       eval(

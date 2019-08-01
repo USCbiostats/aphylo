@@ -1,4 +1,4 @@
-context("Parameter estimation")
+# context("Parameter estimation")
 
 set.seed(15)
 n <- 200
@@ -18,10 +18,10 @@ ans0 <- suppressWarnings({
 })
 
 # Methods ----------------------------------------------------------------------
-test_that("Methods", {
+# test_that("Methods", {
   
   # Printing
-  expect_output(suppressWarnings(print(ans0)), "ESTIMATION OF")
+  expect_silent(print(ans0))
   
   # Plotting
   expect_silent(plot(ans0))
@@ -32,10 +32,10 @@ test_that("Methods", {
   expect_equal(vcov(ans0), ans0$varcovar)
   
   
-})
+# })
 
 # ------------------------------------------------------------------------------
-test_that("MCMC", {
+# test_that("MCMC", {
   ans1 <- suppressWarnings(
     aphylo_mcmc(dat ~ mu_d + psi + eta + Pi, params = ans0$par,
                 priors = function(p) 1,
@@ -56,9 +56,9 @@ test_that("MCMC", {
   # Extracting coef and others
   expect_equal(coef(ans1), ans1$par)
   expect_equal(vcov(ans1), ans1$varcovar)
-})
+# })
 
-test_that("MCMC: in a degenerate case all parameters goes to the prior", {
+# test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   
   set.seed(1)
@@ -97,9 +97,9 @@ test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   expect_equal(unname(coef(ans1))[-c(5:6)], rep(2/12, 5), tol=.025)
   expect_equal(unname(coef(ans2))[-c(5:6)], rep(2/22, 5), tol=.025)
   
-})
+# })
 
-test_that("mu_d and mu_s work", {
+# test_that("mu_d and mu_s work", {
   
   dat   <- c(1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 6, 7, 6, 8, 4, 9, 4, 10)
   dat   <- as.phylo(matrix(dat, ncol=2, byrow = TRUE))
@@ -133,4 +133,4 @@ test_that("mu_d and mu_s work", {
   expect_equivalent(predict(ans_mle), predict(ans_mcmc), tol=.15)
   
   
-})
+# })

@@ -1,6 +1,6 @@
-context("Geodesic distances")
+# context("Geodesic distances")
 
-test_that("geodesic", {
+# test_that("geodesic", {
   # Simple (obvious) test
   edges <- matrix(c(0,1,1,2,2,3,3,4), ncol=2, byrow = TRUE)
   ans0 <- matrix(c(0:4, 1, 0:3, 2:0, 1,2, 3:0, 1, 4:0), ncol=5)
@@ -22,4 +22,4 @@ test_that("geodesic", {
   ans1 <- approx_geodesic(edges + 1)
   
   expect_equal(ans0, ans1)
-})
+# })
