@@ -7,6 +7,7 @@
 #' \\s*(?=$|[,]|\\)): Followed by a comma, parenthesis, line end, or )
 #'   
 #' PATTERN <- c("([a-zA-Z0-9]+\\[.+\\]|c\\(.+\\)|[a-zA-Z0-9.]+)\\s*(?=[,]|\\)|$)")
+#' @noRd
 update_fun_in_body <- function(f, var, replacement) {
   
   pattern <- c("([a-zA-Z0-9]+\\[.+\\]|c\\([a-zA-Z0-9\\.,\\s_\\\"]+\\)|[a-zA-Z0-9.-]+)\\s*(?=$|[,]|\\))")
@@ -24,6 +25,7 @@ update_fun_in_body <- function(f, var, replacement) {
 
 #' This function takes a pattern, looks for the matching line, and comments
 #' it out 
+#' @noRd
 comment_line_in_body <- function(f, pattern, ...) {
   
   f_txt <- deparse(f, width.cutoff = 500L)

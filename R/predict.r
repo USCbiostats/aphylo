@@ -1,34 +1,3 @@
-
-#' @rdname aphylo_estimates-class
-#' @return In the case of the `predict` method, a `P` column numeric matrix
-#' with values between \eqn{[0,1]} (probabilities).
-#' @export
-predict.aphylo_estimates <- function(object, ...) {
-  
-  # Running prediction function
-  pred <- predict_pre_order.aphylo_estimates(object, ...)
-  
-  # Adding names
-  if (is.aphylo(object$dat)) {
-    
-    dimnames(pred) <- list(
-      with(object$dat$tree, c(tip.label, node.label)),
-      colnames(object$dat$tip.annotation))
-    
-  } else {
-    
-    for (i in seq_along(pred)) {
-      dimnames(pred[[i]]) <- list(
-        with(object$dat[[i]]$tree, c(tip.label, node.label)),
-        colnames(object$dat[[i]]$tip.annotation))
-    }
-    
-  }
-  
-  
-  pred
-}
-
 #' Calculate prediction score (quality of prediction)
 #' 
 #' @param x An object of class [aphylo_estimates] or a numeric matrix.

@@ -4,8 +4,10 @@
 #' posterior probabilities, whereas the `predict_brute_force` computes posterior
 #' probabilities generating all possible cases.
 #' 
-#' @param atree,x Either a tree of class [aphylo] or an object of class [aphylo_estimates]
+#' @param atree,x,object Either a tree of class [aphylo] or an object of class [aphylo_estimates]
 #' @param params A numeric vector with the corresponding parameters.
+#' @param newdata (optional) An aphylo object.
+#' 
 #' @template parameters
 #' @templateVar .psi 1
 #' @templateVar .mu 1
@@ -20,15 +22,63 @@
 #' @name posterior-probabilities
 NULL
 
+#' @rdname posterior-probabilities
+#' @return In the case of the `predict` method, a `P` column numeric matrix
+#' with values between \eqn{[0,1]} (probabilities).
+#' @export
+predict.aphylo_estimates <- function(object, newdata = NULL,...) {
+  
+  # Running prediction function
+  pred <- predict_pre_order.aphylo_estimates(object, newdata = newdata, ...)
+  
+  # No need to check for the class since we are already doing that in
+  # predict_preorder.aphylo_estimates
+  if (!is.null(newdata)) 
+    object$dat <- newdata
+  
+  # Adding names
+  if (is.aphylo(object$dat)) {
+    
+    dimnames(pred) <- list(
+      with(object$dat$tree, c(tip.label, node.label)),
+      colnames(object$dat$tip.annotation))
+    
+  } else {
+    
+    for (i in seq_along(pred)) {
+      dimnames(pred[[i]]) <- list(
+        with(object$dat[[i]]$tree, c(tip.label, node.label)),
+        colnames(object$dat[[i]]$tip.annotation))
+    }
+    
+  }
+  
+  
+  pred
+}
+
 #' @export
 #' @rdname posterior-probabilities
 predict_pre_order <- function(x, ...) UseMethod("predict_pre_order")
 
 #' @export
 #' @rdname posterior-probabilities
-predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
+predict_pre_order.aphylo_estimates <- function(
+  x,
+  params  = x$par,
+  newdata = NULL,
+  ...
+  ) {
   
   dots <- list(...)
+  
+  if (!is.null(newdata)) {
+    if (inherits(newdata, "aphylo") | inherits(newdata, "multiAphylo"))
+      x$dat <- newdata
+    else 
+      stop("`newdata` should be of class `aphylo` or `multiAphylo`.",
+           call. = FALSE)
+  }
   
   if (Ntrees(x) > 1) {
     
@@ -41,7 +91,6 @@ predict_pre_order.aphylo_estimates <- function(x, params = x$par, ...) {
     
     return(ans)
   }
-    
   
   # Checking parameters
   types <- with(x$dat, c(tip.type, node.type))

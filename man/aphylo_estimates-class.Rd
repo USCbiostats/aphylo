@@ -8,7 +8,6 @@
 \alias{coef.aphylo_estimates}
 \alias{vcov.aphylo_estimates}
 \alias{aphylo_mcmc}
-\alias{predict.aphylo_estimates}
 \alias{print.aphylo_prediction_score}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
@@ -26,8 +25,6 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 aphylo_mcmc(model, params, priors = uprior(), control = list(),
   check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
-
-\method{predict}{aphylo_estimates}(object, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }
@@ -76,9 +73,6 @@ as the intermediate steps are not available to the user).}
 
 In the case of \code{aphylo_mcmc}, \code{hist} is an object of class
 \code{\link[coda:mcmc.list]{coda::mcmc.list()}}.
-
-In the case of the \code{predict} method, a \code{P} column numeric matrix
-with values between \eqn{[0,1]} (probabilities).
 }
 \description{
 The optimization is done via \code{optim}.

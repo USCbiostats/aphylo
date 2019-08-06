@@ -2,21 +2,27 @@
 % Please edit documentation in R/predict-bis.r
 \name{posterior-probabilities}
 \alias{posterior-probabilities}
+\alias{predict.aphylo_estimates}
 \alias{predict_pre_order}
 \alias{predict_pre_order.aphylo_estimates}
 \alias{predict_pre_order.aphylo}
 \alias{predict_brute_force}
 \title{Posterior probabilities based on parameter estimates}
 \usage{
+\method{predict}{aphylo_estimates}(object, newdata = NULL, ...)
+
 predict_pre_order(x, ...)
 
-\method{predict_pre_order}{aphylo_estimates}(x, params = x$par, ...)
+\method{predict_pre_order}{aphylo_estimates}(x, params = x$par,
+  newdata = NULL, ...)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
 predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 }
 \arguments{
+\item{newdata}{(optional) An aphylo object.}
+
 \item{...}{Ignored.}
 
 \item{params}{A numeric vector with the corresponding parameters.}
@@ -29,7 +35,11 @@ predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
-\item{atree, x}{Either a tree of class \link{aphylo} or an object of class \link{aphylo_estimates}}
+\item{atree, x, object}{Either a tree of class \link{aphylo} or an object of class \link{aphylo_estimates}}
+}
+\value{
+In the case of the \code{predict} method, a \code{P} column numeric matrix
+with values between \eqn{[0,1]} (probabilities).
 }
 \description{
 The function \code{predict_pre_order} uses a pre-order algorithm to compute the
