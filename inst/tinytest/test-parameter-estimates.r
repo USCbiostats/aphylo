@@ -61,41 +61,46 @@ ans0 <- suppressWarnings({
 # test_that("MCMC: in a degenerate case all parameters goes to the prior", {
   
   
-  set.seed(1)
-  dat <- suppressWarnings(raphylo(50, Pi=0, mu_d=c(0, 0), psi=c(0,0)))
-  dat$tip.annotation[] <- 9L
-  
-  ans1 <- suppressWarnings(
-    aphylo_mcmc(dat ~ mu_d + psi + eta(0,1) + Pi,
-                params = c(rep(2/12, 4), .5, .5,2/12),
-                priors = function(x) dbeta(x, 2, 10),
-                control = list(
-                  nsteps = 4e4, burnin=1e4, nchains=2,
-                  kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05),
-                  conv_checker = NULL
+set.seed(1)
+dat <- suppressWarnings(raphylo(50, Pi=0, mu_d=c(0, 0), psi=c(0,0)))
+dat$tip.annotation[] <- 9L
+
+ans1 <- suppressWarnings(
+  aphylo_mcmc(dat ~ mu_d + psi + eta(0,1) + Pi,
+              params = c(rep(2/12, 4), .5, .5,2/12),
+              priors = function(x) dbeta(x, 2, 10),
+              control = list(
+                nsteps = 4e4, burnin=1e4, nchains=2,
+                kernel = fmcmc::kernel_reflective_1by1(
+                  lb = 0, ub = 1, scale = .05,
+                  order = "random"
                   ),
-                check_informative = FALSE
-                )
-    )
-  
-  ans2 <- suppressWarnings(
-    aphylo_mcmc(
-      dat ~ mu_d + psi + eta(0,1) + Pi,
-      params = c(rep(2/22, 4), .5,.5,2/22), 
-      priors = function(x) dbeta(x, 2, 20),
-      control = list(
-        nsteps = 4e4, burnin=1e4, nchains=2,
-        kernel = fmcmc::kernel_reflective(lb = 0, ub = 1, scale = .05),
-        conv_checker = NULL
-        ),
-      check_informative = FALSE
-      )
+                conv_checker = NULL
+                ),
+              check_informative = FALSE
+              )
   )
+
+ans2 <- suppressWarnings(
+  aphylo_mcmc(
+    dat ~ mu_d + psi + eta(0,1) + Pi,
+    params = c(rep(2/22, 4), .5,.5,2/22), 
+    priors = function(x) dbeta(x, 2, 20),
+    control = list(
+      nsteps = 4e4, burnin=1e4, nchains=2,
+      kernel = fmcmc::kernel_reflective_1by1(
+        lb = 0, ub = 1, scale = .05,
+        order = "random"),
+      conv_checker = NULL
+      ),
+    check_informative = FALSE
+    )
+)
   
   
   # Should converge to the prior
-  expect_equal(unname(coef(ans1))[-c(5:6)], rep(2/12, 5), tol=.025)
-  expect_equal(unname(coef(ans2))[-c(5:6)], rep(2/22, 5), tol=.025)
+expect_true(all(abs(unname(coef(ans1))[-c(5:6)] - rep(2/12, 5)) < .025))
+expect_true(all(abs(unname(coef(ans2))[-c(5:6)] - rep(2/22, 5)) < .025))
   
 # })
 

@@ -103,6 +103,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Tree_get_postorder
+std::vector< unsigned int > Tree_get_postorder(const SEXP& tree_ptr);
+RcppExport SEXP _aphylo_Tree_get_postorder(SEXP tree_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_postorder(tree_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Tree_Ntip
 unsigned int Tree_Ntip(const SEXP& phy);
 RcppExport SEXP _aphylo_Tree_Ntip(SEXP phySEXP) {
@@ -304,6 +315,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_Tree_Nnode", (DL_FUNC) &_aphylo_Tree_Nnode, 2},
     {"_aphylo_Tree_get_dist_tip2root", (DL_FUNC) &_aphylo_Tree_get_dist_tip2root, 1},
     {"_aphylo_Tree_get_tips", (DL_FUNC) &_aphylo_Tree_get_tips, 1},
+    {"_aphylo_Tree_get_postorder", (DL_FUNC) &_aphylo_Tree_get_postorder, 1},
     {"_aphylo_Tree_Ntip", (DL_FUNC) &_aphylo_Tree_Ntip, 1},
     {"_aphylo_Tree_Nannotated", (DL_FUNC) &_aphylo_Tree_Nannotated, 1},
     {"_aphylo_Tree_Nann", (DL_FUNC) &_aphylo_Tree_Nann, 1},

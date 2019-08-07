@@ -33,6 +33,7 @@ class TreeIterator;
  * - `args`
  * - `fun`
  */
+
 class Tree {
   
 private:
@@ -113,8 +114,9 @@ public:
   // Getter --------------------------------------------------------------------
   
   // As pointers
-  const v_uint * get_parents_of(uint i);
-  const v_uint * get_offspring_of(uint i);
+  const vv_uint * get_parents_ptr()   const {return &this->parents;};
+  const vv_uint * get_offspring_ptr() const {return &this->offspring;};
+  const v_uint * get_postorder_ptr()  const {return &this->POSTORDER;};
   
   // As data
   vv_uint get_parents()   const {return this->parents;};
@@ -150,6 +152,8 @@ public:
     std::fill(this->visit_counts.begin(), this->visit_counts.end(), 0u);
     return ;
   };
+  
+  uint set_postorder(const v_uint & POSTORDER_, bool check = true);
   
   // Pre-Post/order ------------------------------------------------------------
   

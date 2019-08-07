@@ -1,23 +1,23 @@
-#' Fancy pattern for replacement:
-#' (
-#'   [a-zA-Z0-9]+\\[.+\\]: Something with brackets
-#'   c\\(.+\\): Something with a vector
-#'   [a-zA-Z0-9.]+: Just something
-#' )
-#' \\s*(?=$|[,]|\\)): Followed by a comma, parenthesis, line end, or )
-#'   
-#' PATTERN <- c("([a-zA-Z0-9]+\\[.+\\]|c\\(.+\\)|[a-zA-Z0-9.]+)\\s*(?=[,]|\\)|$)")
+#' Fancy pattern for replacement within the body of a function
 #' @noRd
 update_fun_in_body <- function(f, var, replacement) {
   
-  pattern <- c("([a-zA-Z0-9]+\\[.+\\]|c\\([a-zA-Z0-9\\.,\\s_\\\"]+\\)|[a-zA-Z0-9.-]+)\\s*(?=$|[,]|\\))")
+  pattern <- paste(
+    # p[c("...", ...)],
+    "p\\[c\\((\"[a-zA-Z0-9_]+\",*\\s*)+\\)\\]",
+    # c(0.1, ...)
+    "c\\(([0-9\\.,]+\\s*)+\\)",
+    # -1,
+    "-1",
+    sep = "|"
+  )
   
   # Getting the data
   f_txt <- deparse(f, width.cutoff = 500L)
   
   # Creating the match and replacement
   replacement <- paste(var, "=", replacement)
-  var         <- paste0(var, "\\s*[=]\\s*", pattern)
+  var         <- paste0(var, "\\s*[=]\\s*(", pattern, ")")
   
   eval(parse(text = gsub(var, replacement, f_txt, perl = TRUE)))
   
@@ -97,7 +97,7 @@ aphylo_call <- function(params, priors) {
           psi  = c(0, 0),
           mu_d = p[c("mu_d0", "mu_d1")],
           mu_s = p[c("mu_d0", "mu_d1")],
-          eta  = c(.5, .5),
+          eta  = c(0.5, 0.5),
           Pi   = -1, # Negative default means compute it using the approx
           verb_ans = verb_ans
         )
@@ -180,12 +180,6 @@ eta <- function(..., env) {
 
 #' @rdname aphylo-model
 psi <- function(..., env) {
-  
-  # if (on_covr(env)) {
-  #   body(env$fun)[[2]][[2]][[3]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
-  # } else {
-  #   body(env$fun)[[2]][[3]]$psi  <- bquote(c(p["psi0"], p["psi1"]))
-  # }
 
   # Updating the likelihood function  
   env$fun <- update_fun_in_body(env$fun, "psi", "c(p[\"psi0\"], p[\"psi1\"])")
@@ -204,12 +198,6 @@ psi <- function(..., env) {
 #' @rdname aphylo-model
 Pi <- function(..., env) {
   
-  # Adding eta to the objective function
-  # if (on_covr(env)) {
-  #   body(env$fun)[[2]][[2]][[3]][[3]]$Pi <- bquote(p["Pi"])
-  # } else {
-  #   body(env$fun)[[2]][[3]]$Pi <- bquote(p["Pi"])
-  # }
   # Updating the likelihood function  
   env$fun <- update_fun_in_body(env$fun, "Pi", "p[\"Pi\"]")
   
@@ -243,11 +231,6 @@ mu_s <- function(..., env) {
     env$fixed[paste0("mu_s", f)] <- TRUE
   
   # Updating parameters
-  # if (on_covr(env)) {
-  #   body(env$fun)[[2]][[2]][[3]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
-  # } else {
-  #   body(env$fun)[[2]][[3]]$mu_s <- bquote(c(p["mu_s0"], p["mu_s1"]))
-  # }
   env$fun <- update_fun_in_body(env$fun, "mu_s", "c(p[\"mu_s0\"], p[\"mu_s1\"])")
   
   invisible()

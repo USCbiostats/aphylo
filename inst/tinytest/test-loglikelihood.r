@@ -358,31 +358,42 @@ Pr <- LogLike(
 # ------------------------------------------------------------------------------
 # test_that("Joint loglike for multiAphylo", {
   
-  set.seed(113)
-  trees <- lapply(sample(20:50, 10, TRUE), raphylo)
-  trees <- do.call(c, trees)
+set.seed(113)
+trees <- lapply(sample(20:50, 10, TRUE), raphylo)
+trees <- do.call(c, trees)
+
+psi  <- c(0.01, 0.05)
+mu   <- c(0.03, 0.10)
+Pi   <- .2
+eta  <- c(.7, .9)
+ans0 <- LogLike(trees, psi = psi, mu_d = mu, mu_s = mu, Pi = Pi, eta = eta, verb_ans = FALSE)
+ans1 <- 0
+for (i in seq_along(trees)) {
   
-  psi  <- c(0.01, 0.05)
-  mu   <- c(0.03, 0.10)
-  Pi   <- .2
-  eta  <- c(.7, .9)
-  ans0 <- LogLike(trees, psi = psi, mu_d = mu, mu_s = mu, Pi = Pi, eta = eta, verb_ans = FALSE)
-  ans1 <- 0
-  for (i in seq_along(trees)) {
-    
-    ans1 <- ans1 +
-      LogLike(
-        tree     = trees[[i]],
-        psi      = psi,
-        mu_d     = mu,
-        mu_s     = mu,
-        Pi       = Pi,
-        eta      = eta,
-        verb_ans = FALSE
-        )$ll
-    
-  }
+  ans1 <- ans1 +
+    LogLike(
+      tree     = trees[[i]],
+      psi      = psi,
+      mu_d     = mu,
+      mu_s     = mu,
+      Pi       = Pi,
+      eta      = eta,
+      verb_ans = FALSE
+      )$ll
   
-  expect_equal(ans1, ans0$ll)
+}
+
+expect_equal(ans1, ans0$ll)
   
 # })
+
+  
+# Test for multiphylo_pruner ---------------------------------------------------
+
+trees_pruner <- new_aphylo_pruner(trees)
+
+ans2 <- LogLike(
+  trees_pruner, psi = psi, mu_d = mu, mu_s = mu, Pi = Pi, eta = eta,
+  verb_ans = FALSE)
+
+expect_equal(ans0$ll, ans2$ll)

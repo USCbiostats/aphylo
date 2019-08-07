@@ -347,6 +347,29 @@ inline v_uint Tree::get_dist_tip2root() {
   
 }
 
+#define TOTAL(a) (a)->offspring.size()
+
+inline uint Tree::set_postorder(const v_uint & POSTORDER_, bool check) { 
+  
+  // Checking the range of the data
+  if (check) {
+    uint min_idx = 999999u, max_idx = 0u;
+    for (auto i = POSTORDER_.begin(); i != POSTORDER_.end(); ++i) {
+      
+      if (*i > max_idx) max_idx = *i;
+      if (*i < min_idx) min_idx = *i;
+      
+    }
+    
+    if ((min_idx > max_idx) | (min_idx > TOTAL(this)) | (max_idx > TOTAL(this)))
+      return 1u;
+  }
+  
+  this->POSTORDER = POSTORDER_;
+  
+  return 0u;
+}
+
 inline void Tree::prune_postorder() {
   
   // Set the head in the first node of the sequence

@@ -5,14 +5,17 @@
 \alias{Nann}
 \alias{Nann.aphylo}
 \alias{Nann.multiAphylo}
+\alias{Nann.multiAphylo_pruner}
 \alias{Nann.aphylo_estimates}
 \alias{Nannotated}
 \alias{Nannotated.aphylo}
 \alias{Nannotated.multiAphylo}
+\alias{Nannotated.multiAphylo_pruner}
 \alias{Nannotated.aphylo_estimates}
 \alias{Ntrees}
 \alias{Ntrees.aphylo}
 \alias{Ntrees.multiAphylo}
+\alias{Ntrees.multiAphylo_pruner}
 \alias{Ntrees.aphylo_estimates}
 \title{Information about \code{aphylo} and \code{multiAphylo} objects}
 \usage{
@@ -22,6 +25,8 @@ Nann(phy)
 
 \method{Nann}{multiAphylo}(phy)
 
+\method{Nann}{multiAphylo_pruner}(phy)
+
 \method{Nann}{aphylo_estimates}(phy)
 
 Nannotated(phy)
@@ -30,6 +35,8 @@ Nannotated(phy)
 
 \method{Nannotated}{multiAphylo}(phy)
 
+\method{Nannotated}{multiAphylo_pruner}(phy)
+
 \method{Nannotated}{aphylo_estimates}(phy)
 
 Ntrees(phy)
@@ -37,6 +44,8 @@ Ntrees(phy)
 \method{Ntrees}{aphylo}(phy)
 
 \method{Ntrees}{multiAphylo}(phy)
+
+\method{Ntrees}{multiAphylo_pruner}(phy)
 
 \method{Ntrees}{aphylo_estimates}(phy)
 }

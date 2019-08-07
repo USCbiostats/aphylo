@@ -42,7 +42,7 @@ inline v_uint::const_iterator TreeIterator::end_par() const {
 // 1: End of road.
 inline int TreeIterator::up() {
   
-  if (++this->pos_in_pruning_sequence == this->tree->N_NODES) {
+  if (++this->pos_in_pruning_sequence == this->tree->POSTORDER.size()) {
     --this->pos_in_pruning_sequence;
     return 1;
   }

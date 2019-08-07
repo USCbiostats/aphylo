@@ -279,7 +279,10 @@ print.aphylo_estimates <- function(x, ...) {
   
   sderrors   <- sqrt(diag(x$varcovar))
   
-  ans <- sprintf("\n # of Leafs: %i\n # of Functions %i", Ntip(x), Nann(x))
+  ans <- sprintf(
+    "\n # of Leafs: %i\n # of Functions %i\n # of Trees: %i\n",
+    sum(Ntip(x)), sum(Nann(x)), Ntrees(x)
+    )
   ans <- c(ans, sprintf("\n %-6s  %6s  %6s", "", "Estimate", "Std. Err."))
   for (p in names(x$par)) {
     ans <- c(
@@ -371,7 +374,7 @@ aphylo_mcmc <- function(
   model <- aphylo_formula(model, params, priors, env = env)
 
   # If all are 9s, then, there's nothing to do with it.
-  if (all(model$dat$tip.annotation == 9L)) {
+  if (sum(Nannotated(model$dat)) == 0L) {
     if (check_informative)
       stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
     else
@@ -396,11 +399,12 @@ aphylo_mcmc <- function(
   }
   
   if (!("kernel" %in% control))
-    control$kernel <- fmcmc::kernel_reflective(
+    control$kernel <- fmcmc::kernel_reflective_1by1(
       scale     = .05,
       ub        = 1,
       lb        = 0,
-      fixed     = FALSE
+      fixed     = FALSE,
+      order     = "random"
     )
 
   # If the models is uninformative, then it will return with error
@@ -415,7 +419,7 @@ aphylo_mcmc <- function(
     
     # Setting up the package
     parallel::clusterEvalQ(cl_object, library(aphylo))
-    parallel::clusterExport(cl_object, c("model", "priors"))
+    parallel::clusterExport(cl_object, c("model", "priors"), envir = environment())
     parallel::clusterEvalQ(cl_object, {
       dat0 <- aphylo::new_aphylo_pruner(model$dat)
     })

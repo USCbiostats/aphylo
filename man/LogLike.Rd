@@ -5,6 +5,7 @@
 \alias{LogLike.aphylo_pruner}
 \alias{LogLike.aphylo}
 \alias{LogLike.multiAphylo}
+\alias{LogLike.multiAphylo_pruner}
 \title{Computes Log-likelihood}
 \usage{
 LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
@@ -17,6 +18,9 @@ LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
   check_dims = TRUE)
 
 \method{LogLike}{multiAphylo}(tree, psi, mu_d, mu_s, eta, Pi,
+  verb_ans = TRUE, check_dims = TRUE)
+
+\method{LogLike}{multiAphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi,
   verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{

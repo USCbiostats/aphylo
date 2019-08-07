@@ -8,13 +8,16 @@
 \alias{Nedge.aphylo}
 \alias{Nedge.aphylo_estimates}
 \alias{Nedge.multiAphylo}
+\alias{Nedge.multiAphylo_pruner}
 \alias{Nnode.aphylo}
 \alias{Nnode.aphylo_estimates}
 \alias{Nnode.multiAphylo}
 \alias{Nnode.aphylo_pruner}
+\alias{Nnode.multiAphylo_pruner}
 \alias{Ntip.aphylo}
 \alias{Ntip.aphylo_estimates}
 \alias{Ntip.multiAphylo}
+\alias{Ntip.multiAphylo_pruner}
 \title{APE wrappers}
 \usage{
 \method{Ntip}{aphylo_pruner}(phy)
@@ -29,6 +32,8 @@
 
 \method{Nedge}{multiAphylo}(phy)
 
+\method{Nedge}{multiAphylo_pruner}(phy)
+
 \method{Nnode}{aphylo}(phy, ...)
 
 \method{Nnode}{aphylo_estimates}(phy, ...)
@@ -37,11 +42,15 @@
 
 \method{Nnode}{aphylo_pruner}(phy, ...)
 
+\method{Nnode}{multiAphylo_pruner}(phy, ...)
+
 \method{Ntip}{aphylo}(phy)
 
 \method{Ntip}{aphylo_estimates}(phy)
 
 \method{Ntip}{multiAphylo}(phy)
+
+\method{Ntip}{multiAphylo_pruner}(phy)
 }
 \arguments{
 \item{phy}{An object of class \link{aphylo} (see \link[ape:Nnode]{ape::Nnode}).}

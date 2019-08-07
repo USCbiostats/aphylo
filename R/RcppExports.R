@@ -51,6 +51,10 @@ Tree_get_tips <- function(tree_ptr) {
     .Call(`_aphylo_Tree_get_tips`, tree_ptr)
 }
 
+Tree_get_postorder <- function(tree_ptr) {
+    .Call(`_aphylo_Tree_get_postorder`, tree_ptr)
+}
+
 #' @export
 #' @rdname ape-methods
 Ntip.aphylo_pruner <- function(phy) {

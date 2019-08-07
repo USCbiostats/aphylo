@@ -74,6 +74,7 @@ LogLike.aphylo_pruner <- function(
   )
   
 }
+
 #' @export
 #' @rdname LogLike
 LogLike.aphylo <- function(
@@ -134,4 +135,8 @@ LogLike.multiAphylo <- function(
   res
   
 }
+
+#' @export
+#' @rdname LogLike
+LogLike.multiAphylo_pruner <- LogLike.multiAphylo
 

@@ -122,6 +122,61 @@ SEXP new_aphylo_pruner(
   xptr->args = std::make_shared< pruner::TreeData >(A, types, nannotated);
   xptr->fun  = likelihood;
   
+  // Figuring out the corrected pseq; ------------------------------------------
+  
+  // This flags which to include
+  std::vector< bool > has_ann(A.size(), false);
+  
+  // This is a pointer to the set of offsprings. This is how we check which
+  // is leaf or not
+  const pruner::vv_uint * offspring = xptr->get_offspring_ptr();
+  
+  // This is the current POSTORDER sequence. We save it just in case
+  pruner::v_uint cur_pseq = xptr->get_postorder();
+  pruner::v_uint new_pseq;
+  
+  // We start iterating through the annotations
+  for (auto i = cur_pseq.begin(); i != cur_pseq.end(); ++i) {
+    
+    // First check if it is leaf or not
+    if ((offspring->at(*i).size()) == 0u) {
+      
+      // Checking annotations
+      int n9s = 0;
+      for (unsigned int j = 0u; j < A[0].size(); ++j) 
+        if (A[*i][j] == 9u) {
+          ++n9s;
+          break;
+        }
+        
+      // At least has a single annotation!
+      if (n9s < A[0u].size()) {
+        has_ann[*i] = true;
+        new_pseq.push_back(*i);
+      }
+      
+    } else { // The case for interior nodes
+      
+      // We need to iterate through its offsprings
+      for (auto off = (offspring->at(*i)).begin(); off != (offspring->at(*i)).end(); ++off) 
+        // Any of its offspring has an annotation?
+        if (has_ann[*off]) {
+          has_ann[*i] = true;
+          new_pseq.push_back(*i);
+          break;
+        }
+      
+    }
+    
+  }
+  
+  // Resetting the pseq, only if it has nodes on it!
+  if (new_pseq.size() != 0u) {
+    res = xptr->set_postorder(new_pseq);
+    if (res != 0u)
+      stop("While resetting the POSTORDER.");
+  }
+
   xptr.attr("class") = "aphylo_pruner";
   
   return xptr;
@@ -220,6 +275,15 @@ std::vector< unsigned int > Tree_get_tips(const SEXP & tree_ptr) {
   Rcpp::XPtr< pruner::Tree > p(tree_ptr);
   
   return p->get_tips();
+  
+}
+
+// [[Rcpp::export]]
+std::vector< unsigned int > Tree_get_postorder(const SEXP & tree_ptr) {
+  
+  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  
+  return p->get_postorder();
   
 }
 
