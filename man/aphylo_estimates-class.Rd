@@ -84,7 +84,7 @@ The default values of \code{control} are:
 
 \tabular{ll}{
 \code{nsteps} \tab Integer scalar. Number of mcmc steps. Default \code{2e3}. \cr
-\code{kernel} \tab A call to the function \link[fmcmc:kernel_reflective]{fmcmc::kernel_reflective} with the
+\code{kernel} \tab A call to the function \link[fmcmc:kernel_normal_reflective_1by1]{fmcmc::kernel_normal_reflective_1by1} with the
 following parameters, \code{lb = 0}, \code{ub = 1}, and \code{scale = 0.01}. \cr
 }
 }

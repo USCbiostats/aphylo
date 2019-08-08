@@ -71,7 +71,7 @@ ans1 <- suppressWarnings(
               priors = function(x) dbeta(x, 2, 10),
               control = list(
                 nsteps = 4e4, burnin=1e4, nchains=2,
-                kernel = fmcmc::kernel_reflective_1by1(
+                kernel = fmcmc::kernel_normal_reflective_1by1(
                   lb = 0, ub = 1, scale = .05,
                   order = "random"
                   ),
@@ -88,7 +88,7 @@ ans2 <- suppressWarnings(
     priors = function(x) dbeta(x, 2, 20),
     control = list(
       nsteps = 4e4, burnin=1e4, nchains=2,
-      kernel = fmcmc::kernel_reflective_1by1(
+      kernel = fmcmc::kernel_normal_reflective_1by1(
         lb = 0, ub = 1, scale = .05,
         order = "random"),
       conv_checker = NULL
