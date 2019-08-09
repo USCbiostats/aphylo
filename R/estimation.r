@@ -46,7 +46,7 @@ try_solve <- function(x, ...) {
 #' 
 #' \tabular{ll}{
 #' `nsteps` \tab Integer scalar. Number of mcmc steps. Default `2e3`. \cr
-#' `kernel` \tab A call to the function [fmcmc::kernel_normal_reflective_1by1] with the
+#' `kernel` \tab A call to the function [fmcmc::kernel_normal_reflective] with the
 #' following parameters, `lb = 0`, `ub = 1`, and `scale = 0.01`. \cr
 #' }
 #' 
@@ -399,7 +399,7 @@ aphylo_mcmc <- function(
   }
   
   if (!("kernel" %in% control))
-    control$kernel <- fmcmc::kernel_normal_reflective_1by1(
+    control$kernel <- fmcmc::kernel_normal_reflective(
       scale     = .05,
       ub        = 1,
       lb        = 0,
