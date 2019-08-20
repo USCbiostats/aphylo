@@ -73,7 +73,7 @@ ans1 <- suppressWarnings(
                 nsteps = 4e4, burnin=1e4, nchains=2,
                 kernel = fmcmc::kernel_normal_reflective(
                   lb = 0, ub = 1, scale = .05,
-                  order = "random"
+                  scheme = "random"
                   ),
                 conv_checker = NULL
                 ),
@@ -90,7 +90,7 @@ ans2 <- suppressWarnings(
       nsteps = 4e4, burnin=1e4, nchains=2,
       kernel = fmcmc::kernel_normal_reflective(
         lb = 0, ub = 1, scale = .05,
-        order = "random"),
+        scheme = "random"),
       conv_checker = NULL
       ),
     check_informative = FALSE

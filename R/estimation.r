@@ -398,13 +398,13 @@ aphylo_mcmc <- function(
       control[[n]] <- APHYLO_DEFAULT_MCMC_CONTROL[[n]]
   }
   
-  if (!("kernel" %in% control))
+  if (!("kernel" %in% names(control)))
     control$kernel <- fmcmc::kernel_normal_reflective(
       scale     = .05,
       ub        = 1,
       lb        = 0,
       fixed     = FALSE,
-      order     = "random"
+      scheme    = "random"
     )
 
   # If the models is uninformative, then it will return with error
