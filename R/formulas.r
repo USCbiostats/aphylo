@@ -103,13 +103,13 @@ aphylo_call <- function(params, priors) {
         )
         
         # Correcting for eta
-        ans$ll <- ans$ll + 0.69314718055994528623*sum(Nann(dat))*sum(Nannotated(dat))
+        ans$ll <- ans$ll + 0.69314718055994528623*sum(Nann(dat)*Nannotated(dat))
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
         
         if (is.infinite(ans$ll)) {
-          ans$ll <- .Machine$double.xmax*sign(ans$ll)*1e-10
+          ans$ll <- .Machine$double.xmax*sign(ans$ll) * 1e-4
         }
         
         # If verbose (not by default)

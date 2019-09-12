@@ -14,7 +14,7 @@ dat <- raphylo(n, P=P, psi = psi, mu_d = mu_d, Pi = Pi)
 ans0 <- suppressWarnings({
   aphylo_mle(
     dat ~ mu_d + psi + eta + Pi,
-    params = c(.05, .05, .05, .05, .9, .9, .5), lower = 0, upper=1)
+    params = c(.05, .05, .05, .05, .9, .9, .5))
 })
 
 # Methods ----------------------------------------------------------------------

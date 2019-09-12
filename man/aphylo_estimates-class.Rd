@@ -12,7 +12,7 @@
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
-  control = list(), lower = 1e-10, upper = 1 - 1e-10,
+  control = list(), lower = 1e-05, upper = 1 - 1e-05,
   check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
 

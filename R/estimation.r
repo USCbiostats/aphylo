@@ -170,8 +170,8 @@ aphylo_mle <- function(
   method            = "L-BFGS-B",
   priors            = function(p) 1, 
   control           = list(),
-  lower             = 1e-10,
-  upper             = 1 - 1e-10,
+  lower             = 1e-5,
+  upper             = 1 - 1e-5,
   check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq      = getOption("aphylo_reduce_pseq", TRUE)
 ) {
@@ -187,7 +187,7 @@ aphylo_mle <- function(
     warnings("Fixing parameters is ignored in MLE estimation.")
 
   # If all are 9s, then, there's nothing to do with it.
-  if (all(model$dat$tip.annotation == 9L)) {
+  if (sum(Nannotated(model$dat)) == 0L) {
     if (check_informative)
       stop("This tree is empty. With no annotations on the tips, no model can be estimated.", call.=FALSE)
     else

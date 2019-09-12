@@ -96,7 +96,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       ncz <- ncol(dots$z)
       
       # Fixing ranges
-      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.025, 1)))
+      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.025, 1), na.rm=TRUE))
       dots$ticktype <- "detailed"
       dots$z[dots$z > dots$zlim[2]] <- dots$zlim[2]
       dots$z[dots$z < dots$zlim[1]] <- dots$zlim[1]
@@ -261,6 +261,9 @@ plot_multivariate <- function(
         z[i, j] <- do.call(fun, c(tmppar, args))
         
       }
+    
+    # We don't want values that are too big
+    z[abs(z) > 1e100] <- NA
     
     # Storing the results
     ans[[p]] <- list(
