@@ -6,7 +6,7 @@ update_fun_in_body <- function(f, var, replacement) {
     # p[c("...", ...)],
     "p\\[c\\((\"[a-zA-Z0-9_]+\",*\\s*)+\\)\\]",
     # c(0.1, ...)
-    "c\\(([0-9\\.,]+\\s*)+\\)",
+    "[-]?c\\(([0-9\\.,]+\\s*)+\\)",
     # -1,
     "-1",
     sep = "|"
@@ -97,13 +97,10 @@ aphylo_call <- function(params, priors) {
           psi  = c(0, 0),
           mu_d = p[c("mu_d0", "mu_d1")],
           mu_s = p[c("mu_d0", "mu_d1")],
-          eta  = c(0.5, 0.5),
+          eta  = -c(1, 1),
           Pi   = -1, # Negative default means compute it using the approx
           verb_ans = verb_ans
         )
-        
-        # Correcting for eta
-        ans$ll <- ans$ll + 0.69314718055994528623*sum(Nann(dat)*Nannotated(dat))
         
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
@@ -163,12 +160,8 @@ eta <- function(..., env) {
   # Updating parameters
   env$fun <- update_fun_in_body(env$fun, "eta", "c(p[\"eta0\"], p[\"eta1\"])")
   
-  # Removing the eta correction
-  env$fun <- comment_line_in_body(env$fun, "sum(Nann(dat))", fixed = TRUE)
-  
   # Adding eta to the objective function
   env$fixed[c("eta0", "eta1")] <- FALSE
-  
   
   # Updating
   dots <- validate_dots_in_term(..., expected = c(0,1))

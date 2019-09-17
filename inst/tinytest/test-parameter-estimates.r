@@ -3,18 +3,19 @@
 set.seed(15)
 n <- 200
 P <- 1
-psi <- c(.01, .01)
-mu_d  <- c(.05, .05)
-Pi  <- .2
+psi  <- c(.01, .01)
+mu_d <- c(.05, .05)
+eta  <- c(.8, .9)
+Pi   <- .2
 
-dat <- raphylo(n, P=P, psi = psi, mu_d = mu_d, Pi = Pi)
+dat <- raphylo(n, P=P, psi = psi, mu_d = mu_d, Pi = Pi, eta = eta)
 
 # Estimation via L-BFGS-B
 
 ans0 <- suppressWarnings({
   aphylo_mle(
     dat ~ mu_d + psi + eta + Pi,
-    params = c(.05, .05, .05, .05, .9, .9, .5))
+    params = c(.05, .05, .05, .05, .5, .5, .5))
 })
 
 # Methods ----------------------------------------------------------------------

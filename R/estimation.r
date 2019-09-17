@@ -170,8 +170,8 @@ aphylo_mle <- function(
   method            = "L-BFGS-B",
   priors            = function(p) 1, 
   control           = list(),
-  lower             = 1e-5,
-  upper             = 1 - 1e-5,
+  lower             = 1e-10,
+  upper             = 1 - 1e-10,
   check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq      = getOption("aphylo_reduce_pseq", TRUE)
 ) {
