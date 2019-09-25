@@ -214,13 +214,14 @@ aphylo_mle <- function(
   control$parscale <- rep(1, length(model$params))
   
   # Optimizing
+  dat0 <- new_aphylo_pruner(model$dat)
   ans <- do.call(
     stats::optim, 
     c(
       list(
         par      = model$params,
         fn       = model$fun,
-        dat      = model$dat,
+        dat      = dat0,
         priors   = priors,
         verb_ans = FALSE,
         method   = method,
@@ -242,7 +243,7 @@ aphylo_mle <- function(
   
   # Computing the hessian (information matrix)
   hessian <- stats::optimHess(
-    ans$par, model$fun, dat = model$dat, priors = priors, verb_ans = FALSE,
+    ans$par, model$fun, dat = dat0, priors = priors, verb_ans = FALSE,
     control = control
     )
   
@@ -277,7 +278,7 @@ print.aphylo_estimates <- function(x, ...) {
   # Function to print a bar with variable width
   catbar <- function() paste0(rep("-",options()$width), collapse="")
   
-  sderrors   <- sqrt(diag(x$varcovar))
+  sderrors   <- structure(sqrt(diag(x$varcovar)), names = names(coef(x)))
   
   ans <- sprintf(
     "\n # of Leafs: %i\n # of Functions %i\n # of Trees: %i\n",
@@ -325,10 +326,30 @@ vcov.aphylo_estimates <- function(object, ...) {
   object$varcovar
 }
 
-#' @rdname plot_logLik
+#' @rdname aphylo_estimates-class
+#' @param which.tree Integer scalar. Which tree to plot. 
+#' @details The plot method for the object of class `aphylo_estimates` plots
+#' the original tree with the predicted annotations.
+#' @param y Ignored.
+#' @return The plot method for `aphylo_estimates` returns the selected tree
+#' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export
-#' @include plot_logLik.r
-plot.aphylo_estimates <- plot_logLik.aphylo_estimates
+plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, ...) {
+  
+  if (inherits(x$dat, "multiAphylo")) {
+    if (!(which.tree %in% seq_len(Ntrees(x))) | length(which.tree) > 1L)
+      stop("`which.tree` out of range.", call. = FALSE)
+    x$dat <- x$dat[[which.tree]]
+  }
+  
+  pred <- stats::predict(x)[1:Ntip(x$dat),,drop = FALSE]
+  colnames(pred) <- paste("Pred.", colnames(pred))
+  
+  x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted= pred)
+  plot(x$dat, ...)
+  
+  invisible(x$dat)
+}
 
 #' @export
 logLik.aphylo_estimates <- function(object, ...) {

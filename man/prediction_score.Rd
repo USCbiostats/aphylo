@@ -4,14 +4,17 @@
 \alias{prediction_score}
 \alias{prediction_score.default}
 \alias{prediction_score.aphylo_estimates}
+\alias{print.aphylo_prediction_score}
 \title{Calculate prediction score (quality of prediction)}
 \usage{
 prediction_score(x, expected, alpha = NULL, W = NULL)
 
 \method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL)
 
-\method{prediction_score}{aphylo_estimates}(x, expected, alpha = NULL,
-  W = NULL, ...)
+\method{prediction_score}{aphylo_estimates}(x, expected = NULL,
+  alpha = NULL, W = NULL, ...)
+
+\method{print}{aphylo_prediction_score}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \link{aphylo_estimates} or a numeric matrix.}

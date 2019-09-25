@@ -82,9 +82,10 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
   # Plotting
   op <- graphics::par(mar = c(1, 1, .2, .2), oma = c(0, 0, 2, 0))
   on.exit(par(op))
+  dat0 <- new_aphylo_pruner(x$dat)
   plot_multivariate(
     function(...) {
-      x$fun(unlist(list(...)), priors = x$priors, dat = x$dat, verb_ans = FALSE)
+      x$fun(unlist(list(...)), priors = x$priors, dat = dat0, verb_ans = FALSE)
     },
     params  = x$par,
     sets    = sets,
@@ -96,7 +97,7 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
       ncz <- ncol(dots$z)
       
       # Fixing ranges
-      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.025, 1), na.rm=TRUE))
+      dots$zlim     <- as.vector(stats::quantile(dots$z, c(.025, 1), na.rm=TRUE)) + c(-.01, +.01)
       dots$ticktype <- "detailed"
       dots$z[dots$z > dots$zlim[2]] <- dots$zlim[2]
       dots$z[dots$z < dots$zlim[1]] <- dots$zlim[1]
@@ -232,7 +233,7 @@ plot_multivariate <- function(
   # Specifying limits
   if (missing(domain)) 
     domain <- structure(
-      lapply(pnames, function(i) c(1e-10, 1 - 1e-10)),
+      lapply(pnames, function(i) c(1e-5, 1 - 1e-5)),
       names = pnames
       )
   

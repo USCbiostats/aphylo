@@ -1,7 +1,7 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stringr str_match_all
 #' @importFrom stats var coef vcov optim optimHess complete.cases dbeta runif
-#'  as.formula update.formula
+#'  as.formula update.formula predict
 #' @importFrom utils head tail getFromNamespace
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
 #'  points segments polygon rect yinch image

@@ -29,16 +29,26 @@ void likelihood(
       for (p = 0u; p < D->nfuns; ++p) {
         
         // ETA PARAMETER
-        if (D->A[*n][p] == 9u) {
-          
+        if (D->A[*n][p] == 9u && (D->eta[0u] >= 0.0)) {
+        
           D->Pr[*n][s] *=
             (1.0 - D->eta[0u]) * D->PSI[D->states[s][p]][0u] +
             (1.0 - D->eta[1u]) * D->PSI[D->states[s][p]][1u]
             ;
           
         } else {
-          D->Pr[*n][s] *= D->PSI[D->states[s][p]][D->A[*n][p]]*
-            D->eta[D->A[*n][p]];
+        
+          if (D->eta[0u] >= 0.0) {
+            
+            D->Pr[*n][s] *= D->PSI[D->states[s][p]][D->A[*n][p]]*
+              D->eta[D->A[*n][p]];
+            
+          } else {
+            
+            D->Pr[*n][s] *= D->PSI[D->states[s][p]][D->A[*n][p]];
+            
+          }
+          
         }
           
       }
