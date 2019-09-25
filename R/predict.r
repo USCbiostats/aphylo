@@ -201,7 +201,7 @@ predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
 }
 
 #' @export
-#' @rdname aphylo_estimates-class
+#' @rdname prediction_score
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
   with(x, cat(

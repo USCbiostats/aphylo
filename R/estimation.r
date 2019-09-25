@@ -330,6 +330,7 @@ vcov.aphylo_estimates <- function(object, ...) {
 #' @param which.tree Integer scalar. Which tree to plot. 
 #' @details The plot method for the object of class `aphylo_estimates` plots
 #' the original tree with the predicted annotations.
+#' @param y Ignored.
 #' @return The plot method for `aphylo_estimates` returns the selected tree
 #' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export
@@ -341,7 +342,7 @@ plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, ...) {
     x$dat <- x$dat[[which.tree]]
   }
   
-  pred <- predict(x)[1:Ntip(x$dat),,drop = FALSE]
+  pred <- stats::predict(x)[1:Ntip(x$dat),,drop = FALSE]
   colnames(pred) <- paste("Pred.", colnames(pred))
   
   x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted= pred)
