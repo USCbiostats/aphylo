@@ -7,8 +7,9 @@
 \alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
-\method{plot}{aphylo}(x, y = NULL, prop = 0.15, rect.args = list(),
-  ...)
+\method{plot}{aphylo}(x, y = NULL, prop = 0.15,
+  node.type.col = c(dupl = "red", other = "blue"),
+  node.type.size = c(dupl = 0, other = 0), rect.args = list(), ...)
 
 \method{print}{aphylo}(x, ...)
 
@@ -21,6 +22,10 @@
 
 \item{prop}{Numeric scalar between 0 and 1. Proportion of the device that the
 annotations use in \code{plot.aphylo}.}
+
+\item{node.type.col, node.type.size}{Vectors of length 2. In the case of
+\code{node.type.col} the color of the duplication and other nodes. \code{node.type.size}
+sets the size of circles.}
 
 \item{rect.args}{List of arguments passed to \link[graphics:rect]{graphics::rect}.}
 

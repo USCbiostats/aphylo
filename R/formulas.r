@@ -105,8 +105,8 @@ aphylo_call <- function(params, priors) {
         # Adding priors
         ans$ll <- ans$ll + sum(log(priors(p)))
         
-        if (is.infinite(ans$ll)) {
-          ans$ll <- .Machine$double.xmax*sign(ans$ll) * 1e-4
+        if (!is.finite(ans$ll)) {
+          ans$ll <- -1e200
         }
         
         # If verbose (not by default)

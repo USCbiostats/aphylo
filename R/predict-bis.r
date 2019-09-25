@@ -53,7 +53,6 @@ predict.aphylo_estimates <- function(object, newdata = NULL,...) {
     
   }
   
-  
   pred
 }
 

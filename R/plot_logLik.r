@@ -82,9 +82,10 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
   # Plotting
   op <- graphics::par(mar = c(1, 1, .2, .2), oma = c(0, 0, 2, 0))
   on.exit(par(op))
+  dat0 <- new_aphylo_pruner(x$dat)
   plot_multivariate(
     function(...) {
-      x$fun(unlist(list(...)), priors = x$priors, dat = x$dat, verb_ans = FALSE)
+      x$fun(unlist(list(...)), priors = x$priors, dat = dat0, verb_ans = FALSE)
     },
     params  = x$par,
     sets    = sets,

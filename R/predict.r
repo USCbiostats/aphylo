@@ -91,17 +91,42 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
 #' ```
 prediction_score.aphylo_estimates <- function(
   x,
-  expected,
+  expected = NULL,
   alpha    = NULL,
   W        = NULL,
-  ...) {
+  ...
+  ) {
   
   # If null, then we take the true (observed) proportion of ones to compare
+  if (any(class(x$dat) %in% c("multiAphylo"))) {
+    
+    # Setting up for prediction
+    x_tmp <- x
+    res   <- vector("list", Ntrees(x_tmp))
+    
+    if (is.null(expected)) expected <- res
+    if (is.null(W))        W        <- res
+    if (length(alpha) == 1L)  alpha <- rep(alpha, Ntrees(x))
+      
+    for (i in seq_along(res)) {
+      
+      # Preparing data
+      x_tmp$dat <- x$dat[[i]]
+      res[[i]] <- prediction_score(
+        x_tmp, expected = expected[[i]], alpha = alpha[i],
+        W = W[[i]],
+        ...)
+    }
+    
+    return(res)
+    
+  }
+  
   if (is.null(alpha))
     alpha <- mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
   
   # Finding relevant ids
-  if (missing(expected)) {
+  if (is.null(expected)) {
     expected <- with(x$dat, rbind(tip.annotation, node.annotation))
     dimnames(expected) <- with(x$dat, list(c(tree$tip.label, tree$node.label), colnames(tip.annotation)))
   } else {
@@ -261,7 +286,6 @@ plot.aphylo_prediction_score <- function(
     
     # Sorting accordingly to predicted
     # ord <- 1L:length(predicted[,i]) 
-    
 
     # Outer polygon
     piechart(

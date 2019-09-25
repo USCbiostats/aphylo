@@ -314,6 +314,9 @@ as_aphylo <- function(
 #' annotations use in `plot.aphylo`.
 #' @param rect.args List of arguments passed to [graphics::rect].
 #' @name aphylo-methods
+#' @param node.type.col,node.type.size Vectors of length 2. In the case of 
+#' `node.type.col` the color of the duplication and other nodes. `node.type.size`
+#' sets the size of circles.
 #' @details The `plot.aphylo` function is a wrapper of [ape::plot.phylo].
 #' 
 #' @export
@@ -321,8 +324,14 @@ as_aphylo <- function(
 #' @family aphylo methods
 #' @export
 plot.aphylo <- function(
-  x, y = NULL, prop = .15, 
-  rect.args = list(), ...) {
+  x,
+  y              = NULL,
+  prop           = .15, 
+  node.type.col  = c(dupl = "red", other = "blue"),
+  node.type.size = c(dupl = 0, other = 0), 
+  rect.args      = list(),
+  ...
+  ) {
   
   # Coercing into phylo
   phylo <- as.phylo(x)
@@ -332,7 +341,7 @@ plot.aphylo <- function(
   if (!length(dots$cex))
     dots$cex <- .75
   if (!length(dots$show.node.label))
-    dots$show.node.label <- TRUE
+    dots$show.node.label <- FALSE
   if (!length(dots$font))
     dots$font <- 1
   if (!length(dots$main))
@@ -357,8 +366,25 @@ plot.aphylo <- function(
   # Capturing the parameters from the `ape` package
   plot_pars <- utils::getFromNamespace(".PlotPhyloEnv", "ape")
   
+  # Adding node type
+  nodes <- (Ntip(x) + 1):Nnode(x, internal.only=FALSE)
+  nodes <- with(plot_pars$last_plot.phylo, cbind(xx[nodes], yy[nodes]))
+  
   tips <- with(plot_pars$last_plot.phylo, cbind(xx, yy))
   tips <- tips[1L:ape::Ntip(phylo),,drop=FALSE]
+    
+  if (all(node.type.size == 0))
+    node.type.size <- rep(diff(range(c(tips[,1], nodes[,1])))/90, 2)
+  
+  graphics::symbols(
+    x       = nodes[,1] - node.type.size[x$node.type + 1L]*1.3,
+    y       = nodes[,2],
+    circles = node.type.size[x$node.type + 1L],
+    add     = TRUE,
+    inches  = FALSE,
+    fg      = "lightgray",
+    bg      = node.type.col[x$node.type + 1L]
+    )
   
   yspacing <- range(tips[,2])
   yspacing <- (yspacing[2] - yspacing[1])/(nrow(tips) - 1)/2
@@ -391,13 +417,13 @@ plot.aphylo <- function(
     rect.args$xright  <- f/nfun
     rect.args$ytop    <- tips[,2] + yspacing
     rect.args$xpd     <- NA
+    rect.args$col     <- blue(x$tip.annotation[,f])
+    rect.args$border  <- blue(x$tip.annotation[,f])
+    rect.args$density <- ifelse(x$tip.annotation[,f] == 9L, 10, NA)
     
     if (!length(rect.args$xpd)) rect.args$xpd <- NA
-    if (!length(rect.args$col)) rect.args$col <- blue(x$tip.annotation[,f])
-    if (!length(rect.args$border)) rect.args$border <- blue(x$tip.annotation[,f])
     if (!length(rect.args$lwd)) rect.args$lwd<-.5
-    if (!length(rect.args$density)) rect.args$density <- 
-      ifelse(x$tip.annotation[,f] == 9L, 10, NA)
+    
     
     # Drawing rectangles
     do.call(graphics::rect, rect.args)
@@ -415,17 +441,36 @@ plot.aphylo <- function(
   }
   
   # Drawing a legend
+  width <- dev_size[1]*(1 - prop)
   graphics::par(op2)
-  graphics::par(mai = c(0,0,dev_size[2] - op2$mai[1], dev_size[1]*prop))
+  graphics::par(mai = c(0,0,dev_size[2] - op2$mai[1], dev_size[1]*prop + width/2))
   graphics::plot.window(c(0,1), c(0,1))
+  graphics::legend(
+    "center",
+    legend  = c("Duplication", "Other"),
+    pt.bg   = node.type.col,
+    
+    pch     = 21,
+    pt.cex  = 2,
+    bty     = "n",
+    horiz   = FALSE,
+    title   = "Node type"
+  )
+  
+  graphics::par(op2)
+  graphics::par(mai = c(0, width/2, dev_size[2] - op2$mai[1], dev_size[1]*prop))
+  graphics::plot.window(c(0,1), c(0,1))
+  graphics::box(col="transparent")
   graphics::legend(
     "center",
     legend  = c("No function", "Function", "no information"),
     fill    = blue(c(0,1,9)),
     bty     = "n",
     density = c(NA, NA, 10),
-    horiz   = TRUE
-    )
+    horiz   = FALSE,
+    title   = "Annotations"
+  )
+  
   
   invisible(NULL)
 }

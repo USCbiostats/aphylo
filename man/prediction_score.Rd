@@ -10,8 +10,8 @@ prediction_score(x, expected, alpha = NULL, W = NULL)
 
 \method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL)
 
-\method{prediction_score}{aphylo_estimates}(x, expected, alpha = NULL,
-  W = NULL, ...)
+\method{prediction_score}{aphylo_estimates}(x, expected = NULL,
+  alpha = NULL, W = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \link{aphylo_estimates} or a numeric matrix.}
