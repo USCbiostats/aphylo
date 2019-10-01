@@ -33,6 +33,9 @@ NULL
 #' @param ... Further arguments passed to the method
 new_aphylo_pruner <- function(...) UseMethod("new_aphylo_pruner")
 
+new_aphylo_pruner.aphylo_pruner <- function(x, ...) x
+new_aphylo_pruner.multiAphylo_pruner <- function(x, ...) x
+
 #' @export
 #' @rdname new_aphylo_pruner
 #' @param x An object of class [aphylo].

@@ -22,12 +22,12 @@
 #'                    
 #' pr <- prediction_score(ans)
 #' with(pr, cbind(Expected = expected, Predicted = predicted))
-prediction_score <- function(x, expected, alpha = NULL, W = NULL)
+prediction_score <- function(x, expected, alpha = NULL, W = NULL, ...)
   UseMethod("prediction_score")
 
 #' @export
 #' @rdname prediction_score
-prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
+prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   
   # Checking dimensions
   if (length(x) != length(expected))
@@ -64,6 +64,9 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
   # Random case
   rand  <- prediction_score_rand(expected, W, alpha)
   
+  # Computing AUCs
+  
+  
   structure(
     list(
       obs       = obs,
@@ -72,6 +75,7 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
       expected  = expected,
       random    = rand,
       alpha     = alpha,
+      auc       = auc(x, expected),
       obs.ids   = NULL,
       leaf.ids  = NULL,
       tree      = NULL
@@ -81,6 +85,7 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL) {
 }
 
 #' @export
+#' @template loo
 #' @rdname prediction_score
 #' @details In the case of the method for aphylo estimates, the function takes as
 #' a reference using alpha equal to the proportion of observed tip annotations that
@@ -94,6 +99,7 @@ prediction_score.aphylo_estimates <- function(
   expected = NULL,
   alpha    = NULL,
   W        = NULL,
+  loo      = TRUE,
   ...
   ) {
   
@@ -112,10 +118,14 @@ prediction_score.aphylo_estimates <- function(
       
       # Preparing data
       x_tmp$dat <- x$dat[[i]]
-      res[[i]] <- prediction_score(
-        x_tmp, expected = expected[[i]], alpha = alpha[i],
-        W = W[[i]],
-        ...)
+      res[[i]] <- prediction_score.aphylo_estimates(
+        x_tmp,
+        expected = expected[[i]],
+        alpha    = alpha[i],
+        W        = W[[i]],
+        loo      = loo,
+        ...
+        )
     }
     
     return(res)
@@ -145,7 +155,7 @@ prediction_score.aphylo_estimates <- function(
   ids <- intersect(ids, 1L:Ntip(x$dat))
 
   # Prediction
-  pred <- predict.aphylo_estimates(x, ...)
+  pred <- predict.aphylo_estimates(x, loo = loo,...)
   
   # Inverse of Geodesic distances
   if (!length(W)) {
@@ -161,7 +171,7 @@ prediction_score.aphylo_estimates <- function(
     x        = pred[ids,,drop=FALSE],
     expected = expected[ids,,drop = FALSE],
     alpha    = alpha,
-    W        = G_inv  
+    W        = G_inv
   )
   
   # Adding missing info
@@ -207,6 +217,7 @@ print.aphylo_prediction_score <- function(x, ...) {
   with(x, cat(
     sprintf("Observed : %-.2f ", obs/worse),
     sprintf("Random   : %-.2f ", random/worse),
+    sprintf("AUC      : %-.2f ", auc$auc),
     paste0(rep("-", getOption("width")), collapse=""),
     "Values scaled to range between 0 and 1, 0 being best.",
     sep ="\n"

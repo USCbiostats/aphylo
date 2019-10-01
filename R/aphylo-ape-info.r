@@ -152,4 +152,8 @@ Ntrees.multiAphylo_pruner <- Ntrees.multiAphylo
 
 #' @export
 #' @rdname aphylo-info
+Ntrees.aphylo_pruner <- Ntrees.aphylo
+
+#' @export
+#' @rdname aphylo-info
 Ntrees.aphylo_estimates <- function(phy) Ntrees(phy$dat)

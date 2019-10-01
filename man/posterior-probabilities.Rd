@@ -14,7 +14,7 @@
 predict_pre_order(x, ...)
 
 \method{predict_pre_order}{aphylo_estimates}(x, params = x$par,
-  newdata = NULL, ...)
+  newdata = NULL, loo = FALSE, ...)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
@@ -26,6 +26,10 @@ predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 \item{...}{Ignored.}
 
 \item{params}{A numeric vector with the corresponding parameters.}
+
+\item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
+similar to what a leave-one-out cross-validation scheme would be done
+(see \link{predict.aphylo_estimates}).}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -49,4 +53,9 @@ probabilities generating all possible cases.
 \details{
 The function \code{predict_brute_force} is only intended for testing. For predictions
 after estimating the model, see \link{predict.aphylo_estimates}.
+
+In the case of the parameter \code{loo} (leave-one-out), while making tip-level
+predictions, at each leaf the algorithm will drop annotations regarding that
+leaf, making its prediction using all the available information except the
+one include in such leaf.
 }

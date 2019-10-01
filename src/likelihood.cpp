@@ -37,6 +37,13 @@ void likelihood(
             ;
           
         } else {
+          
+          // Unnanotated leafs should be skipped in this situation. This mostly
+          // happens if we are not using the eta parameter and during cv. At
+          // that time some annotations are dropped without modifying the 
+          // pruning sequence.
+          if (D->A[*n][p] == 9u)
+            continue;
         
           if (D->eta[0u] >= 0.0) {
             
@@ -338,6 +345,25 @@ std::vector< double > root_node_pr(
   root_node_pr(pi_probs, Pi, S);
   
   return pi_probs;
+  
+}
+
+// [[Rcpp::export]]
+unsigned int Tree_set_ann(const SEXP & phy, unsigned int i, unsigned int j, unsigned int val) {
+  
+  Rcpp::XPtr< pruner::Tree > p(phy);
+  
+  p->args->set_ann(i, j, val);
+  
+  return 0u;
+  
+}
+
+// [[Rcpp::export]]
+std::vector< std::vector< unsigned int > > Tree_get_ann(const SEXP & phy) {
+  
+  Rcpp::XPtr< pruner::Tree > p(phy);
+  return p->args->A;
   
 }
 

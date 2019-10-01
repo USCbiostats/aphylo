@@ -334,7 +334,7 @@ vcov.aphylo_estimates <- function(object, ...) {
 #' @return The plot method for `aphylo_estimates` returns the selected tree
 #' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export
-plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, ...) {
+plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, loo = FALSE, ...) {
   
   if (inherits(x$dat, "multiAphylo")) {
     if (!(which.tree %in% seq_len(Ntrees(x))) | length(which.tree) > 1L)
@@ -342,7 +342,7 @@ plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, ...) {
     x$dat <- x$dat[[which.tree]]
   }
   
-  pred <- stats::predict(x)[1:Ntip(x$dat),,drop = FALSE]
+  pred <- stats::predict(x, loo = loo)[1:Ntip(x$dat),,drop = FALSE]
   colnames(pred) <- paste("Pred.", colnames(pred))
   
   x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted= pred)
@@ -369,9 +369,9 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
   nsteps    = 1e5L,
   burnin    = 1e4L,
   thin      = 10L,
-  nchains   = 1L, #2L,
+  nchains   = 2L,
   multicore = FALSE,
-  conv_checker = fmcmc::convergence_auto(500)
+  conv_checker = fmcmc::convergence_auto(2000)
 )
 
 #' @rdname aphylo_estimates-class
@@ -420,12 +420,10 @@ aphylo_mcmc <- function(
   }
   
   if (!("kernel" %in% names(control)))
-    control$kernel <- fmcmc::kernel_normal_reflective(
-      scale     = .05,
-      ub        = 1,
-      lb        = 0,
-      fixed     = FALSE,
-      scheme    = "random"
+    control$kernel <- fmcmc::kernel_adapt(
+      ub   = 1,
+      lb   = 0,
+      freq = 10
     )
 
   # If the models is uninformative, then it will return with error

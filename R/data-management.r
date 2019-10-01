@@ -307,6 +307,7 @@ as_aphylo <- function(
 
 #' Plot and print methods for `aphylo` objects
 #' 
+#' @template loo
 #' @param x An object of class `aphylo`.
 #' @param y Ignored.
 #' @param ... Further arguments passed to [ape::plot.phylo].

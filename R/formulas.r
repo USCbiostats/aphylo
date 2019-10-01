@@ -377,7 +377,7 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
     stop("The object -", as.character(val[[2]]), "- can't be found.", call. = FALSE)
   
   LHS <- eval(val[[2]], envir = env)
-  if (!is.aphylo(LHS) && !is.multiAphylo(LHS))
+  if (!is.aphylo(LHS) && !is.multiAphylo(LHS) && !inherits(LHS, "aphylo_pruner"))
     stop(
       "The LHS of the equation should be either a list or a single ",
       "aphylo object.", call. = FALSE)

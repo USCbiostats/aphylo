@@ -100,8 +100,8 @@ public:
   double prop_type_d;
   
   // Annotations
-  const pruner::vv_uint A;
-  const pruner::v_uint types;
+  pruner::vv_uint A;
+  pruner::v_uint types;
   
   // Temporal storage ----------------------------------------------------------
   pruner::vv_uint states;
@@ -120,6 +120,14 @@ public:
   void set_psi(const pruner::v_dbl & psi_) {transition_mat(psi_, this->PSI);return;}
   void set_eta(const pruner::v_dbl & eta_) {this->eta = eta_;return;}
   void  set_pi(double pi_) {root_node_pr(this->Pi, pi_, states);return;}
+  
+  // Set annotation
+  void set_ann(const unsigned int i, const unsigned int j, unsigned int x) {
+    
+    this->A[i][j] = x;
+    return;
+    
+  }
   
   // Destructor and constructor ------------------------------------------------
   ~TreeData() {};

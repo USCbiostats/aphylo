@@ -7,12 +7,13 @@
 \alias{print.aphylo_prediction_score}
 \title{Calculate prediction score (quality of prediction)}
 \usage{
-prediction_score(x, expected, alpha = NULL, W = NULL)
+prediction_score(x, expected, alpha = NULL, W = NULL, ...)
 
-\method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL)
+\method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL,
+  ...)
 
 \method{prediction_score}{aphylo_estimates}(x, expected = NULL,
-  alpha = NULL, W = NULL, ...)
+  alpha = NULL, W = NULL, loo = TRUE, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }
@@ -27,6 +28,10 @@ used to compute the random imputation score.}
 \item{W}{A square matrix. Must have as many rows as genes in \code{expected}.}
 
 \item{...}{Further arguments passed to \link{predict.aphylo_estimates}}
+
+\item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
+similar to what a leave-one-out cross-validation scheme would be done
+(see \link{predict.aphylo_estimates}).}
 }
 \description{
 Calculate prediction score (quality of prediction)

@@ -123,9 +123,12 @@ checkout_annotations <- function(x) {
   }
   
   tree2  <- new_aphylo(tip.annotation=rbind(0,0,0), tree = dat2)
-  ans0 <- raphylo(tree = tree2, mu_d = c(1, 0), Pi = 1, psi = c(0,0), eta = c(1,1))
-  ans1 <- raphylo(tree = tree2, mu_d = c(0, 1), Pi = 1, psi = c(0,0), eta = c(1,1))
-  ans2 <- raphylo(tree = tree2, mu_d = c(1, 1), Pi = 1, psi = c(0,0), eta = c(1,1))
+  ans0 <- raphylo(tree = tree2, mu_d = c(1, 0), Pi = 1, psi = c(0,0),
+                  eta = c(1,1), node.type = NULL)
+  ans1 <- raphylo(tree = tree2, mu_d = c(0, 1), Pi = 1, psi = c(0,0),
+                  eta = c(1,1), node.type = NULL)
+  ans2 <- raphylo(tree = tree2, mu_d = c(1, 1), Pi = 1, psi = c(0,0),
+                  eta = c(1,1), node.type = NULL)
   
   expect_equivalent(getann(ans0), rep(1, 5))        # Only gains
   expect_equivalent(getann(ans1), c(1, 0, 0, 0, 0)) # All losses
@@ -144,7 +147,8 @@ checkout_annotations <- function(x) {
     mu_d = c(1, 0), # Duplication nodes gain a function
     Pi   = 0,       # Start with no function
     eta  = c(1, 1), # Everything is reported
-    psi  = c(0,0)   # Nothing is misclassified
+    psi  = c(0,0),  # Nothing is misclassified
+    node.type = NULL
     ))
   
   expect_equivalent(getann(ans3), c(0, 0, 0, 1, 1))
@@ -163,7 +167,8 @@ checkout_annotations <- function(x) {
     mu_d = c(0, 1), # Duplication nodes loss a function
     Pi   = 1,       # Start with a function
     eta  = c(1, 1), # Everything is reported
-    psi  = c(0,0)   # Nothing is misclassified
+    psi  = c(0, 0), # Nothing is misclassified
+    node.type = tree3$node.type
   ))
   
   expect_equivalent(getann(ans3), c(1, 1, 1, 0, 0))

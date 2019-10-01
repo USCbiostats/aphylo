@@ -47,10 +47,7 @@ suppressMessages(library(coda))
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu_d0", "mu_d1")],
-          kernel  = fmcmc::kernel_normal_reflective(
-            lb = 0, ub = 1, scale = 0.05,
-            scheme = "random"
-            )
+          kernel  = fmcmc::kernel_adapt(ub = 1, lb = 0, freq = 10)
         ),
         pars
       ))
@@ -114,10 +111,7 @@ suppressMessages(library(coda))
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(7:8)],
-          kernel  = fmcmc::kernel_normal_reflective(
-            lb = 0, ub = 1, scale = 0.05,
-            scheme = "random"
-            )
+          kernel  = fmcmc::kernel_adapt(ub = 1, lb = 0, freq = 10)
           ),
         pars
       ))

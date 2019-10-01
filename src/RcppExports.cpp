@@ -156,6 +156,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Tree_set_ann
+unsigned int Tree_set_ann(const SEXP& phy, unsigned int i, unsigned int j, unsigned int val);
+RcppExport SEXP _aphylo_Tree_set_ann(SEXP phySEXP, SEXP iSEXP, SEXP jSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type phy(phySEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type j(jSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_set_ann(phy, i, j, val));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Tree_get_ann
+std::vector< std::vector< unsigned int > > Tree_get_ann(const SEXP& phy);
+RcppExport SEXP _aphylo_Tree_get_ann(SEXP phySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type phy(phySEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_ann(phy));
+    return rcpp_result_gen;
+END_RCPP
+}
 // approx_geodesic
 arma::imat approx_geodesic(const arma::umat& edges, unsigned int nsteps, bool undirected, bool warn);
 RcppExport SEXP _aphylo_approx_geodesic(SEXP edgesSEXP, SEXP nstepsSEXP, SEXP undirectedSEXP, SEXP warnSEXP) {
@@ -320,6 +345,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_Tree_Nannotated", (DL_FUNC) &_aphylo_Tree_Nannotated, 1},
     {"_aphylo_Tree_Nann", (DL_FUNC) &_aphylo_Tree_Nann, 1},
     {"_aphylo_root_node_pr", (DL_FUNC) &_aphylo_root_node_pr, 2},
+    {"_aphylo_Tree_set_ann", (DL_FUNC) &_aphylo_Tree_set_ann, 4},
+    {"_aphylo_Tree_get_ann", (DL_FUNC) &_aphylo_Tree_get_ann, 1},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},
     {"_aphylo_states", (DL_FUNC) &_aphylo_states, 1},
     {"_aphylo_prob_mat", (DL_FUNC) &_aphylo_prob_mat, 1},

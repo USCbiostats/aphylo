@@ -8,6 +8,7 @@
 #' @param params A numeric vector with the corresponding parameters.
 #' @param newdata (optional) An aphylo object.
 #' 
+#' @template loo
 #' @template parameters
 #' @templateVar .psi 1
 #' @templateVar .mu 1
@@ -15,9 +16,15 @@
 #' @templateVar .eta 1
 #' @param ... Ignored.
 #' 
+#' 
 #' @details 
 #' The function `predict_brute_force` is only intended for testing. For predictions
 #' after estimating the model, see [predict.aphylo_estimates].
+#' 
+#' In the case of the parameter `loo` (leave-one-out), while making tip-level
+#' predictions, at each leaf the algorithm will drop annotations regarding that
+#' leaf, making its prediction using all the available information except the
+#' one include in such leaf.
 #' 
 #' @name posterior-probabilities
 NULL
@@ -66,6 +73,7 @@ predict_pre_order.aphylo_estimates <- function(
   x,
   params  = x$par,
   newdata = NULL,
+  loo     = FALSE,
   ...
   ) {
   
@@ -109,10 +117,11 @@ predict_pre_order.aphylo_estimates <- function(
   
   # Looping through the variables
   p   <- Nann(x)
-  ans <- lapply(1:p, function(i) {
-    
+  ans <- matrix(nrow = ape::Nnode(x, internal.only = FALSE), ncol = p)
+  for (j in 1L:p) {
+
     # Updating tree (we only need a single function)
-    tmpdat <- x$dat[i]
+    tmpdat <- x$dat[j]
     
     dots$dat      <- tmpdat
     dots$p        <- params
@@ -123,22 +132,62 @@ predict_pre_order.aphylo_estimates <- function(
       dots$priors <- x$priors
     
     # Computing loglike
-    l <- do.call(x$fun, dots)
+    if (!loo) {
     
-    # Returning posterior probability
-    .posterior_prob(
-      Pr_postorder = l$Pr[[1]],
+      l <- do.call(x$fun, dots)
+      
+      # Returning posterior probability
+      ans[, j] <- .posterior_prob(
+        Pr_postorder = l$Pr[[1]],
+        types        = types,
+        mu_d         = mu_d,
+        mu_s         = mu_s,
+        Pi           = Pi,
+        pseq         = x$dat$pseq,
+        offspring    = x$dat$offspring
+        )$posterior
+      
+      next
+      
+    }
+    
+    dots$dat <- new_aphylo_pruner(tmpdat)
+    for (i in 1L:Ntip(x)) {
+      
+      # Setting that annotation to Missing (9)
+      Tree_set_ann(dots$dat, i - 1L, j - 1L, 9L)
+      l <- do.call(x$fun, dots)
+      
+      ans[i, j] <- .posterior_prob(
+        Pr_postorder = l$Pr[[1L]],
+        types        = types,
+        mu_d         = mu_d,
+        mu_s         = mu_s,
+        Pi           = Pi,
+        pseq         = x$dat$pseq,
+        offspring    = x$dat$offspring
+      )$posterior[i,]
+      
+      # Original value
+      Tree_set_ann(dots$dat, i - 1L, j - 1L, x$dat$tip.annotation[i, j])
+      
+    }
+    
+    # Filling the rest of the tree
+    l <- do.call(x$fun, dots)
+    ans[(i + 1L):(i + 1L):nrow(ans), j] <- .posterior_prob(
+      Pr_postorder = l$Pr[[1L]],
       types        = types,
       mu_d         = mu_d,
       mu_s         = mu_s,
       Pi           = Pi,
       pseq         = x$dat$pseq,
       offspring    = x$dat$offspring
-      )$posterior
+    )$posterior[(i + 1L):nrow(ans),]
     
-  })
+  }
   
-  do.call(cbind, ans)
+  ans
   
 }
 

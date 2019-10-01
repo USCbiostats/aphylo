@@ -22,7 +22,8 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L, ...)
+\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L,
+  loo = FALSE, ...)
 
 aphylo_mcmc(model, params, priors = uprior(), control = list(),
   check_informative = getOption("aphylo_informative", FALSE),

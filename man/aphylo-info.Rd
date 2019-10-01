@@ -16,6 +16,7 @@
 \alias{Ntrees.aphylo}
 \alias{Ntrees.multiAphylo}
 \alias{Ntrees.multiAphylo_pruner}
+\alias{Ntrees.aphylo_pruner}
 \alias{Ntrees.aphylo_estimates}
 \title{Information about \code{aphylo} and \code{multiAphylo} objects}
 \usage{
@@ -46,6 +47,8 @@ Ntrees(phy)
 \method{Ntrees}{multiAphylo}(phy)
 
 \method{Ntrees}{multiAphylo_pruner}(phy)
+
+\method{Ntrees}{aphylo_pruner}(phy)
 
 \method{Ntrees}{aphylo_estimates}(phy)
 }

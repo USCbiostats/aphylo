@@ -32,6 +32,10 @@ sets the size of circles.}
 \item{...}{Further arguments passed to \link[ape:plot.phylo]{ape::plot.phylo}.}
 
 \item{object}{An object of class \code{aphylo}.}
+
+\item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
+similar to what a leave-one-out cross-validation scheme would be done
+(see \link{predict.aphylo_estimates}).}
 }
 \value{
 In the case of \code{plot.aphylo}, \code{NULL}.

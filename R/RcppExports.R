@@ -77,6 +77,14 @@ root_node_pr <- function(Pi, S) {
     .Call(`_aphylo_root_node_pr`, Pi, S)
 }
 
+Tree_set_ann <- function(phy, i, j, val) {
+    .Call(`_aphylo_Tree_set_ann`, phy, i, j, val)
+}
+
+Tree_get_ann <- function(phy) {
+    .Call(`_aphylo_Tree_get_ann`, phy)
+}
+
 approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
     .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }

@@ -250,13 +250,13 @@ raphylo <- function(
   n           = NULL,
   tree        = NULL,
   tip.type    = NULL,
-  node.type   = NULL,
+  node.type   = function(n) sample.int(2, size = n, replace = TRUE, prob = c(.2, .8)) - 1,
   P           = 1L,
   psi         = c(.05, .05),
   mu_d        = c(.90, .90),
   mu_s        = c(.10, .05),
   eta         = c(1.0, 1.0),
-  Pi          = 1.0,
+  Pi          = 0.2,
   informative = getOption("aphylo_informative", FALSE),
   maxtries    = 20L
   ) {
@@ -291,6 +291,8 @@ raphylo <- function(
   
   if (is.null(node.type))
     node.type <- integer(ape::Nnode(tree))
+  else if (is.function(node.type))
+    node.type <- node.type(ape::Nnode(tree))
   else if (length(node.type) != ape::Nnode(tree))
     stop("The length of `node.type` does not match the number of nodes on `tree`.",
          call. = FALSE)
