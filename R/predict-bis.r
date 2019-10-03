@@ -155,7 +155,7 @@ predict_pre_order.aphylo_estimates <- function(
     for (i in 1L:Ntip(x)) {
       
       # Setting that annotation to Missing (9)
-      Tree_set_ann(dots$dat, i - 1L, j - 1L, 9L)
+      Tree_set_ann(dots$dat, i - 1L, 0L, 9L)
       l <- do.call(x$fun, dots)
       
       ans[i, j] <- .posterior_prob(
@@ -169,7 +169,7 @@ predict_pre_order.aphylo_estimates <- function(
       )$posterior[i,]
       
       # Original value
-      Tree_set_ann(dots$dat, i - 1L, j - 1L, x$dat$tip.annotation[i, j])
+      Tree_set_ann(dots$dat, i - 1L, 0L, x$dat$tip.annotation[i, j])
       
     }
     
