@@ -459,5 +459,21 @@ inline uint Tree::n_tips() const {
   
 }
 
+inline int Tree::n_offspring(uint i) const {
+  
+  if (i < this->offspring.size()) {
+    return this->offspring.at(i).size();
+  }
+  return -1;
+}
+
+inline int Tree::n_parents(uint i) const {
+  
+  if (i < this->parents.size()) {
+    return this->parents.at(i).size();
+  }
+  return -1;
+}
+
 #endif
 

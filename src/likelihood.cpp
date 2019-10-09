@@ -85,9 +85,9 @@ void likelihood(
           s_n_sum = 1.0;
           for (p_n = 0u; p_n < D->nfuns; ++p_n)
             // s_n_sum *= (D->MU[D->types[*n]]).at(D->states[s][p_n]).at(D->states[s_n][p_n]);
-            s_n_sum *= (D->types[*n] == 0u)?
+            s_n_sum *= ((D->types[*n] == 0u)?
               D->MU_d[D->states[s][p_n]][D->states[s_n][p_n]] :
-              D->MU_s[D->states[s][p_n]][D->states[s_n][p_n]];
+              D->MU_s[D->states[s][p_n]][D->states[s_n][p_n]]) / n.n_offspring();
           
           // Multiplying by off's probability
           offspring_ll += (s_n_sum) * D->Pr[*o_n][s_n];

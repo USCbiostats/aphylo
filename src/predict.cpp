@@ -82,14 +82,14 @@ List posterior_prob(
       D_n_complement_x_n = 
         Pr_preorder.at(*n - 1u, 0) / 
         (
-            Pr_postorder.at(*o - 1u, 1)*mu[types[*n - 1u]]->at(0) + 
-              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu[types[*n - 1u]]->at(0))
-        ) * mu[types[*n - 1u]]->at(0) +
+            Pr_postorder.at(*o - 1u, 1)*mu[types[*n - 1u]]->at(0)/O.size() + 
+              Pr_postorder.at(*o - 1u, 0)*(1.0 - mu[types[*n - 1u]]->at(0))/O.size()
+        ) * mu[types[*n - 1u]]->at(0)/O.size() +
           Pr_preorder.at(*n - 1u, 1) / 
           (
-              Pr_postorder.at(*o - 1u, 1)*(1.0-mu[types[*n - 1u]]->at(1)) + 
-                Pr_postorder.at(*o - 1u, 0)*mu[types[*n - 1u]]->at(1)
-          ) * (1 - mu[types[*n - 1u]]->at(1))
+              Pr_postorder.at(*o - 1u, 1)*(1.0-mu[types[*n - 1u]]->at(1)/O.size()) + 
+                Pr_postorder.at(*o - 1u, 0)*mu[types[*n - 1u]]->at(1)/O.size()
+          ) * (1 - mu[types[*n - 1u]]->at(1)/O.size())
         ;
       
       

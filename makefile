@@ -15,4 +15,7 @@ build:
 install:
 	cd ..&& R CMD INSTALL --preclean aphylo/&& cd aphylo/
 
+pruner:
+	cp ../pruner/include/* inst/include
+
 .PHONY: news check checkv install

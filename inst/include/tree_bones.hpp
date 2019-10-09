@@ -138,6 +138,12 @@ public:
   //! Return the number of tips defined as nodes with no offspring.
   uint n_tips() const;
   
+  //! Return the number of offsprings a given node has
+  int n_offspring(uint i) const;
+  
+  //! Return the number of parents a given node has
+  int n_parents(uint i) const;
+  
   vv_uint get_edgelist()  const;
   
   void print(bool details = true) const;

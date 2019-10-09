@@ -49,6 +49,12 @@ public:
   //! Returns the id (index) of the current node
   uint id() const {return current_node;};
   
+  //! Return the number of offsprings the current node has
+  int n_offspring() const;
+  
+  //! Return the number of parents the current node has
+  int n_parents() const;
+  
   uint operator*() const {return current_node;};
   
   //! Check whether the current node is root

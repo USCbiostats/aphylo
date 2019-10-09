@@ -78,6 +78,14 @@ inline void TreeIterator::bottom() {
   return;
 }
 
+inline int TreeIterator::n_offspring() const {
+  return this->tree->n_offspring(this->current_node);
+}
+
+inline int TreeIterator::n_parents() const {
+  return this->tree->n_parents(this->current_node);
+}
+
 
 inline bool TreeIterator::is_root() const {
   return this->tree->parents[current_node].size() == 0u;
