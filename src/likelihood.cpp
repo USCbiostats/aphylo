@@ -18,6 +18,8 @@ void likelihood(
   printf("\n");
 #endif
   
+  int descalefactor = 0;
+  
   if (n.is_tip()) {
     
     // Iterating through the states
@@ -59,6 +61,13 @@ void likelihood(
         }
           
       }
+      
+      // Correction for avoiding "underflow". We premultiply the data by 32
+      // and demultiply everything by the correction factor right before
+      // computing the logarithm
+      D->Pr[*n][s] *= 32;
+      descalefactor++;
+      
       
     }
     
@@ -103,10 +112,13 @@ void likelihood(
     
     // Computing the joint likelihood
     if (*n == n.back()) {
+      
       D->ll = 0.0;
       for (s = 0; s < D->nstates; ++s) 
         D->ll += D->Pi[s] * D->Pr[*n][s];
-      D->ll = log(D->ll);
+      
+      D->ll = log(D->ll) - // Descalation of the whole thing...
+        0.6931472*descalefactor;
     }
     
   }
