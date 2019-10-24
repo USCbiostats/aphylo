@@ -4,7 +4,7 @@
 \alias{sim_tree}
 \title{Random tree generation}
 \usage{
-sim_tree(n, edge.length = NULL)
+sim_tree(n, edge.length = stats::runif)
 }
 \arguments{
 \item{n}{Integer scalar. Number of leaf nodes.}

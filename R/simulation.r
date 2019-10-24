@@ -48,7 +48,7 @@
 #' #    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100
 #' }
 #' @export
-sim_tree <- function(n, edge.length = NULL) {
+sim_tree <- function(n, edge.length = stats::runif) {
   
   if (!is.null(edge.length) && !is.function(edge.length))
     stop("When not NULL `edge.length` should be a function.")

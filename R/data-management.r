@@ -347,6 +347,8 @@ plot.aphylo <- function(
     dots$font <- 1
   if (!length(dots$main))
     dots$main <- "Annotated Phylogenetic Tree"
+  if (!length(dots$align.tip.label))
+    dots$align.tip.label <- TRUE
   
   if (length(dots$type) && dots$type != "phylogram")
     stop("Only `phylograph` is currently supported.")
@@ -373,7 +375,8 @@ plot.aphylo <- function(
   
   tips <- with(plot_pars$last_plot.phylo, cbind(xx, yy))
   tips <- tips[1L:ape::Ntip(phylo),,drop=FALSE]
-    
+  
+  # Printing node types --------------------------------------------------------  
   if (all(node.type.size == 0))
     node.type.size <- rep(diff(range(c(tips[,1], nodes[,1])))/90, 2)
   
@@ -387,6 +390,7 @@ plot.aphylo <- function(
     bg      = node.type.col[x$node.type + 1L]
     )
   
+  # Plotting annotations (making room first) -----------------------------------
   yspacing <- range(tips[,2])
   yspacing <- (yspacing[2] - yspacing[1])/(nrow(tips) - 1)/2
   
@@ -401,30 +405,30 @@ plot.aphylo <- function(
   nfun      <- ncol(x$tip.annotation)
   yran      <- range(tips[,2])
   
-  graphics::rect(
-    xleft   = -.1,
-    ybottom = yran[1] - .1*yinch() - yspacing,
-    xright  = 1.1,
-    ytop    = yran[2] + .1*yinch() + yspacing,
-    xpd     = NA,
-    col     = "lightgray",
-    border  = "gray"
-  )
+  # graphics::rect(
+  #   xleft   = -.1,
+  #   ybottom = yran[1] - .1*yinch() - yspacing,
+  #   xright  = 1.1,
+  #   ytop    = yran[2] + .1*yinch() + yspacing,
+  #   xpd     = NA,
+  #   col     = "lightgray",
+  #   border  = "gray"
+  # )
   
   for (f in 1:nfun) {
 
-    rect.args$xleft   <- (f - 1)/nfun
+    rect.args$xleft   <- (f - 1)/nfun + 1/nfun*.05
     rect.args$ybottom <- tips[,2] - yspacing
-    rect.args$xright  <- f/nfun
+    rect.args$xright  <- f/nfun - 1/nfun*.05
     rect.args$ytop    <- tips[,2] + yspacing
     rect.args$xpd     <- NA
     rect.args$col     <- blue(x$tip.annotation[,f])
-    rect.args$border  <- blue(x$tip.annotation[,f])
-    rect.args$density <- ifelse(x$tip.annotation[,f] == 9L, 10, NA)
+    # rect.args$border  <- blue(x$tip.annotation[,f])
+    rect.args$col[x$tip.annotation[,f] == 9L] <- "white"
+    rect.args$border  <- rect.args$col
     
     if (!length(rect.args$xpd)) rect.args$xpd <- NA
     if (!length(rect.args$lwd)) rect.args$lwd<-.5
-    
     
     # Drawing rectangles
     do.call(graphics::rect, rect.args)
@@ -439,6 +443,15 @@ plot.aphylo <- function(
       xpd = NA
     )
     
+    rect.args$ybottom <- min(tips[,2] - yspacing)
+    rect.args$ytop    <- max(tips[,2] + yspacing)
+    rect.args$col     <- "transparent"
+    rect.args$border  <- "darkgray"
+    rect.args$lwd     <- 1.5
+    
+    do.call(graphics::rect, rect.args)
+    
+    
   }
   
   # Drawing a legend
@@ -450,7 +463,6 @@ plot.aphylo <- function(
     "center",
     legend  = c("Duplication", "Other"),
     pt.bg   = node.type.col,
-    
     pch     = 21,
     pt.cex  = 2,
     bty     = "n",
@@ -465,9 +477,9 @@ plot.aphylo <- function(
   graphics::legend(
     "center",
     legend  = c("No function", "Function", "no information"),
-    fill    = blue(c(0,1,9)),
+    fill    = blue(c(0,1,.5)),
     bty     = "n",
-    density = c(NA, NA, 10),
+    # density = c(NA, NA, 10),
     horiz   = FALSE,
     title   = "Annotations"
   )
