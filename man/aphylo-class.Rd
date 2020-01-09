@@ -9,8 +9,14 @@
 \usage{
 new_aphylo(tree, tip.annotation, ...)
 
-\method{new_aphylo}{phylo}(tree, tip.annotation, node.annotation = NULL,
-  tip.type = NULL, node.type = NULL, ...)
+\method{new_aphylo}{phylo}(
+  tree,
+  tip.annotation,
+  node.annotation = NULL,
+  tip.type = NULL,
+  node.type = NULL,
+  ...
+)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
@@ -49,7 +55,8 @@ ans <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
 plot(ans)
 }
 \seealso{
-Other aphylo methods: \code{\link{aphylo-methods}}
+Other aphylo methods: 
+\code{\link{aphylo-methods}}
 }
 \concept{Data management functions}
 \concept{aphylo methods}

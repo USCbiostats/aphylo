@@ -8,20 +8,15 @@
 \alias{LogLike.multiAphylo_pruner}
 \title{Computes Log-likelihood}
 \usage{
-LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
-  check_dims = TRUE)
+LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 
-\method{LogLike}{aphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi,
-  verb_ans = TRUE, check_dims = TRUE)
+\method{LogLike}{aphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 
-\method{LogLike}{aphylo}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
-  check_dims = TRUE)
+\method{LogLike}{aphylo}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 
-\method{LogLike}{multiAphylo}(tree, psi, mu_d, mu_s, eta, Pi,
-  verb_ans = TRUE, check_dims = TRUE)
+\method{LogLike}{multiAphylo}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 
-\method{LogLike}{multiAphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi,
-  verb_ans = TRUE, check_dims = TRUE)
+\method{LogLike}{multiAphylo_pruner}(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link{aphylo}.}

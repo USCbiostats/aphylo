@@ -67,6 +67,7 @@ APE wrappers
 Functions \code{Nedge}, \code{Nnode}, and \code{Ntip} have S3 methods in the \code{ape} package.
 }
 \seealso{
-Other information: \code{\link{aphylo-info}}
+Other information: 
+\code{\link{aphylo-info}}
 }
 \concept{information}

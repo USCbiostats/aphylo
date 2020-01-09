@@ -11,10 +11,17 @@
 \alias{aphylo_mcmc}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
-aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
-  control = list(), lower = 1e-05, upper = 1 - 1e-05,
+aphylo_mle(
+  model,
+  params,
+  method = "L-BFGS-B",
+  priors = function(p) 1,
+  control = list(),
+  lower = 1e-05,
+  upper = 1 - 1e-05,
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE)
+)
 
 \method{print}{aphylo_estimates}(x, ...)
 
@@ -22,12 +29,16 @@ aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L,
-  loo = FALSE, ...)
+\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L, loo = FALSE, ...)
 
-aphylo_mcmc(model, params, priors = uprior(), control = list(),
+aphylo_mcmc(
+  model,
+  params,
+  priors = uprior(),
+  control = list(),
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE)
+)
 }
 \arguments{
 \item{model}{A model as specified in \link{aphylo-model}.}
@@ -59,6 +70,10 @@ to \code{FALSE}.}
 \item{y}{Ignored.}
 
 \item{which.tree}{Integer scalar. Which tree to plot.}
+
+\item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
+similar to what a leave-one-out cross-validation scheme would be done
+(see \link{predict.aphylo_estimates}).}
 }
 \value{
 A list of class \code{aphylo_estimates} with the following elements:

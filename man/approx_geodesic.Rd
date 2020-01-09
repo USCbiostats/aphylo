@@ -8,19 +8,15 @@
 \alias{approx_geodesic.matrix}
 \title{Approximation of Geodesic distances using Matrix Powers}
 \usage{
-approx_geodesic(edges, nsteps = 1e+05, undirected = TRUE,
-  warn = FALSE)
+approx_geodesic(edges, nsteps = 1e+05, undirected = TRUE, warn = FALSE)
 
 shortest_path(edges, nsteps = 1e+05, undirected = TRUE, warn = FALSE)
 
-\method{approx_geodesic}{aphylo}(edges, nsteps = 1e+05,
-  undirected = TRUE, warn = FALSE)
+\method{approx_geodesic}{aphylo}(edges, nsteps = 1e+05, undirected = TRUE, warn = FALSE)
 
-\method{approx_geodesic}{phylo}(edges, nsteps = 1e+05,
-  undirected = TRUE, warn = FALSE)
+\method{approx_geodesic}{phylo}(edges, nsteps = 1e+05, undirected = TRUE, warn = FALSE)
 
-\method{approx_geodesic}{matrix}(edges, nsteps = 1e+05,
-  undirected = TRUE, warn = FALSE)
+\method{approx_geodesic}{matrix}(edges, nsteps = 1e+05, undirected = TRUE, warn = FALSE)
 }
 \arguments{
 \item{edges}{Integer matrix with two columns. An edgelist where each row is in the form of \\code{(parent, offspring)}.}

@@ -9,11 +9,9 @@
 \usage{
 prediction_score(x, expected, alpha = NULL, W = NULL, ...)
 
-\method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL,
-  ...)
+\method{prediction_score}{default}(x, expected, alpha = NULL, W = NULL, ...)
 
-\method{prediction_score}{aphylo_estimates}(x, expected = NULL,
-  alpha = NULL, W = NULL, loo = TRUE, ...)
+\method{prediction_score}{aphylo_estimates}(x, expected = NULL, alpha = NULL, W = NULL, loo = TRUE, ...)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }
@@ -47,12 +45,12 @@ are equal to 1, this is:\preformatted{mean(x$dat$tip.annotation[x$dat$tip.annota
 }
 \examples{
 # Example with prediction_score ---------------------------------------------
-set.seed(1312)
-ap  <- raphylo(10, P = 1, Pi=.2, mu_d=c(.05,.02))
+set.seed(11552)
+ap  <- raphylo(50, P = 1, Pi=0, mu_d=c(.8,.2), mu_s = c(0,0.25), psi = c(0,0))
 ans <- aphylo_mcmc(
-  ap ~ mu_d + eta + psi + Pi,
-  control = list(nsteps=2e4, thin=100),
-  priors  = function(x) dbeta(x, 1, 30)
+  ap ~ mu_d + mu_s + psi + Pi,
+  control = list(nsteps=5e3, thin=20, burnin = 1000),
+  priors = bprior(c(9,9,1,1,1,1,1), c(1,1,9,9,9,9,9))
   )
                    
 pr <- prediction_score(ans)

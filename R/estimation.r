@@ -331,6 +331,7 @@ vcov.aphylo_estimates <- function(object, ...) {
 #' @details The plot method for the object of class `aphylo_estimates` plots
 #' the original tree with the predicted annotations.
 #' @param y Ignored.
+#' @template loo
 #' @return The plot method for `aphylo_estimates` returns the selected tree
 #' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export

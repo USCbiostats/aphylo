@@ -23,13 +23,13 @@ significantly faster than \code{rtree}.
 The algorithm was implemented as follows
 
 \enumerate{
-\item Initialize \code{N = {1, ..., n}}, \code{E} to be empty,
+\item Initialize \verb{N = \{1, ..., n\}}, \code{E} to be empty,
 \code{k = 2*n - 1}
 \item While \code{length(N) != 1} do:
 \enumerate{
-\item Randomly choose a pair \code{(i, j)} from \code{N}
-\item Add the edges \code{E = E U {(k, i), (k, j)}},
-\item Redefine \code{N = (N \ {i, j}) U {k}}
+\item Randomly choose a pair \verb{(i, j)} from \code{N}
+\item Add the edges \verb{E = E U \{(k, i), (k, j)\}},
+\item Redefine \verb{N = (N \\ \{i, j\}) U \{k\}}
 \item Set \code{k = k - 1}
 \item next
 }

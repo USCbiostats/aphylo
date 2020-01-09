@@ -7,9 +7,15 @@
 \alias{summary.aphylo}
 \title{Plot and print methods for \code{aphylo} objects}
 \usage{
-\method{plot}{aphylo}(x, y = NULL, prop = 0.15,
+\method{plot}{aphylo}(
+  x,
+  y = NULL,
+  prop = 0.15,
   node.type.col = c(dupl = "red", other = "blue"),
-  node.type.size = c(dupl = 0, other = 0), rect.args = list(), ...)
+  node.type.size = c(dupl = 0, other = 0),
+  rect.args = list(),
+  ...
+)
 
 \method{print}{aphylo}(x, ...)
 
@@ -32,10 +38,6 @@ sets the size of circles.}
 \item{...}{Further arguments passed to \link[ape:plot.phylo]{ape::plot.phylo}.}
 
 \item{object}{An object of class \code{aphylo}.}
-
-\item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
-similar to what a leave-one-out cross-validation scheme would be done
-(see \link{predict.aphylo_estimates}).}
 }
 \value{
 In the case of \code{plot.aphylo}, \code{NULL}.
@@ -50,6 +52,7 @@ Plot and print methods for \code{aphylo} objects
 The \code{plot.aphylo} function is a wrapper of \link[ape:plot.phylo]{ape::plot.phylo}.
 }
 \seealso{
-Other aphylo methods: \code{\link{aphylo-class}}
+Other aphylo methods: 
+\code{\link{aphylo-class}}
 }
 \concept{aphylo methods}

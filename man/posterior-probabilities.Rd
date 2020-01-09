@@ -13,8 +13,7 @@
 
 predict_pre_order(x, ...)
 
-\method{predict_pre_order}{aphylo_estimates}(x, params = x$par,
-  newdata = NULL, loo = FALSE, ...)
+\method{predict_pre_order}{aphylo_estimates}(x, params = x$par, newdata = NULL, loo = FALSE, ...)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 

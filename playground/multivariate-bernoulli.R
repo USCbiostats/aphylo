@@ -8,7 +8,7 @@ pr <- function(x_off, x_par, mu, blength = NULL) {
   
   # Scalars
   P <- length(x_off)
-  if (is.null(blength))
+  # if (is.null(blength))
     blength <- rep(1, P)
   
   # Computing powerset offspring
@@ -57,18 +57,18 @@ printer <- function(x0, x1, p, mu, stats) {
   
   if (length(x0) == 2) {
     cat(sprintf(
-      "$(%d, %d) \\to (%d, %d)$ & (%.2f, %.2f, %.2f) &  %.2f \\\\\n",
+      "$(%d, %d) \\to (%d, %d)$ & (%.2f, %.2f) &  %.2f \\\\\n",
       x0[1], x0[2],
       x1[,1], x1[2],
-      stats[,1], stats[,2], stats[,3],
+      stats[,1], stats[,3],
       p
       ), sep = "")
   } else if (length(x0) == 3) {
     cat(sprintf(
-      "$(%d, %d, %d) \\to (%d, %d, %d)$ & (%.2f, %.2f, %.2f) &  %.2f \\\\\n",
+      "$(%d, %d, %d) \\to (%d, %d, %d)$ & (%.2f,%.2f) &  %.2f \\\\\n",
       x0[1], x0[2], x0[3],
       x1[,1], x1[,2], x1[,3],
-      stats[,1], stats[,2], stats[,3],
+      stats[,1], stats[,3],
       p
     ), sep = "")
   }
