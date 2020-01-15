@@ -34,8 +34,9 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
     stop("`x` and `expected` differ in length. These must match.", call.=FALSE)
   
   # Counting complete cases
-  ids <- expected[cbind(1:nrow(expected),max.col(expected))]
-  ids <- which((ids == 1L) | (ids == 0L))
+  N <- 1:nrow(expected)
+  ids <- expected[cbind(N, max.col(expected))]
+  ids <- which(ids %in% c(1L, 0L) & x[cbind(N, max.col(x))] != 9.0)
   
   if (length(ids) != nrow(expected)) {
     expected <- expected[ids, , drop=FALSE]

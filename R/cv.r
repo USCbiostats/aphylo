@@ -15,9 +15,13 @@ aphylo_cv.formula <- function(model, ...) {
   
   # First run of the model
   ans0    <- aphylo_mcmc(model, ...)
-  nt      <- Ntip(ans0$dat)
-  has_ann <- which(rowSums(ans0$dat$tip.annotation == 9) < Nann(ans0$dat))
-  nhas    <- length(has_ann)
+  ntrees  <- Ntrees(ans0)
+  if (ntrees == 1) {
+    has_ann <- which(rowSums(ans0$dat$tip.annotation == 9) < Nann(ans0$dat))
+    nhas    <- length(has_ann)
+  } else {
+    nhas <- ntrees
+  }
   
   # Model
   m <- as.formula(model)
@@ -26,26 +30,62 @@ aphylo_cv.formula <- function(model, ...) {
   
   cat(sprintf("%s\nLeave-one-out cross validation of aphylo model with %i cases\n",
                  paste0(rep("-", 80L), collapse=""), nhas))
-  pcents <- floor((1:nhas)/nhas*100)
+  pcents <- floor((1L:nhas)/nhas*100)
   
   # Output matrix
-  pred <- matrix(
-    9L, ncol = Nann(ans0$dat), nrow = Nnode(ans0$dat, internal.only = FALSE),
-    # Proper row and column names
-    dimnames = list(
-      c(rownames(ans0$dat$tip.annotation), rownames(ans0$dat$node.annotation)),
-      colnames(ans0$dat$node.annotation)
+  if (ntrees == 1L) {
+    
+    pred <- matrix(
+      9L,
+      ncol = Nann(ans0$dat),
+      nrow = Nnode(ans0$dat, internal.only = FALSE),
+      # Proper row and column names
+      dimnames = list(
+        c(rownames(ans0$dat$tip.annotation), rownames(ans0$dat$node.annotation)),
+        colnames(ans0$dat$node.annotation)
+      )
     )
-  )
+    
+  } else {
+    
+    pred <- vector("list", ntrees)
+    pred <- lapply(ans0$dat, function(tree.) {
+      
+      matrix(
+        9L,
+        ncol = Nann(tree.),
+        nrow = Nnode(tree., internal.only = FALSE),
+        # Proper row and column names
+        dimnames = list(
+          c(rownames(tree.$tip.annotation), rownames(tree.$node.annotation)),
+          colnames(tree.$node.annotation)
+        )
+      )
+      
+    })
+    
+  }
   
-  for (i in seq_along(has_ann)) {
+  # Figuring out the iteration sequence
+  iterseq <- seq_len(nhas)
+  
+  for (i in iterseq) {
     
     # Getting alternative model
-    tree1 <- ans0$dat
-    tree1[has_ann[i],] <- NA
+    if (!inherits(ans0$dat, "multiAphylo")) {
+      tree1 <- ans0$dat
+      tree1[has_ann[i],] <- NA
+    } else {
+      tree1 <- tree1[-i]
+    }
     
     ans1 <- suppressWarnings(suppressMessages(aphylo_mcmc(m, ...)))
-    pred[has_ann[i],] <- predict.aphylo_estimates(ans1)[has_ann[i],,drop=FALSE]
+    
+    if (ntrees == 1) 
+      pred[has_ann[i],] <- predict.aphylo_estimates(ans1)[has_ann[i],,drop=FALSE]
+    else 
+      pred[[i]] <- predict.aphylo_estimates(ans1, newdata = ans0$dat[[i]])
+    
     
     # Communicating status
     if (interactive())
@@ -55,7 +95,11 @@ aphylo_cv.formula <- function(model, ...) {
     
   }
   
-  expected <- with(ans0$dat, rbind(tip.annotation, node.annotation))
+  expected <- if (ntrees == 1) 
+    with(ans0$dat, rbind(tip.annotation, node.annotation))
+  else 
+    lapply(ans0$dat, function(d) rbind(d$tip.annotation, d$node.annotation))
+  
   
   structure(
     list(
@@ -64,8 +108,13 @@ aphylo_cv.formula <- function(model, ...) {
       call      = sys.call(),
       ids       = has_ann,
       estimates = ans0,
-      auc       = auc(pred, expected),
-      pscore    = prediction_score(pred, expected)
+      auc       = if (ntrees == 1) {
+        auc(pred, expected)
+        } else Map(auc, pred = pred, labels = expected),
+      pscore    = if (ntrees == 1) {
+        prediction_score(pred, expected)
+        } else Map(prediction_score, x = pred, expected = expected),
+      ntrees    = Ntrees(ans0)
     ),
     class="aphylo_cv"
   )
@@ -106,3 +155,4 @@ plot.aphylo_auc <- function(x, y=NULL, ...) {
   graphics::abline(a=0, b=1, col = "gray", lty="dashed", lwd=1.5)
   
 }
+
