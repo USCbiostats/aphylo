@@ -159,8 +159,8 @@ SEXP new_aphylo_pruner(
     if ((offspring->at(*i).size()) == 0u) {
       
       // Checking annotations
-      int n9s = 0;
-      for (unsigned int j = 0u; j < A[0].size(); ++j) 
+      unsigned int n9s = 0u;
+      for (unsigned int j = 0u; j < A[0u].size(); ++j) 
         if (A[*i][j] == 9u) {
           ++n9s;
           break;

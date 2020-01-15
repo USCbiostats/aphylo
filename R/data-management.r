@@ -27,57 +27,6 @@ list_offspring.phylo <- function(x) {
   .list_offspring(x$edge, x$Nnode + length(x$tip.label))
 }
 
-map_ids_to_positions.aphylo_estimates <- function(ids_name, dat_name) {
-  
-  # Retrieving information about the tree 
-  env    <- parent.frame()
-  labels <- with(env[[dat_name]][["dat"]][["tree"]], c(tip.label, node.label))
-  n      <- length(labels)
-  
-  # Mapping the ids to the positions -------------------------------------------
-  if (is.numeric(env[[ids_name]])) {
-    
-    # Coercing into integer
-    env[[ids_name]] <- as.integer(env[[ids_name]]) 
-    
-  } else if (length(env[[ids_name]]) == 1 && (env[[ids_name]] %in% c("all", "leafs", "missings"))) {
-    
-    # Matching the description
-    env[[ids_name]] <- switch(
-      env[[ids_name]], 
-      all      = 0L:(n - 1L),
-      leafs    = 0L:(length(env[[dat_name]][["dat"]][["tree"]]$tip.label) - 1L),
-      missings = {
-        
-        tmp <- with(env[[dat_name]][["dat"]], rbind(tip.annotation, node.annotation))
-        which(!stats::complete.cases(tmp)) - 1L
-        
-      }
-    )
-    
-  } else if (is.character(env[[ids_name]])) {
-    
-    # Matching the labels
-    env[[ids_name]] <- as.integer(match(env[[ids_name]], labels)) - 1L
-    
-  } else
-    stop("Unsupported type of ids: ", paste0(env[[ids_name]], collapse=", "))
-  
-  # Checking everything is in order --------------------------------------------
-  
-  # All complete
-  if (any(!is.finite(env[[ids_name]])))
-    stop("Some ids are either NAs or Inf.")
-  
-  if (any(env[[ids_name]] >= n))
-    stop("Out of range: Some ids are greater than (n-1). Ids go from 0 to n-1.")
-  
-  if (any(env[[ids_name]] < 0L))
-    stop("Out of range: Some ids are greater less than 0. Ids go from 0 to n-1.")
-  
-}
-
-
 #' Annotated Phylogenetic Tree
 #' 
 #' The `aphylo` class tree holds both the tree structure represented as a
@@ -554,23 +503,23 @@ summary.aphylo <- function(object, ...) {
 }
 
 
-# This list sets the default plotting parameters when calling
-# the plot.phylo function.
-APHYLO_DEFAULT_PLOT_PARAMS <- list(
-  show.node.label = TRUE,
-  show.tip.label  = TRUE,
-  root.edge       = TRUE
-)
-
-# This is the actual function that does all the job setting the defaults.
-set.default.plot.phylo.params <- function(dots) {
-  dots <- as.character(match.call()$dots)
-  env <- parent.frame()
-  
-  for (p in names(APHYLO_DEFAULT_PLOT_PARAMS)) 
-    if (!length(env[[dots]][[p]]))
-      env[[dots]][[p]] <- APHYLO_DEFAULT_PLOT_PARAMS[[p]]
-}
+# # This list sets the default plotting parameters when calling
+# # the plot.phylo function.
+# APHYLO_DEFAULT_PLOT_PARAMS <- list(
+#   show.node.label = TRUE,
+#   show.tip.label  = TRUE,
+#   root.edge       = TRUE
+# )
+# 
+# # This is the actual function that does all the job setting the defaults.
+# set.default.plot.phylo.params <- function(dots) {
+#   dots <- as.character(match.call()$dots)
+#   env <- parent.frame()
+#   
+#   for (p in names(APHYLO_DEFAULT_PLOT_PARAMS)) 
+#     if (!length(env[[dots]][[p]]))
+#       env[[dots]][[p]] <- APHYLO_DEFAULT_PLOT_PARAMS[[p]]
+# }
 
 
 is.aphylo <- function(x)      inherits(x, "aphylo")

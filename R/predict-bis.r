@@ -121,7 +121,7 @@ predict_pre_order.aphylo_estimates <- function(
   for (j in 1L:p) {
 
     # Updating tree (we only need a single function)
-    tmpdat <- x$dat[j]
+    tmpdat <- x$dat[,j]
     
     dots$dat      <- tmpdat
     dots$p        <- params
@@ -213,7 +213,7 @@ predict_pre_order.aphylo <- function(x, psi, mu_d, mu_s, eta, Pi, ...) {
     
     # Computing loglike
     l <- LogLike(
-      tree       = x[i],
+      tree       = x[, i],
       psi        = psi,
       mu_d       = mu_d,
       mu_s       = mu_s,

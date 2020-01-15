@@ -6,7 +6,7 @@
 \alias{[<-.aphylo}
 \title{Indexing aphylo objects}
 \usage{
-\method{[}{aphylo}(x, j)
+\method{[}{aphylo}(x, i, j, drop = FALSE)
 
 \method{[}{aphylo}(x, i, j) <- value
 }
@@ -15,6 +15,9 @@
 
 \item{i, j}{Integer vector. Indices of genes or functions.}
 
+\item{drop}{Logical scalar. When \code{TRUE}, the function returns a matrix of
+annotations. Otherwise an object of class \code{aphylo}.}
+
 \item{value}{Integer vector. Replacing values, can be either \code{c(0, 1, 9, NA)}.}
 }
 \description{
@@ -22,5 +25,6 @@ Indexing aphylo objects
 }
 \details{
 The subsetting method allows selecting one or more annotations from
-the \link{aphylo} object.
+the \link{aphylo} object. Whenever \code{i} is specified, then aphylo returns the corresponding
+annotations.
 }

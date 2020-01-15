@@ -146,7 +146,7 @@ public:
         continue;
       }
       
-      if (iter->size() != current_size)
+      if ((int) iter->size() != current_size)
         stop("All function annotations in A have to have the same length.");
     }
     
