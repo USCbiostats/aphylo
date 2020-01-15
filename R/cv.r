@@ -72,8 +72,8 @@ aphylo_cv.formula <- function(model, ...) {
   for (i in iterseq) {
     
     # Getting alternative model
-    if (!inherits(ans0$dat, "multiAphylo")) {
-      tree1 <- ans0$dat
+    tree1 <- ans0$dat
+    if (ntrees == 1L) {
       tree1[has_ann[i],] <- NA
     } else {
       tree1 <- tree1[-i]
@@ -106,7 +106,7 @@ aphylo_cv.formula <- function(model, ...) {
       pred_out  = pred,
       expected  = expected,
       call      = sys.call(),
-      ids       = has_ann,
+      ids       = iterseq,
       estimates = ans0,
       auc       = if (ntrees == 1) {
         auc(pred, expected)
