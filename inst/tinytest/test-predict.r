@@ -127,4 +127,11 @@ p1 <- aphylo:::prediction_score_rand(y, diag(20), a)
 
 expect_equivalent(p0, p1, tol = 1e-1)
   
+# Mutliphylo -------------------------------------------------------------------
+set.seed(192318)
+net <- c(raphylo(20), raphylo(10))
+ans <- aphylo_mcmc(net ~ mu_d + mu_s + Pi, control = list(nsteps = 2e3, burnin = 0))
+
+pred <- prediction_score(ans)
+expect_output(pred, "PREDICTION SCORE")
 

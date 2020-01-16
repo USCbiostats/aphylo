@@ -43,16 +43,21 @@ Tree_get_parents <- function(tree_ptr) {
     .Call(`_aphylo_Tree_Nnode`, tree_ptr, internal_only)
 }
 
-Tree_get_dist_tip2root <- function(tree_ptr) {
-    .Call(`_aphylo_Tree_get_dist_tip2root`, tree_ptr)
+#' @rdname new_aphylo_pruner
+#' @param ptr An object of class `aphylo_pruner`.
+#' @return `dist2root`: An integer vector with the number of steps from each
+#' node (internal or not) to the root node.
+#' @export
+dist2root <- function(ptr) {
+    .Call(`_aphylo_Tree_get_dist_tip2root`, ptr)
 }
 
-Tree_get_tips <- function(tree_ptr) {
-    .Call(`_aphylo_Tree_get_tips`, tree_ptr)
-}
-
-Tree_get_postorder <- function(tree_ptr) {
-    .Call(`_aphylo_Tree_get_postorder`, tree_ptr)
+#' @rdname new_aphylo_pruner
+#' @return `get_postorder`: An integer vector with the postorder sequence
+#' for pruning the tree (indexed from 0).
+#' @export
+get_postorder <- function(ptr) {
+    .Call(`_aphylo_Tree_get_postorder`, ptr)
 }
 
 #' @export
@@ -71,10 +76,6 @@ Nannotated.aphylo_pruner <- function(phy) {
 #' @export
 Nann.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Nann`, phy)
-}
-
-root_node_pr <- function(Pi, S) {
-    .Call(`_aphylo_root_node_pr`, Pi, S)
 }
 
 Tree_set_ann <- function(phy, i, j, val) {

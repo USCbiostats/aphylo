@@ -82,35 +82,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // Tree_get_dist_tip2root
-std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP& tree_ptr);
-RcppExport SEXP _aphylo_Tree_get_dist_tip2root(SEXP tree_ptrSEXP) {
+std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP& ptr);
+RcppExport SEXP _aphylo_Tree_get_dist_tip2root(SEXP ptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(Tree_get_dist_tip2root(tree_ptr));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Tree_get_tips
-std::vector< unsigned int > Tree_get_tips(const SEXP& tree_ptr);
-RcppExport SEXP _aphylo_Tree_get_tips(SEXP tree_ptrSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(Tree_get_tips(tree_ptr));
+    Rcpp::traits::input_parameter< const SEXP& >::type ptr(ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_dist_tip2root(ptr));
     return rcpp_result_gen;
 END_RCPP
 }
 // Tree_get_postorder
-std::vector< unsigned int > Tree_get_postorder(const SEXP& tree_ptr);
-RcppExport SEXP _aphylo_Tree_get_postorder(SEXP tree_ptrSEXP) {
+std::vector< unsigned int > Tree_get_postorder(const SEXP& ptr);
+RcppExport SEXP _aphylo_Tree_get_postorder(SEXP ptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type tree_ptr(tree_ptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(Tree_get_postorder(tree_ptr));
+    Rcpp::traits::input_parameter< const SEXP& >::type ptr(ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(Tree_get_postorder(ptr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -141,18 +128,6 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const SEXP& >::type phy(phySEXP);
     rcpp_result_gen = Rcpp::wrap(Tree_Nann(phy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// root_node_pr
-std::vector< double > root_node_pr(double Pi, const std::vector< std::vector<unsigned int> >& S);
-RcppExport SEXP _aphylo_root_node_pr(SEXP PiSEXP, SEXP SSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Pi(PiSEXP);
-    Rcpp::traits::input_parameter< const std::vector< std::vector<unsigned int> >& >::type S(SSEXP);
-    rcpp_result_gen = Rcpp::wrap(root_node_pr(Pi, S));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -339,12 +314,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_Tree_get_parents", (DL_FUNC) &_aphylo_Tree_get_parents, 1},
     {"_aphylo_Tree_Nnode", (DL_FUNC) &_aphylo_Tree_Nnode, 2},
     {"_aphylo_Tree_get_dist_tip2root", (DL_FUNC) &_aphylo_Tree_get_dist_tip2root, 1},
-    {"_aphylo_Tree_get_tips", (DL_FUNC) &_aphylo_Tree_get_tips, 1},
     {"_aphylo_Tree_get_postorder", (DL_FUNC) &_aphylo_Tree_get_postorder, 1},
     {"_aphylo_Tree_Ntip", (DL_FUNC) &_aphylo_Tree_Ntip, 1},
     {"_aphylo_Tree_Nannotated", (DL_FUNC) &_aphylo_Tree_Nannotated, 1},
     {"_aphylo_Tree_Nann", (DL_FUNC) &_aphylo_Tree_Nann, 1},
-    {"_aphylo_root_node_pr", (DL_FUNC) &_aphylo_root_node_pr, 2},
     {"_aphylo_Tree_set_ann", (DL_FUNC) &_aphylo_Tree_set_ann, 4},
     {"_aphylo_Tree_get_ann", (DL_FUNC) &_aphylo_Tree_get_ann, 1},
     {"_aphylo_approx_geodesic", (DL_FUNC) &_aphylo_approx_geodesic, 4},

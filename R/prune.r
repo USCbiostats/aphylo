@@ -3,13 +3,13 @@
 #' Creates an external pointer to an object of class `aphylo_pruner`. This is mostly
 #' used to compute the model's likelihood function faster by reusing underlying
 #' C++ class objects to store probability matrices and data. This is intended
-#' for internal use only
+#' for internal use only.
 #' 
 #' @aliases aphylo_pruner
 #' 
 #' @details The underlying implementation of the pruning function is based on the
 #' pruner C++ library that implements Felsenstein's tree pruning algorithm.
-#' See ttps://github.com/USCbiostats/pruner.
+#' See \url{https://github.com/USCbiostats/pruner}.
 #' 
 #' @examples
 #' set.seed(1)

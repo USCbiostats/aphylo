@@ -1,10 +1,6 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
-int sample_int(int n) {
-  return (int) floor(unif_rand() * (double) n);
-}
-
 // [[Rcpp::export(name=".sim_fun_on_tree")]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,

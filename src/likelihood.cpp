@@ -277,28 +277,41 @@ unsigned int Tree_Nnode(const SEXP & tree_ptr, bool internal_only = true) {
   return count;
 }
 
-// [[Rcpp::export]]
-std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP & tree_ptr) {
+//' @rdname new_aphylo_pruner
+//' @param ptr An object of class `aphylo_pruner`.
+//' @return `dist2root`: An integer vector with the number of steps from each
+//' node (internal or not) to the root node.
+//' @export
+// [[Rcpp::export(name = "dist2root", rng = false)]]
+std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP & ptr) {
   
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  if (!Rf_inherits(ptr, "aphylo_pruner"))
+    stop("-ptr- must be an object of class 'aphylo_pruner'.");
   
-  return p->get_dist_tip2root();
+  Rcpp::XPtr< pruner::Tree > p(ptr);
+  pruner::v_uint ans = p->get_dist_tip2root(), ans_sorted;
+  pruner::v_uint tip = p->get_tips();
+  
+  // Right sorting
+  ans_sorted.resize(ans.size());
+  for (unsigned int i = 0u; i < tip.size(); ++i)
+    ans_sorted[tip[i]] = ans[i];
+  
+  return ans_sorted;
   
 }
 
-// [[Rcpp::export]]
-std::vector< unsigned int > Tree_get_tips(const SEXP & tree_ptr) {
+//' @rdname new_aphylo_pruner
+//' @return `get_postorder`: An integer vector with the postorder sequence
+//' for pruning the tree (indexed from 0).
+//' @export
+// [[Rcpp::export(name = "get_postorder", rng = false)]]
+std::vector< unsigned int > Tree_get_postorder(const SEXP & ptr) {
   
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  if (!Rf_inherits(ptr, "aphylo_pruner"))
+    stop("-ptr- must be an object of class 'aphylo_pruner'.");
   
-  return p->get_tips();
-  
-}
-
-// [[Rcpp::export]]
-std::vector< unsigned int > Tree_get_postorder(const SEXP & tree_ptr) {
-  
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  Rcpp::XPtr< pruner::Tree > p(ptr);
   
   return p->get_postorder();
   
@@ -335,18 +348,6 @@ unsigned int Tree_Nann(const SEXP & phy) {
   return p->args->nfuns;
 }
 
-// [[Rcpp::export]]
-std::vector< double > root_node_pr(
-  double Pi,
-  const std::vector< std::vector<unsigned int> > & S
-) {
-  
-  std::vector< double > pi_probs(S.size());
-  root_node_pr(pi_probs, Pi, S);
-  
-  return pi_probs;
-  
-}
 
 // [[Rcpp::export]]
 unsigned int Tree_set_ann(const SEXP & phy, unsigned int i, unsigned int j, unsigned int val) {
