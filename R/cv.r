@@ -20,7 +20,8 @@ aphylo_cv.formula <- function(model, ...) {
     has_ann <- which(rowSums(ans0$dat$tip.annotation == 9) < Nann(ans0$dat))
     nhas    <- length(has_ann)
   } else {
-    nhas <- ntrees
+    nhas    <- ntrees
+    has_ann <- 1L:nhas
   }
   
   # Model
