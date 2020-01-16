@@ -51,8 +51,12 @@ Multiavariate plot (surface)
 }
 \examples{
 # Example: A model with less parameters
+set.seed(1231)
 x <- raphylo(20)
-ans <- aphylo_mcmc(x ~ psi, control=list(nsteps=2e4))
+ans <- aphylo_mcmc(
+  x ~ psi + mu_d + mu_s,
+  control = list(nsteps = 1e3, burnin = 0)
+  )
 
 # Creating the multivariate plot (using by default image)
 plot_multivariate(

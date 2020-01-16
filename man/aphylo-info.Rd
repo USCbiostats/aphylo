@@ -14,6 +14,8 @@
 \alias{Nannotated.aphylo_estimates}
 \alias{Ntrees}
 \alias{Ntrees.aphylo}
+\alias{Ntrees.phylo}
+\alias{Ntrees.multiPhylo}
 \alias{Ntrees.multiAphylo}
 \alias{Ntrees.multiAphylo_pruner}
 \alias{Ntrees.aphylo_pruner}
@@ -43,6 +45,10 @@ Nannotated(phy)
 Ntrees(phy)
 
 \method{Ntrees}{aphylo}(phy)
+
+\method{Ntrees}{phylo}(phy)
+
+\method{Ntrees}{multiPhylo}(phy)
 
 \method{Ntrees}{multiAphylo}(phy)
 
