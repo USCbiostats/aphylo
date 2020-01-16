@@ -21,5 +21,9 @@
   ans0 <- ans0 + t(ans0)
   ans1 <- approx_geodesic(edges + 1)
   
+  tree <- new_aphylo(as.phylo(edges), tip.annotation = c(0,0,0,0,1))
+  ord  <- order(c(tree$tree$tip.label, tree$tree$node.label) + 1)
+  
   expect_equal(ans0, ans1)
+  expect_equal(approx_geodesic(tree)[ord,ord], ans1)
 # })

@@ -144,6 +144,14 @@ Ntrees.aphylo <- function(phy) 1L
 
 #' @export
 #' @rdname aphylo-info
+Ntrees.phylo <- function(phy) 1L
+
+#' @export
+#' @rdname aphylo-info
+Ntrees.multiPhylo <- function(phy) length(phy)
+
+#' @export
+#' @rdname aphylo-info
 Ntrees.multiAphylo <- function(phy) length(phy)
 
 #' @export

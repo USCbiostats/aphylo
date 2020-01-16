@@ -25,4 +25,4 @@ env:
    - CRAN: http://cran.rstudio.com
 
 after_success:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then Rscript -e 'covr::codecov()'; fi
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then Rscript -e 'covr::codecov(line_exclusions = as.list(readLines("inst/CODECOV_EXCLUSIONS")))'; fi

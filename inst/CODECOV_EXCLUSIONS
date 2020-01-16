@@ -1,0 +1,7 @@
+R/aphylo-package.r
+pruner.hpp
+inst/include/tree_bones.hpp
+inst/include/tree_meat.hpp
+inst/include/treeiterator_bones.hpp
+inst/include/treeiterator_meat.hpp
+inst/include/typedefs.hpp

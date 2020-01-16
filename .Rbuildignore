@@ -30,3 +30,5 @@ README[.]md
 ^codecov\.yml$
 ^makefile$
 ^docs$
+inst/CODECOV_EXCLUSIONS
+
