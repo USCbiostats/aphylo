@@ -168,12 +168,14 @@ sim_fun_on_tree <- function(
   if (missing(tip.type) || is.null(tip.type)) {
     if (is.aphylo(tree)) tip.type <- tree$tip.type
     else tip.type <- integer(ape::Ntip(tree))
-  }
+  } else if (length(tip.type) != Ntip(tree))
+    stop("The length of -tip.type- must be the same as Ntip(tree).", call. = FALSE)
   
   if (missing(node.type) || is.null(node.type)) {
     if (is.aphylo(tree)) node.type <- tree$node.type
     else node.type <- integer(ape::Nnode(tree))
-  }
+  } else if (length(node.type) != Nnode(tree))
+    stop("The length of -node.type- must be the same as Nnode(tree).", call. = FALSE)
   
   tree <- ape::as.phylo(tree)
   

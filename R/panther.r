@@ -35,7 +35,7 @@ read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   x  <- readLines(x)
   
   # Obtaining extra info and processing internal nodes labels
-  rgxp <- "(?:[:])?([0-9.]+)?\\[\\&\\&NHX:Ev=([0-9><]{3})(?::S=([a-zA-Z_.-]+))?:ID=([a-zA-Z0-9]+)\\]"
+  rgxp <- "(?:[:])?([0-9.]+)?\\[\\&\\&NHX:Ev=([0-9><]{3})(?::S=([a-zA-Z_.-]*))?:ID=([a-zA-Z0-9]+)\\]"
   
   dat <- gregexpr(rgxp, x[1], perl = TRUE)
   dat <- regmatches(x[1], dat)
@@ -64,6 +64,13 @@ read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   write(x[1], tmptree)
   tree <- tree.reader(tmptree, ...)
   file.remove(tmptree)
+  
+  if (Nnode(tree) != nrow(dat))
+    stop(
+      "The number of nodes read does not coincide with that reported by the ",
+      "tree.reader. This could be an updated version of PantherDB.",
+      call. = FALSE
+      )
   
   tree$tip.label <- paste(
     tree$tip.label,
