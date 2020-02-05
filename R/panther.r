@@ -37,9 +37,9 @@ read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Obtaining extra info and processing internal nodes labels
   rgxp <- "(?:[:])?([0-9.]+)?\\[\\&\\&NHX:Ev=([0-9><]{3})(?::S=([a-zA-Z_.-]+))?:ID=([a-zA-Z0-9]+)\\]"
   
-  dat <- gregexpr(rgxp, x[1])
+  dat <- gregexpr(rgxp, x[1], perl = TRUE)
   dat <- regmatches(x[1], dat)
-  dat <- do.call(rbind, regmatches(dat[[1]], regexec(rgxp, dat[[1]])))
+  dat <- do.call(rbind, regmatches(dat[[1]], regexec(rgxp, dat[[1]], perl = TRUE)))
   dat[dat == ""] <- NA_character_
   
   # Rewriting the file so that labels of inner nodes can be read in
