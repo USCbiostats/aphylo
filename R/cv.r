@@ -1,4 +1,8 @@
 #' Leave-one-out Cross Validation
+#' 
+#' This implements Leave-one-out cross-validation (LOO-CV) for trees of class
+#' [aphylo] and [multiAphylo].
+#' 
 #' @param model As passed to [aphylo_mcmc].
 #' @param ... Further arguments passed to the method.
 #' @return An object of class `aphylo_cv` with the following components:
@@ -6,6 +10,13 @@
 #' - `expected` Expected annotations
 #' - `call` The call
 #' - `ids` Integer vector with the ids of the leafs used in the loo process.
+#' 
+#' @details For each observation in the dataset (either a single gene if of 
+#' class [aphylo], or an entire tree if of class [multiAphylo]), we restimate
+#' the model removing the observation and use the parameter estimates to make
+#' a prediction on it. The prediction is done using the function [predict.aphylo_estimates]
+#' with argument `loo = TRUE`.
+#'  
 #' @export
 aphylo_cv <- function(...) UseMethod("aphylo_cv")
 

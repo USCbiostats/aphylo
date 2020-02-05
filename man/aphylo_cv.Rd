@@ -24,5 +24,13 @@ An object of class \code{aphylo_cv} with the following components:
 }
 }
 \description{
-Leave-one-out Cross Validation
+This implements Leave-one-out cross-validation (LOO-CV) for trees of class
+\link{aphylo} and \link{multiAphylo}.
+}
+\details{
+For each observation in the dataset (either a single gene if of
+class \link{aphylo}, or an entire tree if of class \link{multiAphylo}), we restimate
+the model removing the observation and use the parameter estimates to make
+a prediction on it. The prediction is done using the function \link{predict.aphylo_estimates}
+with argument \code{loo = TRUE}.
 }

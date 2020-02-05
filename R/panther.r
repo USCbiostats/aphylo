@@ -37,20 +37,24 @@ read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Obtaining extra info and processing internal nodes labels
   rgxp <- "(?:[:])?([0-9.]+)?\\[\\&\\&NHX:Ev=([0-9><]{3})(?::S=([a-zA-Z_.-]+))?:ID=([a-zA-Z0-9]+)\\]"
   
-  dat <- stringr::str_match_all(x, rgxp)[[1]]
+  dat <- gregexpr(rgxp, x[1])
+  dat <- regmatches(x[1], dat)
+  dat <- do.call(rbind, regmatches(dat[[1]], regexec(rgxp, dat[[1]])))
+  dat[dat == ""] <- NA_character_
   
   # Rewriting the file so that labels of inner nodes can be read in
   for (i in 1:nrow(dat))
-    x[1] <- stringr::str_replace(
-      string      = x[1],
-      pattern     = stringr::fixed(dat[i,1]),
+    x[1] <- gsub(
+      x           = x[1],
+      pattern     = dat[i,1],
+      fixed       = TRUE,
       replacement = ifelse(is.na(dat[i,2]), dat[i,5], paste(dat[i,5],dat[i,2], sep=":"))
       )
   
   # Getting the labels
   labs <- data.frame(
-    id       = stringr::str_extract(x[-1], "^.+(?=\\:)"),
-    label    = stringr::str_extract(x[-1], "(?<=\\:).+(?=\\;$)"),
+    id    = unlist(regmatches(x[-1], regexec(pattern = "^.+(?=\\:)", x[-1], perl = TRUE))),
+    label = unlist(regmatches(x[-1], regexec(pattern = "(?<=\\:).+(?=\\;$)", x[-1], perl = TRUE))),
     stringsAsFactors = FALSE
   )
   

@@ -1,5 +1,4 @@
 #' @importFrom Rcpp evalCpp
-#' @importFrom stringr str_match_all
 #' @importFrom stats var coef vcov optim optimHess complete.cases dbeta runif
 #'  as.formula update.formula predict
 #' @importFrom utils head tail getFromNamespace
