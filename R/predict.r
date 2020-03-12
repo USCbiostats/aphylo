@@ -229,6 +229,7 @@ print.aphylo_prediction_score <- function(x, ...) {
 
 # Function to color the absence/presence of function
 blue <- function(x) {
+  x[is.na(x)] <- 9
   ans <- polygons::colorRamp2(.aphyloColors)(x)
   ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
   ifelse(x == 9, "black", ans)

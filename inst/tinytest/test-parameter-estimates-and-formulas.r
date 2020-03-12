@@ -47,7 +47,7 @@ suppressMessages(library(coda))
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[c("mu_d0", "mu_d1")],
-          kernel  = fmcmc::kernel_ram(ub = 1, lb = 0, freq = 10)
+          kernel  = fmcmc::kernel_am(ub = 1, lb = 0, freq = 1)
         ),
         pars
       ))
@@ -111,7 +111,7 @@ suppressMessages(library(coda))
         list(
           fun = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(7:8)],
-          kernel  = fmcmc::kernel_ram(ub = 1, lb = 0, freq = 10)
+          kernel  = fmcmc::kernel_am(ub = 1, lb = 0, freq = 1)
           ),
         pars
       ))

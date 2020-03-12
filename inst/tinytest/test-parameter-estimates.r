@@ -71,7 +71,7 @@ ans1 <- suppressWarnings(
               params = c(rep(2/12, 4), .5, .5,2/12),
               priors = function(x) dbeta(x, 2, 10),
               control = list(
-                nsteps = 4e4, burnin=1e4, nchains=2,
+                nsteps = 2e4, burnin=1e4, nchains=2,
                 kernel = fmcmc::kernel_normal_reflective(
                   lb = 0, ub = 1, scale = .05,
                   scheme = "random"
@@ -88,7 +88,7 @@ ans2 <- suppressWarnings(
     params = c(rep(2/22, 4), .5,.5,2/22), 
     priors = function(x) dbeta(x, 2, 20),
     control = list(
-      nsteps = 4e4, burnin=1e4, nchains=2,
+      nsteps = 2e4, burnin=1e4, nchains=2,
       kernel = fmcmc::kernel_normal_reflective(
         lb = 0, ub = 1, scale = .05,
         scheme = "random"),
@@ -136,7 +136,7 @@ expect_true(all(abs(unname(coef(ans2))[-c(5:6)] - rep(2/22, 5)) < .025))
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
   })
   
-  expect_equivalent(predict(ans_mle), predict(ans_mcmc), tol=.15)
+  expect_equivalent(predict(ans_mle, loo = FALSE), predict(ans_mcmc, loo = FALSE), tol=.15)
   
   
 # })

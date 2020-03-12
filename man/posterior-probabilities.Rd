@@ -11,6 +11,8 @@
 \usage{
 \method{predict}{aphylo_estimates}(
   object,
+  which.tree = 1:Ntrees(object),
+  ids = lapply(Ntip(object)[which.tree], seq_len),
   newdata = NULL,
   loo = TRUE,
   nsamples = 1L,
@@ -24,6 +26,8 @@ predict_pre_order(x, ...)
 \method{predict_pre_order}{aphylo_estimates}(
   x,
   params = x$par,
+  which.tree = 1:Ntrees(x),
+  ids = lapply(Ntip(x)[which.tree], seq_len),
   newdata = NULL,
   loo = TRUE,
   nsamples = 1L,
@@ -38,6 +42,11 @@ predict_pre_order(x, ...)
 predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 }
 \arguments{
+\item{which.tree}{Integer scalar. Which tree to include in the prediction.}
+
+\item{ids}{Integer vector. Ids (positions) of the nodes that need to be
+predicted.}
+
 \item{newdata}{(optional) An aphylo object.}
 
 \item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
@@ -54,6 +63,8 @@ to be computed from the distribution of outcomes.}
 \item{...}{Ignored.}
 
 \item{params}{A numeric vector with the corresponding parameters.}
+
+\item{ncores, cl}{Passed to \code{\link[parallel:makeCluster]{parallel::makeCluster()}}.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 

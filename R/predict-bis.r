@@ -7,6 +7,7 @@
 #' @param atree,x,object Either a tree of class [aphylo] or an object of class [aphylo_estimates]
 #' @param params A numeric vector with the corresponding parameters.
 #' @param newdata (optional) An aphylo object.
+#' @param which.tree Integer scalar. Which tree to include in the prediction.
 #' 
 #' @template loo
 #' @template parameters

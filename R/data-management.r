@@ -443,7 +443,7 @@ plot.aphylo <- function(
     ndraws <- ndraws + 1L
     
     if (f %in% as_ci) {
-      abline(v = (x1 - x0)/2 + x0, lty = 2)
+      graphics::abline(v = (x1 - x0)/2 + x0, lty = 2)
       break
     }
     

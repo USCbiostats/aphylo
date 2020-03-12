@@ -332,6 +332,7 @@ vcov.aphylo_estimates <- function(object, ...) {
 #' the original tree with the predicted annotations.
 #' @param y Ignored.
 #' @template loo
+#' @param ids,nsamples,ncores,centiles,cl passed to [predict.aphylo_estimates()]
 #' @return The plot method for `aphylo_estimates` returns the selected tree
 #' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export
@@ -339,7 +340,7 @@ plot.aphylo_estimates <- function(
   x,
   y = NULL,
   which.tree = 1L,
-  ids        = 1:Ntip(x)[which.tree],
+  ids        = list(1:Ntip(x)[which.tree]),
   loo        = TRUE,
   nsamples   = 1L,
   ncores     = 1L,
@@ -357,18 +358,24 @@ plot.aphylo_estimates <- function(
   pred <- stats::predict(
     object     = x,
     which.tree = which.tree,
-    ids        = list(ids),
+    ids        = ids,
     loo        = loo,
     nsamples   = nsamples,
     centiles   = centiles,
     ncores     = ncores,
     cl         = cl
-    )[[1]][1:Ntip(x)[which.tree], ,drop = FALSE]
+    )
+  
+  pred <- if (is.multiAphylo(x$dat))
+    pred[[1]][1:Ntip(x)[which.tree], ,drop = FALSE]
+  else
+    pred[1:Ntip(x)[which.tree], ,drop = FALSE]
   
   # Adding the Pred. predix to the columns.
   colnames(pred) <- paste("Pred.", colnames(pred))
   
-  x$dat <- x$dat[[which.tree]]
+  if (is.multiAphylo(x$dat))
+    x$dat <- x$dat[[which.tree]]
   
   x$dat$tip.annotation <- cbind(
     x$dat$tip.annotation,

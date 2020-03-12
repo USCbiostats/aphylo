@@ -34,8 +34,10 @@ aphylo_mle(
   x,
   y = NULL,
   which.tree = 1L,
+  ids = list(1:Ntip(x)[which.tree]),
   loo = TRUE,
   nsamples = 1L,
+  ncores = 1L,
   centiles = c(0.025, 0.5, 0.975),
   cl = NULL,
   ...
@@ -82,6 +84,8 @@ to \code{FALSE}.}
 \item{y}{Ignored.}
 
 \item{which.tree}{Integer scalar. Which tree to plot.}
+
+\item{ids, nsamples, ncores, centiles, cl}{passed to \code{\link[=predict.aphylo_estimates]{predict.aphylo_estimates()}}}
 
 \item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
 similar to what a leave-one-out cross-validation scheme would be done
