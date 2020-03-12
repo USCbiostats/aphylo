@@ -9,6 +9,7 @@
 \alias{vcov.aphylo_estimates}
 \alias{plot.aphylo_estimates}
 \alias{aphylo_mcmc}
+\alias{window.aphylo_estimates}
 \title{Parameter estimation of Annotated Phylogenetic Trees}
 \usage{
 aphylo_mle(
@@ -29,7 +30,16 @@ aphylo_mle(
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L, loo = FALSE, ...)
+\method{plot}{aphylo_estimates}(
+  x,
+  y = NULL,
+  which.tree = 1L,
+  loo = TRUE,
+  nsamples = 1L,
+  centiles = c(0.025, 0.5, 0.975),
+  cl = NULL,
+  ...
+)
 
 aphylo_mcmc(
   model,
@@ -39,6 +49,8 @@ aphylo_mcmc(
   check_informative = getOption("aphylo_informative", FALSE),
   reduced_pseq = getOption("aphylo_reduce_pseq", TRUE)
 )
+
+\method{window}{aphylo_estimates}(x, ...)
 }
 \arguments{
 \item{model}{A model as specified in \link{aphylo-model}.}

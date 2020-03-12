@@ -335,7 +335,18 @@ vcov.aphylo_estimates <- function(object, ...) {
 #' @return The plot method for `aphylo_estimates` returns the selected tree
 #' (`which.tree`) with predicted annotations, also of class [aphylo].
 #' @export
-plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, loo = FALSE, ...) {
+plot.aphylo_estimates <- function(
+  x,
+  y = NULL,
+  which.tree = 1L,
+  ids        = 1:Ntip(x)[which.tree],
+  loo        = TRUE,
+  nsamples   = 1L,
+  ncores     = 1L,
+  centiles   = c(.025, .5, .975),
+  cl         = NULL,
+  ...
+  ) {
   
   if (inherits(x$dat, "multiAphylo")) {
     if (!(which.tree %in% seq_len(Ntrees(x))) | length(which.tree) > 1L)
@@ -343,11 +354,26 @@ plot.aphylo_estimates <- function(x, y = NULL, which.tree = 1L, loo = FALSE, ...
     x$dat <- x$dat[[which.tree]]
   }
   
-  pred <- stats::predict(x, loo = loo)[1:Ntip(x$dat),,drop = FALSE]
+  # Computing predictions
+  pred <- stats::predict(
+    object     = x,
+    which.tree = which.tree,
+    ids        = list(ids),
+    loo        = loo,
+    nsamples   = nsamples,
+    centiles   = centiles,
+    ncores     = ncores,
+    cl         = cl
+    )[1:Ntip(x$dat), ,drop = FALSE]
+  
+  # Adding the Pred. predix to the columns.
   colnames(pred) <- paste("Pred.", colnames(pred))
   
-  x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted= pred)
-  plot(x$dat, ...)
+  x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted = pred)
+  if (nsamples > 1L)
+    plot(x$dat, as_ci = 2L:4L, ...)
+  else
+    plot(x$dat, ...)
   
   invisible(x$dat)
 }
@@ -367,12 +393,12 @@ logLik.aphylo_estimates <- function(object, ...) {
 }
 
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
-  nsteps    = 1e5L,
-  burnin    = 1e4L,
+  nsteps    = 1e4L,
+  burnin    = 5e3L,
   thin      = 10L,
   nchains   = 2L,
   multicore = FALSE,
-  conv_checker = fmcmc::convergence_auto(2000)
+  conv_checker = fmcmc::convergence_auto(5e3)
 )
 
 #' @rdname aphylo_estimates-class
@@ -421,10 +447,10 @@ aphylo_mcmc <- function(
   }
   
   if (!("kernel" %in% names(control)))
-    control$kernel <- fmcmc::kernel_adapt(
+    control$kernel <- fmcmc::kernel_am(
       ub   = 1,
       lb   = 0,
-      freq = 10
+      freq = 1L
     )
 
   # If the models is uninformative, then it will return with error
@@ -499,8 +525,25 @@ aphylo_mcmc <- function(
     dat         = model$dat,
     par0        = model$params,
     method      = "mcmc",
-    varcovar    = var(do.call(rbind, ans)),
+    varcovar    = stats::var(do.call(rbind, ans)),
     call        = cl
   )
 }
 
+#' @export
+#' @rdname aphylo_estimates-class
+window.aphylo_estimates <- function(x, ...) {
+  
+  if (x$method != "mcmc") {
+    warning("No window method for aphylo_estimates using MLE.", call. = FALSE)
+    return(x)
+  }
+  
+  x$hist <- window(x$hist, ...)
+  x$par  <- colMeans(do.call(rbind, x$hist))
+  x$ll   <- x$fun(
+    p = x$par, dat = x$dat, priors = x$priors, verb_ans = FALSE
+    )
+  x$varcovar <- stats::var(do.call(rbind, x$hist))
+  x
+}

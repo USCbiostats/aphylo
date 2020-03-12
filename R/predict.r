@@ -274,16 +274,18 @@ plot.aphylo_prediction_score <- function(
   } else
     idx <- 1:nrow(x$predicted)
   
-  predicted <- x$predicted[idx,,drop=FALSE]
-  expected  <- x$expected[idx,,drop=FALSE]
+  predicted <- x$predicted[idx, , drop=FALSE]
+  expected  <- x$expected[idx, , drop=FALSE]
   
   k <- length(which.fun)
   y <- rep(1L, nrow(predicted))
   
   # Should we draw the labels?
   if (!length(include.labels)) {
+    
     if (nrow(predicted) > 40) include.labels <- FALSE
     else include.labels <- TRUE
+    
   }
   
   # Getting the order

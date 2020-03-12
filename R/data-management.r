@@ -266,6 +266,7 @@ as_aphylo <- function(
 #' @param node.type.col,node.type.size Vectors of length 2. In the case of 
 #' `node.type.col` the color of the duplication and other nodes. `node.type.size`
 #' sets the size of circles.
+#' @param as_ci Integer vector. Internal use only.
 #' @details The `plot.aphylo` function is a wrapper of [ape::plot.phylo].
 #' 
 #' @export
@@ -279,6 +280,7 @@ plot.aphylo <- function(
   node.type.col  = c(dupl = "red", other = "blue"),
   node.type.size = c(dupl = 0, other = 0), 
   rect.args      = list(),
+  as_ci          = NULL,
   ...
   ) {
   
@@ -363,29 +365,66 @@ plot.aphylo <- function(
   #   border  = "gray"
   # )
   
+  # If we are plotting the CI, then it is only two blocks
+  nblocks <- ifelse(length(as_ci), 2, nfun)
+  ndraws  <- 1L
   for (f in 1:nfun) {
 
-    rect.args$xleft   <- (f - 1)/nfun + 1/nfun*.05
+    rect.args$xleft   <- (ndraws - 1)/nblocks + 1/nblocks*.05
     rect.args$ybottom <- tips[,2] - yspacing
-    rect.args$xright  <- f/nfun - 1/nfun*.05
+    rect.args$xright  <- ndraws/nblocks - 1/nblocks*.05
     rect.args$ytop    <- tips[,2] + yspacing
     rect.args$xpd     <- NA
     rect.args$col     <- blue(x$tip.annotation[,f])
     # rect.args$border  <- blue(x$tip.annotation[,f])
-    rect.args$col[x$tip.annotation[,f] == 9L] <- "white"
+    rect.args$col[x$tip.annotation[, f] == 9L] <- "white"
     rect.args$border  <- rect.args$col
     
     if (!length(rect.args$xpd)) rect.args$xpd <- NA
     if (!length(rect.args$lwd)) rect.args$lwd<-.5
+   
+    
+    # In the case that the function plotted is actually a
+    # confidence interval, we plot bars instead
+    if (length(as_ci) && f == as_ci[1L]) {
+      
+      # The locations of the x coordinates change
+      barwd <- rect.args$xright - rect.args$xleft
+      x0    <- rect.args$xleft
+      x1    <- rect.args$xright
+      
+      xmid  <- rect.args$xright + barwd/2
+      
+      rect.args$xleft  <- x0 + barwd * x$tip.annotation[, f]
+      rect.args$xright <- x1 - barwd *
+        (1 - x$tip.annotation[, as_ci[3L]])
+      
+      # Assuring a minimum
+      rect.args$xleft[rect.args$xleft < (x0 + barwd*.1)] <- x0 + barwd*.1
+      rect.args$xright[rect.args$xright > (x1 - barwd*.1)] <- x1 - barwd*.1
+      
+      # Figuring out the right color, we use the middle one
+      rect.args$col    <- blue(x$tip.annotation[, as_ci[2]])
+      rect.args$border <- rect.args$col
+      
+      rect.args$ytop    <- rect.args$ytop - yspacing*.2
+      rect.args$ybottom <- rect.args$ybottom + yspacing*.2
+      
+    } 
     
     # Drawing rectangles
     do.call(graphics::rect, rect.args)
     
     # Adding function label
     graphics::text(
-      x = (2*f - 1)/nfun/2 - 1/nfun/2,
-      y = yran[1] - graphics::strheight(colnames(x$tip.annotation)[f], srt=45)*1.5 - yspacing,
-      label = colnames(x$tip.annotation)[f],
+      x = (2 * ndraws - 1)/nblocks/2 - 1/nblocks/2,
+      y = yran[1] - graphics::strheight(
+        colnames(x$tip.annotation)[f], srt = 45
+        )*1.5 - yspacing,
+      label = if (f %in% as_ci) 
+        paste("C.I.", colnames(x$tip.annotation)[1L])
+      else
+        colnames(x$tip.annotation)[f],
       pos = 1,
       srt = 45,
       xpd = NA
@@ -397,8 +436,16 @@ plot.aphylo <- function(
     rect.args$border  <- "darkgray"
     rect.args$lwd     <- 1.5
     
-    do.call(graphics::rect, rect.args)
+    rect.args$xleft   <- (ndraws - 1)/nblocks + 1/nblocks*.05
+    rect.args$xright  <- ndraws/nblocks - 1/nblocks*.05
     
+    do.call(graphics::rect, rect.args)
+    ndraws <- ndraws + 1L
+    
+    if (f %in% as_ci) {
+      abline(v = (x1 - x0)/2 + x0, lty = 2)
+      break
+    }
     
   }
   

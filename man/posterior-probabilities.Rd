@@ -9,11 +9,29 @@
 \alias{predict_brute_force}
 \title{Posterior probabilities based on parameter estimates}
 \usage{
-\method{predict}{aphylo_estimates}(object, newdata = NULL, ...)
+\method{predict}{aphylo_estimates}(
+  object,
+  newdata = NULL,
+  loo = TRUE,
+  nsamples = 1L,
+  centiles = c(0.025, 0.5, 0.975),
+  cl = NULL,
+  ...
+)
 
 predict_pre_order(x, ...)
 
-\method{predict_pre_order}{aphylo_estimates}(x, params = x$par, newdata = NULL, loo = FALSE, ...)
+\method{predict_pre_order}{aphylo_estimates}(
+  x,
+  params = x$par,
+  newdata = NULL,
+  loo = TRUE,
+  nsamples = 1L,
+  centiles = c(0.025, 0.5, 0.975),
+  ncores = 1L,
+  cl = NULL,
+  ...
+)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
@@ -22,13 +40,20 @@ predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 \arguments{
 \item{newdata}{(optional) An aphylo object.}
 
-\item{...}{Ignored.}
-
-\item{params}{A numeric vector with the corresponding parameters.}
-
 \item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
 similar to what a leave-one-out cross-validation scheme would be done
 (see \link{predict.aphylo_estimates}).}
+
+\item{nsamples}{Integer scalar. When greater than one, the prediction is done
+using a random sample from the MCMC chain. This only works if the model was
+fitted using MCMC, of course.}
+
+\item{centiles}{Used together with \code{nsamples}, this indicates the centiles
+to be computed from the distribution of outcomes.}
+
+\item{...}{Ignored.}
+
+\item{params}{A numeric vector with the corresponding parameters.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 

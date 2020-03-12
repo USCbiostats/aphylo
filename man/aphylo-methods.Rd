@@ -14,6 +14,7 @@
   node.type.col = c(dupl = "red", other = "blue"),
   node.type.size = c(dupl = 0, other = 0),
   rect.args = list(),
+  as_ci = NULL,
   ...
 )
 
@@ -34,6 +35,8 @@ annotations use in \code{plot.aphylo}.}
 sets the size of circles.}
 
 \item{rect.args}{List of arguments passed to \link[graphics:rect]{graphics::rect}.}
+
+\item{as_ci}{Integer vector. Internal use only.}
 
 \item{...}{Further arguments passed to \link[ape:plot.phylo]{ape::plot.phylo}.}
 
