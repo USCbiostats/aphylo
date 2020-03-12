@@ -156,7 +156,7 @@ prediction_score.aphylo_estimates <- function(
   ids <- intersect(ids, 1L:Ntip(x$dat))
 
   # Prediction
-  pred <- predict.aphylo_estimates(x, loo = loo,...)
+  pred <- predict.aphylo_estimates(x, ids = list(ids), loo = loo,...)
   
   # Inverse of Geodesic distances
   if (!length(W)) {

@@ -351,7 +351,6 @@ plot.aphylo_estimates <- function(
   if (inherits(x$dat, "multiAphylo")) {
     if (!(which.tree %in% seq_len(Ntrees(x))) | length(which.tree) > 1L)
       stop("`which.tree` out of range.", call. = FALSE)
-    x$dat <- x$dat[[which.tree]]
   }
   
   # Computing predictions
@@ -364,12 +363,18 @@ plot.aphylo_estimates <- function(
     centiles   = centiles,
     ncores     = ncores,
     cl         = cl
-    )[1:Ntip(x$dat), ,drop = FALSE]
+    )[[1]][1:Ntip(x)[which.tree], ,drop = FALSE]
   
   # Adding the Pred. predix to the columns.
   colnames(pred) <- paste("Pred.", colnames(pred))
   
-  x$dat$tip.annotation <- cbind(x$dat$tip.annotation, predicted = pred)
+  x$dat <- x$dat[[which.tree]]
+  
+  x$dat$tip.annotation <- cbind(
+    x$dat$tip.annotation,
+    predicted = pred
+    )
+  
   if (nsamples > 1L)
     plot(x$dat, as_ci = 2L:4L, ...)
   else

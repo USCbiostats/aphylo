@@ -45,7 +45,7 @@ predict.aphylo_estimates <- function(
   ...
   ) {
   
-  if ((Nann(object) > 1L) && (nsamples > 1L))
+  if (any(Nann(object)[which.tree] > 1L) && (nsamples > 1L))
     stop(
       "Predictions using multiple samples is restricted to a single function ",
       "for now.", call. = FALSE
@@ -88,19 +88,20 @@ predict.aphylo_estimates <- function(
     
   } else {
     
-    for (i in seq_along(pred)) {
+    for (i in seq_along(which.tree)) {
       
       # Figuring out names
       cnames <- if (nsamples > 1)
         sprintf(
-          "%s_%.3f", colnames(object$dat[[i]]$tip.annotation),
+          "%s_%.3f",
+          colnames(object$dat[[which.tree[i]]]$tip.annotation),
           centiles
         )
       else
-        colnames(object$dat[[i]]$tip.annotation)
+        colnames(object$dat[[which.tree[i]]]$tip.annotation)
       
       dimnames(pred[[i]]) <- list(
-        with(object$dat[[i]]$tree, c(tip.label, node.label)),
+        with(object$dat[[which.tree[i]]]$tree, c(tip.label, node.label)),
         cnames
         )
       
@@ -149,17 +150,20 @@ predict_pre_order.aphylo_estimates <- function(
   }
   
   # Multiple trees are simply passed along the way -----------------------------
-  if (Ntrees(x) > 1) {
+  if (is.multiAphylo(x$dat)) {
     
-    ans <- vector("list", Ntrees(x))
+    ans <- vector("list", length(which.tree))
     x.  <- x
     
-    for (t. in seq_along(ans)) {
-      x.$dat <- x$dat[[t.]]
-      ans[[t.]] <-predict_pre_order(
+    for (t. in seq_along(which.tree)) {
+      x.$dat <- x$dat[[which.tree[t.]]]
+      ans[[t.]] <- predict_pre_order(
         x      = x.,
         ids    = ids[t.],
         params = x$par,
+        nsamples = nsamples,
+        ncores   = ncores,
+        centiles = centiles,
         ...
         )
     }
@@ -218,7 +222,7 @@ predict_pre_order.aphylo_estimates <- function(
           )
         },
         x.      = x,
-        ids     = ids[[1L]],
+        ids     = ids[1L],
         newdata = newdata,
         loo     = loo,
         ...
@@ -237,7 +241,7 @@ predict_pre_order.aphylo_estimates <- function(
           )
         },
         x       = x,
-        ids     = ids[[1L]],
+        ids     = ids[1L],
         newdata = newdata,
         loo     = loo,
         ...
@@ -312,7 +316,7 @@ predict_pre_order.aphylo_estimates <- function(
     }
     
     dots$dat <- new_aphylo_pruner(tmpdat)
-    for (i in intersect(1L:Ntip(x), ids)) {
+    for (i in intersect(1L:Ntip(x), ids[[1L]])) {
       
       # Setting that annotation to Missing (9)
       Tree_set_ann(dots$dat, i - 1L, 0L, 9L)
@@ -335,15 +339,18 @@ predict_pre_order.aphylo_estimates <- function(
     
     # Filling the rest of the tree
     l <- do.call(x$fun, dots)
-    ans[intersect((i + 1L):nrow(ans), ids), j] <- .posterior_prob(
-      Pr_postorder = l$Pr[[1L]],
-      types        = types,
-      mu_d         = mu_d,
-      mu_s         = mu_s,
-      Pi           = Pi,
-      pseq         = x$dat$pseq,
-      offspring    = x$dat$offspring
-    )$posterior[intersect((i + 1L):nrow(ans), ids),]
+    last_set <- intersect((i + 1L):nrow(ans), ids[[1L]])
+    
+    if (length(last_set))
+      ans[last_set, j] <- .posterior_prob(
+        Pr_postorder = l$Pr[[1L]],
+        types        = types,
+        mu_d         = mu_d,
+        mu_s         = mu_s,
+        Pi           = Pi,
+        pseq         = x$dat$pseq,
+        offspring    = x$dat$offspring
+      )$posterior[last_set, ]
     
   }
   
