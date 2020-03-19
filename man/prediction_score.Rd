@@ -46,13 +46,19 @@ are equal to 1, this is:\preformatted{mean(x$dat$tip.annotation[x$dat$tip.annota
 \examples{
 # Example with prediction_score ---------------------------------------------
 set.seed(11552)
-ap  <- raphylo(50, P = 1, Pi=0, mu_d=c(.8,.2), mu_s = c(0,0.25), psi = c(0,0))
+ap  <- raphylo(
+  50, P = 1,
+  Pi   = 0,
+  mu_d = c(.8,.2),
+  mu_s = c(0.1,0.1),
+  psi  = c(0,0)
+  )
 ans <- aphylo_mcmc(
-  ap ~ mu_d + mu_s + psi + Pi,
-  control = list(nsteps=5e3, thin=20, burnin = 1000),
-  priors = bprior(c(9,9,1,1,1,1,1), c(1,1,9,9,9,9,9))
+  ap ~ mu_d + mu_s + Pi,
+  control = list(nsteps=2e3, thin=20, burnin = 500),
+  priors = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5))
   )
                    
-pr <- prediction_score(ans)
-with(pr, cbind(Expected = expected, Predicted = predicted))
+(pr <- prediction_score(ans, loo = TRUE))
+plot(pr)
 }
