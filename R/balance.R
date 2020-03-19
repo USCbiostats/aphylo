@@ -33,7 +33,6 @@
 balance_ann <- function(phy) UseMethod("balance_ann")
 
 #' @export
-#' @rdname balance_ann
 balance_ann.aphylo <- function(phy) {
   
   A <- phy$tip.annotation
@@ -44,7 +43,6 @@ balance_ann.aphylo <- function(phy) {
 }
 
 #' @export
-#' @rdname balance_ann
 balance_ann.multiAphylo <- function(phy) {
   
   sapply(phy, balance_ann)
@@ -52,7 +50,6 @@ balance_ann.multiAphylo <- function(phy) {
 }
 
 #' @export
-#' @rdname balance_ann
 balance_ann.default <- function(phy) {
   
   stop(

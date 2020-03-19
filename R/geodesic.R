@@ -41,7 +41,6 @@ approx_geodesic <- function(
 shortest_path <- approx_geodesic
 
 #' @export
-#' @rdname approx_geodesic
 approx_geodesic.aphylo <- function(
   edges,
   nsteps     = 1e5,
@@ -55,7 +54,6 @@ approx_geodesic.aphylo <- function(
 }
 
 #' @export
-#' @rdname approx_geodesic
 approx_geodesic.phylo <- function(
   edges,
   nsteps     = 1e5,
@@ -69,7 +67,6 @@ approx_geodesic.phylo <- function(
 }
 
 #' @export
-#' @rdname approx_geodesic
 approx_geodesic.matrix <- function(
   edges,
   nsteps     = 1e5,

@@ -24,3 +24,4 @@ bprior <- function(shape1=1, shape2=9, ...) {
 uprior <- function() {
   function(p) 1
 }
+

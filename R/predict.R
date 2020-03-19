@@ -46,6 +46,22 @@ predict.aphylo_estimates <- function(
   ...
   ) {
   
+  # Checking if there's any new data
+  if (!is.null(newdata)) {
+    if (!is.multiAphylo(newdata) & !is.aphylo(newdata))
+      stop(
+        "-newdata- must be an object of class aphylo or multiAphilo. ",
+        "The object is of class(es) '", paste(class(object),collapse="', '"),
+        "'.", call. = FALSE
+        )
+    
+    object$dat <- newdata
+  }
+  
+  # Filling the blanks
+  if (is.null(which.tree)) which.tree <- 1:Ntrees(object)
+  if (is.null(ids)) ids <- lapply(Ntip(object)[which.tree], seq_len)
+  
   if (any(Nann(object)[which.tree] > 1L) && (nsamples > 1L))
     stop(
       "Predictions using multiple samples is restricted to a single function ",
@@ -57,19 +73,13 @@ predict.aphylo_estimates <- function(
     object,
     which.tree = which.tree,
     ids        = ids,
-    newdata    = newdata,
     loo        = loo,
     nsamples   = nsamples,
     centiles   = centiles,
     cl         = cl,
     ...
     )
-  
-  # No need to check for the class since we are already doing that in
-  # predict_preorder.aphylo_estimates
-  if (!is.null(newdata)) 
-    object$dat <- newdata
-  
+
   # Adding names
   if (is.aphylo(object$dat)) {
     
@@ -132,7 +142,6 @@ predict_pre_order.aphylo_estimates <- function(
   params     = x$par,
   which.tree = 1:Ntrees(x),
   ids        = lapply(Ntip(x)[which.tree], seq_len),
-  newdata    = NULL,
   loo        = TRUE,
   nsamples   = 1L,
   centiles   = c(.025, .5, .975),
@@ -140,16 +149,8 @@ predict_pre_order.aphylo_estimates <- function(
   cl         = NULL,
   ...
   ) {
-  
-  # Checking that the new data makes sense
-  if (!is.null(newdata)) {
-    if (inherits(newdata, "aphylo") | inherits(newdata, "multiAphylo"))
-      x$dat <- newdata
-    else 
-      stop("`newdata` should be of class `aphylo` or `multiAphylo`.",
-           call. = FALSE)
-  }
-  
+
+
   # Multiple trees are simply passed along the way -----------------------------
   if (is.multiAphylo(x$dat)) {
     
@@ -212,11 +213,10 @@ predict_pre_order.aphylo_estimates <- function(
     ans <- if (ncores > 1L) {
       parallel::parLapply(
         cl,
-        X = samples, function(params., x., ids, newdata, loo, ...) {
+        X = samples, function(params., x., ids, loo, ...) {
           aphylo::predict_pre_order(
             x       = x.,
             ids     = ids,
-            newdata = newdata,
             loo     = loo,
             params  = params.,
             ...
@@ -224,18 +224,16 @@ predict_pre_order.aphylo_estimates <- function(
         },
         x.      = x,
         ids     = ids[1L],
-        newdata = newdata,
         loo     = loo,
         ...
       )
     } else {
       
       lapply(
-        X = samples, function(params., x, ids, newdata, loo, ...) {
+        X = samples, function(params., x, ids, loo, ...) {
           aphylo::predict_pre_order(
             x       = x,
             ids     = ids,
-            newdata = newdata,
             loo     = loo,
             params  = params.,
             ...
@@ -243,7 +241,6 @@ predict_pre_order.aphylo_estimates <- function(
         },
         x       = x,
         ids     = ids[1L],
-        newdata = newdata,
         loo     = loo,
         ...
       )
