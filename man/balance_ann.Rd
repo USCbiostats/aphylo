@@ -2,18 +2,9 @@
 % Please edit documentation in R/balance.R
 \name{balance_ann}
 \alias{balance_ann}
-\alias{balance_ann.aphylo}
-\alias{balance_ann.multiAphylo}
-\alias{balance_ann.default}
 \title{Functional banlance of a tree}
 \usage{
 balance_ann(phy)
-
-\method{balance_ann}{aphylo}(phy)
-
-\method{balance_ann}{multiAphylo}(phy)
-
-\method{balance_ann}{default}(phy)
 }
 \arguments{
 \item{phy}{An object of class \link{aphylo} or \link{multiAphylo}}

@@ -27,24 +27,3 @@ Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
 Remotes: USCbiostats/polygons, USCbiostats/fmcmc
-Collate: 
-    'RcppExports.R'
-    'ape.r'
-    'aphylo-ape-info.r'
-    'aphylo-package.r'
-    'balance.R'
-    'cv.r'
-    'data-management.r'
-    'plot_logLik.r'
-    'estimation.r'
-    'formulas.r'
-    'geodesic.r'
-    'indexing.r'
-    'loglike.r'
-    'multiaphylo.r'
-    'panther.r'
-    'predict-bis.r'
-    'predict.r'
-    'priors.r'
-    'prune.r'
-    'simulation.r'

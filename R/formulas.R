@@ -39,6 +39,10 @@ comment_line_in_body <- function(f, pattern, ...) {
 
 #' Formulas in `aphylo`
 #' 
+#' This function the the workhorse behind the likelihood function. It creates
+#' arbitrary models by modifying the call to [LogLike()] function according to
+#' what the user specifies as model.
+#' 
 #' @param ... Either 0, 1 or both. Depending on the parameter, the index of the
 #' model parameter that will be set as fixed.
 #' @param fm A formula. Model of the type `<aphylo-object> ~ <parameters>` (see 
@@ -83,8 +87,7 @@ APHYLO_PARAM_DEFAULT <- structure(
   names = APHYLO_PARAM_NAMES
 )
 
-#' @rdname aphylo-model
-#' @export
+#' @noRd
 aphylo_call <- function(params, priors) {
   
   ans <- list2env(
