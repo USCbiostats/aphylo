@@ -100,20 +100,10 @@ plot.aphylo <- function(
   )
   on.exit(graphics::par(op2), add=TRUE)
   
-  graphics::plot.window(c(0, 1), range(tips[,2]), new=FALSE, xaxs = "i")
-  
+  graphics::plot.window(c(0, 1), range(tips[,2]), new = FALSE, xaxs = "i")
+
   nfun      <- ncol(x$tip.annotation)
   yran      <- range(tips[,2])
-  
-  # graphics::rect(
-  #   xleft   = -.1,
-  #   ybottom = yran[1] - .1*yinch() - yspacing,
-  #   xright  = 1.1,
-  #   ytop    = yran[2] + .1*yinch() + yspacing,
-  #   xpd     = NA,
-  #   col     = "lightgray",
-  #   border  = "gray"
-  # )
   
   # If we are plotting the CI, then it is only two blocks
   nblocks <- ifelse(length(as_ci), 2, nfun)
@@ -133,6 +123,15 @@ plot.aphylo <- function(
     if (!length(rect.args$xpd)) rect.args$xpd <- NA
     if (!length(rect.args$lwd)) rect.args$lwd<-.5
     
+    # Draing a background
+    graphics::rect(
+      xleft   = rect.args$xleft,
+      xright  = rect.args$xright,
+      ytop    = max(rect.args$ytop),
+      ybottom = min(rect.args$ybottom),
+      col     = "darkgray",
+      border  = "lightgray"
+    )
     
     # In the case that the function plotted is actually a
     # confidence interval, we plot bars instead
@@ -203,7 +202,8 @@ plot.aphylo <- function(
   width <- dev_size[1]*(1 - prop)
   graphics::par(op2)
   graphics::par(mai = c(0,0,dev_size[2] - op2$mai[1], dev_size[1]*prop + width/2))
-  graphics::plot.window(c(0,1), c(0,1))
+  graphics::plot.window(c(0,1), c(0, 1))
+  graphics::box(col="transparent")
   graphics::legend(
     "center",
     legend  = c("Duplication", "Other"),
