@@ -68,14 +68,13 @@ dat <- suppressWarnings(raphylo(50, Pi=0, mu_d=c(0, 0), psi=c(0,0)))
 dat$tip.annotation[] <- 9L
 
 ans1 <- suppressWarnings(
-  aphylo_mcmc(dat ~ mu_d + psi + eta(0,1) + Pi,
-              params = c(rep(2/12, 4), .5, .5,2/12),
+  aphylo_mcmc(dat ~ mu_d + psi + Pi,
+              params = c(rep(2/12, 4), 2/12),
               priors = function(x) dbeta(x, 2, 10),
               control = list(
-                nsteps = 4e3, burnin=1e3, nchains=2,
-                kernel = fmcmc::kernel_normal_reflective(
-                  lb = 0, ub = 1, scale = .05,
-                  scheme = "random"
+                nsteps = 4e3, burnin=2e3, nchains=2,
+                kernel = fmcmc::kernel_adapt(
+                  lb = 0, ub = 1, eps = .05
                   ),
                 conv_checker = NULL
                 ),
@@ -85,14 +84,13 @@ ans1 <- suppressWarnings(
 
 ans2 <- suppressWarnings(
   aphylo_mcmc(
-    dat ~ mu_d + psi + eta(0,1) + Pi,
-    params = c(rep(2/22, 4), .5,.5,2/22), 
+    dat ~ mu_d + psi + Pi,
+    params = c(rep(2/22, 4), 2/22), 
     priors = function(x) dbeta(x, 2, 20),
     control = list(
-      nsteps = 4e3, burnin=1e3, nchains=2,
-      kernel = fmcmc::kernel_normal_reflective(
-        lb = 0, ub = 1, scale = .05,
-        scheme = "random"),
+      nsteps = 4e3, burnin=2e3, nchains=2,
+      kernel = fmcmc::kernel_adapt(
+        lb = 0, ub = 1, eps = .05),
       conv_checker = NULL
       ),
     check_informative = FALSE
@@ -101,8 +99,8 @@ ans2 <- suppressWarnings(
   
   
   # Should converge to the prior
-expect_true(all(abs(unname(coef(ans1))[-c(5:6)] - rep(2/12, 5)) < .025))
-expect_true(all(abs(unname(coef(ans2))[-c(5:6)] - rep(2/22, 5)) < .025))
+expect_true(all(abs(unname(coef(ans1)) - rep(2/12, 5)) < .025))
+expect_true(all(abs(unname(coef(ans2)) - rep(2/22, 5)) < .025))
   
 # })
 
