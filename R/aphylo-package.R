@@ -7,7 +7,6 @@
 #' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom fmcmc MCMC
-#' @importFrom ape as.phylo plot.phylo Nnode Ntip Nedge
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 #' @importFrom MASS ginv
 NULL

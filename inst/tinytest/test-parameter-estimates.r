@@ -15,7 +15,8 @@ dat <- raphylo(n, P=P, psi = psi, mu_d = mu_d, Pi = Pi, eta = eta)
 ans0 <- suppressWarnings({
   aphylo_mle(
     dat ~ mu_d + psi + eta + Pi,
-    params = c(.05, .05, .05, .05, .5, .5, .5))
+    params = c(.05, .05, .05, .05, .5, .5, .5)
+    )
 })
 
 # Methods ----------------------------------------------------------------------
@@ -41,14 +42,14 @@ ans0 <- suppressWarnings({
     aphylo_mcmc(dat ~ mu_d + psi + eta + Pi, params = ans0$par,
                 priors = function(p) 1,
                 control = list(
-                  nsteps = 1e4, burnin=5e3, thin=20,
+                  nsteps = 4e3, burnin=1e3, thin=20,
                   conv_checker = NULL, nchains=1
                   )
                 )
   )
   
   # Checking expectations. It is difficult to do so with PI, so we exclude it.
-  expect_equal(ans0$par[-7], ans1$par[-7], tolerance = 0.1)
+  expect_equal(ans0$par[-7], ans1$par[-7], tolerance = 0.1, scale = 1)
   
   # Plotting
   expect_silent(plot(ans1))
@@ -71,7 +72,7 @@ ans1 <- suppressWarnings(
               params = c(rep(2/12, 4), .5, .5,2/12),
               priors = function(x) dbeta(x, 2, 10),
               control = list(
-                nsteps = 2e4, burnin=1e4, nchains=2,
+                nsteps = 4e3, burnin=1e3, nchains=2,
                 kernel = fmcmc::kernel_normal_reflective(
                   lb = 0, ub = 1, scale = .05,
                   scheme = "random"
@@ -88,7 +89,7 @@ ans2 <- suppressWarnings(
     params = c(rep(2/22, 4), .5,.5,2/22), 
     priors = function(x) dbeta(x, 2, 20),
     control = list(
-      nsteps = 2e4, burnin=1e4, nchains=2,
+      nsteps = 4e3, burnin=1e3, nchains=2,
       kernel = fmcmc::kernel_normal_reflective(
         lb = 0, ub = 1, scale = .05,
         scheme = "random"),
@@ -129,14 +130,17 @@ expect_true(all(abs(unname(coef(ans2))[-c(5:6)] - rep(2/22, 5)) < .025))
   ans_mcmc <- suppressWarnings(aphylo_mcmc(tree ~ mu_d + mu_s, priors = function(p) {
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
-  }))
+  }, control = list(nsteps = 4e3, burnin = 1e3, nchains = 1)))
   
   ans_mle <- aphylo_mle(tree ~ mu_d + mu_s, priors = function(p) {
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
   })
   
-  expect_equivalent(predict(ans_mle, loo = FALSE), predict(ans_mcmc, loo = FALSE), tol=.15)
+  expect_equivalent(
+    predict(ans_mle, loo = FALSE), predict(ans_mcmc, loo = FALSE),
+    tol=.1, scale = 1
+    )
   
   
 # })

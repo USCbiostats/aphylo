@@ -318,7 +318,6 @@ std::vector< unsigned int > Tree_get_postorder(const SEXP & ptr) {
 }
 
 //' @export
-//' @rdname ape-methods
 // [[Rcpp::export(name="Ntip.aphylo_pruner", rng = false)]]
 unsigned int Tree_Ntip(const SEXP & phy) {
   
@@ -328,7 +327,6 @@ unsigned int Tree_Ntip(const SEXP & phy) {
 }
 
 
-//' @rdname ape-methods
 //' @export
 // [[Rcpp::export(name="Nannotated.aphylo_pruner", rng = false)]]
 unsigned int Tree_Nannotated(const SEXP & phy) {
@@ -338,7 +336,6 @@ unsigned int Tree_Nannotated(const SEXP & phy) {
   return p->args->nannotated;
 }
 
-//' @rdname ape-methods
 //' @export
 // [[Rcpp::export(name="Nann.aphylo_pruner", rng = false)]]
 unsigned int Tree_Nann(const SEXP & phy) {

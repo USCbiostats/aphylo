@@ -28,6 +28,6 @@ number of annotated leaves (\code{Nannotated}), number of unnanotated leaves
 }
 \seealso{
 Other information: 
-\code{\link{Ntip.aphylo_pruner}()}
+\code{\link{ape-methods}}
 }
 \concept{information}

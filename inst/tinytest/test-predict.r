@@ -48,7 +48,12 @@ set.seed(137245)
 
 x <- raphylo(10)
 x_obs <- rdrop_annotations(x, .5)
-res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu_d + Pi, priors = bprior()))
+res   <- suppressWarnings({
+  aphylo_mcmc(
+    x_obs ~ psi + mu_d + Pi, priors = bprior(),
+    control = list(nsteps = 2e3, burnin = 0)
+    )
+  })
 
 ans0 <- predict_pre_order(
   x    = x_obs,
@@ -69,7 +74,9 @@ expect_equivalent(ans0, ans1)
 set.seed(88)
 res <- suppressMessages(
   suppressWarnings(
-    aphylo_mcmc(x_obs ~ psi + mu_d + mu_s + eta + Pi, priors = bprior())
+    aphylo_mcmc(
+      x_obs ~ psi + mu_d + mu_s + eta + Pi, priors = bprior(),
+      control = list(nsteps = 2e3, burnin = 0))
     )
   )
 z <- raphylo(20, node.type = sample.int(2, 19, TRUE)-1)
@@ -108,11 +115,11 @@ y <- sample(c(0,1), 20, replace = TRUE)
 
 # Perfect prediction score
 ans0 <- prediction_score(cbind(y), cbind(y))
-expect_equivalent((ans0$obs/ans0$worse)[1], 0)
+expect_equivalent(ans0$obs[1], 1)
 
 # Worse
 ans1 <- prediction_score(cbind(y), 1 - cbind(y))
-expect_equivalent((ans1$obs/ans1$worse)[1], 1)
+expect_equivalent(ans1$obs[1], 0)
 
 # })
 

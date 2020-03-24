@@ -1,36 +1,44 @@
-#' APE wrappers
-#' @param phy An object of class [aphylo] (see [ape::Nnode]).
-#' @param ... Further arguments passed to the method.
-#' @details 
-#' Functions `Nedge`, `Nnode`, and `Ntip` have S3 methods in the `ape` package.
+#' Available methods from the APE package
+#' 
+#' The generics [ape::Nedge()], [ape::Nnode()], and [ape::Ntip()] can be used
+#' directly on objects of class [aphylo], [aphylo_estimates], [multiAphylo]
 #' 
 #' @return Integer with the number of edges, nodes, or tips accordignly.
 #' @name ape-methods
 #' @family information
+#' @importFrom ape as.phylo plot.phylo Nedge Ntip Nnode
 NULL
 
-#' @rdname ape-methods
+#' @method Nedge aphylo
 #' @export
 Nedge.aphylo <- function(phy) ape::Nedge(phy$tree)
 
+#' @method Nedge aphylo_estimates
 #' @export
 Nedge.aphylo_estimates <- function(phy) ape::Nedge(phy$dat)
 
+#' @method Nedge multiAphylo
 #' @export
 Nedge.multiAphylo <- function(phy) sapply(phy, ape::Nedge)
 
+
+#' @method Nedge multiAphylo_pruner
 #' @export
 Nedge.multiAphylo_pruner <- Nedge.multiAphylo
 
+#' @method Nnode aphylo
 #' @export
 Nnode.aphylo <- function(phy, ...) ape::Nnode(phy$tree, ...)
 
+#' @method Nnode aphylo_estimates
 #'@export
 Nnode.aphylo_estimates <- function(phy, ...) ape::Nnode(phy$dat, ...)
 
+#' @method Nnode multiAphylo
 #' @export
 Nnode.multiAphylo <- function(phy, ...) sapply(phy, ape::Nnode, ...)
 
+#' @method Nnode aphylo_pruner
 #' @export
 Nnode.aphylo_pruner <- function(phy, ...) {
   
@@ -43,18 +51,23 @@ Nnode.aphylo_pruner <- function(phy, ...) {
 }
 
 #' @export
+#' @method Nnode multiAphylo_pruner
 Nnode.multiAphylo_pruner <- Nnode.multiAphylo
 
 #' @export
+#' @method Ntip aphylo
 Ntip.aphylo <- function(phy) ape::Ntip(phy$tree)
 
 #' @export
+#' @method Ntip aphylo_estimates
 Ntip.aphylo_estimates <- function(phy) ape::Ntip(phy$dat)
 
 #' @export
+#' @method Ntip multiAphylo
 Ntip.multiAphylo <- function(phy) sapply(phy, ape::Ntip)
 
 #' @export
+#' @method Ntip multiAphylo_pruner
 Ntip.multiAphylo_pruner <- function(phy) {
   sapply(phy, ape::Ntip)
 }
@@ -80,6 +93,7 @@ NULL
 Nann <- function(phy) UseMethod("Nann")
 
 #' @export
+# @method Nann aphylo
 Nann.aphylo <- function(phy) ncol(phy$tip.annotation)
 
 #' @export

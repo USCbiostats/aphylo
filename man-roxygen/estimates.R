@@ -7,7 +7,6 @@
 #' @param reduced_pseq Logical. When `TRUE` it will use a reduced peeling sequence
 #' in which it drops unannotated leafs. If the model includes `eta` this is set
 #' to `FALSE`.
-#' @param ... Further arguments passed to the method
 #' 
 #' @return An object of class [aphylo_estimates].
 NULL

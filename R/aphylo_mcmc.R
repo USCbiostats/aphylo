@@ -14,7 +14,11 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
 #' @template estimates
 #' @param control A list with parameters for the optimization method (see
 #' details).
-#' @param x An object of class `aphylo_estimates` with method equal to `"mcmc"`.
+#' @details 
+#' Methods [base::print()], [base::summary()], [stats::coef], [stats::window()],
+#' [stats::vcov()], [stats::logLik()], [predict()][predict.aphylo_estimates()],
+#' and the various ways to query features of the trees via [Ntip()][ape::Ntip()]
+#' are available post estimation.
 #' 
 #' @family parameter estimation
 #' @export
@@ -169,8 +173,8 @@ aphylo_mcmc <- function(
   )
 }
 
+# @rdname aphylo_mcmc
 #' @export
-#' @rdname aphylo_mcmc
 window.aphylo_estimates <- function(x, ...) {
   
   if (x$method != "mcmc") {

@@ -33,8 +33,6 @@ stops with an error when the annotations are uninformative (either 0s or 1s).}
 \item{reduced_pseq}{Logical. When \code{TRUE} it will use a reduced peeling sequence
 in which it drops unannotated leafs. If the model includes \code{eta} this is set
 to \code{FALSE}.}
-
-\item{...}{Further arguments passed to the method}
 }
 \value{
 An object of class \link{aphylo_estimates}.
