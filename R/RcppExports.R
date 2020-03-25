@@ -61,18 +61,15 @@ get_postorder <- function(ptr) {
 }
 
 #' @export
-#' @rdname ape-methods
 Ntip.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Ntip`, phy)
 }
 
-#' @rdname ape-methods
 #' @export
 Nannotated.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Nannotated`, phy)
 }
 
-#' @rdname ape-methods
 #' @export
 Nann.aphylo_pruner <- function(phy) {
     .Call(`_aphylo_Tree_Nann`, phy)

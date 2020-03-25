@@ -1,13 +1,12 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats var coef vcov optim optimHess complete.cases dbeta runif
-#'  as.formula update.formula predict
+#'  as.formula update.formula predict window
 #' @importFrom utils head tail getFromNamespace
 #' @importFrom graphics plot contour persp legend mtext plot.new plot.window par
-#'  points segments polygon rect yinch image
+#'  points segments polygon rect yinch image abline
 #' @importFrom grDevices colors trans3d adjustcolor rgb
 #' @importFrom coda mcmc mcmc.list
 #' @importFrom fmcmc MCMC
-#' @importFrom ape as.phylo plot.phylo Nnode Ntip Nedge
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 #' @importFrom MASS ginv
 NULL

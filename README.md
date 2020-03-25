@@ -30,11 +30,11 @@ Southern California.
 ## Install
 
 This package depends on another on-development R package, the
-[`amcmc`](https://github.com/USCbiostats/amcmc). So first you need to
+[`fmcmc`](https://github.com/USCbiostats/fmcmc). So first you need to
 install it:
 
 ``` r
-devtools::install_github("USCbiostats/amcmc")
+devtools::install_github("USCbiostats/fmcmc")
 ```
 
 Then you can install the `aphylo` package
@@ -80,7 +80,7 @@ head(faketree)
 ``` r
 O <- new_aphylo(
   tip.annotation = fakeexperiment[,2:3],
-  tree           = faketree
+  tree           = as.phylo(faketree)
 )
 
 O
@@ -134,8 +134,6 @@ plot(O)
 plot_logLik(O)
 ```
 
-    ## No parameters were specified. Default will be used instead.
-
 ![](README_files/figure-gfm/Get%20offspring-2.png)<!-- -->
 
 ## Simulating annoated trees
@@ -143,91 +141,88 @@ plot_logLik(O)
 ``` r
 set.seed(198)
 dat <- raphylo(
-  200, P=2, 
-  psi = c(0.05, 0.05),
-  mu  = c(0.1, 0.1),
-  eta = c(.7, .95),
-  Pi  = .4
+  50,
+  P    = 1, 
+  psi  = c(0.05, 0.05),
+  mu_d = c(0.8, 0.3),
+  mu_s = c(0.1, 0.1),
+  Pi   = .4
   )
 
 dat
 ```
 
     ## 
-    ## Phylogenetic tree with 200 tips and 199 internal nodes.
+    ## Phylogenetic tree with 50 tips and 49 internal nodes.
     ## 
     ## Tip labels:
     ##  1, 2, 3, 4, 5, 6, ...
     ## Node labels:
-    ##  201, 202, 203, 204, 205, 206, ...
+    ##  51, 52, 53, 54, 55, 56, ...
     ## 
-    ## Rooted; no branch lengths.
+    ## Rooted; includes branch lengths.
     ## 
     ##  Tip (leafs) annotations:
-    ##      fun0000 fun0001
-    ## [1,]       1       1
-    ## [2,]       0       1
-    ## [3,]       0       9
-    ## [4,]       1       1
-    ## [5,]       1       1
-    ## [6,]       1       1
+    ##      fun0000
+    ## [1,]       1
+    ## [2,]       0
+    ## [3,]       0
+    ## [4,]       1
+    ## [5,]       0
+    ## [6,]       0
     ## 
-    ## ...(194 obs. omitted)...
+    ## ...(44 obs. omitted)...
     ## 
     ## 
     ##  Internal node annotations:
-    ##      fun0000 fun0001
-    ## [1,]       1       0
-    ## [2,]       1       0
-    ## [3,]       1       1
-    ## [4,]       1       1
-    ## [5,]       1       1
-    ## [6,]       0       1
+    ##      fun0000
+    ## [1,]       1
+    ## [2,]       1
+    ## [3,]       1
+    ## [4,]       1
+    ## [5,]       1
+    ## [6,]       0
     ## 
-    ## ...(193 obs. omitted)...
+    ## ...(43 obs. omitted)...
 
 ## Likelihood
 
 ``` r
 # Parameters and data
 psi     <- c(0.020,0.010)
-mu      <- c(0.04,.01)
+mu_d    <- c(0.40,.10)
+mu_s    <- c(0.04,.01)
 eta     <- c(.7, .9)
 pi_root <- .05
 
 # Computing likelihood
-str(LogLike(dat, psi = psi, mu = mu, eta = eta, Pi = pi_root))
+str(LogLike(dat, psi = psi, mu_d = mu_d, mu_s = mu_s, eta = eta, Pi = pi_root))
 ```
 
-    ## List of 3
-    ##  $ S : int [1:4, 1:2] 0 1 0 1 0 0 1 1
-    ##  $ Pr: num [1:399, 1:4] 0.000324 0.012348 0.203056 0.000324 0.000324 ...
-    ##  $ ll: num -399
-    ##  - attr(*, "class")= chr "phylo_LogLik"
+    ## List of 2
+    ##  $ Pr:List of 1
+    ##   ..$ : num [1:99, 1:2] 0.018 0.686 0.686 0.018 0.686 0.686 0.018 0.018 0.018 0.686 ...
+    ##  $ ll: num -40.4
 
 # Estimation
 
 ``` r
 # Using L-BFGS-B (MLE) to get an initial guess
-ans0 <- aphylo_mle(dat ~ psi + mu + Pi + eta)
-```
+ans0 <- aphylo_mle(dat ~ psi + mu_d + Pi + eta)
 
-    ## No parameters were specified. Default will be used instead.
 
-``` r
 # MCMC method
 ans2 <- aphylo_mcmc(
-  dat ~ mu + psi + eta,
-  prior = function(p) dbeta(p, 2,20),
-  control = list(nsteps=1e4, burnin=100, thin=20, nchains=5))
+  dat ~ mu_d + mu_s + Pi,
+  prior = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5)),
+  control = list(nsteps=2e3, burnin=500, thin=20, nchains=2))
 ```
 
-    ## No parameters were specified. Default will be used instead.
+    ## Warning: While using multiple chains, a single initial point has been passed via
+    ## `initial`: c(0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled. Ideally you
+    ## would want to start each chain from different locations.
 
-    ## Warning: A single initial point has been passed via `initial`: c(0.1, 0.1,
-    ## 0.1, 0.1, 0.9, 0.9). The values will be recycled.
-
-    ## Convergence has been reached with 1100 steps (50 final count of observations).
+    ## Convergence has been reached with 2500 steps (100 final count of samples).
 
 ``` r
 ans2
@@ -236,23 +231,29 @@ ans2
     ## 
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
     ## 
-    ##  Call: aphylo_mcmc(model = dat ~ mu + psi + eta, priors = function(p) dbeta(p, 
-    ##     2, 20), control = list(nsteps = 10000, burnin = 100, thin = 20, 
-    ##     nchains = 5))
-    ##  LogLik (unnormalized): -425.5128
-    ##  Method used: mcmc (1100 steps)
-    ##  # of Leafs: 200
-    ##  # of Functions 2
+    ##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
+    ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 2000, 
+    ##     burnin = 500, thin = 20, nchains = 2))
+    ##  LogLik (unnormalized): -20.3557 
+    ##  Method used: mcmc (2500 steps)
+    ##  # of Leafs: 50
+    ##  # of Functions 1
+    ##  # of Trees: 1
+    ## 
     ##          Estimate  Std. Err.
-    ##  psi0    0.0879    0.0475
-    ##  psi1    0.0438    0.0272
-    ##  mu0     0.1139    0.0262
-    ##  mu1     0.0929    0.0218
-    ##  eta0    0.6770    0.0349
-    ##  eta1    0.8006    0.0320
+    ##  mu_d0   0.9015    0.0798
+    ##  mu_d1   0.1723    0.0813
+    ##  mu_s0   0.1204    0.0808
+    ##  mu_s1   0.1052    0.0472
+    ##  Pi      0.5122    0.1594
 
 ``` r
-plot(ans2)
+plot(
+  ans2,
+  nsample = 200,
+  loo     = TRUE,
+  ncores  = 2L
+  )
 ```
 
 ![](README_files/figure-gfm/MLE-1.png)<!-- -->
@@ -265,67 +266,42 @@ gelman.diag(ans2$hist)
 
     ## Potential scale reduction factors:
     ## 
-    ##      Point est. Upper C.I.
-    ## psi0       1.03       1.09
-    ## psi1       1.02       1.08
-    ## mu0        1.03       1.10
-    ## mu1        1.01       1.05
-    ## eta0       1.08       1.22
-    ## eta1       1.01       1.04
+    ##       Point est. Upper C.I.
+    ## mu_d0      1.007      1.009
+    ## mu_d1      0.996      0.996
+    ## mu_s0      1.030      1.156
+    ## mu_s1      1.097      1.362
+    ## Pi         1.050      1.052
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.11
+    ## 1.06
 
 ``` r
-summary(ans2$hist)
+plot(ans2$hist)
 ```
 
-    ## 
-    ## Iterations = 120:1100
-    ## Thinning interval = 20 
-    ## Number of chains = 5 
-    ## Sample size per chain = 50 
-    ## 
-    ## 1. Empirical mean and standard deviation for each variable,
-    ##    plus standard error of the mean:
-    ## 
-    ##         Mean      SD Naive SE Time-series SE
-    ## psi0 0.08789 0.04745 0.003001       0.006267
-    ## psi1 0.04376 0.02715 0.001717       0.002065
-    ## mu0  0.11386 0.02619 0.001656       0.003464
-    ## mu1  0.09293 0.02183 0.001381       0.001936
-    ## eta0 0.67703 0.03495 0.002210       0.003062
-    ## eta1 0.80062 0.03205 0.002027       0.002872
-    ## 
-    ## 2. Quantiles for each variable:
-    ## 
-    ##          2.5%     25%     50%     75%  97.5%
-    ## psi0 0.015681 0.05758 0.07854 0.11911 0.1945
-    ## psi1 0.003866 0.02378 0.03856 0.06099 0.1095
-    ## mu0  0.064390 0.09719 0.11336 0.13285 0.1652
-    ## mu1  0.054532 0.07710 0.09142 0.10847 0.1320
-    ## eta0 0.611915 0.65315 0.67380 0.70114 0.7434
-    ## eta1 0.737275 0.78161 0.80163 0.82253 0.8594
+![](README_files/figure-gfm/MCMC-1.png)<!-- -->![](README_files/figure-gfm/MCMC-2.png)<!-- -->
 
 # Prediction
 
 ``` r
-pred <- prediction_score(ans2)
+pred <- prediction_score(ans2, loo = TRUE)
 pred
 ```
 
     ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-    ## Observed : 0.01 
-    ## Random   : 0.42 
-    ## ---------------------------------------------------------------------------
+    ## Observed : 0.16 
+    ## Random   : 0.38 
+    ## AUC      : 0.78 
+    ## --------------------------------------------------------------------------------
     ## Values scaled to range between 0 and 1, 0 being best.
 
 ``` r
 plot(pred)
 ```
 
-![](README_files/figure-gfm/Predict-1.png)<!-- -->![](README_files/figure-gfm/Predict-2.png)<!-- -->
+![](README_files/figure-gfm/Predict-1.png)<!-- -->
 
 # Misc
 

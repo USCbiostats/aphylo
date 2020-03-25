@@ -1,9 +1,9 @@
-#' Computes Log-likelihood
+#' Likelihood of an observed annotated phylogenetic tree
 #' 
 #' This function computes the log-likelihood of the chosen parameters given
-#' a particular dataset. The arguments \code{annotations}, and \code{offspring}
-#' should be as those returned by \code{\link{new_aphylo}}.
-#' For complete Maximum Likelihood Estimation see [aphylo_estimates][aphylo_estimates-class].
+#' a particular dataset. The arguments `annotations`, and `offspring`
+#' should be as those returned by [new_aphylo()].
+#' For complete parameter estimation see [aphylo_estimates].
 #' 
 #' @template parameters
 #' @param tree A phylogenetic tree of class [aphylo].
@@ -51,7 +51,6 @@ LogLike <- function(
 ) UseMethod("LogLike")
 
 #' @export
-#' @rdname LogLike
 LogLike.aphylo_pruner <- function(
   tree,
   psi,
@@ -76,7 +75,6 @@ LogLike.aphylo_pruner <- function(
 }
 
 #' @export
-#' @rdname LogLike
 LogLike.aphylo <- function(
   tree,
   psi,
@@ -102,7 +100,6 @@ LogLike.aphylo <- function(
 }
 
 #' @export
-#' @rdname LogLike
 LogLike.multiAphylo <- function(
   tree,
   psi,
@@ -137,6 +134,5 @@ LogLike.multiAphylo <- function(
 }
 
 #' @export
-#' @rdname LogLike
 LogLike.multiAphylo_pruner <- LogLike.multiAphylo
 

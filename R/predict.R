@@ -7,6 +7,7 @@
 #' @param atree,x,object Either a tree of class [aphylo] or an object of class [aphylo_estimates]
 #' @param params A numeric vector with the corresponding parameters.
 #' @param newdata (optional) An aphylo object.
+#' @param which.tree Integer scalar. Which tree to include in the prediction.
 #' 
 #' @template loo
 #' @template parameters
@@ -33,29 +34,88 @@ NULL
 #' @return In the case of the `predict` method, a `P` column numeric matrix
 #' with values between \eqn{[0,1]} (probabilities).
 #' @export
-predict.aphylo_estimates <- function(object, newdata = NULL,...) {
+predict.aphylo_estimates <- function(
+  object,
+  which.tree = 1:Ntrees(object),
+  ids        = lapply(Ntip(object)[which.tree], seq_len),
+  newdata    = NULL,
+  loo        = TRUE,
+  nsamples   = 1L,
+  centiles   = c(.025, .5, .975),
+  cl         = NULL,
+  ...
+  ) {
+  
+  # Checking if there's any new data
+  if (!is.null(newdata)) {
+    if (!is.multiAphylo(newdata) & !is.aphylo(newdata))
+      stop(
+        "-newdata- must be an object of class aphylo or multiAphilo. ",
+        "The object is of class(es) '", paste(class(object),collapse="', '"),
+        "'.", call. = FALSE
+        )
+    
+    object$dat <- newdata
+  }
+  
+  # Filling the blanks
+  if (is.null(which.tree)) which.tree <- 1:Ntrees(object)
+  if (is.null(ids)) ids <- lapply(Ntip(object)[which.tree], seq_len)
+  
+  if (any(Nann(object)[which.tree] > 1L) && (nsamples > 1L))
+    stop(
+      "Predictions using multiple samples is restricted to a single function ",
+      "for now.", call. = FALSE
+      )
   
   # Running prediction function
-  pred <- predict_pre_order.aphylo_estimates(object, newdata = newdata, ...)
-  
-  # No need to check for the class since we are already doing that in
-  # predict_preorder.aphylo_estimates
-  if (!is.null(newdata)) 
-    object$dat <- newdata
-  
+  pred <- predict_pre_order.aphylo_estimates(
+    object,
+    which.tree = which.tree,
+    ids        = ids,
+    loo        = loo,
+    nsamples   = nsamples,
+    centiles   = centiles,
+    cl         = cl,
+    ...
+    )
+
   # Adding names
   if (is.aphylo(object$dat)) {
     
+    # Figuring out names
+    cnames <- if (nsamples > 1)
+      sprintf(
+        "%s_%.3f", colnames(object$dat$tip.annotation),
+        centiles
+        )
+    else
+      colnames(object$dat$tip.annotation)
+    
     dimnames(pred) <- list(
       with(object$dat$tree, c(tip.label, node.label)),
-      colnames(object$dat$tip.annotation))
+      cnames
+      )
     
   } else {
     
-    for (i in seq_along(pred)) {
+    for (i in seq_along(which.tree)) {
+      
+      # Figuring out names
+      cnames <- if (nsamples > 1)
+        sprintf(
+          "%s_%.3f",
+          colnames(object$dat[[which.tree[i]]]$tip.annotation),
+          centiles
+        )
+      else
+        colnames(object$dat[[which.tree[i]]]$tip.annotation)
+      
       dimnames(pred[[i]]) <- list(
-        with(object$dat[[i]]$tree, c(tip.label, node.label)),
-        colnames(object$dat[[i]]$tip.annotation))
+        with(object$dat[[which.tree[i]]]$tree, c(tip.label, node.label)),
+        cnames
+        )
+      
     }
     
   }
@@ -69,34 +129,135 @@ predict_pre_order <- function(x, ...) UseMethod("predict_pre_order")
 
 #' @export
 #' @rdname posterior-probabilities
+#' @param nsamples Integer scalar. When greater than one, the prediction is done
+#' using a random sample from the MCMC chain. This only works if the model was
+#' fitted using MCMC, of course.
+#' @param ncores,cl Passed to [parallel::makeCluster()].
+#' @param ids Integer vector. Ids (positions) of the nodes that need to be
+#' predicted.
+#' @param centiles Used together with `nsamples`, this indicates the centiles
+#' to be computed from the distribution of outcomes.
 predict_pre_order.aphylo_estimates <- function(
   x,
-  params  = x$par,
-  newdata = NULL,
-  loo     = FALSE,
+  params     = x$par,
+  which.tree = 1:Ntrees(x),
+  ids        = lapply(Ntip(x)[which.tree], seq_len),
+  loo        = TRUE,
+  nsamples   = 1L,
+  centiles   = c(.025, .5, .975),
+  ncores     = 1L,
+  cl         = NULL,
   ...
   ) {
-  
-  dots <- list(...)
-  
-  if (!is.null(newdata)) {
-    if (inherits(newdata, "aphylo") | inherits(newdata, "multiAphylo"))
-      x$dat <- newdata
-    else 
-      stop("`newdata` should be of class `aphylo` or `multiAphylo`.",
-           call. = FALSE)
-  }
-  
-  if (Ntrees(x) > 1) {
+
+
+  # Multiple trees are simply passed along the way -----------------------------
+  if (is.multiAphylo(x$dat)) {
     
-    ans <- vector("list", Ntrees(x))
+    ans <- vector("list", length(which.tree))
     x.  <- x
-    for (t. in seq_along(ans)) {
-      x.$dat <- x$dat[[t.]]
-      ans[[t.]] <-predict_pre_order(x., params = x$par, ...)
+    
+    for (t. in seq_along(which.tree)) {
+      x.$dat <- x$dat[[which.tree[t.]]]
+      ans[[t.]] <- predict_pre_order(
+        x      = x.,
+        ids    = ids[t.],
+        params = x$par,
+        nsamples = nsamples,
+        ncores   = ncores,
+        centiles = centiles,
+        ...
+        )
     }
     
     return(ans)
+  }
+  
+  # In the case of multiple samples --------------------------------------------
+  if (nsamples > 1L) {
+    
+    # Only valid for MCMC
+    if (x$method != "mcmc")
+      stop(
+        "Using the nsamples parameters is only valid for MCMC estimation ",
+        "method, this is ", x$method, ".", call. = FALSE
+      )
+    
+    # Valid ranges
+    centiles <- sort(centiles)
+    if (centiles[1L] < 0 | centiles[length(centiles)] > 1)
+      stop("Out of range. When specifying centiles, these should be within the ",
+           "[0, 1] range.", call. = FALSE
+      )
+    
+    # Warning b/c of number of samples
+    if (nsamples > coda::niter(x$hist) * coda::nchain(x$hist))
+      warning("Retrieving more samples than iterations are available.",
+              call. = FALSE, immediate. = TRUE
+      )
+    
+    # Sampling parameters
+    samples <- do.call(rbind, x$hist) 
+    samples <- lapply(
+      sample.int(n = nrow(samples), size = nsamples, replace = TRUE), 
+      function(i) samples[i, ]
+    )
+    
+    if (ncores > 1L & is.null(cl)) {
+      on.exit(tryCatch(parallel::stopCluster(cl), error = function(e) e))
+      cl <- parallel::makeCluster(ncores)
+    } else if (!is.null(cl)) 
+      ncores <- length(cl)
+    
+    # Calling the prediction function
+    ans <- if (ncores > 1L) {
+      parallel::parLapply(
+        cl,
+        X = samples, function(params., x., ids, loo, ...) {
+          aphylo::predict_pre_order(
+            x       = x.,
+            ids     = ids,
+            loo     = loo,
+            params  = params.,
+            ...
+          )
+        },
+        x.      = x,
+        ids     = ids[1L],
+        loo     = loo,
+        ...
+      )
+    } else {
+      
+      lapply(
+        X = samples, function(params., x, ids, loo, ...) {
+          aphylo::predict_pre_order(
+            x       = x,
+            ids     = ids,
+            loo     = loo,
+            params  = params.,
+            ...
+          )
+        },
+        x       = x,
+        ids     = ids[1L],
+        loo     = loo,
+        ...
+      )
+      
+    }
+    
+    # Combining results and computing desired centiles
+    ans0 <- do.call(cbind, ans)
+    ans  <- matrix(nrow = nrow(ans0), ncol = length(centiles))
+    ans[ids[[1]], ] <- if (ncores > 1L) {
+      t(parallel::parApply(cl, X = ans0[ids[[1]], ], MARGIN = 1L, stats::quantile, prob = centiles))
+    } else
+      t(apply(ans0[ids[[1]], ], MARGIN = 1L, FUN = stats::quantile, prob = centiles))
+    
+    # Done! For now, this will be a bit of a mess if we have multiple functions
+    return(ans)
+    
   }
   
   # Checking parameters
@@ -116,6 +277,7 @@ predict_pre_order.aphylo_estimates <- function(
     Pi <- params["Pi"]
   
   # Looping through the variables
+  dots <- list(...)
   p   <- Nann(x)
   ans <- matrix(nrow = ape::Nnode(x, internal.only = FALSE), ncol = p)
   for (j in 1L:p) {
@@ -152,7 +314,7 @@ predict_pre_order.aphylo_estimates <- function(
     }
     
     dots$dat <- new_aphylo_pruner(tmpdat)
-    for (i in 1L:Ntip(x)) {
+    for (i in intersect(1L:Ntip(x), ids[[1L]])) {
       
       # Setting that annotation to Missing (9)
       Tree_set_ann(dots$dat, i - 1L, 0L, 9L)
@@ -175,15 +337,18 @@ predict_pre_order.aphylo_estimates <- function(
     
     # Filling the rest of the tree
     l <- do.call(x$fun, dots)
-    ans[(i + 1L):(i + 1L):nrow(ans), j] <- .posterior_prob(
-      Pr_postorder = l$Pr[[1L]],
-      types        = types,
-      mu_d         = mu_d,
-      mu_s         = mu_s,
-      Pi           = Pi,
-      pseq         = x$dat$pseq,
-      offspring    = x$dat$offspring
-    )$posterior[(i + 1L):nrow(ans),]
+    last_set <- intersect((i + 1L):nrow(ans), ids[[1L]])
+    
+    if (length(last_set))
+      ans[last_set, j] <- .posterior_prob(
+        Pr_postorder = l$Pr[[1L]],
+        types        = types,
+        mu_d         = mu_d,
+        mu_s         = mu_s,
+        Pi           = Pi,
+        pseq         = x$dat$pseq,
+        offspring    = x$dat$offspring
+      )$posterior[last_set, ]
     
   }
   

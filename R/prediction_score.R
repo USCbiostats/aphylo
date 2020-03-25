@@ -13,15 +13,21 @@
 #' @examples 
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(11552)
-#' ap  <- raphylo(50, P = 1, Pi=0, mu_d=c(.8,.2), mu_s = c(0,0.25), psi = c(0,0))
+#' ap  <- raphylo(
+#'   50, P = 1,
+#'   Pi   = 0,
+#'   mu_d = c(.8,.2),
+#'   mu_s = c(0.1,0.1),
+#'   psi  = c(0,0)
+#'   )
 #' ans <- aphylo_mcmc(
-#'   ap ~ mu_d + mu_s + psi + Pi,
-#'   control = list(nsteps=5e3, thin=20, burnin = 1000),
-#'   priors = bprior(c(9,9,1,1,1,1,1), c(1,1,9,9,9,9,9))
+#'   ap ~ mu_d + mu_s + Pi,
+#'   control = list(nsteps=2e3, thin=20, burnin = 500),
+#'   priors = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5))
 #'   )
 #'                    
-#' pr <- prediction_score(ans)
-#' with(pr, cbind(Expected = expected, Predicted = predicted))
+#' (pr <- prediction_score(ans, loo = TRUE))
+#' plot(pr)
 prediction_score <- function(x, expected, alpha = NULL, W = NULL, ...)
   UseMethod("prediction_score")
 
@@ -70,11 +76,11 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   
   structure(
     list(
-      obs       = obs,
-      worse     = worse,
+      obs       = 1.0 - obs/worse,
+      worse     = 0.0,
       predicted = x,
       expected  = expected,
-      random    = rand,
+      random    = 1.0 - rand/worse,
       alpha     = alpha,
       auc       = auc(x, expected),
       obs.ids   = NULL,
@@ -156,7 +162,7 @@ prediction_score.aphylo_estimates <- function(
   ids <- intersect(ids, 1L:Ntip(x$dat))
 
   # Prediction
-  pred <- predict.aphylo_estimates(x, loo = loo,...)
+  pred <- predict.aphylo_estimates(x, ids = list(ids), loo = loo,...)
   
   # Inverse of Geodesic distances
   if (!length(W)) {
@@ -216,11 +222,11 @@ predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
 print.aphylo_prediction_score <- function(x, ...) {
   cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
   with(x, cat(
-    sprintf("Observed : %-.2f ", obs/worse),
-    sprintf("Random   : %-.2f ", random/worse),
+    sprintf("Observed : %-.2f ", obs),
+    sprintf("Random   : %-.2f ", random),
     sprintf("AUC      : %-.2f ", auc$auc),
     paste0(rep("-", getOption("width")), collapse=""),
-    "Values scaled to range between 0 and 1, 0 being best.",
+    "Values scaled to range between 0 and 1, 1 being best.",
     sep ="\n"
   ))
   invisible(x)
@@ -229,8 +235,9 @@ print.aphylo_prediction_score <- function(x, ...) {
 
 # Function to color the absence/presence of function
 blue <- function(x) {
+  x[is.na(x)] <- 9
   ans <- polygons::colorRamp2(.aphyloColors)(x)
-  ans <- grDevices::rgb(ans, alpha = 200, maxColorValue = 255)
+  ans <- grDevices::rgb(ans, alpha = 255, maxColorValue = 255)
   ifelse(x == 9, "black", ans)
 }
 
@@ -274,16 +281,18 @@ plot.aphylo_prediction_score <- function(
   } else
     idx <- 1:nrow(x$predicted)
   
-  predicted <- x$predicted[idx,,drop=FALSE]
-  expected  <- x$expected[idx,,drop=FALSE]
+  predicted <- x$predicted[idx, , drop=FALSE]
+  expected  <- x$expected[idx, , drop=FALSE]
   
   k <- length(which.fun)
   y <- rep(1L, nrow(predicted))
   
   # Should we draw the labels?
   if (!length(include.labels)) {
+    
     if (nrow(predicted) > 40) include.labels <- FALSE
     else include.labels <- TRUE
+    
   }
   
   # Getting the order

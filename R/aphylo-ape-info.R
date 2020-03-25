@@ -1,43 +1,44 @@
-#' APE wrappers
-#' @param phy An object of class [aphylo] (see [ape::Nnode]).
-#' @param ... Further arguments passed to the method.
-#' @details 
-#' Functions `Nedge`, `Nnode`, and `Ntip` have S3 methods in the `ape` package.
+#' Available methods from the APE package
+#' 
+#' The generics [ape::Nedge()], [ape::Nnode()], and [ape::Ntip()] can be used
+#' directly on objects of class [aphylo], [aphylo_estimates], [multiAphylo]
 #' 
 #' @return Integer with the number of edges, nodes, or tips accordignly.
 #' @name ape-methods
 #' @family information
+#' @importFrom ape as.phylo plot.phylo Nedge Ntip Nnode
 NULL
 
-#' @rdname ape-methods
+#' @method Nedge aphylo
 #' @export
 Nedge.aphylo <- function(phy) ape::Nedge(phy$tree)
 
-#' @rdname ape-methods
+#' @method Nedge aphylo_estimates
 #' @export
 Nedge.aphylo_estimates <- function(phy) ape::Nedge(phy$dat)
 
-#' @rdname ape-methods
+#' @method Nedge multiAphylo
 #' @export
 Nedge.multiAphylo <- function(phy) sapply(phy, ape::Nedge)
 
-#' @rdname ape-methods
+
+#' @method Nedge multiAphylo_pruner
 #' @export
 Nedge.multiAphylo_pruner <- Nedge.multiAphylo
 
-#' @rdname ape-methods
+#' @method Nnode aphylo
 #' @export
 Nnode.aphylo <- function(phy, ...) ape::Nnode(phy$tree, ...)
 
+#' @method Nnode aphylo_estimates
 #'@export
-#'@rdname ape-methods
 Nnode.aphylo_estimates <- function(phy, ...) ape::Nnode(phy$dat, ...)
 
-#' @rdname ape-methods
+#' @method Nnode multiAphylo
 #' @export
 Nnode.multiAphylo <- function(phy, ...) sapply(phy, ape::Nnode, ...)
 
-#' @rdname ape-methods
+#' @method Nnode aphylo_pruner
 #' @export
 Nnode.aphylo_pruner <- function(phy, ...) {
   
@@ -49,24 +50,24 @@ Nnode.aphylo_pruner <- function(phy, ...) {
   
 }
 
-#' @rdname ape-methods
 #' @export
+#' @method Nnode multiAphylo_pruner
 Nnode.multiAphylo_pruner <- Nnode.multiAphylo
 
-#' @rdname ape-methods
 #' @export
+#' @method Ntip aphylo
 Ntip.aphylo <- function(phy) ape::Ntip(phy$tree)
 
 #' @export
-#' @rdname ape-methods
+#' @method Ntip aphylo_estimates
 Ntip.aphylo_estimates <- function(phy) ape::Ntip(phy$dat)
 
 #' @export
-#' @rdname ape-methods
+#' @method Ntip multiAphylo
 Ntip.multiAphylo <- function(phy) sapply(phy, ape::Ntip)
 
 #' @export
-#' @rdname ape-methods
+#' @method Ntip multiAphylo_pruner
 Ntip.multiAphylo_pruner <- function(phy) {
   sapply(phy, ape::Ntip)
 }
@@ -91,45 +92,36 @@ NULL
 #' @export
 Nann <- function(phy) UseMethod("Nann")
 
-#' @rdname aphylo-info
 #' @export
+# @method Nann aphylo
 Nann.aphylo <- function(phy) ncol(phy$tip.annotation)
 
-#' @rdname aphylo-info
 #' @export
 Nann.multiAphylo <- function(phy) sapply(phy, Nann)
 
-#' @rdname aphylo-info
 #' @export
 Nann.multiAphylo_pruner <- Nann.multiAphylo
 
 #' @export
-#' @rdname aphylo-info
 Nann.aphylo_estimates <- function(phy) {
   Nann(phy$dat)
 }
-
-
 
 #' @export
 #' @rdname aphylo-info
 Nannotated <- function(phy) UseMethod("Nannotated")
 
 #' @export
-#' @rdname aphylo-info
 Nannotated.aphylo <- function(phy) phy$Ntips.annotated
 
 #' @export
-#' @rdname aphylo-info
 Nannotated.multiAphylo <- function(phy) sapply(phy, Nannotated)
 
 #' @export
-#' @rdname aphylo-info
 Nannotated.multiAphylo_pruner <- Nannotated.multiAphylo
 
 
 #' @export
-#' @rdname aphylo-info
 Nannotated.aphylo_estimates <- function(phy) {
   Nannotated(phy$dat)
 }
@@ -139,29 +131,22 @@ Nannotated.aphylo_estimates <- function(phy) {
 Ntrees <- function(phy) UseMethod("Ntrees")
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.aphylo <- function(phy) 1L
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.phylo <- function(phy) 1L
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.multiPhylo <- function(phy) length(phy)
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.multiAphylo <- function(phy) length(phy)
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.multiAphylo_pruner <- Ntrees.multiAphylo
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.aphylo_pruner <- Ntrees.aphylo
 
 #' @export
-#' @rdname aphylo-info
 Ntrees.aphylo_estimates <- function(phy) Ntrees(phy$dat)

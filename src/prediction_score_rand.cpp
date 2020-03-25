@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 double prediction_score_rand(
   const arma::mat & A,
   const arma::mat & W,
@@ -28,24 +28,24 @@ double prediction_score_rand(
   unsigned int h, u, r, ah, au;
   double score = 0.0, prods;
   
-  for (h = 0; h < H; h++)
+  for (h = 0; h < H; ++h)
     
     // Symmetry of W allows us to do it faster, this should also be true for the
     // states data, ah and au. Will work on that later
     
-    for (u = 0; u <= h; u++) 
+    for (u = 0; u <= h; ++u) 
       
       // Multiplying states
-      for (ah=0; ah<P2; ah++) {
+      for (ah=0; ah<P2; ++ah) {
     
         if (h != u) {
         
-          for (au=0; au<P2; au++) {
+          for (au=0; au<P2; ++au) {
             prods = 0.0;
             
             // Product within PxP
-            for (p = 0; p < P; p++)
-              for (r = 0; r < P; r++)
+            for (p = 0; p < P; ++p)
+              for (r = 0; r < P; ++r)
                 prods += powf((A.at(h, p) - S.at(ah, p))*(A.at(u, r) - S.at(au, r)), 2.0);
             
             // // Score at the ah, au level
@@ -60,7 +60,7 @@ double prediction_score_rand(
           prods = 0.0;
           
           // Product within PxP
-          for (p = 0; p < P; p++)
+          for (p = 0; p < P; ++p)
               prods += powf((A.at(h, p) - S.at(ah, p)), 4.0);
           
           score += Pa.at(ah)*powf(prods, 0.5)*W.at(h, u);

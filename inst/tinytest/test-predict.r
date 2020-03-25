@@ -25,7 +25,7 @@ ans0 <- c(
 
 # Computing brute-force and using the pre-order
 ans1 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
-ans2 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi)
+ans2 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi, loo = FALSE)
 
 
 expect_equivalent(ans0, ans1$posterior)
@@ -36,7 +36,7 @@ set.seed(122331)
 atree <- raphylo(4, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)
 
 ans0 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
-ans1 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi)
+ans1 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi, loo = FALSE)
 
 expect_equivalent(ans0$posterior, ans1[,1])
 
@@ -48,7 +48,12 @@ set.seed(137245)
 
 x <- raphylo(10)
 x_obs <- rdrop_annotations(x, .5)
-res   <- suppressWarnings(aphylo_mcmc(x_obs ~ psi + mu_d + Pi, priors = bprior()))
+res   <- suppressWarnings({
+  aphylo_mcmc(
+    x_obs ~ psi + mu_d + Pi, priors = bprior(),
+    control = list(nsteps = 2e3, burnin = 0)
+    )
+  })
 
 ans0 <- predict_pre_order(
   x    = x_obs,
@@ -56,10 +61,10 @@ ans0 <- predict_pre_order(
   mu_d = res$par[c("mu_d0", "mu_d1")],
   mu_s = res$par[c("mu_d0", "mu_d1")],
   eta  = c(1,1)/2, #res$par[c("eta0", "eta1")],
-  Pi   = res$par["Pi"]
+  Pi   = res$par["Pi"], loo = FALSE
   )
 
-ans1 <- predict(res)
+ans1 <- predict(res, ids = list(1:Nnode(x_obs, internal.only = FALSE)), loo = FALSE)
 
 expect_silent(plot(prediction_score(res)))
 expect_equivalent(ans0, ans1)
@@ -69,29 +74,31 @@ expect_equivalent(ans0, ans1)
 set.seed(88)
 res <- suppressMessages(
   suppressWarnings(
-    aphylo_mcmc(x_obs ~ psi + mu_d + mu_s + eta + Pi, priors = bprior())
+    aphylo_mcmc(
+      x_obs ~ psi + mu_d + mu_s + eta + Pi, priors = bprior(),
+      control = list(nsteps = 2e3, burnin = 0))
     )
   )
 z <- raphylo(20, node.type = sample.int(2, 19, TRUE)-1)
 
-ans0_a <- predict(res)
+ans0_a <- predict(res, loo = FALSE)
 ans1_a <- predict_pre_order(
   res$dat,
   psi = res$par[c("psi0", "psi1")],
   eta = res$par[c("eta0", "eta1")],
   mu_s = res$par[c("mu_s0", "mu_s1")],
   mu_d = res$par[c("mu_d0", "mu_d1")],
-  Pi  = res$par["Pi"]
+  Pi  = res$par["Pi"], loo = FALSE
 )
 
-ans0_b <- predict(res, newdata = z)
+ans0_b <- predict(res, newdata = z, loo = FALSE)
 ans1_b <- predict_pre_order(
   z,
   psi = res$par[c("psi0", "psi1")],
   eta = res$par[c("eta0", "eta1")],
   mu_s = res$par[c("mu_s0", "mu_s1")],
   mu_d = res$par[c("mu_d0", "mu_d1")],
-  Pi  = res$par["Pi"]
+  Pi  = res$par["Pi"], loo = FALSE
   )
 
 expect_equivalent(ans0_a, ans1_a)
@@ -108,11 +115,11 @@ y <- sample(c(0,1), 20, replace = TRUE)
 
 # Perfect prediction score
 ans0 <- prediction_score(cbind(y), cbind(y))
-expect_equivalent((ans0$obs/ans0$worse)[1], 0)
+expect_equivalent(ans0$obs[1], 1)
 
 # Worse
 ans1 <- prediction_score(cbind(y), 1 - cbind(y))
-expect_equivalent((ans1$obs/ans1$worse)[1], 1)
+expect_equivalent(ans1$obs[1], 0)
 
 # })
 
