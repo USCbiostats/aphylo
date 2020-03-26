@@ -142,3 +142,7 @@ ans <- aphylo_mcmc(net ~ mu_d + mu_s + Pi, control = list(nsteps = 2e3, burnin =
 pred <- prediction_score(ans)
 expect_output(pred, "PREDICTION SCORE")
 
+# Prediction of multiple samples
+set.seed(1123);p_all <- predict(ans, nsamples = 10)
+set.seed(1123);p_1 <- predict(ans, which.tree = 1, nsamples = 10)
+expect_equivalent(p_all[[1]], p_1[[1]])

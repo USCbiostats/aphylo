@@ -110,11 +110,18 @@ aphylo_mcmc <- function(
     parallel::clusterEvalQ(cl_object, library(aphylo))
     parallel::clusterExport(cl_object, c("model", "priors"), envir = environment())
     parallel::clusterEvalQ(cl_object, {
-      dat0 <- aphylo::new_aphylo_pruner(model$dat)
+      dat00 <- aphylo::new_aphylo_pruner(model$dat)
+    })
+    parallel::clusterEvalQ(cl_object, {
+      f_pll <- model$fun
+      model$fun <- function(p, dat, priors, verb_ans, ...) {
+        f_pll(p, dat = dat0, priors = priors, verb_ans = verb_ans)
+      }
     })
     
     # Appending to the set of controls
     control$cl <- cl_object
+    dat0 <- model$dat
     
   } else {
     

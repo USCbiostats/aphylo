@@ -26,4 +26,5 @@
   
   expect_equal(ans0, ans1)
   expect_equal(approx_geodesic(tree)[ord,ord], ans1)
+  expect_equal(approx_geodesic(tree$tree)[ord,ord], ans1)
 # })
