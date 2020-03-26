@@ -1,8 +1,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-#ifndef APHYLO_MISC_
-#define APHYLO_MISC_
+#ifndef APHYLO_MISC_H
+#define APHYLO_MISC_H
 
 using namespace Rcpp;
 

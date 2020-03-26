@@ -115,7 +115,7 @@ aphylo_mcmc <- function(
     parallel::clusterEvalQ(cl_object, {
       f_pll <- model$fun
       model$fun <- function(p, dat, priors, verb_ans, ...) {
-        f_pll(p, dat = dat0, priors = priors, verb_ans = verb_ans)
+        f_pll(p, dat = dat00, priors = priors, verb_ans = verb_ans)
       }
     })
     
