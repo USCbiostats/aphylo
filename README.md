@@ -290,12 +290,18 @@ pred <- prediction_score(ans2, loo = TRUE)
 pred
 ```
 
-    ## PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE
-    ## Observed : 0.16 
-    ## Random   : 0.38 
-    ## AUC      : 0.78 
+    ## Prediction score (H0: Observed != Random)
+    ## 
+    ##  N obs.   : 50
+    ##  alpha    : 0.74
+    ##  Observed : 0.84 ***
+    ##  Random   : 0.62 
+    ##  P(<t)    : 0.0001
+    ## 
+    ## Significance levels: *** p < .01, ** p < .05, * p < .10
+    ## AUC 0.78.
     ## --------------------------------------------------------------------------------
-    ## Values scaled to range between 0 and 1, 0 being best.
+    ## Values scaled to range between 0 and 1, 1 being best.
 
 ``` r
 plot(pred)
