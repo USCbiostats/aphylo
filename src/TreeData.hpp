@@ -2,6 +2,9 @@
 #include "pruner.hpp"
 using namespace Rcpp;
 
+#ifndef APHYLO_TREEDATA_HPP
+#define APHYLO_TREEDATA_HPP 1
+
 // This function creates pre-filled arrays
 template <class T>
 inline std::vector< std::vector< T > > new_vector_array(
@@ -192,3 +195,5 @@ public:
     
   };
 };
+
+#endif

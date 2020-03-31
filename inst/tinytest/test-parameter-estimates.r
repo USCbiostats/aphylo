@@ -48,6 +48,9 @@ ans0 <- suppressWarnings({
                 )
   )
   
+  # Testing the window function
+  expect_equal(window(ans1, 2000)$hist, window(ans1$hist, 2000))
+  
   # Checking expectations. It is difficult to do so with PI, so we exclude it.
   expect_equal(ans0$par[-7], ans1$par[-7], tolerance = 0.1, scale = 1)
   
@@ -129,6 +132,11 @@ expect_true(all(abs(unname(coef(ans2)) - rep(2/22, 5)) < .025))
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
       dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
   }, control = list(nsteps = 4e3, burnin = 1e3, nchains = 1)))
+  
+  ans_mcmc_pll <- suppressWarnings(aphylo_mcmc(tree ~ mu_d + mu_s, priors = function(p) {
+    c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 
+      dbeta(p[c("mu_s0", "mu_s1")], 2, 10))
+  }, control = list(nsteps = 4e3, burnin = 1e3, nchains = 2, multicore = TRUE)))
   
   ans_mle <- aphylo_mle(tree ~ mu_d + mu_s, priors = function(p) {
     c(dbeta(p[c("mu_d0", "mu_d1")], 10, 2), 

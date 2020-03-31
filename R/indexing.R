@@ -26,6 +26,14 @@ NULL
     
     x$tip.annotation  <- x$tip.annotation[, j, drop=FALSE]
     x$node.annotation <- x$node.annotation[, j, drop=FALSE]
+    
+    # Updating the pruning sequence
+    x$reduced_pseq <- reduce_pseq(
+      pseq      = x$pseq,
+      A         = with(x, rbind(tip.annotation, node.annotation)),
+      offspring = list_offspring(x)
+      )
+    
     return(x)
     
   } else if (missing(j)) {

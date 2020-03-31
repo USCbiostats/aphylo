@@ -161,8 +161,9 @@ predict_pre_order.aphylo_estimates <- function(
       x.$dat <- x$dat[[which.tree[t.]]]
       ans[[t.]] <- predict_pre_order(
         x      = x.,
-        ids    = ids[t.],
         params = x$par,
+        ids    = ids[t.],
+        loo      = loo,
         nsamples = nsamples,
         ncores   = ncores,
         centiles = centiles,

@@ -24,3 +24,5 @@ expect_warning(x1[1,,drop = TRUE])
 expect_error({
   x1[1,] <- c(1, 5)
 }, "5")
+
+expect_output(c(x1, x1), "2 annotated")

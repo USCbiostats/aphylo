@@ -71,21 +71,30 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   # Random case
   rand  <- prediction_score_rand(expected, W, alpha)
   
-  # Computing AUCs
-  
+  # Hypothesis testing ---------------------------------------------------------
+  pval <- p_prediction_score(
+    ceiling(obs),
+    alpha = alpha,
+    n0    = sum(expected == 0),
+    n1    = sum(expected == 1)
+  )
   
   structure(
     list(
-      obs       = 1.0 - obs/worse,
-      worse     = 0.0,
-      predicted = x,
-      expected  = expected,
-      random    = 1.0 - rand/worse,
-      alpha     = alpha,
-      auc       = auc(x, expected),
-      obs.ids   = NULL,
-      leaf.ids  = NULL,
-      tree      = NULL
+      obs        = 1.0 - obs/worse,
+      obs_raw    = obs,
+      random_raw = rand,
+      worse_raw  = worse,
+      pval       = pval,
+      worse      = 0.0,
+      predicted  = x,
+      expected   = expected,
+      random     = 1.0 - rand/worse,
+      alpha      = alpha,
+      auc        = auc(x, expected),
+      obs.ids    = NULL,
+      leaf.ids   = NULL,
+      tree       = NULL
     ), class = "aphylo_prediction_score"
   )
   
@@ -217,14 +226,28 @@ predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
   })
 }
 
+
+
 #' @export
 #' @rdname prediction_score
 print.aphylo_prediction_score <- function(x, ...) {
-  cat("PREDICTION SCORE: ANNOTATED PHYLOGENETIC TREE\n")
+  
+  significance <- with(x, {
+    if (pval < .01) "***"
+    else if (pval < .05) "**"
+    else if (pval < .1) "*"
+    else ""
+  })
+  
   with(x, cat(
-    sprintf("Observed : %-.2f ", obs),
-    sprintf("Random   : %-.2f ", random),
-    sprintf("AUC      : %-.2f ", auc$auc),
+    "Prediction score (H0: Observed != Random)\n", 
+    sprintf(" N obs.   : %-d", length(obs.ids)),
+    sprintf(" alpha    : %-.2f", alpha),
+    sprintf(" Observed : %-.2f %s", obs, significance),
+    sprintf(" Random   : %-.2f ", random),
+    sprintf(" P(<t)    : %-.4f", pval),
+    "\nSignificance levels: *** p < .01, ** p < .05, * p < .10",
+    sprintf("AUC %-.2f.", auc$auc),
     paste0(rep("-", getOption("width")), collapse=""),
     "Values scaled to range between 0 and 1, 1 being best.",
     sep ="\n"
@@ -422,3 +445,21 @@ plot.aphylo_prediction_score <- function(
 
 }
   
+d_prediction_score <- function(k, alpha, n0, n1) {
+  
+  l <- 0:k
+  sum(stats::dbinom(l, n1, 1 - alpha) * 
+    stats::dbinom(k - l, n0, alpha))
+  
+}
+
+p_prediction_score <- function(k, alpha, n0, n1) {
+  
+  if (length(k) > 1)
+    return(sapply(k, p_prediction_score, alpha = alpha, n0 = n0, n1 = n1))
+  
+  sum(
+    sapply(0:k, d_prediction_score, alpha = alpha, n0 = n0, n1 = n1)
+  )
+  
+}

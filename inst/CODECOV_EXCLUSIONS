@@ -1,4 +1,4 @@
-R/aphylo-package.r
+R/aphylo-package.R
 pruner.hpp
 inst/include/tree_bones.hpp
 inst/include/tree_meat.hpp
