@@ -63,7 +63,7 @@ double prediction_score_rand(
           for (p = 0; p < P; ++p)
               prods += powf((A.at(h, p) - S.at(ah, p)), 4.0);
           
-          score += Pa.at(ah)*powf(prods, 0.5)*W.at(h, u);
+          score += Pa.at(ah) * powf(prods, 0.5) * W.at(h, u);
           
         } 
         

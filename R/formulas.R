@@ -282,7 +282,6 @@ validate_parameters <- function(fm, params) {
   vars <- attr(stats::terms(fm), "term.labels")
   vars <- gsub("\\(.+", "", vars)
   
-  
   # Getting the default
   vars <- paste0("^(",paste0(vars, collapse="|"), ")")
   vars <- APHYLO_PARAM_NAMES[grepl(vars, x = APHYLO_PARAM_NAMES)]

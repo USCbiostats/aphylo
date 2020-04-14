@@ -14,6 +14,7 @@
   which.tree = 1:Ntrees(object),
   ids = lapply(Ntip(object)[which.tree], seq_len),
   newdata = NULL,
+  params = stats::coef(object),
   loo = TRUE,
   nsamples = 1L,
   centiles = c(0.025, 0.5, 0.975),
@@ -25,7 +26,7 @@ predict_pre_order(x, ...)
 
 \method{predict_pre_order}{aphylo_estimates}(
   x,
-  params = x$par,
+  params = stats::coef(x),
   which.tree = 1:Ntrees(x),
   ids = lapply(Ntip(x)[which.tree], seq_len),
   loo = TRUE,
@@ -48,6 +49,8 @@ predicted.}
 
 \item{newdata}{(optional) An aphylo object.}
 
+\item{params}{A numeric vector with the corresponding parameters.}
+
 \item{loo}{Logical scalar. When \code{loo = TRUE}, predictions are preformed
 similar to what a leave-one-out cross-validation scheme would be done
 (see \link{predict.aphylo_estimates}).}
@@ -60,8 +63,6 @@ fitted using MCMC, of course.}
 to be computed from the distribution of outcomes.}
 
 \item{...}{Ignored.}
-
-\item{params}{A numeric vector with the corresponding parameters.}
 
 \item{ncores, cl}{Passed to \code{\link[parallel:makeCluster]{parallel::makeCluster()}}.}
 

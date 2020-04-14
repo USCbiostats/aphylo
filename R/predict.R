@@ -39,6 +39,7 @@ predict.aphylo_estimates <- function(
   which.tree = 1:Ntrees(object),
   ids        = lapply(Ntip(object)[which.tree], seq_len),
   newdata    = NULL,
+  params     = stats::coef(object),
   loo        = TRUE,
   nsamples   = 1L,
   centiles   = c(.025, .5, .975),
@@ -72,6 +73,7 @@ predict.aphylo_estimates <- function(
   pred <- predict_pre_order.aphylo_estimates(
     object,
     which.tree = which.tree,
+    params     = params,
     ids        = ids,
     loo        = loo,
     nsamples   = nsamples,
@@ -139,7 +141,7 @@ predict_pre_order <- function(x, ...) UseMethod("predict_pre_order")
 #' to be computed from the distribution of outcomes.
 predict_pre_order.aphylo_estimates <- function(
   x,
-  params     = x$par,
+  params     = stats::coef(x),
   which.tree = 1:Ntrees(x),
   ids        = lapply(Ntip(x)[which.tree], seq_len),
   loo        = TRUE,
@@ -161,8 +163,8 @@ predict_pre_order.aphylo_estimates <- function(
       x.$dat <- x$dat[[which.tree[t.]]]
       ans[[t.]] <- predict_pre_order(
         x      = x.,
-        params = x$par,
-        ids    = ids[t.],
+        params   = params,
+        ids      = ids[t.],
         loo      = loo,
         nsamples = nsamples,
         ncores   = ncores,
