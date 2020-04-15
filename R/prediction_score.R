@@ -59,8 +59,12 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   else
     W <- W[ids, ids, drop=FALSE]
   
-  obs <- rowSums(x - expected)
-  obs <- t(obs) %*% W %*% obs
+  # obs <- rowSums(x - expected)
+  obs <- NULL
+  for (p in 1:ncol(x))
+    obs <- cbind(obs, ifelse(expected == 1, 1 - x, x))
+  obs <- sum(obs)
+  # obs <- t(obs) %*% W %*% obs
   
   # Best case
   best <- 0
@@ -214,24 +218,37 @@ prediction_score.aphylo_estimates <- function(
 #' 
 predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
   n <- nrow(G_inv)
+  S <- array(
+    sample(c(0,1), size = P*n*R, replace = TRUE, prob = c(1-alpha, alpha)),
+    dim = c(n, P, R)
+    )
   sapply(1:R, function(x) {
-    
-    A_hat <- matrix(
-      data = sample(
-        x       = c(0, 1),
-        size    = P * n,
-        replace = TRUE,
-        prob    = c(1 - alpha, alpha)
-        ),
-      ncol = P
-      )
-    
-    obs   <- sqrt(rowSums((A - A_hat)^2))
+    obs   <- sqrt(rowSums((A - S[,,x])^2))
     t(obs) %*% G_inv %*% obs
   })
 }
 
-
+predict_random2 <- function(P, A, G_inv, alpha=NULL, beta=NULL, R = 1e4L) {
+  n <- nrow(G_inv)
+  
+  # By default, if not specified, we use the MoM estimators
+  if (is.null(alpha) | is.null(beta)) {
+    m     <- mean(A)
+    v     <- var(A)/2
+    const <- (m * (1 - m) / v - 1)
+    if (is.null(alpha))
+      alpha <- const * m
+    if (is.null(beta))
+      beta  <- const * (1 - m)
+  }
+  
+  B <- array(rbeta(n * P * R, alpha, beta), dim = c(n, P, R))
+  
+  sapply(1:R, function(r) {
+    obs   <- sqrt(rowSums((A - B[,,r,drop=TRUE])^2))
+    t(obs) %*% G_inv %*% obs
+  })
+}
 
 #' @export
 #' @rdname prediction_score
@@ -246,7 +263,7 @@ print.aphylo_prediction_score <- function(x, ...) {
   
   with(x, cat(
     "Prediction score (H0: Observed != Random)\n", 
-    sprintf(" N obs.   : %-d", length(obs.ids)),
+    sprintf(" N obs.   : %-d", nrow(expected)),
     sprintf(" alpha    : %-.2f", alpha),
     sprintf(" Observed : %-.2f %s", obs, significance),
     sprintf(" Random   : %-.2f ", random),
@@ -468,3 +485,70 @@ p_prediction_score <- function(k, alpha, n0, n1) {
   )
   
 }
+
+#' Exact variance under the null for the prediction score
+#' @noRd
+var_prediction_score <- function(alpha, n0, n1) {
+  
+  n0 * (n0 - 1) * alpha ^ 2 +
+    n1 * (n1 - 1) * (1 - alpha) ^ 2 +
+    2 * n0 * n1 * alpha * (1 - alpha) +
+    n0 * alpha + n1 * (1 - alpha) - 
+    (n0 * alpha + n1 * (1 - alpha)) ^ 2
+  
+}
+
+# d <- seq(from = .01, to = .99, length.out = 10)
+# 
+# # y <- var_prediction_score(d, 15, 7)
+# # plot(y, x =, type = "l")
+# 
+# P<-1
+# set.seed(1231)
+# A<-cbind(sample(c(0,1), 20, replace=TRUE))
+# samp1 <- predict_random(P = 1, A = A, G_inv = diag(20), alpha = .5)
+# samp2 <- predict_random2(P = 1, A = A, G_inv = diag(20))
+# mean(samp2)
+# mean(samp1)
+# 
+# # Comparing the range of the scores
+# plot(1 - sapply(d, function(d.) aphylo:::prediction_score_rand(A, diag(20), d.))/20, type = "l")
+# dat. <- lapply(d, function(d.) {
+#   1 - predict_random(P = 1, A = A, G_inv = diag(20), alpha = d.)/20
+# })
+# dat. <- do.call(cbind, dat.)
+# colnames(dat.) <- sprintf("%.2f",d)
+# boxplot(dat., outline = FALSE)
+# 
+# set.seed(22223)
+# n <- 25
+# A <- cbind(c(rep(0, 5), rep(1, 20)))
+# 
+# # A_hat <- cbind(rbeta(n, (1-A)*5 + .1, 1))
+# # A_hat <- cbind(rep(.5, n))
+# A_hat <- cbind(rep(.5, n) + ifelse(A == 1, .01, -.01))
+# 
+# 
+
+# Generating the alternative (experiment)
+# experiment <- replicate(10000, {
+# 
+#   1-sum((A - (runif(n) < A_hat))^2)/n
+# 
+# })
+# mean(experiment)
+# 1 - (sum(A_hat[A==0]) + sum(1 - A_hat[A==1]))/n
+# prediction_score(x=A_hat, expected=A)
+# aphylo:::p_prediction_score(
+#   (sum(A_hat[A==0]) + sum(1 - A_hat[A==1])),
+#   alpha = .8, n0 = sum(A == 0), n1 = sum(A == 1)
+# )
+# 
+# randp <- aphylo:::predict_random(1, A, diag(n), .8)
+# 
+# boxplot(
+#   cbind(
+#     experiment,
+#     1 - randp/n
+#   )
+# )
