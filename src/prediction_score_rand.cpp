@@ -1,25 +1,23 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include "misc.h"
 using namespace Rcpp;
 
-// [[Rcpp::depends(RcppArmadillo)]]
-
 // Rcpp::export(rng = false)
 double prediction_score_rand(
-  const arma::mat & A,
-  const arma::mat & W,
+  const NumericMatrix & A,
+  const NumericMatrix & W,
   double alpha0,
   double alpha1
 ) {
   
-  unsigned int P = A.n_cols;
+  unsigned int P = A.ncol();
   unsigned int P2 = (unsigned int) powf(2u, P);
-  unsigned int H = A.n_rows;
+  unsigned int H = A.nrow();
   
-  arma::imat S = states(P);
+  IntegerMatrix S = states(P);
 
   // Computing the probabilities of each state
-  arma::vec Pa(P2, arma::fill::ones);
+  NumericVector Pa(P2, 1);
   unsigned int s, p;
   for (s = 0; s < P2; s++)
     for (p = 0; p < P; p++) 

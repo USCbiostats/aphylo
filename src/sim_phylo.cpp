@@ -1,29 +1,29 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 using namespace Rcpp;
 
 // [[Rcpp::export(name=".sim_fun_on_tree")]]
 IntegerMatrix sim_fun_on_tree(
     const List       & offspring,
-    const arma::ivec & types, 
-    const arma::ivec & pseq,
-    const arma::vec  & psi,
-    const arma::vec  & mu_d,
-    const arma::vec  & mu_s,
-    const arma::vec  & eta,
-    const arma::vec  & Pi,
+    const IntegerVector & types, 
+    const IntegerVector & pseq,
+    const NumericVector  & psi,
+    const NumericVector  & mu_d,
+    const NumericVector  & mu_s,
+    const NumericVector  & eta,
+    const NumericVector  & Pi,
     int P = 1
 ) {
   
   
   // Vessels
   int N = offspring.size(), N_o;
-  std::vector< const arma::vec* > mu(2u);
+  std::vector< const NumericVector* > mu(2u);
   mu[0] = & mu_d;
   mu[1] = & mu_s;
   IntegerMatrix ans(N,P);
   ans.fill(9u);
   
-  typedef arma::ivec::const_iterator iviter;
+  typedef IntegerVector::const_iterator iviter;
   for (int p=0; p<P; p++) {
     
     // Root node function
@@ -58,7 +58,7 @@ IntegerMatrix sim_fun_on_tree(
       }
         
       // Getting the list of offspring
-      arma::ivec O = offspring.at(*i - 1);
+      IntegerVector O = offspring.at(*i - 1);
       
       // Looping through offspring
       for (iviter o = O.begin(); o != O.end(); o++) {

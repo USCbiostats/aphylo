@@ -83,10 +83,6 @@ auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }
 
-approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
-    .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
-}
-
 #' Matrix of states
 #' 
 #' @param P Integer scalar. Number of functions.

@@ -397,9 +397,4 @@ ans2 <- LogLike(
   verb_ans = FALSE)
 
 expect_equal(ans0$ll, ans2$ll)
-ans <- approx_geodesic(trees[[1]], undirected = TRUE, warn = TRUE, nsteps = 1000)
 
-expect_equal(
-  ans[Ntip(trees[[1]]) + 1, 1:Ntip(trees[[1]])],
-  dist2root(trees_pruner[[1]])
-)
