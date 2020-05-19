@@ -31,6 +31,33 @@ ans2 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi, loo = FALSE
 expect_equivalent(ans0, ans1$posterior)
 expect_equivalent(ans1$posterior, ans2[,1])
 
+# # Alternative take
+# p_up <- matrix(ncol=2, nrow = length(ans0))
+# p_pred <- double(nrow(p_up))
+# l  <- LogLike(atree, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)
+# for (i in rev(atree$pseq)) {
+#   
+#   # If the root note
+#   if (Ntip(atree) == (i - 1)) {
+#     
+#     p_up[i, 1] = 1 - Pi
+#     p_up[i, 2] = Pi
+#     
+#   }
+#   
+#   # Computing the offsprings
+#   for (o in atree$offspring[[i]]) {
+#     p_up[o, 1] = p_up[i, 1] * (1 - mu[1]) + p_up[i, 2] * mu[2]
+#     p_up[o, 2] = p_up[i, 1] * mu[1]       + p_up[i, 2] * (1 - mu[2])
+#   }
+#  
+#   p_pred[i] <-  p_up[i, 2] * l$Pr[[1]][i, 2]/
+#     (p_up[i, 1] * l$Pr[[1]][i, 1] + p_up[i, 2] * l$Pr[[1]][i, 2])
+# }
+# 
+# p_pred
+# ans0
+
 # Random test
 set.seed(122331)
 atree <- raphylo(4, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)

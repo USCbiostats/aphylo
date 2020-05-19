@@ -40,9 +40,9 @@ List posterior_prob(
     Pr_postorder.at(preorder.at(0u) - 1u, 1u)*Pi;
   
   // Computing posterior probabilities
-  Posterior.at(preorder.at(0u) - 1) = Pr_preorder.at(preorder.at(0u) - 1u, 1)/(
-    Pr_preorder.at(preorder.at(0u) - 1u, 1) +
-    Pr_preorder.at(preorder.at(0u) - 1u, 0)
+  Posterior.at(preorder.at(0u) - 1u) = Pr_preorder.at(preorder.at(0u) - 1u, 1u)/(
+    Pr_preorder.at(preorder.at(0u) - 1u, 1u) +
+    Pr_preorder.at(preorder.at(0u) - 1u, 0u)
   );
   
   double D_n_complement_x_n;

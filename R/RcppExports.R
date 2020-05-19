@@ -118,10 +118,6 @@ reduce_pseq <- function(pseq, A, offspring) {
     .Call(`_aphylo_posterior_prob`, Pr_postorder, types, mu_d, mu_s, Pi, pseq, offspring)
 }
 
-prediction_score_rand <- function(A, W, alpha) {
-    .Call(`_aphylo_prediction_score_rand`, A, W, alpha)
-}
-
 .sim_fun_on_tree <- function(offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P = 1L) {
     .Call(`_aphylo_sim_fun_on_tree`, offspring, types, pseq, psi, mu_d, mu_s, eta, Pi, P)
 }

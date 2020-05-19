@@ -4,11 +4,12 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export(rng = false)]]
+// Rcpp::export(rng = false)
 double prediction_score_rand(
   const arma::mat & A,
   const arma::mat & W,
-  double alpha
+  double alpha0,
+  double alpha1
 ) {
   
   unsigned int P = A.n_cols;
@@ -22,7 +23,7 @@ double prediction_score_rand(
   unsigned int s, p;
   for (s = 0; s < P2; s++)
     for (p = 0; p < P; p++) 
-      Pa.at(s) *= (S.at(s, p) == 1)? alpha : (1.0-alpha);
+      Pa.at(s) *= (S.at(s, p) == 1)? 1 - alpha0 : 1 - alpha1;
     
   
   unsigned int h, u, r, ah, au;

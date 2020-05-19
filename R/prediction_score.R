@@ -28,12 +28,25 @@
 #'                    
 #' (pr <- prediction_score(ans, loo = TRUE))
 #' plot(pr)
-prediction_score <- function(x, expected, alpha = NULL, W = NULL, ...)
-  UseMethod("prediction_score")
+prediction_score <- function(
+  x,
+  expected,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W = NULL,
+  ...
+  ) UseMethod("prediction_score")
 
 #' @export
 #' @rdname prediction_score
-prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
+prediction_score.default <- function(
+  x,
+  expected,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W      = NULL,
+  ...
+  ) {
   
   # Checking dimensions
   if (length(x) != length(expected))
@@ -51,8 +64,10 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   
   # Computing the expected value of 1s. We will use this to compute the random
   # score.
-  if (!length(alpha))
-    alpha <- mean(expected)
+  if (!length(alpha0))
+    alpha0 <- 1 - mean(expected)
+  if (is.null(alpha1))
+    alpha1 <- 1 - alpha0
   
   if (is.null(W))
     W <- diag(length(ids))
@@ -73,14 +88,15 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
   worse <- sum(W)*ncol(x)
   
   # Random case
-  rand  <- prediction_score_rand(expected, W, alpha)
-  
+  rand  <- prediction_score_rand(expected, W, alpha0, alpha1)
+
   # Hypothesis testing ---------------------------------------------------------
   pval <- p_prediction_score(
     ceiling(obs),
-    alpha = alpha,
-    n0    = sum(expected == 0),
-    n1    = sum(expected == 1)
+    alpha0 = alpha0,
+    alpha1 = alpha1,
+    n0     = sum(expected == 0),
+    n1     = sum(expected == 1)
   )
   
   structure(
@@ -94,7 +110,8 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
       predicted  = x,
       expected   = expected,
       random     = 1.0 - rand/worse,
-      alpha      = alpha,
+      alpha0     = alpha0,
+      alpha1     = alpha1,
       auc        = auc(x, expected),
       obs.ids    = NULL,
       leaf.ids   = NULL,
@@ -117,7 +134,8 @@ prediction_score.default <- function(x, expected, alpha = NULL, W = NULL, ...) {
 prediction_score.aphylo_estimates <- function(
   x,
   expected = NULL,
-  alpha    = NULL,
+  alpha0   = NULL,
+  alpha1   = NULL,
   W        = NULL,
   loo      = TRUE,
   ...
@@ -132,7 +150,8 @@ prediction_score.aphylo_estimates <- function(
     
     if (is.null(expected)) expected <- res
     if (is.null(W))        W        <- res
-    if (length(alpha) == 1L)  alpha <- rep(alpha, Ntrees(x))
+    if (length(alpha0) == 1L)  alpha0 <- rep(alpha0, Ntrees(x))
+    if (length(alpha1) == 1L)  alpha1 <- rep(alpha1, Ntrees(x))
       
     for (i in seq_along(res)) {
       
@@ -141,7 +160,8 @@ prediction_score.aphylo_estimates <- function(
       res[[i]] <- prediction_score.aphylo_estimates(
         x_tmp,
         expected = expected[[i]],
-        alpha    = alpha[i],
+        alpha0   = alpha0[i],
+        alpha1   = alpha1[i],
         W        = W[[i]],
         loo      = loo,
         ...
@@ -151,9 +171,6 @@ prediction_score.aphylo_estimates <- function(
     return(res)
     
   }
-  
-  if (is.null(alpha))
-    alpha <- mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
   
   # Finding relevant ids
   if (is.null(expected)) {
@@ -192,10 +209,27 @@ prediction_score.aphylo_estimates <- function(
       stop(sprintf("-W- must have be of dimmension dim(W) == c(%i, %1$i)", length(ids)))
   }
   
+  # Adjusting alphas according to loo logic. To make the benchmark fair, we need
+  # to exclude one annotation from each type for the loo
+  n <- length(ids)
+  if (is.null(alpha0) && loo) {
+    
+    alpha0 <- max(sum(expected[ids,] == 0) - 1, 0)
+    alpha0 <- alpha0/(n - 1)
+    
+  }
+  if (is.null(alpha1) && loo) {
+    
+    alpha1 <- max(sum(expected[ids,]) - 1, 0)
+    alpha1 <- alpha1/(n - 1)
+    
+  }
+  
   ans <- prediction_score(
     x        = pred[ids,,drop=FALSE],
     expected = expected[ids,,drop = FALSE],
-    alpha    = alpha,
+    alpha0   = alpha0,
+    alpha1   = alpha1,
     W        = G_inv
   )
   
@@ -216,39 +250,52 @@ prediction_score.aphylo_estimates <- function(
 #' @param G_inv Weighting matrix
 #' @noRd
 #' 
-predict_random <- function(P, A, G_inv, alpha, R = 1e4L) {
-  n <- nrow(G_inv)
+predict_random <- function(P, A, G_inv, alpha0, alpha1, R = 1e4L) {
+  
+  is0 <- which(A == 0)
+  is1 <- which(A == 1)
+  n0  <- length(is0)
+  n1  <- length(is1)
+  n   <- n0 + n1
+  
+  A_sorted <- matrix(c(rep(0, n0), rep(1, n1)), ncol = 1)
+  
   S <- array(
-    sample(c(0,1), size = P*n*R, replace = TRUE, prob = c(1-alpha, alpha)),
+    as.integer(runif(P*n*R) < c(rep(1 - alpha0, n0), rep(alpha1, n1))),
     dim = c(n, P, R)
-    )
+  )
+  # S <- array(
+  #   sample(c(0,1), size = P*n*R, replace = TRUE, prob = c(alpha0, alpha1)),
+  #   dim = c(n, P, R)
+  #   )
   sapply(1:R, function(x) {
-    obs   <- sqrt(rowSums((A - S[,,x])^2))
-    t(obs) %*% G_inv %*% obs
+    # obs   <- sqrt(rowSums((A_sorted - S[,,x])^2))
+    # t(obs) %*% G_inv %*% obs
+    sum((A_sorted - S[,,x])^2)
   })
 }
 
-predict_random2 <- function(P, A, G_inv, alpha=NULL, beta=NULL, R = 1e4L) {
-  n <- nrow(G_inv)
-  
-  # By default, if not specified, we use the MoM estimators
-  if (is.null(alpha) | is.null(beta)) {
-    m     <- mean(A)
-    v     <- var(A)/2
-    const <- (m * (1 - m) / v - 1)
-    if (is.null(alpha))
-      alpha <- const * m
-    if (is.null(beta))
-      beta  <- const * (1 - m)
-  }
-  
-  B <- array(rbeta(n * P * R, alpha, beta), dim = c(n, P, R))
-  
-  sapply(1:R, function(r) {
-    obs   <- sqrt(rowSums((A - B[,,r,drop=TRUE])^2))
-    t(obs) %*% G_inv %*% obs
-  })
-}
+# predict_random2 <- function(P, A, G_inv, alpha0=NULL, alpha1=NULL, beta=NULL, R = 1e4L) {
+#   n <- nrow(G_inv)
+#   
+#   # By default, if not specified, we use the MoM estimators
+#   if (is.null(alpha) | is.null(beta)) {
+#     m     <- mean(A)
+#     v     <- var(A)/2
+#     const <- (m * (1 - m) / v - 1)
+#     if (is.null(alpha))
+#       alpha <- const * m
+#     if (is.null(beta))
+#       beta  <- const * (1 - m)
+#   }
+#   
+#   B <- array(rbeta(n * P * R, alpha, beta), dim = c(n, P, R))
+#   
+#   sapply(1:R, function(r) {
+#     obs   <- sqrt(rowSums((A - B[,,r,drop=TRUE])^2))
+#     t(obs) %*% G_inv %*% obs
+#   })
+# }
 
 #' @export
 #' @rdname prediction_score
@@ -263,11 +310,11 @@ print.aphylo_prediction_score <- function(x, ...) {
   
   with(x, cat(
     "Prediction score (H0: Observed != Random)\n", 
-    sprintf(" N obs.   : %-d", nrow(expected)),
-    sprintf(" alpha    : %-.2f", alpha),
-    sprintf(" Observed : %-.2f %s", obs, significance),
-    sprintf(" Random   : %-.2f ", random),
-    sprintf(" P(<t)    : %-.4f", pval),
+    sprintf(" N obs.      : %-d", nrow(expected)),
+    sprintf(" alpha(0, 1) : %-.2f, -.2f", alpha0, alpha1),
+    sprintf(" Observed    : %-.2f %s", obs, significance),
+    sprintf(" Random      : %-.2f ", random),
+    sprintf(" P(<t)       : %-.4f", pval),
     "\nSignificance levels: *** p < .01, ** p < .05, * p < .10",
     sprintf("AUC %-.2f.", auc$auc),
     paste0(rep("-", getOption("width")), collapse=""),
@@ -467,21 +514,37 @@ plot.aphylo_prediction_score <- function(
 
 }
   
-d_prediction_score <- function(k, alpha, n0, n1) {
+d_prediction_score <- function(k, alpha0, alpha1, n0, n1) {
   
   l <- 0:k
-  sum(stats::dbinom(l, n1, 1 - alpha) * 
-    stats::dbinom(k - l, n0, alpha))
+  sum(stats::dbinom(l, n1, alpha0) * 
+    stats::dbinom(k - l, n0, alpha1))
   
 }
 
-p_prediction_score <- function(k, alpha, n0, n1) {
+p_prediction_score <- function(k, alpha0, alpha1, n0, n1) {
   
   if (length(k) > 1)
-    return(sapply(k, p_prediction_score, alpha = alpha, n0 = n0, n1 = n1))
+    return(
+      sapply(
+        X      = k,
+        FUN    = p_prediction_score,
+        alpha0 = alpha0,
+        alpha1 = alpha1,
+        n0     = n0,
+        n1     = n1
+        )
+      )
   
   sum(
-    sapply(0:k, d_prediction_score, alpha = alpha, n0 = n0, n1 = n1)
+    sapply(
+      X   = 0:k,
+      FUN = d_prediction_score,
+      alpha0 = alpha0,
+      alpha1 = alpha1,
+      n0     = n0,
+      n1     = n1
+    )
   )
   
 }
@@ -552,3 +615,13 @@ var_prediction_score <- function(alpha, n0, n1) {
 #     1 - randp/n
 #   )
 # )
+
+prediction_score_rand <- function(A, W, alpha0, alpha1) {
+  
+  obs <- NULL
+  for (p in 1:ncol(A))
+    obs <- cbind(obs, ifelse(A[,p] == 1, 1 - alpha1, 1 - alpha0))
+  sum(obs)
+  
+}
+  

@@ -228,18 +228,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// prediction_score_rand
-double prediction_score_rand(const arma::mat& A, const arma::mat& W, double alpha);
-RcppExport SEXP _aphylo_prediction_score_rand(SEXP ASEXP, SEXP WSEXP, SEXP alphaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type W(WSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(prediction_score_rand(A, W, alpha));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sim_fun_on_tree
 IntegerMatrix sim_fun_on_tree(const List& offspring, const arma::ivec& types, const arma::ivec& pseq, const arma::vec& psi, const arma::vec& mu_d, const arma::vec& mu_s, const arma::vec& eta, const arma::vec& Pi, int P);
 RcppExport SEXP _aphylo_sim_fun_on_tree(SEXP offspringSEXP, SEXP typesSEXP, SEXP pseqSEXP, SEXP psiSEXP, SEXP mu_dSEXP, SEXP mu_sSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP PSEXP) {
@@ -325,7 +313,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_root_node_prob", (DL_FUNC) &_aphylo_root_node_prob, 2},
     {"_aphylo_reduce_pseq", (DL_FUNC) &_aphylo_reduce_pseq, 3},
     {"_aphylo_posterior_prob", (DL_FUNC) &_aphylo_posterior_prob, 7},
-    {"_aphylo_prediction_score_rand", (DL_FUNC) &_aphylo_prediction_score_rand, 3},
     {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 9},
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
     {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
