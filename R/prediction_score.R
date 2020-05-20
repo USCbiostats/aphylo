@@ -2,8 +2,7 @@
 #' 
 #' @param x An object of class [aphylo_estimates] or a numeric matrix.
 #' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
-#' @param alpha Numeric scalar. Prior belief of the parameter of the bernoulli distribution
-#' used to compute the random imputation score.
+#' @param alpha0,alpha1 Probability of observing a zero an a one, respectively.
 #' @param W A square matrix. Must have as many rows as genes in `expected`.
 #' @param ... Further arguments passed to [predict.aphylo_estimates]
 #' @export
@@ -201,7 +200,6 @@ prediction_score.aphylo_estimates <- function(
   
   # Inverse of Geodesic distances
   if (!length(W)) {
-    # G     <- approx_geodesic(x$dat$tree$edge - 1L, undirected = TRUE)[ids,ids]
     G_inv <- diag(length(ids))
   } else {
     G_inv <- W

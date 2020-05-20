@@ -7,6 +7,7 @@ IntegerMatrix fast_table(
   ) {
 
   IntegerVector ids = unique(x);
+  std::sort(ids.begin(), ids.end());
   IntegerMatrix ans(ids.size(), 2u);
   std::vector< int > x0(x.size());
   for (unsigned int i = 0u; i < x0.size(); ++i)
