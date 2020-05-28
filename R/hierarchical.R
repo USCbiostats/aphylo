@@ -71,6 +71,13 @@ aphylo_hier <- function(
       names = c(sprintf("%s_tree%03i", rep(par_names0, N), 1:N), alpha_names, beta_names)
     )
   
+  if (!is.null(hyper_params)) {
+    params0[alpha_names] <- hyper_params[par_names0, "alpha"]
+    params0[beta_names] <- hyper_params[par_names0, "beta"]
+  }
+    
+  
+  
   # Adding random noise
   params0   <- rbind(params0, params0)
   params0[] <- jitter(params0, 20)
@@ -128,13 +135,15 @@ k_ram <- fmcmc::kernel_ram(
   warmup = 1000,
   eps    = .0001,
   ub     = c(rep(.9999999, 7 * Ntrees(trees)), rep(100, 7 * 2)),
-  constr = constr
+  fixed  = c(rep(FALSE, 7*Ntrees(trees)), rep(TRUE, 7*2)) #,
+  # constr = constr
 )
 
 k_am <- fmcmc::kernel_am(
   lb = .00000001,
   warmup = 1000,
   eps    = .01,
+  fixed  = c(rep(FALSE, 7*Ntrees(trees)), rep(TRUE, 7*2)),
   ub     = c(rep(.9999999, 7 * Ntrees(trees)), rep(100, 7 * 2)), freq = 50
 )
 
@@ -146,7 +155,7 @@ bpriors <- bprior(shape1 = ALPHAS, shape2 = BETAS)
 
 map_estimates <- vector("list", Ntrees(trees))
 for (i in seq_along(trees)) {
-  map_estimates[[i]] <- aphylo_mle(trees[[i]] ~ psi + mu_d + mu_s + Pi)#, priors = bpriors)
+  map_estimates[[i]] <- aphylo_mle(trees[[i]] ~ psi + mu_d + mu_s + Pi, priors = bpriors)
   message("Tree ",i, " of ", Ntrees(trees), " done.")
 }
 
@@ -160,6 +169,7 @@ for (i in 1:ncol(map_estimates)) {
     )
 }
 
+
 op <- par(mfrow = c(3, 3))
 for (i in 1:length(ab))  {
   curve(dbeta(x, ab[[i]]$estimate[1], ab[[i]]$estimate[2]),
@@ -171,19 +181,28 @@ for (i in 1:length(ab))  {
 
 par(op)
 
+# Compiling priors so we can use them to fix the hyperpriors
+alpha_and_beta <- structure(
+  t(sapply(ab, coef)),
+  dimnames = list(names(ALPHAS), c("alpha", "beta"))
+)
+
 
 
 set.seed(123)
 # debug(k_ram$proposal)
 ans0 <- aphylo_hier(
   trees ~ psi + mu_d + mu_s + Pi,
-  params = structure(runif(7), names = names(coef(ans_mle))),
-  nsteps = 1e4,
-  kernel = k_ram,
-  thin   = 1,
-  nchains = 2,
-  conv_checker = fmcmc::convergence_gelman(freq = 2e3)
+  params       = structure(runif(7), names = names(coef(ans_mle))),
+  nsteps       = 1e5,
+  kernel       = k_ram,
+  thin         = 1,
+  nchains      = 2,
+  conv_checker = fmcmc::convergence_gelman(freq = 2e3),
+  hyper_params = alpha_and_beta
   )
+
+saveRDS(ans0, file = "playground/hierarchical.rds")
 
 # Finding parameters using MLE
 if (FALSE) {
