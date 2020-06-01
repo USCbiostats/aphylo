@@ -64,6 +64,7 @@ ans_dbeta
 }
 \seealso{
 Other parameter estimation: 
+\code{\link{aphylo_hier}()},
 \code{\link{aphylo_mcmc}()}
 }
 \concept{parameter estimation}

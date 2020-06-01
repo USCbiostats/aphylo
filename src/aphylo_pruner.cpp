@@ -91,6 +91,15 @@ SEXP new_aphylo_pruner(
 }
 
 // Methods ---------------------------------------------------------------------
+// [[Rcpp::export]]
+int sizeof_pruner(SEXP ptr) {
+  Rcpp::XPtr< pruner::Tree > p(ptr);
+  
+  int ans = (int) sizeof(*p);
+  
+  std::cout << ans << std::endl;
+  return ans;
+}
 
 // [[Rcpp::export(name = ".LogLike_pruner", rng = false)]]
 List LogLike_pruner(

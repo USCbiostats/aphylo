@@ -72,6 +72,7 @@ ans_mcmc <- aphylo_mcmc(
 }
 \seealso{
 Other parameter estimation: 
+\code{\link{aphylo_hier}()},
 \code{\link{aphylo_mle}()}
 }
 \concept{parameter estimation}

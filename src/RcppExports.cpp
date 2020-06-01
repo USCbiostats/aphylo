@@ -18,6 +18,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sizeof_pruner
+int sizeof_pruner(SEXP ptr);
+RcppExport SEXP _aphylo_sizeof_pruner(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(sizeof_pruner(ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LogLike_pruner
 List LogLike_pruner(SEXP tree_ptr, const std::vector< double >& mu_d, const std::vector< double >& mu_s, const std::vector< double >& psi, const std::vector< double >& eta, const double& Pi, bool verb, bool check_dims);
 RcppExport SEXP _aphylo_LogLike_pruner(SEXP tree_ptrSEXP, SEXP mu_dSEXP, SEXP mu_sSEXP, SEXP psiSEXP, SEXP etaSEXP, SEXP PiSEXP, SEXP verbSEXP, SEXP check_dimsSEXP) {
@@ -281,6 +292,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_new_aphylo_pruner", (DL_FUNC) &_aphylo_new_aphylo_pruner, 4},
+    {"_aphylo_sizeof_pruner", (DL_FUNC) &_aphylo_sizeof_pruner, 1},
     {"_aphylo_LogLike_pruner", (DL_FUNC) &_aphylo_LogLike_pruner, 8},
     {"_aphylo_Tree_get_offspring", (DL_FUNC) &_aphylo_Tree_get_offspring, 1},
     {"_aphylo_Tree_get_parents", (DL_FUNC) &_aphylo_Tree_get_parents, 1},
