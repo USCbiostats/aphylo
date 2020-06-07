@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <functional>
 
 #ifndef H_PRUNER
 #define H_PRUNER

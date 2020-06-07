@@ -6,7 +6,6 @@ using namespace Rcpp;
 
 // #define DEBUG_LIKELIHOOD
 
-void likelihood(pruner::sptr_treedata D, pruner::TreeIterator & n);
 // Tree constructor ------------------------------------------------------------
 
 // [[Rcpp::export(name = "new_aphylo_pruner.", rng = false)]]
@@ -19,7 +18,9 @@ SEXP new_aphylo_pruner(
   
   // Initializing the tree
   pruner::uint res;
-  Rcpp::XPtr< pruner::Tree > xptr(new pruner::Tree(edgelist[0], edgelist[1], res), true);
+  Rcpp::XPtr< AphyloPruner > xptr(
+      new AphyloPruner(A, types, nannotated, edgelist[0], edgelist[1], res),
+      true);
   
   if (res != 0u)
     stop(
@@ -27,63 +28,6 @@ SEXP new_aphylo_pruner(
       res
     );
   
-  xptr->args = std::make_shared< pruner::TreeData >(A, types, nannotated);
-  xptr->fun  = likelihood;
-  
-  // Figuring out the corrected pseq; ------------------------------------------
-  
-  // This flags which to include
-  std::vector< bool > has_ann(A.size(), false);
-  
-  // This is a pointer to the set of offsprings. This is how we check which
-  // is leaf or not
-  const pruner::vv_uint * offspring = xptr->get_offspring_ptr();
-  
-  // This is the current POSTORDER sequence. We save it just in case
-  pruner::v_uint cur_pseq = xptr->get_postorder();
-  pruner::v_uint new_pseq;
-  
-  // We start iterating through the annotations
-  for (auto i = cur_pseq.begin(); i != cur_pseq.end(); ++i) {
-    
-    // First check if it is leaf or not
-    if ((offspring->at(*i).size()) == 0u) {
-      
-      // Checking annotations
-      unsigned int n9s = 0u;
-      for (unsigned int j = 0u; j < A[0u].size(); ++j) 
-        if (A[*i][j] == 9u) {
-          ++n9s;
-          break;
-        }
-        
-      // At least has a single annotation!
-      if (n9s < A[0u].size()) {
-        has_ann[*i] = true;
-        new_pseq.push_back(*i);
-      }
-      
-    } else { // The case for interior nodes
-      
-      // We need to iterate through its offsprings
-      for (auto off = (offspring->at(*i)).begin(); off != (offspring->at(*i)).end(); ++off) 
-        // Any of its offspring has an annotation?
-        if (has_ann[*off]) {
-          has_ann[*i] = true;
-          new_pseq.push_back(*i);
-          break;
-        }
-      
-    }
-    
-  }
-  
-  // Resetting the pseq, only if it has nodes on it!
-  if (new_pseq.size() != 0u) {
-    res = xptr->set_postorder(new_pseq);
-    if (res != 0u)
-      stop("While resetting the POSTORDER.");
-  }
 
   xptr.attr("class") = "aphylo_pruner";
   
@@ -93,11 +37,11 @@ SEXP new_aphylo_pruner(
 // Methods ---------------------------------------------------------------------
 // [[Rcpp::export]]
 int sizeof_pruner(SEXP ptr) {
-  Rcpp::XPtr< pruner::Tree > p(ptr);
+  Rcpp::XPtr< AphyloPruner > p(ptr);
   
   int ans = (int) sizeof(*p);
   
-  std::cout << ans << std::endl;
+  Rcpp::Rcout << ans << std::endl;
   return ans;
 }
 
@@ -112,7 +56,7 @@ List LogLike_pruner(
     bool verb = true,
     bool check_dims = false
 ) {
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  Rcpp::XPtr< AphyloPruner > p(tree_ptr);
   
   // Setting the parameters
   p->args->set_mu_d(mu_d);
@@ -151,7 +95,7 @@ List LogLike_pruner(
 // [[Rcpp::export(rng = false)]]
 std::vector< std::vector< unsigned int > > Tree_get_offspring(const SEXP & tree_ptr) {
   
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  Rcpp::XPtr< AphyloPruner > p(tree_ptr);
   return p->get_offspring();
   
 }
@@ -159,7 +103,7 @@ std::vector< std::vector< unsigned int > > Tree_get_offspring(const SEXP & tree_
 // [[Rcpp::export(rng = false)]]
 std::vector< std::vector< unsigned int > > Tree_get_parents(const SEXP & tree_ptr) {
   
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  Rcpp::XPtr< AphyloPruner > p(tree_ptr);
   return p->get_parents();
   
 }
@@ -168,7 +112,7 @@ std::vector< std::vector< unsigned int > > Tree_get_parents(const SEXP & tree_pt
 // [[Rcpp::export(name=".Nnode_aphylo_pruner", rng = false)]]
 unsigned int Tree_Nnode(const SEXP & tree_ptr, bool internal_only = true) {
   
-  Rcpp::XPtr< pruner::Tree > p(tree_ptr);
+  Rcpp::XPtr< AphyloPruner > p(tree_ptr);
   
   unsigned int count = p->n_nodes();
   
@@ -189,7 +133,7 @@ std::vector< unsigned int > Tree_get_dist_tip2root(const SEXP & ptr) {
   if (!Rf_inherits(ptr, "aphylo_pruner"))
     stop("-ptr- must be an object of class 'aphylo_pruner'.");
   
-  Rcpp::XPtr< pruner::Tree > p(ptr);
+  Rcpp::XPtr< AphyloPruner > p(ptr);
   pruner::v_uint ans = p->get_dist_tip2root(), ans_sorted;
   pruner::v_uint tip = p->get_tips();
   
@@ -212,7 +156,7 @@ std::vector< unsigned int > Tree_get_postorder(const SEXP & ptr) {
   if (!Rf_inherits(ptr, "aphylo_pruner"))
     stop("-ptr- must be an object of class 'aphylo_pruner'.");
   
-  Rcpp::XPtr< pruner::Tree > p(ptr);
+  Rcpp::XPtr< AphyloPruner > p(ptr);
   
   return p->get_postorder();
   
@@ -222,7 +166,7 @@ std::vector< unsigned int > Tree_get_postorder(const SEXP & ptr) {
 // [[Rcpp::export(name="Ntip.aphylo_pruner", rng = false)]]
 unsigned int Tree_Ntip(const SEXP & phy) {
   
-  Rcpp::XPtr< pruner::Tree > p(phy);
+  Rcpp::XPtr< AphyloPruner > p(phy);
   
   return p->n_tips();
 }
@@ -232,7 +176,7 @@ unsigned int Tree_Ntip(const SEXP & phy) {
 // [[Rcpp::export(name="Nannotated.aphylo_pruner", rng = false)]]
 unsigned int Tree_Nannotated(const SEXP & phy) {
   
-  Rcpp::XPtr< pruner::Tree > p(phy);
+  Rcpp::XPtr< AphyloPruner > p(phy);
   
   return p->args->nannotated;
 }
@@ -241,7 +185,7 @@ unsigned int Tree_Nannotated(const SEXP & phy) {
 // [[Rcpp::export(name="Nann.aphylo_pruner", rng = false)]]
 unsigned int Tree_Nann(const SEXP & phy) {
   
-  Rcpp::XPtr< pruner::Tree > p(phy);
+  Rcpp::XPtr< AphyloPruner > p(phy);
   
   return p->args->nfuns;
 }
@@ -250,7 +194,7 @@ unsigned int Tree_Nann(const SEXP & phy) {
 // [[Rcpp::export]]
 unsigned int Tree_set_ann(const SEXP & phy, unsigned int i, unsigned int j, unsigned int val) {
   
-  Rcpp::XPtr< pruner::Tree > p(phy);
+  Rcpp::XPtr< AphyloPruner > p(phy);
   
   p->args->set_ann(i, j, val);
   
@@ -261,7 +205,7 @@ unsigned int Tree_set_ann(const SEXP & phy, unsigned int i, unsigned int j, unsi
 // [[Rcpp::export]]
 std::vector< std::vector< unsigned int > > Tree_get_ann(const SEXP & phy) {
   
-  Rcpp::XPtr< pruner::Tree > p(phy);
+  Rcpp::XPtr< AphyloPruner > p(phy);
   return p->args->A;
   
 }

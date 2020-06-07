@@ -14,7 +14,11 @@ aphylo_hier(
   env = parent.frame(),
   verbose = TRUE,
   multicore = FALSE,
-  nchains = 1L
+  nchains = 1L,
+  use_optim = TRUE,
+  priors = NULL,
+  check_informative = NULL,
+  reduced_pseq = NULL
 )
 }
 \arguments{
@@ -23,9 +27,21 @@ aphylo_hier(
 \item{params}{A vector of length 7 with initial parameters. In particular
 \code{psi[1]}, \code{psi[2]}, \code{mu[1]}, \code{mu[2]}, \code{eta[1]}, \code{eta[2]} and \code{Pi}.}
 
+\item{classes}{An integer vector of length equal to the number of trees in
+the model.}
+
+\item{..., multicore, nchains}{passed to \link[fmcmc:MCMC]{fmcmc::MCMC}}
+
 \item{params0}{Starting parameters.}
 
+\item{hyper_params}{If not specified, the function sets as initial hyper
+parameters equal to 10.}
+
 \item{env}{Environment where to evaluate \code{model}.}
+
+\item{verbose}{Logical scalar. When \code{TRUE} prints information.}
+
+\item{use_optim}{Logical, When true uses \link[stats:optim]{stats::optim} as a starting point.}
 
 \item{priors}{A function to be used as prior for the model (see \link{bprior}).}
 
@@ -41,6 +57,10 @@ An object of class \link{aphylo_estimates}.
 }
 \description{
 Fit a Hierarchical aphylo model
+}
+\details{
+The parameters \code{priors}, \code{check_informative}, and \code{reduced_pseq}
+are silently ignored in this function.
 }
 \seealso{
 Other parameter estimation: 

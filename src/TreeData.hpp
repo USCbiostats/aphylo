@@ -127,7 +127,7 @@ inline double AphyloParameter::operator[](unsigned int i) const {
 Definition of tree data 
 *******************************************************************************/
 
-class pruner::TreeData {
+class TreeData {
   
 public:
   
@@ -169,7 +169,11 @@ public:
   
   // Destructor and constructor ------------------------------------------------
   ~TreeData() {};
-  TreeData(const pruner::vv_uint A_, const pruner::v_uint Ntype_, pruner::uint nannotated) : A(A_), types(Ntype_) {
+  TreeData(
+    const pruner::vv_uint A_,
+    const pruner::v_uint Ntype_,
+    pruner::uint nannotated
+    ) : A(A_), types(Ntype_) {
     
     // Initializing data
     // this->A       = A;
@@ -222,7 +226,7 @@ public:
       if (*iter == 0u) {
         this->prop_type_d =+ increments;
       } else if (*iter != 1u)
-        stop("Values in the type of node should be either 0 or 1.");
+        throw std::invalid_argument("Values in the type of node should be either 0 or 1.");
       
     }
     
@@ -230,13 +234,5 @@ public:
     
   };
 };
-
-// class AphyloTree: public pruner::Tree {
-// public:
-//   pruner::Tree tree;
-//   std::shared_ptr< TreeData > data;
-//   AphyloTree() {};
-//   ~AphyloTree() {};
-// };
 
 #endif

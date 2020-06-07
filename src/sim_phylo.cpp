@@ -87,6 +87,10 @@ IntegerMatrix sim_fun_on_tree(
     fnames
     );
   
+  // Needed to clean up afterwards
+  mu[0u] = nullptr;
+  mu[1u] = nullptr;
+  
   return ans;
 }
 

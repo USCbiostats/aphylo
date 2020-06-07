@@ -13,7 +13,7 @@ inline void print_vector(const std::vector< T > & V) {
 #endif
 
 #ifndef H_PRUNER_TYPEDEFS
-#define H_PRUNER_TYPEDEFS
+#define H_PRUNER_TYPEDEFS 1
 
 //! @file typedefs.h
 
@@ -36,10 +36,6 @@ typedef std::vector< v_uint > vv_uint;
 
 //! A vector of logicals
 typedef std::vector< bool > v_bool;
-
-class TreeData;
-//! Shorthand for shared_ptr< TreeData >
-typedef std::shared_ptr< TreeData > sptr_treedata;
 
 // Auxiliar functions ----------------------------------------------------------
 template <class T>

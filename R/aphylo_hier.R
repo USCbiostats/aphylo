@@ -2,7 +2,16 @@
 #' @template estimates
 #' @param params0 Starting parameters.
 #' @param env Environment where to evaluate `model`.
+#' @param ...,multicore,nchains passed to [fmcmc::MCMC]
+#' @param classes An integer vector of length equal to the number of trees in
+#' the model.
+#' @param hyper_params If not specified, the function sets as initial hyper
+#' parameters equal to 10.
+#' @param verbose Logical scalar. When `TRUE` prints information.
+#' @param use_optim Logical, When true uses [stats::optim] as a starting point.
 #' @family parameter estimation
+#' @details The parameters `priors`, `check_informative`, and `reduced_pseq`
+#' are silently ignored in this function.
 #' @export
 aphylo_hier <- function(
   model,
@@ -14,7 +23,11 @@ aphylo_hier <- function(
   env          = parent.frame(),
   verbose      = TRUE,
   multicore    = FALSE,
-  nchains      = 1L
+  nchains      = 1L,
+  use_optim    = TRUE,
+  priors       = NULL,
+  check_informative = NULL,
+  reduced_pseq = NULL
   ) {
   
   # Retrieving the trees
@@ -110,28 +123,32 @@ aphylo_hier <- function(
   #   lb      = rep(.00001, ncol(params0)),
   #   ub      = k_ram$ub
   #   )
-  # Finding suitable starting point
-  if (verbose)
-    message("Trying to maximize using L-BFSG-B...")
   
-  start_point <- stats::optim(
-    par     = params0,
-    fn      = joint,
-    hprior  = hprior,
-    data.   = data.,
-    method  = "L-BFGS-B",
-    control = list(fnscale = -1),
-    lower   = .0001,
-    upper   = c(rep(.9999, Npar * Nclasses), rep(2e3, Npar * 2))
-  )
   
-  if (verbose)
-    message(sprintf(
-      "Optimization complete.\n  convergence: %i\n counts: %i\n message: %s",
-      start_point$convergence,
-      start_point$counts,
-      start_point$message
-      ))
+  if (use_optim) {
+    # Finding suitable starting point
+    if (verbose)
+      message("Trying to maximize using L-BFSG-B...")
+    start_point <- stats::optim(
+      par     = params0,
+      fn      = joint,
+      hprior  = hprior,
+      data.   = data.,
+      method  = "L-BFGS-B",
+      control = list(fnscale = -1),
+      lower   = .0001,
+      upper   = c(rep(.9999, Npar * Nclasses), rep(2e3, Npar * 2))
+    )
+    
+    if (verbose)
+      message(sprintf(
+        "Optimization complete.\n  convergence: %i\n counts: %i\n message: %s",
+        start_point$convergence,
+        start_point$counts,
+        start_point$message
+        ))
+  } else
+    start_point <- list(par = params0)
   
   if (verbose)
     message("Starting MCMC...")
@@ -186,6 +203,7 @@ aphylo_hier <- function(
       hprior    = hprior, 
       cl        = NULL,
       multicore = FALSE, 
+      nchains   = nchains,
       progress  = verbose,
       ...
     )
@@ -196,18 +214,22 @@ aphylo_hier <- function(
     assign("data.", data., envir = fmcmc::LAST_MCMC)
   }
   
+  # We treat all chains as mcmc.list
+  if (!inherits(ans, "mcmc.list"))
+    ans <- coda::mcmc.list(ans)
+  
   sol <- colMeans(do.call(rbind, ans))
   new_aphylo_estimates(
     par         = colMeans(do.call(rbind, ans)),
     hist        = ans,
     ll          = joint(sol, data. = data., hprior = hprior),
-    counts      = coda::niter(ans0),
+    counts      = coda::niter(ans),
     convergence = NA,
     message     = NA,
     fun         = joint,
     priors      = function(i) 1,
     dat         = LHS,
-    par0        = params0[1,],
+    par0        = params0,
     method      = "mcmc",
     varcovar    = stats::var(do.call(rbind, ans)),
     call        = match.call()
