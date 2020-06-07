@@ -5,6 +5,10 @@ new_aphylo_pruner. <- function(edgelist, A, types, nannotated) {
     .Call(`_aphylo_new_aphylo_pruner`, edgelist, A, types, nannotated)
 }
 
+sizeof_pruner <- function(ptr) {
+    .Call(`_aphylo_sizeof_pruner`, ptr)
+}
+
 .LogLike_pruner <- function(tree_ptr, mu_d, mu_s, psi, eta, Pi, verb = TRUE, check_dims = FALSE) {
     .Call(`_aphylo_LogLike_pruner`, tree_ptr, mu_d, mu_s, psi, eta, Pi, verb, check_dims)
 }
@@ -81,10 +85,6 @@ Tree_get_ann <- function(phy) {
 #' @export
 auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
-}
-
-approx_geodesic. <- function(edges, nsteps = 5e3L, undirected = TRUE, warn = FALSE) {
-    .Call(`_aphylo_approx_geodesic`, edges, nsteps, undirected, warn)
 }
 
 #' Matrix of states

@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <stdexcept>
 #include "pruner.hpp"
 using namespace Rcpp;
 
@@ -88,11 +89,45 @@ inline void root_node_pr(
   
 }
 
+/***
+ * Parameter type
+ * Is a vector that has C number of classes, and has the following
+ * functions:
+ * - operator() To get the data
+ * - operator[] To get the data, with boundary check
+ * 
+ * The data should be of type 
+ * - 
+ */
+class AphyloParameter {
+private:
+  unsigned int npar;
+  std::vector< double > p;
+public:
+  AphyloParameter() : npar(0u), p(0u) {};
+  ~AphyloParameter() {};
+  AphyloParameter(std::vector< double > p_) : npar(p_.size()), p(p_) {};
+  double operator()(unsigned int i) const;
+  double operator[](unsigned int i) const;
+};
+
+inline double AphyloParameter::operator()(unsigned int i) const {
+  if (i > npar)
+    throw std::logic_error("Exceeded the classes of parameters.");
+  
+  return p[i];
+}
+
+inline double AphyloParameter::operator[](unsigned int i) const {
+   return p[i];
+}
+
+
 /*******************************************************************************
 Definition of tree data 
 *******************************************************************************/
 
-class pruner::TreeData {
+class TreeData {
   
 public:
   
@@ -118,23 +153,27 @@ public:
   std::vector< pruner::vv_dbl* > MU;
   pruner::v_dbl eta, Pi;  
   
-  void set_mu_d(const pruner::v_dbl & mu_d_) {transition_mat(mu_d_, this->MU_d);return;}
-  void set_mu_s(const pruner::v_dbl & mu_s_) {transition_mat(mu_s_, this->MU_s);return;}
-  void set_psi(const pruner::v_dbl & psi_) {transition_mat(psi_, this->PSI);return;}
+  void set_mu_d(const pruner::v_dbl & mu_d_) {return transition_mat(mu_d_, this->MU_d);}
+  void set_mu_s(const pruner::v_dbl & mu_s_) {return transition_mat(mu_s_, this->MU_s);}
+  void set_psi(const pruner::v_dbl & psi_) {return transition_mat(psi_, this->PSI);}
   void set_eta(const pruner::v_dbl & eta_) {this->eta = eta_;return;}
   void  set_pi(double pi_) {root_node_pr(this->Pi, pi_, states);return;}
   
   // Set annotation
   void set_ann(const unsigned int i, const unsigned int j, unsigned int x) {
     
-    this->A[i][j] = x;
+    this->A[i][j] = x;  
     return;
     
   }
   
   // Destructor and constructor ------------------------------------------------
   ~TreeData() {};
-  TreeData(const pruner::vv_uint A_, const pruner::v_uint Ntype_, pruner::uint nannotated) : A(A_), types(Ntype_) {
+  TreeData(
+    const pruner::vv_uint A_,
+    const pruner::v_uint Ntype_,
+    pruner::uint nannotated
+    ) : A(A_), types(Ntype_) {
     
     // Initializing data
     // this->A       = A;
@@ -187,7 +226,7 @@ public:
       if (*iter == 0u) {
         this->prop_type_d =+ increments;
       } else if (*iter != 1u)
-        stop("Values in the type of node should be either 0 or 1.");
+        throw std::invalid_argument("Values in the type of node should be either 0 or 1.");
       
     }
     

@@ -156,8 +156,8 @@ set.seed(123)
 y <- cbind(sample(c(0,1), 20, replace = TRUE, prob = c(.8, .2)))
 a <- .3
 
-p0 <- mean(aphylo:::predict_random(1, y, diag(20), alpha = a))
-p1 <- aphylo:::prediction_score_rand(y, diag(20), a)
+p0 <- mean(aphylo:::predict_random(1, y, diag(20), alpha0 = a, alpha1 = 1-a))
+p1 <- aphylo:::prediction_score_rand(y, diag(20), alpha0 = a, alpha1 = 1-a)
 
 expect_equivalent(p0, p1, tol = 1e-1)
   

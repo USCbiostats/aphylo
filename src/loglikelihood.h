@@ -5,8 +5,8 @@
 #define APHYLO_LOGLIKELIHOOD_H 1
 
 void likelihood(
-    pruner::sptr_treedata D,
-    pruner::TreeIterator & n
+    TreeData * D,
+    pruner::TreeIterator<TreeData> & n
 ) {
   
 #ifdef DEBUG_LIKELIHOOD
@@ -114,6 +114,106 @@ void likelihood(
   return;
   
 }
+
+/**@brief This inherited class holds all the needed data.
+ * 
+ * The way it is now built is more efficient since R messes less than needed.
+ * Right now I have the slight impression that R is duplicating the data or
+ * doing something else.
+ * 
+ */
+class AphyloPruner: public pruner::Tree<TreeData> {
+public:
+  
+  TreeData D;
+  
+  AphyloPruner(
+    const pruner::vv_uint & A,
+    const pruner::v_uint  & Ntype,
+    const pruner::uint    & nannotated,
+    const pruner::v_uint  & source,
+    const pruner::v_uint  & target,
+    pruner::uint & res
+  ) : Tree<TreeData>(source, target, res), D(A, Ntype, nannotated) {
+    
+    // First things first, setting the Tree data and the likelihood function
+    this->args = &D;
+    this->fun  = likelihood;
+    
+    // Figuring out the corrected pseq; ------------------------------------------
+    
+    // This flags which to include
+    std::vector< bool > has_ann(A.size(), false);
+    
+    // This is a pointer to the set of offsprings. This is how we check which
+    // is leaf or not
+    const pruner::vv_uint * offspring = this->get_offspring_ptr();
+    
+    // This is the current POSTORDER sequence. We save it just in case
+    pruner::v_uint cur_pseq = this->get_postorder();
+    pruner::v_uint new_pseq;
+    new_pseq.reserve(cur_pseq.size());
+    
+    // We start iterating through the annotations
+    for (auto i = cur_pseq.begin(); i != cur_pseq.end(); ++i) {
+      
+      // First check if it is leaf or not
+      if ((offspring->at(*i).size()) == 0u) {
+        
+        // Checking annotations
+        unsigned int n9s = 0u;
+        for (unsigned int j = 0u; j < A[0u].size(); ++j) { 
+          if (A[*i][j] == 9u) {
+            ++n9s;
+            break;
+          }
+        }
+          
+        // At least has a single annotation!
+        if (n9s < A[0u].size()) {
+          has_ann[*i] = true;
+          new_pseq.push_back(*i);
+        }
+          
+      } else { // The case for interior nodes
+        
+        // We need to iterate through its offsprings
+        for (auto off = (offspring->at(*i)).begin(); off != (offspring->at(*i)).end(); ++off) 
+          // Any of its offspring has an annotation?
+          if (has_ann[*off]) {
+            has_ann[*i] = true;
+            new_pseq.push_back(*i);
+            break;
+          }
+          
+      }
+      
+    }
+    
+    // Just enough space
+    new_pseq.shrink_to_fit();
+    
+    // Resetting the pseq, only if it has nodes on it!
+    if (new_pseq.size() != 0u) {
+      res = this->set_postorder(new_pseq);
+      if (res != 0u)
+        throw std::logic_error("While resetting the POSTORDER.");
+    }
+    
+    // Freeing memory.
+    offspring = nullptr;
+    
+    return;
+    
+  };
+  
+  ~AphyloPruner() {
+    
+    this->args = nullptr;
+    
+  };
+  
+};
 
 #endif
 

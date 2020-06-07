@@ -5,8 +5,10 @@
 #ifndef H_PRUNER_TREEITERATOR_BONES
 #define H_PRUNER_TREEITERATOR_BONES
 
+template <typename Data_Type>
 class Tree;
 
+template <typename Data_Type = bool>
 class TreeIterator {
   
 private:
@@ -14,14 +16,14 @@ private:
   uint current_node;
   uint pos_in_pruning_sequence;
   
-  friend class Tree;
+  friend class Tree<Data_Type>;
 public:
   
-  Tree* tree;
+  Tree<Data_Type>* tree;
   
   ~TreeIterator() {};
   TreeIterator() {};
-  TreeIterator(Tree * tree);
+  TreeIterator(Tree<Data_Type> * tree);
   
   //! Begin of offpring `const_iterator` on the current node.
   v_uint::const_iterator begin_off() const;
@@ -48,6 +50,12 @@ public:
   
   //! Returns the id (index) of the current node
   uint id() const {return current_node;};
+  
+  //! Return the number of offsprings the current node has
+  int n_offspring() const;
+  
+  //! Return the number of parents the current node has
+  int n_parents() const;
   
   uint operator*() const {return current_node;};
   

@@ -1,11 +1,12 @@
 #ifndef H_PRUNER
 #include <memory>
+#include <functional>
 #include "typedefs.hpp"
 #include "treeiterator_bones.hpp"
 #endif
 
 #ifndef H_PRUNER_TREE_BONES
-#define H_PRUNER_TREE_BONES
+#define H_PRUNER_TREE_BONES 1
 
 #ifndef MAX_TREE_SIZE
 #define MAX_TREE_SIZE 50000
@@ -20,9 +21,6 @@
 /** Arguments to be passed to Tree::fun.
  * 
  */
-class TreeData;
-class Tree;
-class TreeIterator;
 
 
 //! Tree class 
@@ -34,16 +32,17 @@ class TreeIterator;
  * - `fun`
  */
 
+template <typename Data_Type = bool>
 class Tree {
   
-private:
+protected:
   bool is_dag_(int i = -1, int caller = -1, bool up_search = false);
   void postorder_(uint i);
   void postorder();
   uint get_dist_tip2root_(uint start, uint count);
-  TreeIterator iter;
+  TreeIterator<Data_Type> iter;
   
-protected:
+
   //! Each nodes' parents.
   vv_uint parents;
   //! Each nodes' offspring.
@@ -71,13 +70,13 @@ protected:
   v_uint TIPS;
   v_uint DIST_TIPS2ROOT;
   
-  friend class TreeData;
-  friend class TreeIterator;
+  friend Data_Type;
+  friend class TreeIterator< Data_Type >;
   
 public:
   
   //! Arbitrary set of arguments
-  sptr_treedata args;
+  Data_Type * args = nullptr;
   
   //! Callable function during the the tree traversal
   /**
@@ -86,7 +85,7 @@ public:
    * on the current node. The argument of class TreeIterator allows them to
    * get that information by accessing the member function TreeIterator::id.
    */
-  std::function<void(sptr_treedata, TreeIterator&)> fun;
+  std::function<void(Data_Type *, TreeIterator<Data_Type>&)> fun;
   
   //! Evaluates the function by passing the arguments and the iterator
   void eval_fun() {
@@ -98,7 +97,10 @@ public:
   };
    
   // Creation ------------------------------------------------------------------
-  ~Tree() {};
+  ~Tree() {
+    args = nullptr;
+    return;
+  };
   Tree() {};
   //! Creating method using parents and offpring
   /**
@@ -137,6 +139,12 @@ public:
   uint n_edges()          const {return this->N_EDGES;};
   //! Return the number of tips defined as nodes with no offspring.
   uint n_tips() const;
+  
+  //! Return the number of offsprings a given node has
+  int n_offspring(uint i) const;
+  
+  //! Return the number of parents a given node has
+  int n_parents(uint i) const;
   
   vv_uint get_edgelist()  const;
   

@@ -123,11 +123,8 @@ aphylo_mcmc <- function(
     control$cl <- cl_object
     dat0 <- model$dat
     
-  } else {
-    
+  } else 
     dat0 <- new_aphylo_pruner(model$dat)
-    
-  }
   
   # Running the MCMC
   ans <- do.call(

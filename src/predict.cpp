@@ -1,27 +1,28 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include "misc.h"
 using namespace Rcpp;
 
-// [[Rcpp::depends(RcppArmadillo)]]
-
 // [[Rcpp::export(name = ".posterior_prob", rng=false)]]
 List posterior_prob(
-    const arma::mat  & Pr_postorder,
+    const NumericMatrix  & Pr_postorder,
     const std::vector< unsigned int > & types,
-    const arma::vec  & mu_d,
-    const arma::vec  & mu_s,
+    const NumericVector  & mu_d,
+    const NumericVector  & mu_s,
     const double     & Pi,
-    const arma::ivec & pseq,
+    const IntegerVector & pseq,
     const List       & offspring
 ) {
   
   // Creating output objects
-  arma::mat Pr_preorder(Pr_postorder.n_rows, Pr_postorder.n_cols, arma::fill::zeros);
-  arma::ivec preorder(pseq.n_elem);
-  arma::vec Posterior(preorder.n_elem);
+  NumericMatrix Pr_preorder(Pr_postorder.nrow(), Pr_postorder.ncol());
+  for (auto iter = Pr_preorder.begin(); iter != Pr_preorder.end(); ++iter)
+    *iter = 0.0;
+  
+  IntegerVector preorder(pseq.size());
+  NumericVector Posterior(preorder.size());
   
   // Creating Matrix of probabilities
-  std::vector< const arma::vec * > mu(2);
+  std::vector< const NumericVector * > mu(2);
   mu[0] = & mu_d;
   mu[1] = & mu_s;
   
@@ -29,7 +30,7 @@ List posterior_prob(
   std::reverse_copy(pseq.begin(), pseq.end(), preorder.begin());
   
   // Iterators definitions
-  typedef arma::ivec::const_iterator iviter;
+  typedef IntegerVector::const_iterator iviter;
   typedef IntegerVector::const_iterator Riviter;
   
   // Starting with the root node

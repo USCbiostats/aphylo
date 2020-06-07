@@ -1,17 +1,17 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 using namespace Rcpp;
-
-// [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export(rng=false)]]
 IntegerMatrix fast_table(
-    const arma::ivec & x
+    const IntegerVector & x
   ) {
 
-  arma::ivec ids = unique(x);
+  IntegerVector ids = unique(x);
+  std::sort(ids.begin(), ids.end());
   IntegerMatrix ans(ids.size(), 2u);
-  arma::imat x0(x.size(), 1u);
-  x0.col(0u) = x;
+  std::vector< int > x0(x.size());
+  for (unsigned int i = 0u; i < x0.size(); ++i)
+    x0[i] = x.at(i);
   
   unsigned int N = ids.size(), i, j;
   
@@ -23,14 +23,14 @@ IntegerMatrix fast_table(
     
     // Looping through xsize
     j = 0u;
-    while (j < x0.n_rows) {
+    while (j < x0.size()) {
       
       // If id of i is in x0, then add it!
-      if (x0.at(j, 0u) == ids.at(i)) {
+      if (x0[j] == ids.at(i)) {
         
         // Incrementing counter and removing the row
         ++ans.at(i, 1u);
-        x0.shed_row(j);
+        x0.erase(x0.begin() + j);
         
       } else j++;
     }
@@ -40,14 +40,15 @@ IntegerMatrix fast_table(
 }
 
 // [[Rcpp::export(rng=false)]]
-arma::uvec fast_table_using_labels(
-    const arma::ivec & x,
-    const arma::ivec & ids
+IntegerVector fast_table_using_labels(
+    const IntegerVector & x,
+    const IntegerVector & ids
 ) {
   
-  arma::imat x0(x.size(), 1u);
-  arma::uvec ans(ids.size());
-  x0.col(0u) = x;
+  std::vector< int > x0(x.size());
+  for (unsigned int i = 0u; i < x0.size(); ++i)
+    x0[i] = x.at(i);
+  IntegerVector ans(ids.size());
   
   unsigned int N = ids.size(), i, j;
   
@@ -58,15 +59,15 @@ arma::uvec fast_table_using_labels(
     
     // Looping through xsize
     j = 0u;
-    while (j < x0.n_rows) {
+    while (j < x0.size()) {
       
       // If id of i is in x0, then add it!
-      if (x0.at(j, 0u) == ids.at(i)) {
+      if (x0[j] == ids.at(i)) {
         
         // Incrementing counter and removing the row
         // that we just counted
         ++ans.at(i);
-        x0.shed_row(j);
+        x0.erase(x0.begin() + j);
         
       } else ++j;
     }
@@ -90,3 +91,5 @@ ListOf<IntegerVector> list_offspring(IntegerMatrix E, int n) {
   
   return wrap(O);
 }
+
+

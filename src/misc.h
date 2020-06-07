@@ -1,23 +1,15 @@
-// [[Rcpp::depends(RcppArmadillo)]]
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 
 #ifndef APHYLO_MISC_H
 #define APHYLO_MISC_H
 
 using namespace Rcpp;
 
-arma::umat approx_geodesic(
-    const arma::umat & edges,
-    unsigned int nsteps = 1e3,
-    bool undirected = true,
-    bool warn = false
+NumericMatrix prob_mat(
+    const NumericVector & pr
 );
 
-arma::mat prob_mat(
-    const arma::vec & pr
-);
-
-arma::imat states(
+IntegerMatrix states(
     int P
 );
 

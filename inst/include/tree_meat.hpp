@@ -4,16 +4,17 @@
 #include "tree_bones.hpp"
 #include "treeiterator_bones.hpp"
 #include "treeiterator_meat.hpp"
-#include <memory> // For the std::shared_ptr
+// #include <memory> // For the std::shared_ptr
 #endif
 
 #ifndef H_PRUNER_TREE_MEAT
 #define H_PRUNER_TREE_MEAT
 
 // Pruning ---------------------------------------------------------------------
-
+ 
 // Function to get the pre and post order
-inline void Tree::postorder() {
+template <typename Data_Type>
+inline void Tree<Data_Type>::postorder() {
   
   // If it is not initialized
   if (this->POSTORDER.size() == 0u)
@@ -28,7 +29,8 @@ inline void Tree::postorder() {
   return;
 }
 
-inline void Tree::postorder_(uint i) {
+template <typename Data_Type>
+inline void Tree<Data_Type>::postorder_(uint i) {
   
   // Setting the state to visited
   this->visited[i] = true;
@@ -61,7 +63,8 @@ inline void Tree::postorder_(uint i) {
 }
 
 // Returns an edgelist in the form a vector of two uint vectors.
-inline vv_uint Tree::get_edgelist() const {
+template <typename Data_Type>
+inline vv_uint Tree<Data_Type>::get_edgelist() const {
   
   vv_uint res(2u);
   
@@ -81,7 +84,8 @@ inline vv_uint Tree::get_edgelist() const {
   
 }
 
-inline void Tree::print(bool details) const {
+template <typename Data_Type>
+inline void Tree<Data_Type>::print(bool details) const {
   
   // Basic information
   printf(
@@ -140,7 +144,8 @@ inline void Tree::print(bool details) const {
 // 2: MAX_TREE_SIZE reached.
 // 3: Disconnected tree
 // 4: Not a Dag.
-inline Tree::Tree(const v_uint & parents_, const v_uint & offspring_, uint & out) {
+template <typename Data_Type>
+inline Tree<Data_Type>::Tree(const v_uint & parents_, const v_uint & offspring_, uint & out) {
   
   // If different sizes, then it shouldn't work
   if (parents_.size() != offspring_.size()) {
@@ -184,7 +189,7 @@ inline Tree::Tree(const v_uint & parents_, const v_uint & offspring_, uint & out
   this->postorder();
   
   // Initializing iterator 
-  this->iter = TreeIterator(this);
+  this->iter = TreeIterator<Data_Type>(this);
   
   // Some checks
   if (!this->is_connected()) {
@@ -218,7 +223,9 @@ inline Tree::Tree(const v_uint & parents_, const v_uint & offspring_, uint & out
 
 // A recursive function to check whether the tree is a DAG or not. -------------
 typedef v_uint::const_iterator v_uint_iter;
-inline bool Tree::is_dag() {
+
+template <typename Data_Type>
+inline bool Tree<Data_Type>::is_dag() {
   
   bool res = this->is_dag_();
   this->reset_visited();
@@ -227,8 +234,8 @@ inline bool Tree::is_dag() {
   
 }
 
-
-inline bool Tree::is_dag_(int i, int caller, bool up_search) {
+template <typename Data_Type>
+inline bool Tree<Data_Type>::is_dag_(int i, int caller, bool up_search) {
   
   // For the first iteration
   if (i < 0) 
@@ -244,7 +251,7 @@ inline bool Tree::is_dag_(int i, int caller, bool up_search) {
     
 #ifdef DEBUG_TREE
     std::printf(
-      "Tree::is_dag() @ parents   (i, caller, *n, up_search): (%i, %i, %i, %i)\n",
+      "Tree<Data_Type>::is_dag() @ parents   (i, caller, *n, up_search): (%i, %i, %i, %i)\n",
       i, caller, *n, up_search
     );
 #endif
@@ -267,7 +274,7 @@ inline bool Tree::is_dag_(int i, int caller, bool up_search) {
     
 #ifdef DEBUG_TREE
     std::printf(
-      "Tree::is_dag() @ offspring (i, caller, *n, up_search): (%i, %i, %i, %i)\n",
+      "Tree<Data_Type>::is_dag() @ offspring (i, caller, *n, up_search): (%i, %i, %i, %i)\n",
       i, caller, *n, up_search
     );
 #endif
@@ -290,7 +297,8 @@ inline bool Tree::is_dag_(int i, int caller, bool up_search) {
 }
 
 // The preorder is just the post order reversed
-inline v_uint Tree::get_preorder() const {
+template <typename Data_Type>
+inline v_uint Tree<Data_Type>::get_preorder() const {
   
   v_uint res = this->get_postorder();
   std::reverse(res.begin(), res.end());
@@ -298,7 +306,8 @@ inline v_uint Tree::get_preorder() const {
   
 }
 
-inline uint Tree::get_dist_tip2root_(uint i, uint count) {
+template <typename Data_Type>
+inline uint Tree<Data_Type>::get_dist_tip2root_(uint i, uint count) {
   
   // If we are already in a root node, then return with the reached count
   if (parents[i].size() == 0u)
@@ -331,7 +340,8 @@ inline uint Tree::get_dist_tip2root_(uint i, uint count) {
   return count;
 }
 
-inline v_uint Tree::get_dist_tip2root() {
+template <typename Data_Type>
+inline v_uint Tree<Data_Type>::get_dist_tip2root() {
   
   if (this->DIST_TIPS2ROOT.size() == 0u) {
     
@@ -349,7 +359,8 @@ inline v_uint Tree::get_dist_tip2root() {
 
 #define TOTAL(a) (a)->offspring.size()
 
-inline uint Tree::set_postorder(const v_uint & POSTORDER_, bool check) { 
+template <typename Data_Type>
+inline uint Tree<Data_Type>::set_postorder(const v_uint & POSTORDER_, bool check) { 
   
   // Checking the range of the data
   if (check) {
@@ -370,7 +381,8 @@ inline uint Tree::set_postorder(const v_uint & POSTORDER_, bool check) {
   return 0u;
 }
 
-inline void Tree::prune_postorder() {
+template <typename Data_Type>
+inline void Tree<Data_Type>::prune_postorder() {
   
   // Set the head in the first node of the sequence
   this->iter.bottom();
@@ -386,7 +398,8 @@ inline void Tree::prune_postorder() {
   
 }
 
-inline void Tree::prune_postorder(v_uint & seq) {
+template <typename Data_Type>
+inline void Tree<Data_Type>::prune_postorder(v_uint & seq) {
 
   // Let's reset the sequence
   v_uint OLDPOSTORDER = POSTORDER;
@@ -409,7 +422,8 @@ inline void Tree::prune_postorder(v_uint & seq) {
   
 }
 
-inline void Tree::prune_preorder() {
+template <typename Data_Type>
+inline void Tree<Data_Type>::prune_preorder() {
   
   // Set the head in the first node of the sequence
   this->iter.top();
@@ -425,7 +439,8 @@ inline void Tree::prune_preorder() {
   
 }
 
-inline void Tree::prune_preorder(v_uint & seq) {
+template <typename Data_Type>
+inline void Tree<Data_Type>::prune_preorder(v_uint & seq) {
   
   // Let's reset the sequence
   v_uint OLDPOSTORDER = POSTORDER;
@@ -448,7 +463,8 @@ inline void Tree::prune_preorder(v_uint & seq) {
   
 }
 
-inline uint Tree::n_tips() const {
+template <typename Data_Type>
+inline uint Tree<Data_Type>::n_tips() const {
   
   uint count = 0u;
   for (auto i = this->offspring.begin(); i != offspring.end(); ++i)
@@ -457,6 +473,24 @@ inline uint Tree::n_tips() const {
   
   return count;
   
+}
+
+template <typename Data_Type>
+inline int Tree<Data_Type>::n_offspring(uint i) const {
+  
+  if (i < this->offspring.size()) {
+    return this->offspring.at(i).size();
+  }
+  return -1;
+}
+
+template <typename Data_Type>
+inline int Tree<Data_Type>::n_parents(uint i) const {
+  
+  if (i < this->parents.size()) {
+    return this->parents.at(i).size();
+  }
+  return -1;
 }
 
 #endif

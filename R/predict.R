@@ -331,7 +331,7 @@ predict_pre_order.aphylo_estimates <- function(
         Pi           = Pi,
         pseq         = x$dat$pseq,
         offspring    = x$dat$offspring
-      )$posterior[i,]
+      )$posterior[i]
       
       # Original value
       Tree_set_ann(dots$dat, i - 1L, 0L, x$dat$tip.annotation[i, j])
