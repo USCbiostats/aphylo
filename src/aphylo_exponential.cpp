@@ -19,6 +19,10 @@ using Map = std::unordered_map< T , D, H >;
 template <typename T>
 using BHash = barray::vecHasher< T >;
 
+/**
+ * Compares two vectors of type T and returns `true` if the norm between
+ * the two is smaller than `eps`.
+ */
 template <typename T>
 bool equal(const Vec<T> & a, const Vec<T> & b, double eps = 1e-10) {
   
@@ -31,6 +35,38 @@ bool equal(const Vec<T> & a, const Vec<T> & b, double eps = 1e-10) {
   
   return (sqrt(diff) < eps)?true:false;
   
+}
+
+inline void as_phylo_key(
+    Vec<double> & res,
+    const unsigned int & noff,
+    const Vec<bool> & states,
+    const Vec<double> & blengths
+) {
+  
+  // Vec<double> res(1u + blengths.size(), 0.0);
+  res[0u] = noff * pow(10, states.size());
+  for (unsigned int i = 0u; i < states.size(); ++i)
+    if (states[i])
+      res[0u] += pow(10, i);
+    
+  std::copy(blengths.begin(), blengths.end(), res.begin() + 1);
+      
+  return;
+  
+}
+
+// [[Rcpp::export]]
+NumericVector aspk(
+    const unsigned int & noff,
+    const Vec<bool> & states,
+    const Vec<double> & blengths
+    ) {
+  
+  Vec<double> res(1 + blengths.size(), 0.0);
+  as_phylo_key(res, noff, states, blengths);
+  
+  return Rcpp::wrap(res);
 }
 
 // Brief declaration since banks should be friends of ingredients
@@ -54,9 +90,14 @@ protected:
   double numerator   = 0.0;
   double denominator = 0.0;
   double temp = 0.0;
+  
+  unsigned int nqueries = 0u;
+  
   friend class bank;
+  
 public:
-  ingredients() : weights(0u), params(0u), statmat(0u, empty_dbl) {};
+  ingredients() :
+  weights(0u), params(0u), statmat(0u, empty_dbl) {};
   
   ingredients(
     const Vec< double > & W,
@@ -116,21 +157,32 @@ typedef std::unordered_map< Vec<double>, ingredients, BHash< double > > ingredie
 class bank {
 protected:
   
-  Vec< std::unordered_map< Vec<bool>, ingredients_map, BHash< bool > >> data;
+  ingredients_map data;
+  Vec<double> tmpkey;
   // Probably will need to add a list of statistics that needs to be
   // passed to the actual counter function.
-  // Vec< phylocounters::PhyloCounter > x;
+  Vec< phylocounters::PhyloCounter > counters;
   
 public:
   
-  bank() : data(0u) {};
-  ~bank() {};
+  bank() : data(0u), tmpkey(2u, 0.0), counters(0u) {};
+  ~bank() {
+    for (auto iter = counters.begin(); iter != counters.end(); ++iter) {
+      delete iter->data;
+      iter->data = nullptr;
+    }
+  };
   
   void add(
       const unsigned int & noff,
       const Vec<bool> & state,
       const Vec<double> & blength
   );
+  
+  void add_counter(const phylocounters::PhyloCounter & counter);
+  
+  Vec< unsigned int > * counter_data_ptr(unsigned int i);
+  
   
   void print() const;
   
@@ -148,38 +200,17 @@ inline void bank::add(
   if (noff == 0u)
     throw std::logic_error("Not supported for zero offspring!.");
   
+  // Generating double vector key for the hash map
+  if (tmpkey.size() != (1u + blength.size()))
+    tmpkey.resize(1u+blength.size());
+  as_phylo_key(tmpkey, noff, state, blength);
   
+   
   // Is it in the boundary and is non zero?
-  unsigned int noff_less1 = noff - 1u;
-  if ((noff_less1 < data.size()) && (!data[noff_less1].empty())) {
-    
-    // Is it there? 
-    auto state_loc = data[noff_less1].find(state); 
-    if (state_loc != data[noff_less1].end()) {
-      
-      // Is it in the needed branch, if already in there, meaning that it is not
-      // at the end fo it, we can safely return.
-      if (state_loc->second.find(blength) != data[noff_less1][state_loc->first].end()) {
-        return;
-      }
-      
-    } else {
-      ingredients_map empty_ingredient(0u);
-      data[noff_less1][state] = empty_ingredient;
-    }
-      
-  } else {
-    // Not even containing it
-    if (data.size() < noff)
-      data.resize(noff);
-    
-    // Adding the first map
-    Map< Vec<bool>, ingredients_map, BHash<bool>> empty_map(0u);
-    data[noff_less1] = empty_map;
-    
-    // Adding the second map
-    ingredients_map empty_ingredient(0u);
-    data[noff_less1][state] = empty_ingredient;
+  auto key_iter = data.find(tmpkey);
+  if (key_iter != data.end()) {
+    key_iter->second.nqueries++;
+    return;
   }
   
   // Here is the bulk of the work, we need to calculate the powerset of the
@@ -191,8 +222,8 @@ inline void bank::add(
   barray::Support< phylocounters::PhyloArray, Vec< unsigned int > > S(&Array);
   
   // Adding a few statistics
-  S.add_counter(phylocounters::overall_gains);
-  S.add_counter(phylocounters::overall_loss);
+  for (auto iter = counters.begin(); iter != counters.end(); ++iter)
+    S.add_counter(*iter);
   
   // Computing and retrieving
   S.calc(0u, true);
@@ -208,46 +239,44 @@ inline void bank::add(
     W.push_back(iter->second);
   }
   
-  data[noff_less1][state][blength] = ingredients(W, StatMat, StatMat[0u].size());
-  
-  std::cout << "Adding a new set of stats " << std::endl;
+  data[tmpkey] = ingredients(W, StatMat, StatMat[0u].size());
   
   return;
   
 }
 
+inline Vec< unsigned int > * bank::counter_data_ptr(unsigned int i) {
+  return counters.at(i).data;
+}
+
+inline void bank::add_counter(const phylocounters::PhyloCounter & counter) {
+  counters.push_back(counter);
+  counters[counters.size()].data = new Vec< unsigned int >({0u});
+  return;
+};
+
 inline void bank::print() const {
   
   unsigned int n = 0u;
+  unsigned int n_unique = 0u;
   
   // Iterating on number of offspring
   for (auto iter1 = data.begin(); iter1 != data.end(); ++iter1) {
+    std::cout << "Key: [";
+    ++n;
+    for (auto iter2 = iter1->first.begin(); iter2 != iter1->first.end(); ++iter2)
+      std::cout << *iter2 <<", ";
+    std::cout << "], # elements: " << iter1->second.weights.size() <<
+      " # queried: " << iter1->second.nqueries << std::endl;
     
-    std::cout << "Noffspring: " << ++n << " total records: " << iter1->size() << std::endl;
-    if (iter1->size() == 0u)
-      continue;
-    else
-      
-    for (auto iter2 = iter1->begin(); iter2 != iter1->end(); ++iter2) {
-      
-      std::cout << "  Listing records for state: [";
-      for (auto states_i = iter2->first.begin(); states_i != iter2->first.end(); ++states_i) 
-        std::cout << ((*states_i)? 1 : 0) << ", ";
-
-      std::cout << "],  total records " << iter2->second.size() << std::endl;
-      for (auto states_i = iter2->second.begin(); states_i != iter2->second.end(); ++states_i) {
-        
-        std::cout << "    Listing records for state: [";
-        for (auto len_i = states_i->first.begin(); len_i != states_i->first.end(); ++len_i) 
-          std::cout << *len_i << ", ";
-        
-        std::cout << "] the stats have: " << states_i->second.weights.size() <<
-          " many unique stats" << std::endl;
-        
-      }
-        
-    }
+    // Overall counters
+    n        += iter1->second.nqueries;
+    n_unique += iter1->second.weights.size();
+    
   }
+  std::cout << "Total entries parsed: " << n << " with " << 
+    n_unique << " unique entries compared to " << data.size() <<
+      " ingredients." << std::endl;
   
   return;
   
@@ -262,7 +291,27 @@ int testing_a_bank(
     const std::vector< std::vector< double > > & lenghts
     ) {
   
+  // Creating the bank
   Rcpp::XPtr< bank > ptr(new bank(), true);
+  
+  // Adding some model terms
+  ptr->add_counter(phylocounters::overall_gains);
+  ptr->add_counter(phylocounters::overall_loss);
+  ptr->add_counter(phylocounters::longest);
+
+  // Adding one per function, and the covevolve
+  for (unsigned int i = 0u; i < states.size(); ++i) {
+    ptr->add_counter(phylocounters::gains);
+    ptr->counter_data_ptr(3u + i)->operator[](0u) = i;
+    
+    // Co-gain
+    for (unsigned int j = 0u; j < i; ++j) {
+      if (i == j)
+        continue;
+      
+    }
+  }
+  
   for (unsigned int i = 0u; i < noff.size(); ++i)
     ptr->add( (unsigned int) noff[i], states[i], lenghts[i]);
   
@@ -274,13 +323,22 @@ int testing_a_bank(
 /***R
 
 # Generating some data
-nstates <- 20
+nstates <- 1000
 nfuns   <- 4
 set.seed(5544)
 noff    <- sample.int(2, nstates, TRUE) + 1
 states  <- replicate(nstates, as.logical(sample.int(2, nfuns, TRUE) - 1), simplify = FALSE)
-lenghts <- lapply(noff, runif)
 
+# Random branch length
+lenghts <- lapply(noff, runif)
+testing_a_bank(noff, states, lenghts)
+
+# Ranked branch length
+lenghts <- lapply(lenghts, order)
+testing_a_bank(noff, states, lenghts)
+
+# No differences on branch length
+lenghts <- lapply(noff, function(i) rep(1, i))
 testing_a_bank(noff, states, lenghts)
 
 */
