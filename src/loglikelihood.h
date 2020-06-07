@@ -1,4 +1,4 @@
-#include "pruner.hpp"
+#include "pruner/pruner.hpp"
 #include "TreeData.hpp" // TreeData definition
 
 #ifndef APHYLO_LOGLIKELIHOOD_H
