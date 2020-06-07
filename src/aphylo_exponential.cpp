@@ -108,9 +108,15 @@ public:
   ~ingredients() {};
   
   double probability(
-    const Vec< double > & par,
-    const Vec< double > & target
-    );
+      const Vec< double > & par,
+      const Vec< double > & target
+  );
+  
+  // Getters
+  const Vec<double> * get_weights() const {return &weights;};
+  const Vec<double> * get_params() const {return &params;};
+  const Vec<Vec<double>> * get_statmat() const {return &statmat;};
+  
 };
 
 Vec<double> ingredients::empty_dbl = {};
@@ -161,29 +167,36 @@ protected:
   Vec<double> tmpkey;
   // Probably will need to add a list of statistics that needs to be
   // passed to the actual counter function.
-  Vec< phylocounters::PhyloCounter > counters;
+  // Vec< phylocounters::PhyloCounter > counters;
   
 public:
   
-  bank() : data(0u), tmpkey(2u, 0.0), counters(0u) {};
+  bank() : data(0u), tmpkey(2u, 0.0) {};
   ~bank() {
-    for (auto iter = counters.begin(); iter != counters.end(); ++iter) {
-      delete iter->data;
-      iter->data = nullptr;
-    }
+    // for (auto iter = counters.begin(); iter != counters.end(); ++iter) {
+    //   delete iter->data;
+    //   iter->data = nullptr;
+    // }
   };
-  
+
+  // Query functions
+  unsigned int size() const {return data.size();};
+
+  const ingredients_map::const_iterator begin() const {return data.begin();};
+  const ingredients_map::const_iterator end() const {return data.end();};
+
+  // Manipulation functions
   void add(
       const unsigned int & noff,
       const Vec<bool> & state,
       const Vec<double> & blength
   );
   
-  void add_counter(const phylocounters::PhyloCounter & counter);
+  // void add_counter(const phylocounters::PhyloCounter & counter);
+
+  // Vec< unsigned int > * counter_data_ptr(unsigned int i);
   
-  Vec< unsigned int > * counter_data_ptr(unsigned int i);
-  
-  
+  // Misc
   void print() const;
   
 };
@@ -222,14 +235,27 @@ inline void bank::add(
   barray::Support< phylocounters::PhyloArray, Vec< unsigned int > > S(&Array);
   
   // Adding a few statistics
-  for (auto iter = counters.begin(); iter != counters.end(); ++iter)
-    S.add_counter(*iter);
+  // Adding some model terms
+  S.add_counter(phylocounters::overall_gains);
+  S.add_counter(phylocounters::overall_loss);
   
+  // Longest branch gains a function
+  phylocounters::PhyloCounter count2 = phylocounters::longest;
+  count2.data = new Vec< unsigned int >({});
+  
+  // // Co-evol of functions
+  // Vec< phylocounters::PhyloCounter > coevolve
+  // for (unsigned int i = 0u; i < state.size(); ++i) {
+  //   
+  // }
+
   // Computing and retrieving
   S.calc(0u, true);
   
   delete Array.data;
+  delete count2.data;
   Array.data = nullptr;
+  count2.data = nullptr;
   
   // Now, iterating through the data to generate the ingredients
   Vec< double > W(0u);
@@ -245,15 +271,15 @@ inline void bank::add(
   
 }
 
-inline Vec< unsigned int > * bank::counter_data_ptr(unsigned int i) {
-  return counters.at(i).data;
-}
-
-inline void bank::add_counter(const phylocounters::PhyloCounter & counter) {
-  counters.push_back(counter);
-  counters[counters.size()].data = new Vec< unsigned int >({0u});
-  return;
-};
+// inline Vec< unsigned int > * bank::counter_data_ptr(unsigned int i) {
+//   return counters.at(i).data;
+// }
+// 
+// inline void bank::add_counter(const phylocounters::PhyloCounter & counter) {
+//   counters.push_back(counter);
+//   counters[counters.size() - 1u].data = new Vec< unsigned int >({0u, 0u});
+//   return;
+// };
 
 inline void bank::print() const {
   
@@ -285,7 +311,7 @@ inline void bank::print() const {
 #endif
 
 // [[Rcpp::export]]
-int testing_a_bank(
+List testing_a_bank(
     const std::vector< int > & noff,
     const std::vector< std::vector< bool > > & states,
     const std::vector< std::vector< double > > & lenghts
@@ -294,37 +320,46 @@ int testing_a_bank(
   // Creating the bank
   Rcpp::XPtr< bank > ptr(new bank(), true);
   
-  // Adding some model terms
-  ptr->add_counter(phylocounters::overall_gains);
-  ptr->add_counter(phylocounters::overall_loss);
-  ptr->add_counter(phylocounters::longest);
-
-  // Adding one per function, and the covevolve
-  for (unsigned int i = 0u; i < states.size(); ++i) {
-    ptr->add_counter(phylocounters::gains);
-    ptr->counter_data_ptr(3u + i)->operator[](0u) = i;
-    
-    // Co-gain
-    for (unsigned int j = 0u; j < i; ++j) {
-      if (i == j)
-        continue;
-      
-    }
-  }
-  
   for (unsigned int i = 0u; i < noff.size(); ++i)
     ptr->add( (unsigned int) noff[i], states[i], lenghts[i]);
   
   ptr->print();
   
-  return 0;
+  // Collecting the results
+  Rcout << "Getting the result" << std::endl;
+  List res(ptr->size());
+  unsigned int i = 0u;
+  for (auto iter = ptr->begin(); iter != ptr->end(); ++iter) {
+    
+    const ingredients * tmp = &iter->second;
+    NumericMatrix statmat(
+        tmp->get_statmat()->size(),
+        tmp->get_params()->size()
+        );
+    
+    unsigned int nrow = 0u;
+    for (auto entry = tmp->get_statmat()->begin(); entry != tmp->get_statmat()->end(); ++entry) {
+      for (unsigned int ncol = 0u; ncol < statmat.ncol(); ++ncol)
+        statmat(nrow, ncol) = entry->operator[](ncol);
+      nrow++;
+    }
+    
+    res[i++] = List::create(
+      _["key"]     = wrap(iter->first),
+      _["weights"] = wrap((*tmp->get_weights())),
+      _["statmat"] = clone(statmat)
+    );
+    
+  }
+  
+  return res;
 }
 
 /***R
 
 # Generating some data
-nstates <- 1000
-nfuns   <- 4
+nstates <- 100
+nfuns   <- 2
 set.seed(5544)
 noff    <- sample.int(2, nstates, TRUE) + 1
 states  <- replicate(nstates, as.logical(sample.int(2, nfuns, TRUE) - 1), simplify = FALSE)
