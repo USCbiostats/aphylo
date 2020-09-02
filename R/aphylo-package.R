@@ -70,6 +70,8 @@ release_questions <- function() {
 
 #' Statistical Inference in Annotated Phylogenetic Trees
 #' 
+#' Statistical Inference in Annotated Phylogenetic Trees
+#' 
 #' @docType package
 #' @name aphylo-package
 #' 

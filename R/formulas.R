@@ -296,20 +296,20 @@ validate_parameters <- function(fm, params) {
   } else {
     
     # Retrieving name of the parameters
-    pnames <- switch(
-      class(params),
-      matrix = colnames(params),
+    pnames <- if (inherits(params, "matrix"))
+      colnames(params)
+    else
       names(params)
-      )
     
     # Checking length
     if (!length(pnames)) {
       
       # If unnamed, are we giving enough information?
-      npars <- switch (class(params),
-        matrix = ncol(params),
+      npars <- if (inherits(params, "matrix"))
+        ncol(params)
+      else
         length(params)
-      )
+      
       if (npars != length(vars))
         stop("The initial parameters have different length than specified in ",
              "the model.", call.=FALSE)

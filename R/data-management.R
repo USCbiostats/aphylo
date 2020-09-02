@@ -155,10 +155,31 @@ new_aphylo.phylo <- function(
     stop("The number of `node.annotation` differs with the number of internal nodes in `tree`.",
          call. = FALSE)
   
-  if (is.null(tip.type))
+  if (is.null(tip.type)) {
     tip.type <- integer(ape::Ntip(tree))
-  if (is.null(node.type))
+  } else {
+    
+    tip.type <- as.vector(tip.type)
+    if (length(tip.type) != ape::Ntip(tree))
+      stop(
+        "The provided -tip.type- has not the same length as the number of tips",
+        " in the tree. The actual length should be ", ape::Ntip(tree),
+           call. = FALSE)
+    
+  }
+  
+  if (is.null(node.type)) {
     node.type <- integer(ape::Nnode(tree))
+  } else {
+    
+    node.type <- as.vector(node.type)
+    if (length(node.type) != ape::Nnode(tree))
+      stop(
+        "The provided -node.type- has not the same length as the number of tips",
+        " in the tree. The actual length should be ", ape::Nnode(tree),
+           call. = FALSE)
+    
+  }
   
   # Returning
   as_aphylo(

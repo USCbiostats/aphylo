@@ -12,7 +12,7 @@ sim_tree(n, edge.length = stats::runif)
 \item{edge.length}{A Function. Used to set the length of the edges.}
 }
 \value{
-An object of class \link[ape:phylo]{ape::phylo} with the edgelist as a postorderd,
+An object of class \link[ape:read.tree]{ape::phylo} with the edgelist as a postorderd,
 \code{node.label} and \code{edge.length}.
 }
 \description{

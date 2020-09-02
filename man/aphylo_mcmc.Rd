@@ -41,7 +41,7 @@ The function is a wrapper of \code{\link[fmcmc:MCMC]{fmcmc::MCMC()}}.
 \details{
 Methods \code{\link[base:print]{base::print()}}, \code{\link[base:summary]{base::summary()}}, \link[stats:coef]{stats::coef}, \code{\link[stats:window]{stats::window()}},
 \code{\link[stats:vcov]{stats::vcov()}}, \code{\link[stats:logLik]{stats::logLik()}}, \link[=predict.aphylo_estimates]{predict()},
-and the various ways to query features of the trees via \link[ape:Ntip]{Ntip()}
+and the various ways to query features of the trees via \link[ape:summary.phylo]{Ntip()}
 are available post estimation.
 }
 \examples{

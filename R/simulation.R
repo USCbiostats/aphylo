@@ -331,7 +331,8 @@ raphylo <- function(
   
   # Creating the aphylo object
   nleaf <- length(tree$tip.label)
-  as_aphylo(
+  
+  new_aphylo(
     tip.annotation  = ans[1L:nleaf, ,drop=FALSE],
     node.annotation = ans[(nleaf + 1L):nrow(ans), , drop=FALSE],
     tree            = tree,

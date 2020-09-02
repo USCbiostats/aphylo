@@ -55,6 +55,9 @@ ans <- new_aphylo(fakeexperiment[,2:3], tree = as.phylo(faketree))
 plot(ans)
 }
 \seealso{
+Other Data management functions: 
+\code{\link{aphylo_from_data_frame}()}
+
 Other aphylo methods: 
 \code{\link{aphylo-methods}}
 }

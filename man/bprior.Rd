@@ -10,10 +10,10 @@ bprior(shape1 = 1, shape2 = 9, ...)
 uprior()
 }
 \arguments{
-\item{shape1, shape2, ...}{Arguments passed to \link[stats:dbeta]{stats::dbeta}}
+\item{shape1, shape2, ...}{Arguments passed to \link[stats:Beta]{stats::dbeta}}
 }
 \value{
-In the case of \code{bprior}, a wrapper of the function \link[stats:dbeta]{stats::dbeta}.
+In the case of \code{bprior}, a wrapper of the function \link[stats:Beta]{stats::dbeta}.
 \code{uprior} returns a function \code{function(p) 1} (the uniform prior)
 }
 \description{
