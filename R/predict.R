@@ -36,8 +36,8 @@ NULL
 #' @export
 predict.aphylo_estimates <- function(
   object,
-  which.tree = 1:Ntrees(object),
-  ids        = lapply(Ntip(object)[which.tree], seq_len),
+  which.tree = NULL,
+  ids        = NULL,
   newdata    = NULL,
   params     = stats::coef(object),
   loo        = TRUE,
@@ -174,6 +174,8 @@ predict_pre_order.aphylo_estimates <- function(
     }
     
     return(ans)
+  } else if (!is.list(ids)) {
+    ids <- list(ids)
   }
   
   # In the case of multiple samples --------------------------------------------

@@ -108,7 +108,7 @@ aphylo_from_data_frame <- function(tree, annotations, types = NULL) {
   
   not_miss <- which(!is.na(tip_idx))
   
-  tip_annotations[not_miss,] <- annotations[tip_idx[not_miss], -1L]
+  tip_annotations[not_miss,] <- as.matrix(annotations[tip_idx[not_miss], -1L])
   
   # Working on node annotations ------------------------------------------------
   if (!is.null(node_labels)) {
@@ -124,7 +124,7 @@ aphylo_from_data_frame <- function(tree, annotations, types = NULL) {
     
     not_miss <- which(!is.na(node_idx))
     
-    node_annotation[not_miss,] <- annotations[node_idx[not_miss], -1L]
+    node_annotation[not_miss,] <- as.matrix(annotations[node_idx[not_miss], -1L])
     
   } else
     node_annotation <- NULL

@@ -11,8 +11,8 @@
 \usage{
 \method{predict}{aphylo_estimates}(
   object,
-  which.tree = 1:Ntrees(object),
-  ids = lapply(Ntip(object)[which.tree], seq_len),
+  which.tree = NULL,
+  ids = NULL,
   newdata = NULL,
   params = stats::coef(object),
   loo = TRUE,
