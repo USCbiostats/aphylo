@@ -41,3 +41,9 @@ path <- system.file("tree.tree", package="aphylo")
 read_panther(path)
 
 }
+\seealso{
+Other reading: 
+\code{\link{read_nhx}()},
+\code{\link{read_pli}()}
+}
+\concept{reading}

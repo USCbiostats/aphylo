@@ -30,6 +30,7 @@ NULL
 #' @param tree.reader Function that will be used to read the tree file.
 #' It can be either `ape::read.tree` or `rncl::read_newick_phylo`.
 #' @rdname panther-tree
+#' @family reading
 read_panther <- function(x, tree.reader = ape::read.tree, ...) {
   # Reading the data-in
   x  <- readLines(x)

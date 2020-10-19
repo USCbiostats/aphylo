@@ -25,3 +25,9 @@ A data table object including the following columns:
 \description{
 Read PLI files from SIFTER
 }
+\seealso{
+Other reading: 
+\code{\link{panther-tree}},
+\code{\link{read_nhx}()}
+}
+\concept{reading}
