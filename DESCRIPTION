@@ -15,7 +15,7 @@ Description: The `aphylo` R package implements estimation and data imputation
 Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
 Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, polygons, fmcmc,
-         utils, MASS
+         utils, MASS, xml2
 Suggests: covr, rncl, knitr, AUC, tinytest
 VignetteBuilder: knitr
 LinkingTo: Rcpp

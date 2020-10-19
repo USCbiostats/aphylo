@@ -9,6 +9,7 @@
 #' @importFrom fmcmc MCMC
 #' @importFrom polygons colorkey colorRamp2 piechart circle
 #' @importFrom MASS ginv
+#' @importFrom xml2 as_list read_html
 NULL
 
 #' @useDynLib aphylo, .registration=TRUE
