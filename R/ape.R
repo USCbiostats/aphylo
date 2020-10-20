@@ -80,6 +80,9 @@ as.phylo.matrix <- function(
       call. = FALSE
       )
   
+  # Dropping incomplete cases
+  x <- x[complete.cases(x), , drop = FALSE]
+  
   # Retrieving the labels
   if (!inherits(x, "integer")) {
     
