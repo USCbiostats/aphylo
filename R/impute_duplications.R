@@ -102,7 +102,7 @@ imputate_duplications <- function(tree, species) {
     species_p <- DAT$off_species[DAT$offspring[[p]]]
     
     # Comparing lists
-    for (i in combn(1:length(species_p), 2, simplify = FALSE)) {
+    for (i in utils::combn(1:length(species_p), 2, simplify = FALSE)) {
       if (any(species_p[[i[1]]] %in% species_p[[i[2]]])) {
         dpl[p] <- TRUE
         break

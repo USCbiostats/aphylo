@@ -226,7 +226,8 @@ sim_fun_on_tree <- function(
       break
     
     # Increasing
-    tab <- fast_table_using_labels(as.vector(f[1:ntips,]), c(0, 1))
+    # tab <- fast_table_using_labels(as.vector(f[1:ntips,]), c(0, 1))
+    tab <- tabulate(as.vector(f[1:ntips,]) + 1, 2)
     has_both <- (tab[1] > 0) & (tab[2] > 0)
     ntries <- ntries + 1L
   }
@@ -447,7 +448,8 @@ rdrop_annotations <- function(
   for (p in 1L:ncol(x$tip.annotation)) {
     
     # How many non 9 are there?
-    tab <- fast_table_using_labels(x$tip.annotation[,p], c(0L, 1L, 9L))
+    # tab <- fast_table_using_labels(x$tip.annotation[,p], c(0L, 1L, 9L))
+    tab <- tabulate(x$tip.annotation[,p] + 1, 10)[c(1,2,10)]
     nleft <- n - tab[3L]
 
     # Which ones will be removed
@@ -463,7 +465,8 @@ rdrop_annotations <- function(
       n0 <- tab[1]
       n1 <- tab[2]
       
-      tab <- fast_table_using_labels(x$tip.annotation[ids, p], c(0L, 1L, 9L))
+      # tab <- fast_table_using_labels(x$tip.annotation[ids, p], c(0L, 1L, 9L))
+      tab <- tabulate(x$tip.annotation[ids, p] + 1, 10)[c(1, 2, 10)]
       
       # If we are dropping the same number of 0 and 1 that are in the table
       # currently, then we don't, and go to the next try

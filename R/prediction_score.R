@@ -362,6 +362,14 @@ plot.aphylo_prediction_score <- function(
   ...
   ) {
   
+  if (!length(find.package("polygons"))) {
+    message(
+      "This function requires the polygons package (not on CRAN).",
+      "You can install the package from https://github.com/USCbiostats/polygons"
+      )
+    return(invisible())
+  }
+  
   if (is.null(x$tree))
     stop("This method is only available for trees.", call. = FALSE)
   
@@ -399,7 +407,7 @@ plot.aphylo_prediction_score <- function(
     # ord <- 1L:length(predicted[,i]) 
 
     # Outer polygon
-    piechart(
+    polygons::piechart(
       y, border="transparent", col = "transparent", lwd=2,
       radius = 1.5,
       doughnut = .5, skip.plot.slices = TRUE

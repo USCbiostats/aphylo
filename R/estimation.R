@@ -85,7 +85,8 @@ new_aphylo_estimates <- function(
 #' Stop if the model is uninformative
 #' @noRd
 stop_ifuninformative <- function(tip.annotation) {
-  tab <- fast_table_using_labels(tip.annotation, c(0L, 1L))
+  tab <- tabulate(tip.annotation + 1, 10)[c(1,2,10)]
+  # tab <- fast_table_using_labels(tip.annotation, c(0L, 1L))
   if (tab[1L] == 0L | tab[2] == 0L)
     stop("The model is uninformative (either there's only 0s or 1s).", call. = FALSE)
 }

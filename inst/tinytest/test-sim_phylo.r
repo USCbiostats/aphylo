@@ -23,7 +23,7 @@ degseq <- function(x) {
 checkout_annotations <- function(x) {
   sapply(
     lapply(x, "[[", "tip.annotation"),
-    aphylo:::fast_table_using_labels, ids=c(0,1)
+    function(z) tabulate(z+1, 2)
   )
 }
 

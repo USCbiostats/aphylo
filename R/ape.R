@@ -96,9 +96,9 @@ as.phylo.matrix <- function(
   }
   
   # Computing degrees
-  nodes <- unique(as.vector(x))
-  ideg  <- fast_table_using_labels(x[,2], nodes)
-  odeg  <- fast_table_using_labels(x[,1], nodes)
+  nodes <- sort(unique(as.vector(x)))
+  ideg <- tabulate(x[,2] - nodes[1L] + 1L, nbins = nodes[length(nodes)] - nodes[1L] + 1)
+  odeg <- tabulate(x[,1] - nodes[1L] + 1L, nbins = nodes[length(nodes)] - nodes[1L] + 1)
   
   # Classifying
   roots <- nodes[ideg == 0 & odeg > 0]

@@ -22,7 +22,10 @@ list_offspring.aphylo <- function(x) {
 
 #' @export
 list_offspring.phylo <- function(x) {
-  .list_offspring(x$edge, x$Nnode + length(x$tip.label))
+  o <- split(x$edge[,2], x$edge[,1])
+  a <- matrix(list(integer(0L)), ncol=1, nrow = ape::Nnode(x, internal.only = FALSE))
+  a[as.integer(names(o))] <- unname(o)
+  a[,1]
 }
 
 #' Annotated Phylogenetic Tree
