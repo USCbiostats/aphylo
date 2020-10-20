@@ -126,15 +126,3 @@ reduce_pseq <- function(pseq, A, offspring) {
     .Call(`_aphylo_sim_tree`, n, f, branches)
 }
 
-fast_table <- function(x) {
-    .Call(`_aphylo_fast_table`, x)
-}
-
-fast_table_using_labels <- function(x, ids) {
-    .Call(`_aphylo_fast_table_using_labels`, x, ids)
-}
-
-.list_offspring <- function(E, n) {
-    .Call(`_aphylo_list_offspring`, E, n)
-}
-

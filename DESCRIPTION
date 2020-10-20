@@ -11,19 +11,19 @@ Description: The `aphylo` R package implements estimation and data imputation
          probabilities associated to gain and loss of functionalities, including
          probabilities of experimental misclasification. `aphylo` works smoothly
          with popular tools for analysis of phylogenetic data such as `ape` R
-         package, "Analyses of Phylogenetics and Evolution".
+         package, "Analyses of Phylogenetics and Evolution."
 Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
-Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, polygons, fmcmc,
+Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
          utils, MASS, xml2
-Suggests: covr, rncl, knitr, AUC, tinytest
+Suggests: covr, rncl, knitr, AUC, tinytest, polygons
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Encoding: UTF-8
-URL: https://github.com/USCbiostats/phylogenetic
-BugReports: https://github.com/USCbiostats/phylogenetic/issues
+URL: https://github.com/USCbiostats/aphylo
+BugReports: https://github.com/USCbiostats/aphylo/issues
 Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
-Remotes: USCbiostats/polygons, USCbiostats/fmcmc
+Remotes: USCbiostats/polygons

@@ -9,9 +9,14 @@
 #' @examples 
 #' # Example directly extracted from
 #' # https://sites.google.com/site/cmzmasek/home/software/forester/nhx
-#' read_nhx(txt = "(((ADH2:0.1[&&NHX:S=human], ADH1:0.11[&&NHX:S=human]):0.05[&&NHX:S=primates:D=Y:B=100], ADHY:0.1[&&NHX:S=nematode],ADHX:0.12[&&NHX:S=insect]):0.1[&&NHX:S=metazoa:D=N], (ADH4:0.09[&&NHX:S=yeast],ADH3:0.13[&&NHX:S=yeast], ADH2:0.12[&&NHX:S=yeast],ADH1:0.11[&&NHX:S=yeast]):0.1 [&&NHX:S=Fungi])[&&NHX:D=N];")
+#' read_nhx(
+#'   txt = "(((ADH2:0.1[&&NHX:S=human], ADH1:0.11[&&NHX:S=human]):0.05[&&NHX:S=primates:D=Y:B=100],
+#'     ADHY:0.1[&&NHX:S=nematode],ADHX:0.12[&&NHX:S=insect]):0.1[&&NHX:S=metazoa:D=N],
+#'     (ADH4:0.09[&&NHX:S=yeast],ADH3:0.13[&&NHX:S=yeast], ADH2:0.12[&&NHX:S=yeast],
+#'     ADH1:0.11[&&NHX:S=yeast]):0.1 [&&NHX:S=Fungi])[&&NHX:D=N];"
+#'     )
 #' @export
-#' @references "NHX - New Hampshire eXtended [version 2.0]", 
+#' @references "NHX - New Hampshire eXtended \[version 2.0\]", 
 #' \url{https://sites.google.com/site/cmzmasek/home/software/forester/nhx}
 #' @family reading
 read_nhx <- function(fn, txt) {

@@ -257,38 +257,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fast_table
-IntegerMatrix fast_table(const IntegerVector& x);
-RcppExport SEXP _aphylo_fast_table(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< const IntegerVector& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fast_table(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fast_table_using_labels
-IntegerVector fast_table_using_labels(const IntegerVector& x, const IntegerVector& ids);
-RcppExport SEXP _aphylo_fast_table_using_labels(SEXP xSEXP, SEXP idsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< const IntegerVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ids(idsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fast_table_using_labels(x, ids));
-    return rcpp_result_gen;
-END_RCPP
-}
-// list_offspring
-ListOf<IntegerVector> list_offspring(IntegerMatrix E, int n);
-RcppExport SEXP _aphylo_list_offspring(SEXP ESEXP, SEXP nSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type E(ESEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_offspring(E, n));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_new_aphylo_pruner", (DL_FUNC) &_aphylo_new_aphylo_pruner, 4},
@@ -312,9 +280,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_aphylo_posterior_prob", (DL_FUNC) &_aphylo_posterior_prob, 7},
     {"_aphylo_sim_fun_on_tree", (DL_FUNC) &_aphylo_sim_fun_on_tree, 9},
     {"_aphylo_sim_tree", (DL_FUNC) &_aphylo_sim_tree, 3},
-    {"_aphylo_fast_table", (DL_FUNC) &_aphylo_fast_table, 1},
-    {"_aphylo_fast_table_using_labels", (DL_FUNC) &_aphylo_fast_table_using_labels, 2},
-    {"_aphylo_list_offspring", (DL_FUNC) &_aphylo_list_offspring, 2},
     {NULL, NULL, 0}
 };
 
