@@ -21,7 +21,7 @@
 #' @family reading
 read_nhx <- function(fn, txt) {
   
-  if (!missing(fn) & missing(txt))
+  if (!missing(fn) & !missing(txt))
     stop("Either of -fn- or -txt- should not be specified.", call. = FALSE)
   
   if (!missing(fn))
