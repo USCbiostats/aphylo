@@ -73,3 +73,35 @@ read_pli <- function(fn, dropNAs = TRUE) {
     )
   
 }
+
+#' Write pli files used by SIFTER
+#' @param protein_name,protein_number,go_number,moc Vectors of the same length
+#' @param family_id Character scalar. Name of the family
+#' @export
+write_pli <- function(family_id, protein_name, protein_number, go_number, moc = "EXP") {
+  
+  dat <- split(cbind(protein_name, go_number, moc), protein_name)
+  
+  dat <- sapply(dat, function(d) {
+    ans <- with(d, {
+      c(
+        sprintf("\t\t<ProteinName>%s</ProteinName>", unique(protein_name)),
+        sprintf("\t\t<ProteinNumber>%s</ProteinNumber>", unique(protein_number)),
+        sprintf("\t\t<GONumber>[%s]</GONumber>", paste(go_number, collapse=", ")),
+        sprintf("\t\t<MOC>[%s]</MOC>", paste(moc, collapse=", ")),
+      )
+    })
+    
+    sprintf("\t<Protein>\n%s\n\t</Protein>", paste(ans, collapse = "\n"))
+    
+  })
+  
+  dat <- paste(dat, collapse = "\n")
+  
+  paste(
+    sprintf('<?xml version="1.0"?><Family>\n\t<FamilyID>%s</FamilyID>', family_id),
+    dat, "</Family>", sep = "\n"
+  )
+  
+}
+

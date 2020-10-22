@@ -57,8 +57,9 @@ accuracy_sifter.aphylo_estimates <- function(
 #' @export
 #' @rdname accuracy_sifter
 accuracy_sifter.default <- function(
-  pred, lab, tol = 1e-10, nine_na = TRUE,
-  highlight = "", ...
+  pred, lab, tol = 1e-10,
+  highlight = "",
+  nine_na = TRUE, ...
   ) {
    
   # Coercing to the right type

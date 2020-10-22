@@ -10,7 +10,7 @@ accuracy_sifter(pred, lab, tol = 1e-10, highlight = "", ...)
 
 \method{accuracy_sifter}{aphylo_estimates}(pred, lab, tol = 1e-10, highlight = "", ...)
 
-\method{accuracy_sifter}{default}(pred, lab, tol = 1e-10, nine_na = TRUE, highlight = "", ...)
+\method{accuracy_sifter}{default}(pred, lab, tol = 1e-10, highlight = "", nine_na = TRUE, ...)
 }
 \arguments{
 \item{pred}{A matrix of predictions, or an \link{aphylo_estimates} object.}
