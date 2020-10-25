@@ -29,7 +29,7 @@ read_nhx <- function(fn, txt) {
   
   
   # This pattern catches most of the information
-  pattern <- "([(,)])([a-zA-Z0-9_]*)([:][0-9]+[.]?[0-9]*)(\\[&&NHX[a-zA-Z0-9_:=]+\\])?"
+  pattern <- "([(,)])\\s*([[:alnum:]_/-]*)\\s*([:][0-9]+[.]?[0-9]*)\\s*(\\[&&NHX[[:alnum:]_/:=\\s]+\\])?"
   
   # Capturing the patterns and splitting the data
   x <- gregexpr(txt, pattern = pattern, perl = TRUE)
