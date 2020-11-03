@@ -29,7 +29,7 @@ model parameter that will be set as fixed.}
 
 \item{env}{Environment (not to be called by the user).}
 
-\item{fm}{A formula. Model of the type \verb{<aphylo-object> ~ <parameters>} (see
+\item{fm}{A formula. Model of the type \code{<aphylo-object> ~ <parameters>} (see
 examples).}
 
 \item{params}{Numeric vector with model parameters.}

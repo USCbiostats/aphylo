@@ -5,21 +5,11 @@
 \alias{rmultiAphylo}
 \title{Simulation of Annotated Phylogenetic Trees}
 \usage{
-raphylo(
-  n = NULL,
-  tree = NULL,
-  tip.type = NULL,
-  node.type = function(n) sample.int(2, size = n, replace = TRUE, prob = c(0.2, 0.8)) -
-    1,
-  P = 1L,
-  psi = c(0.05, 0.05),
-  mu_d = c(0.9, 0.9),
-  mu_s = c(0.1, 0.05),
-  eta = c(1, 1),
-  Pi = 0.2,
-  informative = getOption("aphylo_informative", FALSE),
-  maxtries = 20L
-)
+raphylo(n = NULL, tree = NULL, tip.type = NULL,
+  node.type = function(n) sample.int(2, size = n, replace = TRUE, prob =
+  c(0.2, 0.8)) - 1, P = 1L, psi = c(0.05, 0.05), mu_d = c(0.9, 0.9),
+  mu_s = c(0.1, 0.05), eta = c(1, 1), Pi = 0.2,
+  informative = getOption("aphylo_informative", FALSE), maxtries = 20L)
 
 rmultiAphylo(R, ...)
 }

@@ -4,19 +4,9 @@
 \alias{sim_fun_on_tree}
 \title{Simulate functions on a ginven tree}
 \usage{
-sim_fun_on_tree(
-  tree,
-  tip.type,
-  node.type,
-  psi,
-  mu_d,
-  mu_s,
-  eta,
-  Pi,
-  P = 1L,
-  informative = getOption("aphylo_informative", FALSE),
-  maxtries = 20L
-)
+sim_fun_on_tree(tree, tip.type, node.type, psi, mu_d, mu_s, eta, Pi,
+  P = 1L, informative = getOption("aphylo_informative", FALSE),
+  maxtries = 20L)
 }
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}

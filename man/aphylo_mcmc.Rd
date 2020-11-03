@@ -5,14 +5,9 @@
 \alias{MCMC}
 \title{Model estimation using Markov Chain Monte Carlo}
 \usage{
-aphylo_mcmc(
-  model,
-  params,
-  priors = uprior(),
-  control = list(),
+aphylo_mcmc(model, params, priors = uprior(), control = list(),
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE)
-)
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
 }
 \arguments{
 \item{model}{A model as specified in \link{aphylo-model}.}
@@ -41,7 +36,7 @@ The function is a wrapper of \code{\link[fmcmc:MCMC]{fmcmc::MCMC()}}.
 \details{
 Methods \code{\link[base:print]{base::print()}}, \code{\link[base:summary]{base::summary()}}, \link[stats:coef]{stats::coef}, \code{\link[stats:window]{stats::window()}},
 \code{\link[stats:vcov]{stats::vcov()}}, \code{\link[stats:logLik]{stats::logLik()}}, \link[=predict.aphylo_estimates]{predict()},
-and the various ways to query features of the trees via \link[ape:summary.phylo]{Ntip()}
+and the various ways to query features of the trees via \link[ape:Ntip]{Ntip()}
 are available post estimation.
 }
 \examples{
@@ -71,8 +66,7 @@ ans_mcmc <- aphylo_mcmc(
 }
 }
 \seealso{
-Other parameter estimation: 
-\code{\link{aphylo_hier}()},
-\code{\link{aphylo_mle}()}
+Other parameter estimation: \code{\link{aphylo_hier}},
+  \code{\link{aphylo_mle}}
 }
 \concept{parameter estimation}

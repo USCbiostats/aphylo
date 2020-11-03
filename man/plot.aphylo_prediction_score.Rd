@@ -5,17 +5,11 @@
 \alias{plot-prediction}
 \title{Visualize predictions}
 \usage{
-\method{plot}{aphylo_prediction_score}(
-  x,
-  y = NULL,
+\method{plot}{aphylo_prediction_score}(x, y = NULL,
   main = "Prediction Accuracy: Observed versus predicted values",
   main.colorkey = "Probability of Functional Annotation",
-  which.fun = seq_len(ncol(x$expected)),
-  include.labels = NULL,
-  labels.col = "black",
-  leafs_only = TRUE,
-  ...
-)
+  which.fun = seq_len(ncol(x$expected)), include.labels = NULL,
+  labels.col = "black", leafs_only = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{aphylo_prediction_score}.}

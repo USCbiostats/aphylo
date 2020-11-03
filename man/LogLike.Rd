@@ -4,7 +4,8 @@
 \alias{LogLike}
 \title{Likelihood of an observed annotated phylogenetic tree}
 \usage{
-LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE, check_dims = TRUE)
+LogLike(tree, psi, mu_d, mu_s, eta, Pi, verb_ans = TRUE,
+  check_dims = TRUE)
 }
 \arguments{
 \item{tree}{A phylogenetic tree of class \link{aphylo}.}

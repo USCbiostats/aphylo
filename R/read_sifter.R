@@ -78,30 +78,35 @@ read_pli <- function(fn, dropNAs = TRUE) {
 #' @param protein_name,protein_number,go_number,moc Vectors of the same length
 #' @param family_id Character scalar. Name of the family
 #' @export
-write_pli <- function(family_id, protein_name, protein_number, go_number, moc = "EXP") {
+write_pli <- function(family_id, protein_name, protein_number, go_number, moc = "EXP", file = "") {
   
-  dat <- split(cbind(protein_name, go_number, moc), protein_name)
+  dat <- split(data.frame(
+    pname = as.character(protein_name),
+    pnum  = as.character(protein_number),
+    gonum = as.character(go_number),
+    moc_  = as.character(moc)
+  ), protein_name)
   
   dat <- sapply(dat, function(d) {
     ans <- with(d, {
       c(
-        sprintf("\t\t<ProteinName>%s</ProteinName>", unique(protein_name)),
-        sprintf("\t\t<ProteinNumber>%s</ProteinNumber>", unique(protein_number)),
-        sprintf("\t\t<GONumber>[%s]</GONumber>", paste(go_number, collapse=", ")),
-        sprintf("\t\t<MOC>[%s]</MOC>", paste(moc, collapse=", ")),
+        sprintf("    <ProteinName>%s</ProteinName>", unique(pname)),
+        sprintf("    <ProteinNumber>%s</ProteinNumber>", unique(pnum)),
+        sprintf("    <GONumber>[%s]</GONumber>", paste(gonum, collapse=", ")),
+        sprintf("    <MOC>[%s]</MOC>", paste(moc_, collapse=", "))
       )
     })
     
-    sprintf("\t<Protein>\n%s\n\t</Protein>", paste(ans, collapse = "\n"))
+    sprintf("  <Protein>\n%s\n  </Protein>", paste(ans, collapse = "\n"))
     
   })
   
   dat <- paste(dat, collapse = "\n")
   
-  paste(
-    sprintf('<?xml version="1.0"?><Family>\n\t<FamilyID>%s</FamilyID>', family_id),
+  cat(paste(
+    sprintf('<?xml version="1.0"?>\n<Family>\n  <FamilyID>%s</FamilyID>', family_id),
     dat, "</Family>", sep = "\n"
-  )
-  
+  ), file = file, sep = "\n")
+  invisible(dat)
 }
 
