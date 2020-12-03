@@ -4,22 +4,10 @@
 \alias{aphylo_hier}
 \title{Fit a Hierarchical aphylo model}
 \usage{
-aphylo_hier(
-  model,
-  params,
-  classes,
-  ...,
-  params0 = NULL,
-  hyper_params = NULL,
-  env = parent.frame(),
-  verbose = TRUE,
-  multicore = FALSE,
-  nchains = 1L,
-  use_optim = TRUE,
-  priors = NULL,
-  check_informative = NULL,
-  reduced_pseq = NULL
-)
+aphylo_hier(model, params, classes, ..., params0 = NULL,
+  hyper_params = NULL, env = parent.frame(), verbose = TRUE,
+  multicore = FALSE, nchains = 1L, use_optim = TRUE, priors = NULL,
+  check_informative = NULL, reduced_pseq = NULL)
 }
 \arguments{
 \item{model}{A model as specified in \link{aphylo-model}.}
@@ -63,8 +51,7 @@ The parameters \code{priors}, \code{check_informative}, and \code{reduced_pseq}
 are silently ignored in this function.
 }
 \seealso{
-Other parameter estimation: 
-\code{\link{aphylo_mcmc}()},
-\code{\link{aphylo_mle}()}
+Other parameter estimation: \code{\link{aphylo_mcmc}},
+  \code{\link{aphylo_mle}}
 }
 \concept{parameter estimation}

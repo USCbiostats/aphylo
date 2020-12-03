@@ -18,7 +18,7 @@ plot_logLik(x, sets, ...)
 \arguments{
 \item{x}{An object of class \code{\link[=aphylo]{aphylo()}}}
 
-\item{sets}{(optional) Character matrix of size \verb{2 x # of combinations}.
+\item{sets}{(optional) Character matrix of size \code{2 x # of combinations}.
 contains the names of the pairs to plot. If nothing passed, the function will
 generate all possible combinations as \code{combn(names(params), 2)}.}
 

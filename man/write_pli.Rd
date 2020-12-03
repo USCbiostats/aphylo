@@ -4,7 +4,8 @@
 \alias{write_pli}
 \title{Write pli files used by SIFTER}
 \usage{
-write_pli(family_id, protein_name, protein_number, go_number, moc = "EXP")
+write_pli(family_id, protein_name, protein_number, go_number,
+  moc = "EXP", file = "")
 }
 \arguments{
 \item{family_id}{Character scalar. Name of the family}

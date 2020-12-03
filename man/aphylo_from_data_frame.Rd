@@ -55,7 +55,6 @@ aphylo_from_data_frame(tree, anno[sample.int(nrow(anno), 10),])
 
 }
 \seealso{
-Other Data management functions: 
-\code{\link{aphylo-class}}
+Other Data management functions: \code{\link{aphylo-class}}
 }
 \concept{Data management functions}

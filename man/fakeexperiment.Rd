@@ -3,14 +3,12 @@
 \name{fakeexperiment}
 \alias{fakeexperiment}
 \title{Fake Experimental Data}
-\format{
-A data frame with 4 rows and 3 variables:
+\format{A data frame with 4 rows and 3 variables:
 \describe{
 \item{f1}{State of function 1.}
 \item{f2}{State of function 1.}
 \item{LeafId}{Integer, ID of the leaf.}
-}
-}
+}}
 \source{
 BiostatsUSC
 }

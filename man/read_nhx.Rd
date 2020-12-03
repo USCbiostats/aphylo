@@ -38,8 +38,7 @@ read_nhx(
 \url{https://sites.google.com/site/cmzmasek/home/software/forester/nhx}
 }
 \seealso{
-Other reading: 
-\code{\link{panther-tree}},
-\code{\link{read_pli}()}
+Other reading: \code{\link{panther-tree}},
+  \code{\link{read_pli}}
 }
 \concept{reading}

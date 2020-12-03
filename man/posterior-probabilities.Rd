@@ -9,33 +9,17 @@
 \alias{predict_brute_force}
 \title{Posterior probabilities based on parameter estimates}
 \usage{
-\method{predict}{aphylo_estimates}(
-  object,
-  which.tree = NULL,
-  ids = NULL,
-  newdata = NULL,
-  params = stats::coef(object),
-  loo = TRUE,
-  nsamples = 1L,
-  centiles = c(0.025, 0.5, 0.975),
-  cl = NULL,
-  ...
-)
+\method{predict}{aphylo_estimates}(object, which.tree = NULL,
+  ids = NULL, newdata = NULL, params = stats::coef(object),
+  loo = TRUE, nsamples = 1L, centiles = c(0.025, 0.5, 0.975),
+  cl = NULL, ...)
 
 predict_pre_order(x, ...)
 
-\method{predict_pre_order}{aphylo_estimates}(
-  x,
-  params = stats::coef(x),
-  which.tree = 1:Ntrees(x),
-  ids = lapply(Ntip(x)[which.tree], seq_len),
-  loo = TRUE,
-  nsamples = 1L,
-  centiles = c(0.025, 0.5, 0.975),
-  ncores = 1L,
-  cl = NULL,
-  ...
-)
+\method{predict_pre_order}{aphylo_estimates}(x, params = stats::coef(x),
+  which.tree = 1:Ntrees(x), ids = lapply(Ntip(x)[which.tree], seq_len),
+  loo = TRUE, nsamples = 1L, centiles = c(0.025, 0.5, 0.975),
+  ncores = 1L, cl = NULL, ...)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
