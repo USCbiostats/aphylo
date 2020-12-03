@@ -4,10 +4,20 @@
 \alias{plot_multivariate}
 \title{Multiavariate plot (surface)}
 \usage{
-plot_multivariate(fun, params, domain, sets, nlevels = 20,
-  args = list(), plotfun = graphics::image, plot = TRUE,
-  postplot = function(params, res) {     points(params, cex = 2, pch = 3,
-  col = "red") }, mfrow = NULL, ...)
+plot_multivariate(
+  fun,
+  params,
+  domain,
+  sets,
+  nlevels = 20,
+  args = list(),
+  plotfun = graphics::image,
+  plot = TRUE,
+  postplot = function(params, res) {     points(params, cex = 2, pch = 3, col = "red")
+    },
+  mfrow = NULL,
+  ...
+)
 }
 \arguments{
 \item{fun}{A function that receives 2 or more parameters and returns a single
@@ -18,7 +28,7 @@ number.}
 \item{domain}{(optional) Named list with as many elements as parameters. Specifies the
 domain of the function.}
 
-\item{sets}{(optional) Character matrix of size \code{2 x # of combinations}.
+\item{sets}{(optional) Character matrix of size \verb{2 x # of combinations}.
 contains the names of the pairs to plot. If nothing passed, the function will
 generate all possible combinations as \code{combn(names(params), 2)}.}
 
@@ -26,7 +36,7 @@ generate all possible combinations as \code{combn(names(params), 2)}.}
 
 \item{args}{List of named arguments to be passed to \code{fun}.}
 
-\item{plotfun}{Function that will be used to plot \code{x,y,z}.}
+\item{plotfun}{Function that will be used to plot \verb{x,y,z}.}
 
 \item{plot}{Logical. When \code{FALSE} skips plotting.}
 

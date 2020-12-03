@@ -7,7 +7,7 @@
 imputate_duplications(tree, species)
 }
 \arguments{
-\item{tree}{An object of class \link[ape:phylo]{ape::phylo}.}
+\item{tree}{An object of class \link[ape:read.tree]{ape::phylo}.}
 
 \item{species}{A character vector of length \code{ape::Ntip(tree)} (see details).}
 }

@@ -77,8 +77,11 @@ read_pli <- function(fn, dropNAs = TRUE) {
 #' Write pli files used by SIFTER
 #' @param protein_name,protein_number,go_number,moc Vectors of the same length
 #' @param family_id Character scalar. Name of the family
+#' @param file Character scalar passed to [cat].
 #' @export
-write_pli <- function(family_id, protein_name, protein_number, go_number, moc = "EXP", file = "") {
+write_pli <- function(
+  family_id, protein_name, protein_number, go_number, moc = "EXP",
+  file = "") {
   
   dat <- split(data.frame(
     pname = as.character(protein_name),

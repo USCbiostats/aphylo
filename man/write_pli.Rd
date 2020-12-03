@@ -4,13 +4,21 @@
 \alias{write_pli}
 \title{Write pli files used by SIFTER}
 \usage{
-write_pli(family_id, protein_name, protein_number, go_number,
-  moc = "EXP", file = "")
+write_pli(
+  family_id,
+  protein_name,
+  protein_number,
+  go_number,
+  moc = "EXP",
+  file = ""
+)
 }
 \arguments{
 \item{family_id}{Character scalar. Name of the family}
 
 \item{protein_name, protein_number, go_number, moc}{Vectors of the same length}
+
+\item{file}{Character scalar passed to \link{cat}.}
 }
 \description{
 Write pli files used by SIFTER

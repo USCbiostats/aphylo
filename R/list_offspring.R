@@ -12,7 +12,6 @@
 #' set.seed(4)
 #' x <- ape::rtree(10)
 #' list_offspring(x)
-#' list_parent(x)
 #' 
 #' @export
 list_offspring <- function(x) UseMethod("list_offspring")

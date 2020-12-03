@@ -1,5 +1,5 @@
-aphylo: Statistical Inference of Annotated Phylogenetic Trees
-================
+
+# aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
 
 [![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis-CI Build
@@ -163,25 +163,25 @@ dat
     ## Rooted; includes branch lengths.
     ## 
     ##  Tip (leafs) annotations:
-    ##      fun0000
-    ## [1,]       1
-    ## [2,]       0
-    ## [3,]       0
-    ## [4,]       1
-    ## [5,]       0
-    ## [6,]       0
+    ##   fun0000
+    ## 1       1
+    ## 2       0
+    ## 3       0
+    ## 4       1
+    ## 5       0
+    ## 6       0
     ## 
     ## ...(44 obs. omitted)...
     ## 
     ## 
     ##  Internal node annotations:
-    ##      fun0000
-    ## [1,]       1
-    ## [2,]       1
-    ## [3,]       1
-    ## [4,]       1
-    ## [5,]       1
-    ## [6,]       0
+    ##   fun0000
+    ## 1       1
+    ## 2       1
+    ## 3       1
+    ## 4       1
+    ## 5       1
+    ## 6       0
     ## 
     ## ...(43 obs. omitted)...
 
@@ -222,7 +222,12 @@ ans2 <- aphylo_mcmc(
     ## `initial`: c(0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled. Ideally you
     ## would want to start each chain from different locations.
 
-    ## Convergence has been reached with 2500 steps (100 final count of samples).
+    ## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
+    ## not be used in a context other than the argument `conv_checker` in `MCMC`.
+
+    ## No convergence yet (steps count: 2500). Trying with the next bulk.
+
+    ## No convergence reached after 2500 steps (100 final count of samples).
 
 ``` r
 ans2
@@ -234,18 +239,18 @@ ans2
     ##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
     ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 2000, 
     ##     burnin = 500, thin = 20, nchains = 2))
-    ##  LogLik (unnormalized): -20.3557 
+    ##  LogLik (unnormalized): -20.7166 
     ##  Method used: mcmc (2500 steps)
     ##  # of Leafs: 50
     ##  # of Functions 1
     ##  # of Trees: 1
     ## 
     ##          Estimate  Std. Err.
-    ##  mu_d0   0.9015    0.0798
-    ##  mu_d1   0.1723    0.0813
-    ##  mu_s0   0.1204    0.0808
-    ##  mu_s1   0.1052    0.0472
-    ##  Pi      0.5122    0.1594
+    ##  mu_d0   0.8902    0.0941
+    ##  mu_d1   0.1754    0.0862
+    ##  mu_s0   0.1462    0.0928
+    ##  mu_s1   0.1085    0.0490
+    ##  Pi      0.5441    0.1590
 
 ``` r
 plot(
@@ -267,15 +272,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##       Point est. Upper C.I.
-    ## mu_d0      1.007      1.009
-    ## mu_d1      0.996      0.996
-    ## mu_s0      1.030      1.156
-    ## mu_s1      1.097      1.362
-    ## Pi         1.050      1.052
+    ## mu_d0       1.07       1.16
+    ## mu_d1       1.01       1.05
+    ## mu_s0       1.07       1.22
+    ## mu_s1       1.16       1.58
+    ## Pi          1.03       1.15
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.06
+    ## 1.19
 
 ``` r
 plot(ans2$hist)
@@ -292,14 +297,14 @@ pred
 
     ## Prediction score (H0: Observed != Random)
     ## 
-    ##  N obs.   : 50
-    ##  alpha    : 0.74
-    ##  Observed : 0.84 ***
-    ##  Random   : 0.62 
-    ##  P(<t)    : 0.0001
+    ##  N obs.      : 99
+    ##  alpha(0, 1) : 0.24, -.2f
+    ##  Observed    : 0.70 
+    ##  Random      : 0.61 
+    ##  P(<t)       : 0.1539
     ## 
     ## Significance levels: *** p < .01, ** p < .05, * p < .10
-    ## AUC 0.78.
+    ## AUC 0.77.
     ## --------------------------------------------------------------------------------
     ## Values scaled to range between 0 and 1, 1 being best.
 
@@ -316,3 +321,5 @@ what ‘tree-reader’ function he would use, in particular, between using
 either the rncl R package or ape. For such we created a short benchmark
 that compares both functions
 [here](playground/ape_now_supports_singletons.md).
+
+ABCD Test PM566

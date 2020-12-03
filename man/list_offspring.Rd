@@ -25,6 +25,5 @@ lists all its offspring and parents, respectively.
 set.seed(4)
 x <- ape::rtree(10)
 list_offspring(x)
-list_parent(x)
 
 }

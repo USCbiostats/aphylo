@@ -5,10 +5,17 @@
 \alias{MLE}
 \title{Model estimation using Maximum Likelihood Estimation}
 \usage{
-aphylo_mle(model, params, method = "L-BFGS-B", priors = function(p) 1,
-  control = list(), lower = 1e-05, upper = 1 - 1e-05,
+aphylo_mle(
+  model,
+  params,
+  method = "L-BFGS-B",
+  priors = function(p) 1,
+  control = list(),
+  lower = 1e-05,
+  upper = 1 - 1e-05,
   check_informative = getOption("aphylo_informative", FALSE),
-  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE))
+  reduced_pseq = getOption("aphylo_reduce_pseq", TRUE)
+)
 }
 \arguments{
 \item{model}{A model as specified in \link{aphylo-model}.}
@@ -56,7 +63,8 @@ ans_dbeta <- aphylo_mle(dat ~ psi + mu_d + eta + Pi, priors = mypriors)
 ans_dbeta
 }
 \seealso{
-Other parameter estimation: \code{\link{aphylo_hier}},
-  \code{\link{aphylo_mcmc}}
+Other parameter estimation: 
+\code{\link{aphylo_hier}()},
+\code{\link{aphylo_mcmc}()}
 }
 \concept{parameter estimation}

@@ -7,14 +7,19 @@
 \alias{print.aphylo_prediction_score}
 \title{Calculate prediction score (quality of prediction)}
 \usage{
-prediction_score(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL,
-  ...)
+prediction_score(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
 
-\method{prediction_score}{default}(x, expected, alpha0 = NULL,
-  alpha1 = NULL, W = NULL, ...)
+\method{prediction_score}{default}(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
 
-\method{prediction_score}{aphylo_estimates}(x, expected = NULL,
-  alpha0 = NULL, alpha1 = NULL, W = NULL, loo = TRUE, ...)
+\method{prediction_score}{aphylo_estimates}(
+  x,
+  expected = NULL,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W = NULL,
+  loo = TRUE,
+  ...
+)
 
 \method{print}{aphylo_prediction_score}(x, ...)
 }

@@ -14,9 +14,18 @@
 
 \method{vcov}{aphylo_estimates}(object, ...)
 
-\method{plot}{aphylo_estimates}(x, y = NULL, which.tree = 1L,
-  ids = list(1:Ntip(x)[which.tree]), loo = TRUE, nsamples = 1L,
-  ncores = 1L, centiles = c(0.025, 0.5, 0.975), cl = NULL, ...)
+\method{plot}{aphylo_estimates}(
+  x,
+  y = NULL,
+  which.tree = 1L,
+  ids = list(1:Ntip(x)[which.tree]),
+  loo = TRUE,
+  nsamples = 1L,
+  ncores = 1L,
+  centiles = c(0.025, 0.5, 0.975),
+  cl = NULL,
+  ...
+)
 }
 \arguments{
 \item{x, object}{Depending of the method, an object of class \code{aphylo_estimates}.}

@@ -42,7 +42,8 @@ read_panther(path)
 
 }
 \seealso{
-Other reading: \code{\link{read_nhx}},
-  \code{\link{read_pli}}
+Other reading: 
+\code{\link{read_nhx}()},
+\code{\link{read_pli}()}
 }
 \concept{reading}
