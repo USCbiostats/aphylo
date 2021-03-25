@@ -8,6 +8,8 @@ Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://tra
 status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
 [![Coverage
 Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
+[![Integrative Methods of Analysis for Genetic
+Epidemiology](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
 
 The `aphylo` R package implements estimation and data imputation methods
 for Functional Annotations in Phylogenetic Trees. The core function
@@ -90,9 +92,9 @@ O
     ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] 1 2 3 4
+    ##   1, 2, 3, 4
     ## Node labels:
-    ## [1] 5 6 7
+    ##   5, 6, 7
     ## 
     ## Rooted; no branch lengths.
     ## 
@@ -117,9 +119,9 @@ as.phylo(O)
     ## Phylogenetic tree with 4 tips and 3 internal nodes.
     ## 
     ## Tip labels:
-    ## [1] 1 2 3 4
+    ##   1, 2, 3, 4
     ## Node labels:
-    ## [1] 5 6 7
+    ##   5, 6, 7
     ## 
     ## Rooted; no branch lengths.
 
@@ -156,9 +158,9 @@ dat
     ## Phylogenetic tree with 50 tips and 49 internal nodes.
     ## 
     ## Tip labels:
-    ##  1, 2, 3, 4, 5, 6, ...
+    ##   1, 2, 3, 4, 5, 6, ...
     ## Node labels:
-    ##  51, 52, 53, 54, 55, 56, ...
+    ##   51, 52, 53, 54, 55, 56, ...
     ## 
     ## Rooted; includes branch lengths.
     ## 
@@ -214,8 +216,8 @@ ans0 <- aphylo_mle(dat ~ psi + mu_d + Pi + eta)
 # MCMC method
 ans2 <- aphylo_mcmc(
   dat ~ mu_d + mu_s + Pi,
-  prior = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5)),
-  control = list(nsteps=2e3, burnin=500, thin=20, nchains=2))
+  prior   = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5)),
+  control = list(nsteps=5e3, burnin=500, thin=10, nchains=2))
 ```
 
     ## Warning: While using multiple chains, a single initial point has been passed via
@@ -225,9 +227,9 @@ ans2 <- aphylo_mcmc(
     ## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
     ## not be used in a context other than the argument `conv_checker` in `MCMC`.
 
-    ## No convergence yet (steps count: 2500). Trying with the next bulk.
+    ## No convergence yet (steps count: 5500). Trying with the next bulk.
 
-    ## No convergence reached after 2500 steps (100 final count of samples).
+    ## No convergence reached after 5500 steps (500 final count of samples).
 
 ``` r
 ans2
@@ -237,20 +239,20 @@ ans2
     ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
     ## 
     ##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
-    ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 2000, 
-    ##     burnin = 500, thin = 20, nchains = 2))
-    ##  LogLik (unnormalized): -20.7166 
-    ##  Method used: mcmc (2500 steps)
+    ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 5000, 
+    ##     burnin = 500, thin = 10, nchains = 2))
+    ##  LogLik (unnormalized): -20.2668 
+    ##  Method used: mcmc (5500 steps)
     ##  # of Leafs: 50
     ##  # of Functions 1
     ##  # of Trees: 1
     ## 
     ##          Estimate  Std. Err.
-    ##  mu_d0   0.8902    0.0941
-    ##  mu_d1   0.1754    0.0862
-    ##  mu_s0   0.1462    0.0928
-    ##  mu_s1   0.1085    0.0490
-    ##  Pi      0.5441    0.1590
+    ##  mu_d0   0.9048    0.0795
+    ##  mu_d1   0.1691    0.0831
+    ##  mu_s0   0.1050    0.0690
+    ##  mu_s1   0.1106    0.0476
+    ##  Pi      0.5649    0.1405
 
 ``` r
 plot(
@@ -272,15 +274,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##       Point est. Upper C.I.
-    ## mu_d0       1.07       1.16
-    ## mu_d1       1.01       1.05
-    ## mu_s0       1.07       1.22
-    ## mu_s1       1.16       1.58
-    ## Pi          1.03       1.15
+    ## mu_d0       1.05       1.13
+    ## mu_d1       1.00       1.02
+    ## mu_s0       1.00       1.01
+    ## mu_s1       1.00       1.00
+    ## Pi          1.01       1.03
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.19
+    ## 1.02
 
 ``` r
 plot(ans2$hist)
@@ -299,12 +301,12 @@ pred
     ## 
     ##  N obs.      : 99
     ##  alpha(0, 1) : 0.24, -.2f
-    ##  Observed    : 0.70 
+    ##  Observed    : 0.71 
     ##  Random      : 0.61 
     ##  P(<t)       : 0.1539
     ## 
     ## Significance levels: *** p < .01, ** p < .05, * p < .10
-    ## AUC 0.77.
+    ## AUC 0.79.
     ## --------------------------------------------------------------------------------
     ## Values scaled to range between 0 and 1, 1 being best.
 
@@ -321,5 +323,3 @@ what ‘tree-reader’ function he would use, in particular, between using
 either the rncl R package or ape. For such we created a short benchmark
 that compares both functions
 [here](playground/ape_now_supports_singletons.md).
-
-ABCD Test PM566

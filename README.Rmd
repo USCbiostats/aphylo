@@ -8,8 +8,7 @@ output: github_document
 [![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis-CI Build Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo)
 [![Build status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
-[![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
-
+[![Coverage Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo) [![Integrative Methods of Analysis for Genetic Epidemiology](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -107,8 +106,8 @@ ans0 <- aphylo_mle(dat ~ psi + mu_d + Pi + eta)
 # MCMC method
 ans2 <- aphylo_mcmc(
   dat ~ mu_d + mu_s + Pi,
-  prior = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5)),
-  control = list(nsteps=2e3, burnin=500, thin=20, nchains=2))
+  prior   = bprior(c(9, 1, 1, 1, 5), c(1, 9, 9, 9, 5)),
+  control = list(nsteps=5e3, burnin=500, thin=10, nchains=2))
 ans2
 
 plot(
@@ -139,6 +138,4 @@ plot(pred)
 # Misc
 
 During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).
-
-ABCD Test PM566
 
