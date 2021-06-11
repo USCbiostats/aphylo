@@ -2,8 +2,8 @@
 # aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
 
 [![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis-CI Build
-Status](https://travis-ci.org/USCbiostats/aphylo.svg?branch=master)](https://travis-ci.org/USCbiostats/aphylo)
+[![R
+CI](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg)](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml)
 [![Build
 status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
 [![Coverage
@@ -241,18 +241,18 @@ ans2
     ##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
     ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 5000, 
     ##     burnin = 500, thin = 10, nchains = 2))
-    ##  LogLik (unnormalized): -20.2668 
+    ##  LogLik (unnormalized): -20.1965 
     ##  Method used: mcmc (5500 steps)
     ##  # of Leafs: 50
     ##  # of Functions 1
     ##  # of Trees: 1
     ## 
     ##          Estimate  Std. Err.
-    ##  mu_d0   0.9048    0.0795
-    ##  mu_d1   0.1691    0.0831
-    ##  mu_s0   0.1050    0.0690
-    ##  mu_s1   0.1106    0.0476
-    ##  Pi      0.5649    0.1405
+    ##  mu_d0   0.9145    0.0747
+    ##  mu_d1   0.1758    0.0865
+    ##  mu_s0   0.1024    0.0695
+    ##  mu_s1   0.1103    0.0477
+    ##  Pi      0.5558    0.1447
 
 ``` r
 plot(
@@ -274,15 +274,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##       Point est. Upper C.I.
-    ## mu_d0       1.05       1.13
-    ## mu_d1       1.00       1.02
-    ## mu_s0       1.00       1.01
-    ## mu_s1       1.00       1.00
-    ## Pi          1.01       1.03
+    ## mu_d0      1.009       1.05
+    ## mu_d1      1.006       1.03
+    ## mu_s0      1.141       1.50
+    ## mu_s1      1.004       1.03
+    ## Pi         0.999       1.00
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.02
+    ## 1.08
 
 ``` r
 plot(ans2$hist)
@@ -297,6 +297,9 @@ pred <- prediction_score(ans2, loo = TRUE)
 pred
 ```
 
+    ## Warning in sprintf(" alpha(0, 1) : %-.2f, -.2f", alpha0, alpha1): one argument
+    ## not used by format ' alpha(0, 1) : %-.2f, -.2f'
+
     ## Prediction score (H0: Observed != Random)
     ## 
     ##  N obs.      : 99
@@ -306,7 +309,7 @@ pred
     ##  P(<t)       : 0.1539
     ## 
     ## Significance levels: *** p < .01, ** p < .05, * p < .10
-    ## AUC 0.79.
+    ## AUC 0.77.
     ## --------------------------------------------------------------------------------
     ## Values scaled to range between 0 and 1, 1 being best.
 

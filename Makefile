@@ -3,7 +3,7 @@ PKGNAME:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "
 
 install: 
 	$(MAKE) clean && \
-		R CMD build $(PKGNAME)_$(VERSION).tar.gz && \
+		R CMD build . && \
 		R CMD INSTALL $(PKGNAME)_$(VERSION).tar.gz
 		
 
