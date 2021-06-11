@@ -30,7 +30,9 @@ README[.]md
 ^next_release\.md$
 ^\.travis\.yml$
 ^codecov\.yml$
-^makefile$
+
+^Makefile$
 ^docs$
 inst/CODECOV_EXCLUSIONS
-
+^docker$
+^\.githuh$

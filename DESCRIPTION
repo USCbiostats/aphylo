@@ -3,7 +3,7 @@ Title: Statistical Inference of Annotated Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"),
          email="g.vegayon@gmail.com", comment = c(ORCID = "0000-0002-3171-0844"))
 Version: 0.1.99
-Date: 2019-04-10
+Date: 2021-06-07
 Description: The `aphylo` R package implements estimation and data imputation
          methods for Functional Annotations in Phylogenetic Trees. The core
          function consists on the computation of the log-likelihood of observing
@@ -16,7 +16,7 @@ Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
 Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
          utils, MASS, xml2
-Suggests: covr, rncl, knitr, AUC, tinytest, polygons
+Suggests: covr, knitr, tinytest
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
@@ -26,4 +26,3 @@ BugReports: https://github.com/USCbiostats/aphylo/issues
 Classification/MSC: 90C35, 90B18, 91D30
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
-Remotes: USCbiostats/polygons
