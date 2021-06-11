@@ -326,7 +326,7 @@ print.aphylo_prediction_score <- function(x, ...) {
 # Function to color the absence/presence of function
 blue <- function(x) {
   x[is.na(x)] <- 9
-  ans <- polygons::colorRamp2(.aphyloColors)(x)
+  ans <- colorRamp2(.aphyloColors)(x)
   ans <- grDevices::rgb(ans, alpha = 255, maxColorValue = 255)
   ifelse(x == 9, "black", ans)
 }
@@ -407,17 +407,17 @@ plot.aphylo_prediction_score <- function(
     # ord <- 1L:length(predicted[,i]) 
 
     # Outer polygon
-    polygons::piechart(
+    piechart(
       y, border="transparent", col = "transparent", lwd=2,
       radius = 1.5,
       doughnut = .5, skip.plot.slices = TRUE
       )
     
-    graphics::polygon(polygons::circle(0,0,1.5), border="gray", lwd = 1.5, col = "lightgray")
-    graphics::polygon(polygons::circle(0,0,0.5), border="gray", lwd = 1.5, col="white")
+    graphics::polygon(circle(0,0,1.5), border="gray", lwd = 1.5, col = "lightgray")
+    graphics::polygon(circle(0,0,0.5), border="gray", lwd = 1.5, col="white")
     
     # Outer pie
-    opie <- polygons::piechart(
+    opie <- piechart(
       y,
       radius    = 1,
       doughnut  = .755,
@@ -432,7 +432,7 @@ plot.aphylo_prediction_score <- function(
     )
     
     # Inner pie
-    ipie <- polygons::piechart(
+    ipie <- piechart(
       y,
       doughnut  = 0.5,
       radius    = .745,
@@ -451,7 +451,7 @@ plot.aphylo_prediction_score <- function(
     if (include.labels) {
       deg <- 1:length(y)
       deg <- c(deg[1], deg[-1] + deg[-length(y)])/length(y)/2*360
-      polygons::piechart(
+      piechart(
         y,
         radius    = .5,
         add       = TRUE,
@@ -501,7 +501,7 @@ plot.aphylo_prediction_score <- function(
     oldmar <- graphics::par(mar = rep(0, 4), new = FALSE, xpd=NA)
     # graphics::par(mfrow=c(1,1), xpd=NA)
     
-    polygons::colorkey(
+    colorkey(
       x0 = .10, y0=0, x1=.90, y1=.1, 
       label.from = 'No function',
       label.to = "Function",

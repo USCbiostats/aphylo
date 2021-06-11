@@ -6,5 +6,7 @@ RUN apt-get update && \
         r-cran-xml2 r-cran-covr r-cran-tinytest && \
         Rscript -e 'utils::install.packages("fmcmc")'
 
+RUN Rscript -e 'utils::install.packages("AUC")'
+
 CMD ["bash"]
 
