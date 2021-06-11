@@ -362,14 +362,6 @@ plot.aphylo_prediction_score <- function(
   ...
   ) {
   
-  if (!length(find.package("polygons"))) {
-    message(
-      "This function requires the polygons package (not on CRAN).",
-      "You can install the package from https://github.com/USCbiostats/polygons"
-      )
-    return(invisible())
-  }
-  
   if (is.null(x$tree))
     stop("This method is only available for trees.", call. = FALSE)
   
