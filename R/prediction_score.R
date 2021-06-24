@@ -307,16 +307,17 @@ print.aphylo_prediction_score <- function(x, ...) {
   })
   
   with(x, cat(
-    "Prediction score (H0: Observed != Random)\n", 
+    "Prediction score (H0: Observed = Random)\n", 
     sprintf(" N obs.      : %-d", nrow(expected)),
-    sprintf(" alpha(0, 1) : %-.2f, -.2f", alpha0, alpha1),
+    sprintf(" alpha(0, 1) : %-.2f, %-.2f", alpha0, alpha1),
     sprintf(" Observed    : %-.2f %s", obs, significance),
     sprintf(" Random      : %-.2f ", random),
     sprintf(" P(<t)       : %-.4f", pval),
-    "\nSignificance levels: *** p < .01, ** p < .05, * p < .10",
-    sprintf("AUC %-.2f.", auc$auc),
     paste0(rep("-", getOption("width")), collapse=""),
     "Values scaled to range between 0 and 1, 1 being best.",
+    "\nSignificance levels: *** p < .01, ** p < .05, * p < .10",
+    sprintf("AUC %-.2f.", auc$auc),
+    sprintf("MAE %-.2f.", 1 - obs),
     sep ="\n"
   ))
   invisible(x)

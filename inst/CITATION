@@ -1,0 +1,38 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+citHeader("To cite aphylo in publications use the following paper:")
+citEntry(
+  entry  = "Article",
+  title = "Bayesian parameter estimation for automatic annotation of gene functions using observational data and phylogenetic trees",
+  author = c(
+    person("George", "Vega Yon"),
+    person("Duncan", "Thomas"),
+    person("John", "Morrison"),
+    person("Huaiyu", "Mi"),
+    person("Paul", "Thomas"),
+    person("Paul", "Marjoram")
+  ),
+  journal = "PLOS Computational Biology",
+  year    = "2021",
+  month   = "feb",
+  volume  = 17,
+  issue   = 2,
+  doi     = "10.1371/journal.pcbi.1007948",
+  url     = "https://doi.org/10.1371/journal.pcbi.1007948",
+  issn    = "1367-4803",
+  pages   = "1-35",
+ textVersion = "Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021) Bayesian parameter estimation for automatic annotation of gene functions using observational data and phylogenetic trees. PLOS Computational Biology 17(2): e1007948. https://doi.org/10.1371/journal.pcbi.1007948"
+)
+
+
+bibentry(bibtype = "Manual",
+         title = "{{Statistical Inference of Annotated Phylogenetic Trees}}",
+         author = c(
+          person("George", "Vega Yon", comment = c(ORCID = "0000-0002-3171-0844"))
+          ),
+         year = year,
+         note = note,
+         url = "https://github.com/USCBiostats/aphylo",
+         header = "And the actual R package:")
+

@@ -1,6 +1,4 @@
 
-# aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
-
 [![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![R
 CI](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg)](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml)
@@ -10,6 +8,8 @@ status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true)](
 Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 [![Integrative Methods of Analysis for Genetic
 Epidemiology](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
+
+# aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
 
 The `aphylo` R package implements estimation and data imputation methods
 for Functional Annotations in Phylogenetic Trees. The core function
@@ -28,6 +28,33 @@ The package is under MIT License, and is been developed by the Computing
 and Software Cores of the Biostatistics Division’s NIH Project Grant
 (P01) at the Department of Preventive Medicine at the University of
 Southern California.
+
+## Citation
+
+``` r
+citation(package="aphylo")
+```
+
+``` 
+
+To cite aphylo in publications use the following paper:
+
+  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
+  Bayesian parameter estimation for automatic annotation of gene
+  functions using observational data and phylogenetic trees. PLOS
+  Computational Biology 17(2): e1007948.
+  https://doi.org/10.1371/journal.pcbi.1007948
+
+And the actual R package:
+
+Vega Yon G (2021). _Statistical Inference of Annotated Phylogenetic
+Trees_. R package version 0.1.99, <URL:
+https://github.com/USCBiostats/aphylo>.
+
+To see these entries in BibTeX format, use 'print(<citation>,
+bibtex=TRUE)', 'toBibtex(.)', or set
+'options(citation.bibtex.max=999)'.
+```
 
 ## Install
 
@@ -297,21 +324,19 @@ pred <- prediction_score(ans2, loo = TRUE)
 pred
 ```
 
-    ## Warning in sprintf(" alpha(0, 1) : %-.2f, -.2f", alpha0, alpha1): one argument
-    ## not used by format ' alpha(0, 1) : %-.2f, -.2f'
-
-    ## Prediction score (H0: Observed != Random)
+    ## Prediction score (H0: Observed = Random)
     ## 
     ##  N obs.      : 99
-    ##  alpha(0, 1) : 0.24, -.2f
+    ##  alpha(0, 1) : 0.24, 0.73
     ##  Observed    : 0.71 
     ##  Random      : 0.61 
     ##  P(<t)       : 0.1539
+    ## --------------------------------------------------------------------------------
+    ## Values scaled to range between 0 and 1, 1 being best.
     ## 
     ## Significance levels: *** p < .01, ** p < .05, * p < .10
     ## AUC 0.77.
-    ## --------------------------------------------------------------------------------
-    ## Values scaled to range between 0 and 1, 1 being best.
+    ## MAE 0.29.
 
 ``` r
 plot(pred)
