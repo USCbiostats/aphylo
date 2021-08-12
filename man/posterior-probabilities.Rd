@@ -45,7 +45,7 @@ predict_brute_force(atree, psi, mu_d, mu_s, Pi)
 \item{which.tree}{Integer scalar. Which tree to include in the prediction.}
 
 \item{ids}{Integer vector. Ids (positions) of the nodes that need to be
-predicted.}
+predicted (see details.)}
 
 \item{newdata}{(optional) An aphylo object.}
 
@@ -93,4 +93,50 @@ In the case of the parameter \code{loo} (leave-one-out), while making tip-level
 predictions, at each leaf the algorithm will drop annotations regarding that
 leaf, making its prediction using all the available information except the
 one include in such leaf.
+}
+\section{Prediction on specific nodes}{
+
+The \code{ids} parameter indicates for which nodes, both internal and tips, the
+predictions should be made. By default, the function will only make predictions
+on the leaf nodes.
+
+The ids follow \code{ape}'s convention, this is, \code{1:Ntips(x)}
+are the leaf nodes, \code{Ntips(x) + 1L} is the root node, and everything else
+are the interior nodes.
+
+Although the prediction algorithm is fast, indicating only
+a subset of the nodes could make a difference when \code{loo = TRUE} and/or
+\code{nsamples > 1} (calculating a Credible/Confidence Interval.)
+
+In the case of \code{multiAphylo}, \code{ids} should be passed as a list of length
+\code{Ntrees(x)}, with each element indicating the nodes. Otherwise, ids
+are passed as an integer vector.
+}
+
+\examples{
+# Single tree ---------------------------------------------------------------
+set.seed(123)
+atree <- raphylo(10)
+
+# Fitting the model with MLE
+ans <- aphylo_mle(atree ~ psi + mu_d + mu_s + Pi)
+
+# Prediction on leaves
+predict(ans)
+
+# Prediction on all nodes (including root and interior)
+predict(ans, ids = 1:Nnode(ans, internal.only = FALSE))
+
+# Multiple trees (multiAphylo) ----------------------------------------------
+atree <- c(raphylo(10), raphylo(5))
+
+# Fitting the model with MLE
+ans <- aphylo_mle(atree ~ psi + mu_d + mu_s + Pi)
+
+# Prediction on leaves
+predict(ans)
+
+# Predicting only interior nodes
+predict(ans, ids = list(11:19, 6:9))
+
 }

@@ -26,7 +26,7 @@
 #' }
 #'
 #' par(oldpar)
-#' @noRD
+#' @noRd
 npolygon <- function(
   x = 0,
   y = 0,

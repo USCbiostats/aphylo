@@ -136,9 +136,51 @@ predict_pre_order <- function(x, ...) UseMethod("predict_pre_order")
 #' fitted using MCMC, of course.
 #' @param ncores,cl Passed to [parallel::makeCluster()].
 #' @param ids Integer vector. Ids (positions) of the nodes that need to be
-#' predicted.
+#' predicted (see details.) 
 #' @param centiles Used together with `nsamples`, this indicates the centiles
 #' to be computed from the distribution of outcomes.
+#' @section Prediction on specific nodes:
+#' The `ids` parameter indicates for which nodes, both internal and tips, the 
+#' predictions should be made. By default, the function will only make predictions
+#' on the leaf nodes.
+#' 
+#' The ids follow `ape`'s convention, this is, `1:Ntips(x)`
+#' are the leaf nodes, `Ntips(x) + 1L` is the root node, and everything else
+#' are the interior nodes.
+#' 
+#' Although the prediction algorithm is fast, indicating only
+#' a subset of the nodes could make a difference when `loo = TRUE` and/or 
+#' `nsamples > 1` (calculating a Credible/Confidence Interval.)
+#' 
+#' In the case of `multiAphylo`, `ids` should be passed as a list of length
+#' `Ntrees(x)`, with each element indicating the nodes. Otherwise, ids
+#' are passed as an integer vector.
+#' @examples 
+#' # Single tree ---------------------------------------------------------------
+#' set.seed(123)
+#' atree <- raphylo(10)
+#' 
+#' # Fitting the model with MLE
+#' ans <- aphylo_mle(atree ~ psi + mu_d + mu_s + Pi)
+#' 
+#' # Prediction on leaves
+#' predict(ans)
+#' 
+#' # Prediction on all nodes (including root and interior)
+#' predict(ans, ids = 1:Nnode(ans, internal.only = FALSE))
+#' 
+#' # Multiple trees (multiAphylo) ----------------------------------------------
+#' atree <- c(raphylo(10), raphylo(5))
+#' 
+#' # Fitting the model with MLE
+#' ans <- aphylo_mle(atree ~ psi + mu_d + mu_s + Pi)
+#' 
+#' # Prediction on leaves
+#' predict(ans)
+#' 
+#' # Predicting only interior nodes
+#' predict(ans, ids = list(11:19, 6:9))
+#' 
 predict_pre_order.aphylo_estimates <- function(
   x,
   params     = stats::coef(x),
@@ -342,7 +384,7 @@ predict_pre_order.aphylo_estimates <- function(
     
     # Filling the rest of the tree
     l <- do.call(x$fun, dots)
-    last_set <- intersect((i + 1L):nrow(ans), ids[[1L]])
+    last_set <- setdiff(ids[[1L]], intersect(1L:Ntip(x), ids[[1L]]))
     
     if (length(last_set))
       ans[last_set, j] <- .posterior_prob(
@@ -353,7 +395,7 @@ predict_pre_order.aphylo_estimates <- function(
         Pi           = Pi,
         pseq         = x$dat$pseq,
         offspring    = x$dat$offspring
-      )$posterior[last_set, ]
+      )$posterior[last_set]
     
   }
   

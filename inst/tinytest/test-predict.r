@@ -167,9 +167,22 @@ net <- c(raphylo(20), raphylo(10))
 ans <- aphylo_mcmc(net ~ mu_d + mu_s + Pi, control = list(nsteps = 2e3, burnin = 0))
 
 pred <- prediction_score(ans)
-expect_output(pred, "PREDICTION SCORE")
+expect_output(pred, "Prediction score")
 
 # Prediction of multiple samples
 set.seed(1123);p_all <- predict(ans, nsamples = 10)
 set.seed(1123);p_1 <- predict(ans, which.tree = 1, nsamples = 10)
 expect_equivalent(p_all[[1]], p_1[[1]])
+
+# Predicting all, including interior nodes -------------------------------------
+pred0 <- predict(ans, ids = lapply(Nnode(ans, internal.only = FALSE), seq_len))
+pred1 <- predict(ans, ids = lapply(Nnode(ans, internal.only = FALSE), function(a) {
+  seq_len(a - 5) + 5
+  }))
+
+expect_equivalent(rep(NA_real_, 10), unlist(lapply(pred1, "[", i = 1:5)))
+expect_true(!any(is.na(unlist(pred0))))
+expect_equal(
+  lapply(pred0, "[", -c(1:5)),
+  lapply(pred1, "[", -c(1:5))
+)
