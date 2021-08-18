@@ -1,0 +1,94 @@
+---
+title: "Simulation and Inference"
+author: "George G. Vega Yon"
+date: "August 18, 2021"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width = 6, fig.height = 6, fig.align = "center")
+```
+
+
+This is a simple example of simulation, inference, and prediction with the `aphylo` R package.
+
+## Setup
+
+```{r}
+library(aphylo)
+
+# Parameter estimates
+psi  <- c(.05, .025)
+mu_d <- c(.2, .1)
+mu_s <- c(.1, .05)
+Pi   <- .5
+```
+
+## Simulation
+
+```{r data-sim}
+set.seed(223)
+x <- raphylo(n = 200, psi = psi, mu_d = mu_d, mu_s = mu_s, Pi = Pi)
+plot(x)
+```
+
+The simulation function generates an `aphylo` class object which is simply a wrapper containing:
+
+- a 0/1 integer matrix (annotations),
+- a `phylo` tree (from the **ape** package), and
+- some information about the tree and annotations.
+
+If needed, we can export the data as follows:
+
+```{r eval=FALSE}
+# Edgelist describing parent->offspring relations
+edges <- x$tree$edge
+colnames(edges) <- c("parent", "offspring")
+write.csv(edges, file = "edgelist.csv", row.names = FALSE)
+
+# Tip annotations
+ann <- with(x, rbind(tip.annotation, node.annotation))
+rownames(ann) <- 1L:nrow(ann)
+write.csv(ann, file = "annotations.csv", row.names = FALSE)
+
+# Event types
+events <- with(x, cbind(c(tip.type*NA, node.type)))
+rownames(events) <- 1:nrow(events)
+write.csv(events, file = "events.csv", row.names = FALSE)
+```
+
+
+## Inference
+
+To fit the data, we can use MCMC as follows:
+
+```{r inference, cache=TRUE}
+ans <- aphylo_mcmc(x ~ psi + mu_d + mu_s + Pi)
+ans
+```
+
+For goodness-of-fit analysis, we have a couple of tools. We can compare the predicted values with the observed values:
+
+```{r plot-predict}
+plot(ans)
+```
+
+We can also take a look at the surface of the posterior function
+
+```{r plot-loglike}
+plot_logLik(ans)
+```
+
+And we can also take a look at the prediction scores
+
+```{r predict-score}
+ps <- prediction_score(ans)
+ps       # Printing
+plot(ps) # and plotting
+```
+
+

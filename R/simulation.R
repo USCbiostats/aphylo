@@ -308,10 +308,10 @@ raphylo <- function(
          call. = FALSE)
   
   if (is.null(node.type))
-    node.type <- integer(ape::Nnode(tree))
+    node.type <- integer(ape::Nnode(tree, internal.only = TRUE))
   else if (is.function(node.type))
-    node.type <- node.type(ape::Nnode(tree))
-  else if (length(node.type) != ape::Nnode(tree))
+    node.type <- node.type(ape::Nnode(tree, internal.only = TRUE))
+  else if (length(node.type) != ape::Nnode(tree, internal.only = TRUE))
     stop("The length of `node.type` does not match the number of nodes on `tree`.",
          call. = FALSE)
   
