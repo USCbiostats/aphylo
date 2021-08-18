@@ -16,7 +16,7 @@ Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
 Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
          utils, MASS, xml2
-Suggests: covr, knitr, tinytest, AUC
+Suggests: covr, knitr, tinytest, AUC, rmarkdown,
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
