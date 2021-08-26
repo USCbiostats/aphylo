@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Model estimation using Markov Chain Monte Carlo — aphylo_mcmc • aphylo</title>
+<title>Model estimation using Markov Chain Monte Carlo — APHYLO_DEFAULT_MCMC_CONTROL • aphylo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Model estimation using Markov Chain Monte Carlo — aphylo_mcmc" />
+<meta property="og:title" content="Model estimation using Markov Chain Monte Carlo — APHYLO_DEFAULT_MCMC_CONTROL" />
 <meta property="og:description" content="The function is a wrapper of fmcmc::MCMC()." />
 <meta property="og:image" content="/logo.svg" />
 
@@ -132,7 +132,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Model estimation using Markov Chain Monte Carlo</h1>
-    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/aphylo/blob/master/R/aphylo_mcmc.R'><code>R/aphylo_mcmc.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/USCbiostats/aphylo/blob/master/R/aphylo_mcmc.R'><code>R/aphylo_mcmc.R</code></a>, <a href='https://github.com/USCbiostats/aphylo/blob/master/R/formulas.R'><code>R/formulas.R</code></a></small>
     <div class="hidden name"><code>aphylo_mcmc.Rd</code></div>
     </div>
 
@@ -140,14 +140,18 @@
     <p>The function is a wrapper of <code><a href='https://rdrr.io/pkg/fmcmc/man/MCMC.html'>fmcmc::MCMC()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aphylo_mcmc</span><span class='op'>(</span>
+    <pre class="usage"><span class='va'>APHYLO_DEFAULT_MCMC_CONTROL</span>
+
+<span class='fu'>aphylo_mcmc</span><span class='op'>(</span>
   <span class='va'>model</span>,
   <span class='va'>params</span>,
   priors <span class='op'>=</span> <span class='fu'><a href='bprior.html'>uprior</a></span><span class='op'>(</span><span class='op'>)</span>,
   control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
   check_informative <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"aphylo_informative"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>,
   reduced_pseq <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"aphylo_reduce_pseq"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='va'>APHYLO_PARAM_DEFAULT</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,15 +187,43 @@ to <code>FALSE</code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>An object of class <code>list</code> of length 6.</p>
+<p>An object of class <code>numeric</code> of length 9.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <a href='aphylo_estimates.html'>aphylo_estimates</a>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Methods <code><a href='https://rdrr.io/r/base/print.html'>base::print()</a></code>, <code><a href='https://rdrr.io/r/base/summary.html'>base::summary()</a></code>, <a href='https://rdrr.io/r/stats/coef.html'>stats::coef</a>, <code><a href='https://rdrr.io/r/stats/window.html'>stats::window()</a></code>,
+    <p><code>APHYLO_DEFAULT_MCMC_CONTROL</code> lists the default values for the MCMC
+estimation:</p><ul>
+<li><p><code>nsteps</code>: 10000</p></li>
+<li><p><code>nsteps</code>: 5000</p></li>
+<li><p><code>thin</code> : 10</p></li>
+<li><p><code>nchains</code> : 2</p></li>
+<li><p><code>multicore</code> : FALSE</p></li>
+<li><p><code>conv_checker</code> : <code><a href='https://rdrr.io/pkg/fmcmc/man/convergence-checker.html'>fmcmc::convergence_auto(5e3)</a></code></p></li>
+</ul>
+
+<p>For more information about the MCMC estimation process, see <code><a href='https://rdrr.io/pkg/fmcmc/man/MCMC.html'>fmcmc::MCMC()</a></code>.</p>
+<p>Methods <code><a href='https://rdrr.io/r/base/print.html'>base::print()</a></code>, <code><a href='https://rdrr.io/r/base/summary.html'>base::summary()</a></code>, <a href='https://rdrr.io/r/stats/coef.html'>stats::coef</a>, <code><a href='https://rdrr.io/r/stats/window.html'>stats::window()</a></code>,
 <code><a href='https://rdrr.io/r/stats/vcov.html'>stats::vcov()</a></code>, <code><a href='https://rdrr.io/r/stats/logLik.html'>stats::logLik()</a></code>, <a href='posterior-probabilities.html'>predict()</a>,
 and the various ways to query features of the trees via <a href='https://rdrr.io/pkg/ape/man/summary.phylo.html'>Ntip()</a>
 are available post estimation.</p>
+<p>The vector <code>APHYLO_PARAM_DEFAULT</code> lists the starting values for the parameters
+in the model. The current defaults are:</p><ul>
+<li><p><code>psi0</code>: 0.1</p></li>
+<li><p><code>psi1</code>: 0.1</p></li>
+<li><p><code>mu_d0</code>: 0.9</p></li>
+<li><p><code>mu_d1</code>: 0.9</p></li>
+<li><p><code>mu_s0</code>: 0.1</p></li>
+<li><p><code>mu_s1</code>: 0.1</p></li>
+<li><p><code>eta0</code>: 0.9</p></li>
+<li><p><code>eta1</code>: 0.9</p></li>
+<li><p><code>Pi</code>: 0.1</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other parameter estimation: 

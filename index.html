@@ -287,7 +287,7 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 
 
 <span class="co"># MCMC method</span>
-<span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span>
+<span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/APHYLO_DEFAULT_MCMC_CONTROL.html">aphylo_mcmc</a></span><span class="op">(</span>
   <span class="va">dat</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span>,
   prior   <span class="op">=</span> <span class="fu"><a href="reference/bprior.html">bprior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
   control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nsteps<span class="op">=</span><span class="fl">5e3</span>, burnin<span class="op">=</span><span class="fl">500</span>, thin<span class="op">=</span><span class="fl">10</span>, nchains<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>

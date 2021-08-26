@@ -151,7 +151,7 @@
 <a href="#inference" class="anchor"></a>Inference</h2>
 <p>To fit the data, we can use MCMC as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ans</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">ans</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/APHYLO_DEFAULT_MCMC_CONTROL.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning: While using multiple chains, a single initial point has been passed via
 ## `initial`: c(0.1, 0.1, 0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled.
 ## Ideally you would want to start each chain from different locations.</code></pre>
