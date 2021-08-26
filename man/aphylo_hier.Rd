@@ -64,7 +64,7 @@ are silently ignored in this function.
 }
 \seealso{
 Other parameter estimation: 
-\code{\link{aphylo_mcmc}()},
+\code{\link{APHYLO_DEFAULT_MCMC_CONTROL}},
 \code{\link{aphylo_mle}()}
 }
 \concept{parameter estimation}

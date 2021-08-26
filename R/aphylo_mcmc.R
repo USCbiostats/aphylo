@@ -1,3 +1,15 @@
+#' @export
+#' @rdname aphylo_mcmc
+#' @details `APHYLO_DEFAULT_MCMC_CONTROL` lists the default values for the MCMC
+#' estimation:
+#' - `nsteps`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nsteps}
+#' - `nsteps`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
+#' - `thin` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$thin}
+#' - `nchains` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nchains}
+#' - `multicore` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$multicore}
+#' - `conv_checker` : `fmcmc::convergence_auto(5e3)`
+#' 
+#' For more information about the MCMC estimation process, see [fmcmc::MCMC()].
 APHYLO_DEFAULT_MCMC_CONTROL <- list(
   nsteps    = 1e4L,
   burnin    = 5e3L,

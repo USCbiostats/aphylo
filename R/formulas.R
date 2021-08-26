@@ -82,6 +82,23 @@ APHYLO_PARAM_NAMES <- c(
   "psi0", "psi1", "mu_d0", "mu_d1", "mu_s0", "mu_s1",
   "eta0", "eta1", "Pi"
   )
+
+#' @export
+#' @rdname aphylo_mcmc
+#' @details
+#' The vector `APHYLO_PARAM_DEFAULT` lists the starting values for the parameters
+#' in the model. The current defaults are:
+#' 
+#' - `psi0`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$psi0}
+#' - `psi1`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$psi1}
+#' - `mu_d0`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_d0}
+#' - `mu_d1`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_d1}
+#' - `mu_s0`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_s0}
+#' - `mu_s1`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_s1}
+#' - `eta0`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$eta0}
+#' - `eta1`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$eta1}
+#' - `Pi`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$Pi}
+#' 
 APHYLO_PARAM_DEFAULT <- structure(
   .Data = c(.1, .1, .9, .9, .1, .1, .9, .9, .1),
   names = APHYLO_PARAM_NAMES

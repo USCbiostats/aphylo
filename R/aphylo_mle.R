@@ -6,6 +6,8 @@
 #' @param method,control,lower,upper Arguments passed to [stats::optim()]. 
 #' @family parameter estimation
 #' @export
+#' @details 
+#' The default starting parameters are described in [APHYLO_PARAM_DEFAULT].
 #' @examples 
 #' 
 #' # Using simulated data ------------------------------------------------------

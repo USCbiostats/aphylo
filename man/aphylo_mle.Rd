@@ -40,6 +40,9 @@ An object of class \link{aphylo_estimates}.
 \description{
 The function is a wrapper of \code{\link[stats:optim]{stats::optim()}}.
 }
+\details{
+The default starting parameters are described in \link{APHYLO_PARAM_DEFAULT}.
+}
 \examples{
 
 # Using simulated data ------------------------------------------------------
@@ -64,7 +67,7 @@ ans_dbeta
 }
 \seealso{
 Other parameter estimation: 
-\code{\link{aphylo_hier}()},
-\code{\link{aphylo_mcmc}()}
+\code{\link{APHYLO_DEFAULT_MCMC_CONTROL}},
+\code{\link{aphylo_hier}()}
 }
 \concept{parameter estimation}

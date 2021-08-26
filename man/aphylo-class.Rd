@@ -37,6 +37,8 @@ annotations.}
 \item{pseq}{Integer vector. The pruning sequence (postorder).}
 \item{reduced_pseq}{Integer vector. The reduced version of \code{pseq}.}
 \item{Ntips.annotated}{Integer. Number of tips with annotations.}
+\item{tip.type}{Binary of length \code{\link[=Ntip]{Ntip()}}. 0 means duplication and 1 speciation.}
+\item{tip.type}{Binary of length \code{\link[=Nnode]{Nnode()}}. 0 means duplication and 1 speciation.}
 }
 \description{
 The \code{aphylo} class tree holds both the tree structure represented as a
