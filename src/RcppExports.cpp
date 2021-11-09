@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // new_aphylo_pruner
 SEXP new_aphylo_pruner(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& types, unsigned int nannotated);
 RcppExport SEXP _aphylo_new_aphylo_pruner(SEXP edgelistSEXP, SEXP ASEXP, SEXP typesSEXP, SEXP nannotatedSEXP) {

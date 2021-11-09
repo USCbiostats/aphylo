@@ -1,0 +1,45 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# See https://github.com/r-lib/actions/tree/master/examples#readme for
+# additional example workflows available for the R community.
+
+name: DockerHub aphylo
+
+on:
+  push:
+  schedule:
+    cron: '0 0 * * MON'
+
+env:
+  REPO: uscbiostats/aphylo
+
+
+jobs:
+  build:
+    runs-on: Ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        if: ${{ contains(github.event.head_commit.message, '[docker]') }}
+      
+      - name: Login to Docker Hub
+        if: ${{ contains(github.event.head_commit.message, '[docker]') }}
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build container
+        if: ${{ contains(github.event.head_commit.message, '[docker]') }}
+        run: |
+          cd docker
+          make build
+          
+      - name: Upload
+        if: ${{ contains(github.event.head_commit.message, '[docker]') }}
+        run: |
+          cd docker
+          make push
