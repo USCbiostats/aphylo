@@ -255,6 +255,7 @@ sim_fun_on_tree <- function(
 #' @templateVar .Pi 1
 #' @templateVar .types 1
 #' @param informative,maxtries Passed to [sim_fun_on_tree].
+#' @param edge.length Passed to [sim_tree].
 #' @return An object of class [aphylo]
 #' @family Simulation Functions 
 #' @export
@@ -267,6 +268,7 @@ sim_fun_on_tree <- function(
 raphylo <- function(
   n           = NULL,
   tree        = NULL,
+  edge.length = NULL,
   tip.type    = NULL,
   node.type   = function(n) sample.int(2, size = n, replace = TRUE, prob = c(.2, .8)) - 1,
   P           = 1L,
@@ -286,7 +288,15 @@ raphylo <- function(
     # Checking if there's n
     if (!length(n))
       stop("When -tree- is not specified, -n- must be specified.")
-    tree  <- sim_tree(n)
+    tree  <- do.call(
+      sim_tree, c(
+        list(n = n),
+        if (is.null(edge.length))
+          list(edge.length = edge.length)
+        else
+          NULL
+        )
+      )
     
   } else if (is.aphylo(tree)) {
     

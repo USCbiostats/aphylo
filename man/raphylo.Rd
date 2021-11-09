@@ -8,6 +8,7 @@
 raphylo(
   n = NULL,
   tree = NULL,
+  edge.length = NULL,
   tip.type = NULL,
   node.type = function(n) sample.int(2, size = n, replace = TRUE, prob = c(0.2, 0.8)) -
     1,
@@ -27,6 +28,8 @@ rmultiAphylo(R, ...)
 \item{n}{Integer scalar. Number of leafs. If not specified, then}
 
 \item{tree}{An object of class \link[ape:read.tree]{phylo}.}
+
+\item{edge.length}{Passed to \link{sim_tree}.}
 
 \item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 

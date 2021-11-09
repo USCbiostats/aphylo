@@ -3,7 +3,7 @@
 #' @details `APHYLO_DEFAULT_MCMC_CONTROL` lists the default values for the MCMC
 #' estimation:
 #' - `nsteps`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nsteps}
-#' - `nsteps`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
+#' - `burnin`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
 #' - `thin` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$thin}
 #' - `nchains` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nchains}
 #' - `multicore` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$multicore}

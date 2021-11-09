@@ -55,7 +55,7 @@ The function is a wrapper of \code{\link[fmcmc:MCMC]{fmcmc::MCMC()}}.
 estimation:
 \itemize{
 \item \code{nsteps}: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nsteps}
-\item \code{nsteps}: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
+\item \code{burnin}: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
 \item \code{thin} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$thin}
 \item \code{nchains} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nchains}
 \item \code{multicore} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$multicore}

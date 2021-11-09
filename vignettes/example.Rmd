@@ -46,13 +46,10 @@ If needed, we can export the data as follows:
 
 ```{r eval=FALSE}
 # Edgelist describing parent->offspring relations
-edges <- x$tree$edge
-colnames(edges) <- c("parent", "offspring")
-write.csv(edges, file = "edgelist.csv", row.names = FALSE)
+write.csv(x$tree, file = "tree.tree", row.names = FALSE)
 
 # Tip annotations
 ann <- with(x, rbind(tip.annotation, node.annotation))
-rownames(ann) <- 1L:nrow(ann)
 write.csv(ann, file = "annotations.csv", row.names = FALSE)
 
 # Event types
