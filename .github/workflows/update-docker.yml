@@ -11,7 +11,7 @@ name: DockerHub aphylo
 on:
   push:
   schedule:
-    cron: '0 0 * * MON'
+    - cron: '0 0 * * MON'
 
 env:
   REPO: uscbiostats/aphylo
