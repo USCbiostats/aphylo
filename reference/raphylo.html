@@ -145,6 +145,7 @@
     <pre class="usage"><span class='fu'>raphylo</span><span class='op'>(</span>
   n <span class='op'>=</span> <span class='cn'>NULL</span>,
   tree <span class='op'>=</span> <span class='cn'>NULL</span>,
+  edge.length <span class='op'>=</span> <span class='cn'>NULL</span>,
   tip.type <span class='op'>=</span> <span class='cn'>NULL</span>,
   node.type <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span><span class='op'>(</span><span class='fl'>2</span>, size <span class='op'>=</span> <span class='va'>n</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>, prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.2</span>, <span class='fl'>0.8</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span>
     <span class='fl'>1</span>,
@@ -170,6 +171,10 @@
     <tr>
       <th>tree</th>
       <td><p>An object of class <a href='https://rdrr.io/pkg/ape/man/read.tree.html'>phylo</a>.</p></td>
+    </tr>
+    <tr>
+      <th>edge.length</th>
+      <td><p>Passed to <a href='sim_tree.html'>sim_tree</a>.</p></td>
     </tr>
     <tr>
       <th>tip.type, node.type</th>

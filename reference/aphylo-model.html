@@ -199,7 +199,7 @@ examples).</p></td>
 <span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d4257b0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554abc340&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
@@ -210,7 +210,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
@@ -261,15 +261,15 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;bytecode: 0x56079d593f88&gt;</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d5978f8&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;bytecode: 0x565554c42f18&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554c48798&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Mislabeling probabilities</span></span>
 <span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d4257b0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554abc340&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
@@ -280,7 +280,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
@@ -331,7 +331,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d698f60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554d28528&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Different probabilities for speciation and duplication node</span></span>
@@ -339,7 +339,7 @@ examples).</p></td>
 <span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>mu_s</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + mu_s + psi</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d4257b0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554abc340&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
@@ -350,7 +350,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
@@ -401,14 +401,14 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d753968&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554ddf530&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Mislabeling probabilities and etas(fixed)</span></span>
 <span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='fu'>eta</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi + eta(0, 1)</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d4257b0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554abc340&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
@@ -419,7 +419,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
@@ -470,14 +470,14 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d81c508&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554ea71a8&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Mislabeling probabilities and Pi </span></span>
 <span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='va'>Pi</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi + Pi</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d4257b0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554abc340&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
@@ -488,7 +488,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
@@ -539,7 +539,7 @@ examples).</p></td>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x56079d8c9528&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x565554f4e410&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-in'></span>
 </pre>

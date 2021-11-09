@@ -132,13 +132,10 @@
 <p>If needed, we can export the data as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Edgelist describing parent-&gt;offspring relations</span>
-<span class="va">edges</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">edge</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">edges</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parent"</span>, <span class="st">"offspring"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">edges</span>, file <span class="op">=</span> <span class="st">"edgelist.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tree</span>, file <span class="op">=</span> <span class="st">"tree.tree"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># Tip annotations</span>
 <span class="va">ann</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">tip.annotation</span>, <span class="va">node.annotation</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">ann</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1L</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">ann</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">ann</span>, file <span class="op">=</span> <span class="st">"annotations.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># Event types</span>
