@@ -179,28 +179,29 @@ significantly faster than <code>rtree</code>.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># A very simple example ----------------------------------------------------</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1223</span><span class='op'>)</span>
-<span class='va'>newtree</span> <span class='op'>&lt;-</span> <span class='fu'>sim_tree</span><span class='op'>(</span><span class='fl'>50</span><span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>newtree</span><span class='op'>)</span>
-</div><div class='img'><img src='sim_tree-1.png' alt='' width='700' height='433' /></div><div class='input'>
-
-<span class='co'># A performance benchmark with ape::rtree ----------------------------------</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ape-package.ird.fr/'>ape</a></span><span class='op'>)</span>
-<span class='fu'>microbenchmark</span><span class='fu'>::</span><span class='fu'>microbenchmark</span><span class='op'>(</span>
-  ape <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/ape/man/rtree.html'>rtree</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>,
-  phy <span class='op'>=</span> <span class='fu'>sim_tree</span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>,
- unit <span class='op'>=</span> <span class='st'>"relative"</span>
-<span class='op'>)</span>
-<span class='co'># This is what you would get.</span>
-<span class='co'># Unit: relative</span>
-<span class='co'>#   expr     min       lq     mean  median       uq      max neval</span>
-<span class='co'>#    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100</span>
-<span class='co'>#    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># A very simple example ----------------------------------------------------</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1223</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>newtree</span> <span class='op'>&lt;-</span> <span class='fu'>sim_tree</span><span class='op'>(</span><span class='fl'>50</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>newtree</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='sim_tree-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># A performance benchmark with ape::rtree ----------------------------------</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ape-package.ird.fr/'>ape</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>microbenchmark</span><span class='fu'>::</span><span class='fu'>microbenchmark</span><span class='op'>(</span></span>
+<span class='r-in'>  ape <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/ape/man/rtree.html'>rtree</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>,</span>
+<span class='r-in'>  phy <span class='op'>=</span> <span class='fu'>sim_tree</span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>,</span>
+<span class='r-in'> unit <span class='op'>=</span> <span class='st'>"relative"</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># This is what you would get.</span></span>
+<span class='r-in'><span class='co'># Unit: relative</span></span>
+<span class='r-in'><span class='co'>#   expr     min       lq     mean  median       uq      max neval</span></span>
+<span class='r-in'><span class='co'>#    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100</span></span>
+<span class='r-in'><span class='co'>#    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -159,17 +159,19 @@
 <code>uprior</code> returns a function <code>function(p) 1</code> (the uniform prior)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>bprior</span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>9</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; function (p) 
-#&gt; {
-#&gt;     stats::dbeta(p, shape1 = shape1, shape2 = shape2, ...)
-#&gt; }
-#&gt; &lt;bytecode: 0x55a7dbbe46a8&gt;
-#&gt; &lt;environment: 0x55a7dbbe40c0&gt;</div><div class='input'><span class='fu'>uprior</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; function (p) 
-#&gt; 1
-#&gt; &lt;bytecode: 0x55a7dbe2f238&gt;
-#&gt; &lt;environment: 0x55a7dbe2f040&gt;</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>bprior</span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>9</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     stats::dbeta(p, shape1 = shape1, shape2 = shape2, ...)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;bytecode: 0x55abee1f75d0&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abee1f7bb8&gt;</span>
+<span class='r-in'><span class='fu'>uprior</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;bytecode: 0x55abee16f130&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abee16f328&gt;</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

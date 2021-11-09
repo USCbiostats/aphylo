@@ -86,7 +86,7 @@
 
       
 
-      </header><script src="example_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="example_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Simulation and Inference</h1>
@@ -157,38 +157,37 @@
 ## Ideally you would want to start each chain from different locations.</code></pre>
 <pre><code>## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
 ## not be used in a context other than the argument `conv_checker` in `MCMC`.</code></pre>
-<pre><code>## No convergence yet (steps count: 10000). Trying with the next bulk.</code></pre>
-<pre><code>## No convergence reached after 10000 steps (500 final count of samples).</code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<pre><code>## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0412. (500 final count of samples).</code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ans</span></code></pre></div>
 <pre><code>## 
 ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
 ## 
 ##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)
-##  LogLik: -109.0353
+##  LogLik: -108.7258
 ##  Method used: mcmc (10000 steps)
 ##  # of Leafs: 200
 ##  # of Functions 1
 ##  # of Trees: 1
 ## 
 ##          Estimate  Std. Err.
-##  psi0    0.0699    0.0541
-##  psi1    0.0612    0.0414
-##  mu_d0   0.2104    0.1112
-##  mu_d1   0.1344    0.0987
-##  mu_s0   0.1284    0.0465
-##  mu_s1   0.0598    0.0334
-##  Pi      0.4430    0.2559</code></pre>
+##  psi0    0.0558    0.0438
+##  psi1    0.0536    0.0358
+##  mu_d0   0.2201    0.1104
+##  mu_d1   0.1425    0.1057
+##  mu_s0   0.1282    0.0441
+##  mu_s1   0.0620    0.0309
+##  Pi      0.3873    0.2618</code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can compare the predicted values with the observed values:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/plot-predict-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We can also take a look at the surface of the posterior function</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/plot-loglike-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>And we can also take a look at the prediction scores</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span>
 <span class="va">ps</span>       <span class="co"># Printing</span></code></pre></div>
 <pre><code>## Prediction score (H0: Observed = Random)
@@ -204,7 +203,7 @@
 ## Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10
 ## AUC 0.85.
 ## MAE 0.29.</code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></code></pre></div>
 <p><img src="example_files/figure-html/predict-score-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>

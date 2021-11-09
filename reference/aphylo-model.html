@@ -192,352 +192,357 @@ examples).</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>12</span><span class='op'>)</span>
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='raphylo.html'>raphylo</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
-
-<span class='co'># Baseline model</span>
-<span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $model
-#&gt; x ~ mu_d
-#&gt; &lt;environment: 0x55a7d892a898&gt;
-#&gt; 
-#&gt; $dat
-#&gt; 
-#&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   1, 2, 3, 4, 5, 6, ...
-#&gt; Node labels:
-#&gt;   11, 12, 13, 14, 15, 16, ...
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt;  Tip (leafs) annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       0
-#&gt; 6       1
-#&gt; 
-#&gt; ...(4 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt;  Internal node annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       1
-#&gt; 6       1
-#&gt; 
-#&gt; ...(3 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt; $params
-#&gt; mu_d0 mu_d1 
-#&gt;   0.9   0.9 
-#&gt; 
-#&gt; $fixed
-#&gt; mu_d0 mu_d1 
-#&gt; FALSE FALSE 
-#&gt; 
-#&gt; $fun
-#&gt; function (p, dat, priors, verb_ans = FALSE) 
-#&gt; {
-#&gt;     ans &lt;- LogLike(tree = dat, psi = c(0, 0), mu_d = p[c("mu_d0", 
-#&gt;         "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], eta = -c(1, 
-#&gt;         1), Pi = -1, verb_ans = verb_ans)
-#&gt;     ans$ll &lt;- ans$ll + sum(log(priors(p)))
-#&gt;     if (!is.finite(ans$ll)) {
-#&gt;         ans$ll &lt;- -.Machine$double.xmax * 1e-10
-#&gt;     }
-#&gt;     if (verb_ans) {
-#&gt;         ans
-#&gt;     }
-#&gt;     else {
-#&gt;         ans$ll
-#&gt;     }
-#&gt; }
-#&gt; &lt;bytecode: 0x55a7d8bebae8&gt;
-#&gt; &lt;environment: 0x55a7d8bf1330&gt;
-#&gt; </div><div class='input'>
-<span class='co'># Mislabeling probabilities</span>
-<span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $model
-#&gt; x ~ mu_d + psi
-#&gt; &lt;environment: 0x55a7d892a898&gt;
-#&gt; 
-#&gt; $dat
-#&gt; 
-#&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   1, 2, 3, 4, 5, 6, ...
-#&gt; Node labels:
-#&gt;   11, 12, 13, 14, 15, 16, ...
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt;  Tip (leafs) annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       0
-#&gt; 6       1
-#&gt; 
-#&gt; ...(4 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt;  Internal node annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       1
-#&gt; 6       1
-#&gt; 
-#&gt; ...(3 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt; $params
-#&gt;  psi0  psi1 mu_d0 mu_d1 
-#&gt;   0.1   0.1   0.9   0.9 
-#&gt; 
-#&gt; $fixed
-#&gt;  psi0  psi1 mu_d0 mu_d1 
-#&gt; FALSE FALSE FALSE FALSE 
-#&gt; 
-#&gt; $fun
-#&gt; function (p, dat, priors, verb_ans = FALSE) 
-#&gt; {
-#&gt;     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), 
-#&gt;         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], 
-#&gt;         eta = -c(1, 1), Pi = -1, verb_ans = verb_ans)
-#&gt;     ans$ll &lt;- ans$ll + sum(log(priors(p)))
-#&gt;     if (!is.finite(ans$ll)) {
-#&gt;         ans$ll &lt;- -.Machine$double.xmax * 1e-10
-#&gt;     }
-#&gt;     if (verb_ans) {
-#&gt;         ans
-#&gt;     }
-#&gt;     else {
-#&gt;         ans$ll
-#&gt;     }
-#&gt; }
-#&gt; &lt;environment: 0x55a7d8d106a8&gt;
-#&gt; </div><div class='input'>
-<span class='co'># Different probabilities for speciation and duplication node</span>
-<span class='co'># (only works if you have both types)</span>
-<span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>mu_s</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $model
-#&gt; x ~ mu_d + mu_s + psi
-#&gt; &lt;environment: 0x55a7d892a898&gt;
-#&gt; 
-#&gt; $dat
-#&gt; 
-#&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   1, 2, 3, 4, 5, 6, ...
-#&gt; Node labels:
-#&gt;   11, 12, 13, 14, 15, 16, ...
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt;  Tip (leafs) annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       0
-#&gt; 6       1
-#&gt; 
-#&gt; ...(4 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt;  Internal node annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       1
-#&gt; 6       1
-#&gt; 
-#&gt; ...(3 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt; $params
-#&gt;  psi0  psi1 mu_d0 mu_d1 mu_s0 mu_s1 
-#&gt;   0.1   0.1   0.9   0.9   0.1   0.1 
-#&gt; 
-#&gt; $fixed
-#&gt;  psi0  psi1 mu_d0 mu_d1 mu_s0 mu_s1 
-#&gt; FALSE FALSE FALSE FALSE FALSE FALSE 
-#&gt; 
-#&gt; $fun
-#&gt; function (p, dat, priors, verb_ans = FALSE) 
-#&gt; {
-#&gt;     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), 
-#&gt;         mu_d = p[c("mu_d0", "mu_d1")], mu_s = c(p["mu_s0"], p["mu_s1"]), 
-#&gt;         eta = -c(1, 1), Pi = -1, verb_ans = verb_ans)
-#&gt;     ans$ll &lt;- ans$ll + sum(log(priors(p)))
-#&gt;     if (!is.finite(ans$ll)) {
-#&gt;         ans$ll &lt;- -.Machine$double.xmax * 1e-10
-#&gt;     }
-#&gt;     if (verb_ans) {
-#&gt;         ans
-#&gt;     }
-#&gt;     else {
-#&gt;         ans$ll
-#&gt;     }
-#&gt; }
-#&gt; &lt;environment: 0x55a7d8e69818&gt;
-#&gt; </div><div class='input'>
-<span class='co'># Mislabeling probabilities and etas(fixed)</span>
-<span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='fu'>eta</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $model
-#&gt; x ~ mu_d + psi + eta(0, 1)
-#&gt; &lt;environment: 0x55a7d892a898&gt;
-#&gt; 
-#&gt; $dat
-#&gt; 
-#&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   1, 2, 3, 4, 5, 6, ...
-#&gt; Node labels:
-#&gt;   11, 12, 13, 14, 15, 16, ...
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt;  Tip (leafs) annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       0
-#&gt; 6       1
-#&gt; 
-#&gt; ...(4 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt;  Internal node annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       1
-#&gt; 6       1
-#&gt; 
-#&gt; ...(3 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt; $params
-#&gt;  psi0  psi1 mu_d0 mu_d1  eta0  eta1 
-#&gt;   0.1   0.1   0.9   0.9   0.9   0.9 
-#&gt; 
-#&gt; $fixed
-#&gt;  psi0  psi1 mu_d0 mu_d1  eta0  eta1 
-#&gt; FALSE FALSE FALSE FALSE  TRUE  TRUE 
-#&gt; 
-#&gt; $fun
-#&gt; function (p, dat, priors, verb_ans = FALSE) 
-#&gt; {
-#&gt;     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), 
-#&gt;         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], 
-#&gt;         eta = c(p["eta0"], p["eta1"]), Pi = -1, verb_ans = verb_ans)
-#&gt;     ans$ll &lt;- ans$ll + sum(log(priors(p)))
-#&gt;     if (!is.finite(ans$ll)) {
-#&gt;         ans$ll &lt;- -.Machine$double.xmax * 1e-10
-#&gt;     }
-#&gt;     if (verb_ans) {
-#&gt;         ans
-#&gt;     }
-#&gt;     else {
-#&gt;         ans$ll
-#&gt;     }
-#&gt; }
-#&gt; &lt;environment: 0x55a7d8f491b8&gt;
-#&gt; </div><div class='input'>
-<span class='co'># Mislabeling probabilities and Pi </span>
-<span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='va'>Pi</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $model
-#&gt; x ~ mu_d + psi + Pi
-#&gt; &lt;environment: 0x55a7d892a898&gt;
-#&gt; 
-#&gt; $dat
-#&gt; 
-#&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   1, 2, 3, 4, 5, 6, ...
-#&gt; Node labels:
-#&gt;   11, 12, 13, 14, 15, 16, ...
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt;  Tip (leafs) annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       0
-#&gt; 6       1
-#&gt; 
-#&gt; ...(4 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt;  Internal node annotations:
-#&gt;   fun0000
-#&gt; 1       1
-#&gt; 2       1
-#&gt; 3       1
-#&gt; 4       1
-#&gt; 5       1
-#&gt; 6       1
-#&gt; 
-#&gt; ...(3 obs. omitted)...
-#&gt; 
-#&gt; 
-#&gt; $params
-#&gt;  psi0  psi1 mu_d0 mu_d1    Pi 
-#&gt;   0.1   0.1   0.9   0.9   0.1 
-#&gt; 
-#&gt; $fixed
-#&gt;  psi0  psi1 mu_d0 mu_d1    Pi 
-#&gt; FALSE FALSE FALSE FALSE FALSE 
-#&gt; 
-#&gt; $fun
-#&gt; function (p, dat, priors, verb_ans = FALSE) 
-#&gt; {
-#&gt;     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), 
-#&gt;         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], 
-#&gt;         eta = -c(1, 1), Pi = p["Pi"], verb_ans = verb_ans)
-#&gt;     ans$ll &lt;- ans$ll + sum(log(priors(p)))
-#&gt;     if (!is.finite(ans$ll)) {
-#&gt;         ans$ll &lt;- -.Machine$double.xmax * 1e-10
-#&gt;     }
-#&gt;     if (verb_ans) {
-#&gt;         ans
-#&gt;     }
-#&gt;     else {
-#&gt;         ans$ll
-#&gt;     }
-#&gt; }
-#&gt; &lt;environment: 0x55a7d9079ad8&gt;
-#&gt; </div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>12</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='raphylo.html'>raphylo</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Baseline model</span></span>
+<span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1e77c60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 10 tips and 9 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2, 3, 4, 5, 6, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(4 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Internal node annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(3 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $params</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mu_d0 mu_d1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   0.9   0.9 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fixed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mu_d0 mu_d1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> FALSE FALSE </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p, dat, priors, verb_ans = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans &lt;- LogLike(tree = dat, psi = c(0, 0), mu_d = p[c("mu_d0", </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], eta = -c(1, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         1), Pi = -1, verb_ans = verb_ans)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans$ll &lt;- ans$ll + sum(log(priors(p)))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.finite(ans$ll)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll &lt;- -.Machine$double.xmax * 1e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (verb_ans) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;bytecode: 0x55abf1fe6438&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1fe9da8&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Mislabeling probabilities</span></span>
+<span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1e77c60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 10 tips and 9 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2, 3, 4, 5, 6, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(4 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Internal node annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(3 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $params</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   0.1   0.1   0.9   0.9 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fixed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> FALSE FALSE FALSE FALSE </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p, dat, priors, verb_ans = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         eta = -c(1, 1), Pi = -1, verb_ans = verb_ans)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans$ll &lt;- ans$ll + sum(log(priors(p)))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.finite(ans$ll)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll &lt;- -.Machine$double.xmax * 1e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (verb_ans) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf20eb410&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Different probabilities for speciation and duplication node</span></span>
+<span class='r-in'><span class='co'># (only works if you have both types)</span></span>
+<span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>mu_s</span> <span class='op'>+</span> <span class='va'>psi</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + mu_s + psi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1e77c60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 10 tips and 9 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2, 3, 4, 5, 6, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(4 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Internal node annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(3 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $params</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1 mu_s0 mu_s1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   0.1   0.1   0.9   0.9   0.1   0.1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fixed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1 mu_s0 mu_s1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> FALSE FALSE FALSE FALSE FALSE FALSE </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p, dat, priors, verb_ans = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         mu_d = p[c("mu_d0", "mu_d1")], mu_s = c(p["mu_s0"], p["mu_s1"]), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         eta = -c(1, 1), Pi = -1, verb_ans = verb_ans)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans$ll &lt;- ans$ll + sum(log(priors(p)))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.finite(ans$ll)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll &lt;- -.Machine$double.xmax * 1e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (verb_ans) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf21a5e18&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Mislabeling probabilities and etas(fixed)</span></span>
+<span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='fu'>eta</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi + eta(0, 1)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1e77c60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 10 tips and 9 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2, 3, 4, 5, 6, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(4 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Internal node annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(3 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $params</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1  eta0  eta1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   0.1   0.1   0.9   0.9   0.9   0.9 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fixed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1  eta0  eta1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> FALSE FALSE FALSE FALSE  TRUE  TRUE </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p, dat, priors, verb_ans = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         eta = c(p["eta0"], p["eta1"]), Pi = -1, verb_ans = verb_ans)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans$ll &lt;- ans$ll + sum(log(priors(p)))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.finite(ans$ll)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll &lt;- -.Machine$double.xmax * 1e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (verb_ans) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf226e9b8&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Mislabeling probabilities and Pi </span></span>
+<span class='r-in'><span class='fu'>aphylo_formula</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>mu_d</span> <span class='op'>+</span> <span class='va'>psi</span> <span class='op'>+</span> <span class='va'>Pi</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x ~ mu_d + psi + Pi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf1e77c60&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 10 tips and 9 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2, 3, 4, 5, 6, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   11, 12, 13, 14, 15, 16, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Tip (leafs) annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(4 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Internal node annotations:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   fun0000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...(3 obs. omitted)...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $params</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1    Pi </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   0.1   0.1   0.9   0.9   0.1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fixed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  psi0  psi1 mu_d0 mu_d1    Pi </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> FALSE FALSE FALSE FALSE FALSE </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> function (p, dat, priors, verb_ans = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans &lt;- LogLike(tree = dat, psi = c(p["psi0"], p["psi1"]), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         mu_d = p[c("mu_d0", "mu_d1")], mu_s = p[c("mu_d0", "mu_d1")], </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         eta = -c(1, 1), Pi = p["Pi"], verb_ans = verb_ans)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ans$ll &lt;- ans$ll + sum(log(priors(p)))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.finite(ans$ll)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll &lt;- -.Machine$double.xmax * 1e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (verb_ans) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         ans$ll</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x55abf231b9d8&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -182,40 +182,43 @@ less than the currently available in the data.</p></td>
     <p><code>x</code> with fewer annotations (more 9s).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># The following tree has roughtly the same proportion of 0s and 1s</span>
-<span class='co'># and 0 mislabeling.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='raphylo.html'>raphylo</a></span><span class='op'>(</span><span class='fl'>200</span>, Pi<span class='op'>=</span><span class='fl'>.5</span>, mu_d<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>,<span class='fl'>.5</span><span class='op'>)</span>, psi<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Distribution of functions in tip.annotation :
-#&gt;          0   1 NA
-#&gt; fun0000 80 120  0
-#&gt; 
-#&gt; Distribution of functions in node.annotation :
-#&gt;          0   1 NA
-#&gt; fun0000 85 114  0</div><div class='input'>
-<span class='co'># Dropping half of the annotations</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'>rdrop_annotations</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Distribution of functions in tip.annotation :
-#&gt;          0  1  NA
-#&gt; fun0000 34 66 100
-#&gt; 
-#&gt; Distribution of functions in node.annotation :
-#&gt;          0   1 NA
-#&gt; fun0000 85 114  0</div><div class='input'>
-<span class='co'># Dropping half of the annotations, but 0 are more likely to drop</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'>rdrop_annotations</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>.5</span>, prob.drop.0 <span class='op'>=</span> <span class='fl'>2</span><span class='op'>/</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Distribution of functions in tip.annotation :
-#&gt;          0  1  NA
-#&gt; fun0000 33 67 100
-#&gt; 
-#&gt; Distribution of functions in node.annotation :
-#&gt;          0   1 NA
-#&gt; fun0000 85 114  0</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># The following tree has roughtly the same proportion of 0s and 1s</span></span>
+<span class='r-in'><span class='co'># and 0 mislabeling.</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='raphylo.html'>raphylo</a></span><span class='op'>(</span><span class='fl'>200</span>, Pi<span class='op'>=</span><span class='fl'>.5</span>, mu_d<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>,<span class='fl'>.5</span><span class='op'>)</span>, psi<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in tip.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0   1 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 80 120  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in node.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0   1 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 85 114  0</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Dropping half of the annotations</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'>rdrop_annotations</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in tip.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0  1  NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 34 66 100</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in node.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0   1 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 85 114  0</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Dropping half of the annotations, but 0 are more likely to drop</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'>rdrop_annotations</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>.5</span>, prob.drop.0 <span class='op'>=</span> <span class='fl'>2</span><span class='op'>/</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in tip.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0  1  NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 33 67 100</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Distribution of functions in node.annotation :</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          0   1 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fun0000 85 114  0</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

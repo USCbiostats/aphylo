@@ -179,31 +179,34 @@ are the internal nodes.</p></dd>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># A simple example ----------------------------------------------------------</span>
-<span class='co'># This tree has a coding different from ape's</span>
-
-<span class='va'>mytree</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>2</span>, <span class='fl'>5</span><span class='op'>)</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span>, ncol<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-<span class='va'>mytree</span>
-</div><div class='output co'>#&gt;      [,1] [,2]
-#&gt; [1,]    1    2
-#&gt; [2,]    1    3
-#&gt; [3,]    2    4
-#&gt; [4,]    2    5</div><div class='input'>
-<span class='va'>ans</span> <span class='op'>&lt;-</span> <span class='fu'>as.phylo</span><span class='op'>(</span><span class='va'>mytree</span><span class='op'>)</span>
-<span class='va'>ans</span>
-</div><div class='output co'>#&gt; 
-#&gt; Phylogenetic tree with 3 tips and 2 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   3, 4, 5
-#&gt; Node labels:
-#&gt;   1, 2
-#&gt; 
-#&gt; Rooted; no branch lengths.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>ans</span><span class='op'>)</span>
-</div><div class='img'><img src='as.phylo-1.png' alt='' width='700' height='433' /></div><div class='input'>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='co'># A simple example ----------------------------------------------------------</span></span>
+<span class='r-in'><span class='co'># This tree has a coding different from ape's</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>mytree</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>2</span>, <span class='fl'>5</span><span class='op'>)</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span>, ncol<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>mytree</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1] [,2]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]    1    2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2,]    1    3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [3,]    2    4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4,]    2    5</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>ans</span> <span class='op'>&lt;-</span> <span class='fu'>as.phylo</span><span class='op'>(</span><span class='va'>mytree</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ans</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 3 tips and 2 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   3, 4, 5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   1, 2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; no branch lengths.</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>ans</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='as.phylo-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

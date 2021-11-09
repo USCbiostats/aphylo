@@ -175,86 +175,87 @@ a character scalar (see examples).</p></td>
 <code><a href='read_pli.html'>read_pli</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Example directly extracted from</span>
-<span class='co'># https://sites.google.com/site/cmzmasek/home/software/forester/nhx</span>
-<span class='fu'>read_nhx</span><span class='op'>(</span>
-  txt <span class='op'>=</span> <span class='st'>"(((ADH2:0.1[&amp;&amp;NHX:S=human], ADH1:0.11[&amp;&amp;NHX:S=human]):0.05[&amp;&amp;NHX:S=primates:D=Y:B=100],
-    ADHY:0.1[&amp;&amp;NHX:S=nematode],ADHX:0.12[&amp;&amp;NHX:S=insect]):0.1[&amp;&amp;NHX:S=metazoa:D=N],
-    (ADH4:0.09[&amp;&amp;NHX:S=yeast],ADH3:0.13[&amp;&amp;NHX:S=yeast], ADH2:0.12[&amp;&amp;NHX:S=yeast],
-    ADH1:0.11[&amp;&amp;NHX:S=yeast]):0.1 [&amp;&amp;NHX:S=Fungi])[&amp;&amp;NHX:D=N];"</span>
-    <span class='op'>)</span>
-</div><div class='output co'>#&gt; $tree
-#&gt; 
-#&gt; Phylogenetic tree with 8 tips and 4 internal nodes.
-#&gt; 
-#&gt; Tip labels:
-#&gt;   ADH2, ADH1, 
-#&gt; ADHY, ADHX, ADH4, ADH3, ...
-#&gt; Node labels:
-#&gt;   , unnamed0002, unnamed0001, unnamed0003
-#&gt; 
-#&gt; Rooted; includes branch lengths.
-#&gt; 
-#&gt; $edge
-#&gt;       [,1]          [,2]   
-#&gt;  [1,] "ADH2"        ":0.1" 
-#&gt;  [2,] "ADH1"        ":0.11"
-#&gt;  [3,] "unnamed0001" ":0.05"
-#&gt;  [4,] "ADHY"        ":0.1" 
-#&gt;  [5,] "ADHX"        ":0.12"
-#&gt;  [6,] "unnamed0002" ":0.1" 
-#&gt;  [7,] "ADH4"        ":0.09"
-#&gt;  [8,] "ADH3"        ":0.13"
-#&gt;  [9,] "ADH2"        ":0.12"
-#&gt; [10,] "ADH1"        ":0.11"
-#&gt; [11,] "unnamed0003" ":0.1" 
-#&gt; 
-#&gt; $nhx
-#&gt; $nhx[[1]]
-#&gt;       S 
-#&gt; "human" 
-#&gt; 
-#&gt; $nhx[[2]]
-#&gt;       S 
-#&gt; "human" 
-#&gt; 
-#&gt; $nhx[[3]]
-#&gt;          S          D          B 
-#&gt; "primates"        "Y"      "100" 
-#&gt; 
-#&gt; $nhx[[4]]
-#&gt;          S 
-#&gt; "nematode" 
-#&gt; 
-#&gt; $nhx[[5]]
-#&gt;        S 
-#&gt; "insect" 
-#&gt; 
-#&gt; $nhx[[6]]
-#&gt;         S         D 
-#&gt; "metazoa"       "N" 
-#&gt; 
-#&gt; $nhx[[7]]
-#&gt;       S 
-#&gt; "yeast" 
-#&gt; 
-#&gt; $nhx[[8]]
-#&gt;       S 
-#&gt; "yeast" 
-#&gt; 
-#&gt; $nhx[[9]]
-#&gt;       S 
-#&gt; "yeast" 
-#&gt; 
-#&gt; $nhx[[10]]
-#&gt;       S 
-#&gt; "yeast" 
-#&gt; 
-#&gt; $nhx[[11]]
-#&gt;       S 
-#&gt; "Fungi" 
-#&gt; 
-#&gt; </div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Example directly extracted from</span></span>
+<span class='r-in'><span class='co'># https://sites.google.com/site/cmzmasek/home/software/forester/nhx</span></span>
+<span class='r-in'><span class='fu'>read_nhx</span><span class='op'>(</span></span>
+<span class='r-in'>  txt <span class='op'>=</span> <span class='st'>"(((ADH2:0.1[&amp;&amp;NHX:S=human], ADH1:0.11[&amp;&amp;NHX:S=human]):0.05[&amp;&amp;NHX:S=primates:D=Y:B=100],</span>
+<span class='r-in'>    ADHY:0.1[&amp;&amp;NHX:S=nematode],ADHX:0.12[&amp;&amp;NHX:S=insect]):0.1[&amp;&amp;NHX:S=metazoa:D=N],</span>
+<span class='r-in'>    (ADH4:0.09[&amp;&amp;NHX:S=yeast],ADH3:0.13[&amp;&amp;NHX:S=yeast], ADH2:0.12[&amp;&amp;NHX:S=yeast],</span>
+<span class='r-in'>    ADH1:0.11[&amp;&amp;NHX:S=yeast]):0.1 [&amp;&amp;NHX:S=Fungi])[&amp;&amp;NHX:D=N];"</span></span>
+<span class='r-in'>    <span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $tree</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Phylogenetic tree with 8 tips and 4 internal nodes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Tip labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   ADH2, ADH1, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ADHY, ADHX, ADH4, ADH3, ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Node labels:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   , unnamed0002, unnamed0001, unnamed0003</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Rooted; includes branch lengths.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $edge</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       [,1]          [,2]   </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1,] "ADH2"        ":0.1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [2,] "ADH1"        ":0.11"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [3,] "unnamed0001" ":0.05"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [4,] "ADHY"        ":0.1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [5,] "ADHX"        ":0.12"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [6,] "unnamed0002" ":0.1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7,] "ADH4"        ":0.09"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [8,] "ADH3"        ":0.13"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9,] "ADH2"        ":0.12"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [10,] "ADH1"        ":0.11"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [11,] "unnamed0003" ":0.1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "human" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "human" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          S          D          B </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "primates"        "Y"      "100" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "nematode" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>        S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "insect" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         S         D </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "metazoa"       "N" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "yeast" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "yeast" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[9]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "yeast" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[10]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "yeast" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nhx[[11]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       S </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "Fungi" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
