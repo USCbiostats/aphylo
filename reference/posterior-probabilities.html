@@ -177,7 +177,7 @@ probabilities generating all possible cases.</p>
 <span class='co'># S3 method for aphylo</span>
 <span class='fu'>predict_pre_order</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>psi</span>, <span class='va'>mu_d</span>, <span class='va'>mu_s</span>, <span class='va'>eta</span>, <span class='va'>Pi</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>predict_brute_force</span><span class='op'>(</span><span class='va'>atree</span>, <span class='va'>psi</span>, <span class='va'>mu_d</span>, <span class='va'>mu_s</span>, <span class='va'>Pi</span><span class='op'>)</span></pre>
+<span class='fu'>predict_brute_force</span><span class='op'>(</span><span class='va'>atree</span>, <span class='va'>psi</span>, <span class='va'>mu_d</span>, <span class='va'>mu_s</span>, <span class='va'>Pi</span>, force <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -244,6 +244,11 @@ to be computed from the distribution of outcomes.</p></td>
       <th>atree, x, object</th>
       <td><p>Either a tree of class <a href='aphylo-class.html'>aphylo</a> or an object of class <a href='aphylo_estimates.html'>aphylo_estimates</a></p></td>
     </tr>
+    <tr>
+      <th>force</th>
+      <td><p>Logical scalar. When <code>TRUE</code> it will try to compute the brute-force
+probabilities for trees with more than 7 nodes.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -258,6 +263,19 @@ after estimating the model, see predict.aphylo_estimates.</p>
 predictions, at each leaf the algorithm will drop annotations regarding that
 leaf, making its prediction using all the available information except the
 one include in such leaf.</p>
+<p>The <code>predict_brute_force</code> function makes the (obviously) brute force
+calculation of the probabilities. It will perform
+It returns a list with the following:</p><ul>
+<li><p><code>Pr</code> The conditional probabilities of observing a tree given a particular state
+of the leave nodes. The size is given by (2^nnodes x 2^nleaves), each entry is
+read as "The probability of observing scenario i (row) given that the leaves have
+state j (colum)." The scenarios are specified in the <code>row</code> matrix returned by the
+function.</p></li>
+<li><p><code>row</code> Indicates the state of each node (columns) per scenario (row).</p></li>
+<li><p><code>col</code> Indicates the state of each leaf node (columns) per potential leaf
+scenario.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="prediction-on-specific-nodes"><a class="anchor" href="#prediction-on-specific-nodes"></a>Prediction on specific nodes</h2>
 
     
