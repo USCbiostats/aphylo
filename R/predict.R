@@ -453,14 +453,29 @@ predict_pre_order.aphylo <- function(x, psi, mu_d, mu_s, eta, Pi, ...) {
 }
 
 #' @rdname posterior-probabilities
+#' @param force Logical scalar. When `TRUE` it will try to compute the brute-force
+#' probabilities for trees with more than 7 nodes.
+#' @details The `predict_brute_force` function makes the (obviously) brute force
+#' calculation of the probabilities. It will perform
+#' It returns a list with the following:
+#' - `Pr` The conditional probabilities of observing a tree given a particular state
+#' of the leave nodes. The size is given by (2^nnodes x 2^nleaves), each entry is 
+#' read as "The probability of observing scenario i (row) given that the leaves have
+#' state j (colum)." The scenarios are specified in the `row` matrix returned by the
+#' function.
+#' 
+#' - `row` Indicates the state of each node (columns) per scenario (row).
+#' 
+#' - `col` Indicates the state of each leaf node (columns) per potential leaf
+#' scenario.
 #' @export
-predict_brute_force <- function(atree, psi, mu_d, mu_s, Pi) {
+predict_brute_force <- function(atree, psi, mu_d, mu_s, Pi, force = FALSE) {
   
   # Should be aphylo
   if (!inherits(atree, "aphylo"))
     stop("`atree` must be of class `aphylo` (it is of class ", class(atree), ".")
   
-  if (length(atree$offspring) > 7)
+  if (!force && length(atree$offspring) > 7)
     stop("In the case of the brute-force calculations, trees with more than 7 nodes becomes burdensome.")
   
   # Coercing into the true class

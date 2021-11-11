@@ -39,7 +39,7 @@ predict_pre_order(x, ...)
 
 \method{predict_pre_order}{aphylo}(x, psi, mu_d, mu_s, eta, Pi, ...)
 
-predict_brute_force(atree, psi, mu_d, mu_s, Pi)
+predict_brute_force(atree, psi, mu_d, mu_s, Pi, force = FALSE)
 }
 \arguments{
 \item{which.tree}{Integer scalar. Which tree to include in the prediction.}
@@ -75,6 +75,9 @@ to be computed from the distribution of outcomes.}
 \item{Pi}{Numeric scalar. Root node probability of having the function (see \code{\link{LogLike}}).}
 
 \item{atree, x, object}{Either a tree of class \link{aphylo} or an object of class \link{aphylo_estimates}}
+
+\item{force}{Logical scalar. When \code{TRUE} it will try to compute the brute-force
+probabilities for trees with more than 7 nodes.}
 }
 \value{
 In the case of the \code{predict} method, a \code{P} column numeric matrix
@@ -93,6 +96,20 @@ In the case of the parameter \code{loo} (leave-one-out), while making tip-level
 predictions, at each leaf the algorithm will drop annotations regarding that
 leaf, making its prediction using all the available information except the
 one include in such leaf.
+
+The \code{predict_brute_force} function makes the (obviously) brute force
+calculation of the probabilities. It will perform
+It returns a list with the following:
+\itemize{
+\item \code{Pr} The conditional probabilities of observing a tree given a particular state
+of the leave nodes. The size is given by (2^nnodes x 2^nleaves), each entry is
+read as "The probability of observing scenario i (row) given that the leaves have
+state j (colum)." The scenarios are specified in the \code{row} matrix returned by the
+function.
+\item \code{row} Indicates the state of each node (columns) per scenario (row).
+\item \code{col} Indicates the state of each leaf node (columns) per potential leaf
+scenario.
+}
 }
 \section{Prediction on specific nodes}{
 
