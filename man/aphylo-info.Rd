@@ -26,6 +26,14 @@ Information about annotations, in particular, number of annotations (\code{Nann}
 number of annotated leaves (\code{Nannotated}), number of unnanotated leaves
 (\code{Nunannotated}), and number of trees (\code{Ntrees}).
 }
+\examples{
+# Generating data for the example
+set.seed(223)
+dat <- rmultiAphylo(10, n = 5, P = 2)
+Nann(dat)
+Nannotated(dat)
+Ntrees(dat)
+}
 \seealso{
 Other information: 
 \code{\link{ape-methods}}

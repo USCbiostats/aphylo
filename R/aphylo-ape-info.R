@@ -86,6 +86,13 @@ Ntip.multiAphylo_pruner <- function(phy) {
 #' 
 #' @name aphylo-info
 #' @family information
+#' @examples 
+#' # Generating data for the example
+#' set.seed(223)
+#' dat <- rmultiAphylo(10, n = 5, P = 2)
+#' Nann(dat)
+#' Nannotated(dat)
+#' Ntrees(dat)
 NULL
 
 #' @rdname aphylo-info

@@ -359,7 +359,10 @@ raphylo <- function(
 #' @details The `rmultiAphylo` function is a wrapper around `raphylo`.
 rmultiAphylo <- function(R, ...) {
   
-  do.call(c, replicate(n = R, raphylo(...), simplify = FALSE))
+  ans <- vector("list", length = R)
+  for (i in seq_len(R))
+    ans[[i]] <- raphylo(...)
+  do.call(c, ans)
   
 }
 

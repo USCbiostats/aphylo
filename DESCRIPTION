@@ -1,17 +1,17 @@
 Package: aphylo
-Title: Statistical Inference of Annotated Phylogenetic Trees
+Title: Statistical Inference and Prediction of Annotations in Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"),
          email="g.vegayon@gmail.com", comment = c(ORCID = "0000-0002-3171-0844"))
-Version: 0.1.99
-Date: 2021-06-07
-Description: The `aphylo` R package implements estimation and data imputation
-         methods for Functional Annotations in Phylogenetic Trees. The core
-         function consists on the computation of the log-likelihood of observing
-         a given phylogenetic tree with functional annotation on its leafs, and
-         probabilities associated to gain and loss of functionalities, including
-         probabilities of experimental misclasification. `aphylo` works smoothly
-         with popular tools for analysis of phylogenetic data such as `ape` R
-         package, "Analyses of Phylogenetics and Evolution."
+Version: 0.2-0
+Date: 2021-11-16
+Description: aphylo implements a parsimonious evolutionary model to analyze and
+  predict gene-functional annotations in phylogenetic trees as described in Vega
+  Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. With a focus on
+  computational efficiency, aphylo makes it possible to estimate pooled
+  phylogenetic models, including thousands (hundreds) of annotations (trees) in
+  the same run. The package also provides the tools for visualization of
+  annotated phylogenies, calculation of posterior probabilities (prediction,)
+  and goodness-of-fit assessment featured in Vega Yon et al. (2021).
 Depends: R (>= 3.1.1), ape (>= 5.0)
 LazyData: true
 Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
