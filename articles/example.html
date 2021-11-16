@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2-0</span>
       </span>
     </div>
 
@@ -154,27 +154,27 @@
 ## Ideally you would want to start each chain from different locations.</code></pre>
 <pre><code>## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
 ## not be used in a context other than the argument `conv_checker` in `MCMC`.</code></pre>
-<pre><code>## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0379. (500 final count of samples).</code></pre>
+<pre><code>## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0412. (500 final count of samples).</code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ans</span></code></pre></div>
 <pre><code>## 
 ## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
 ## 
 ##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)
-##  LogLik: -108.8018
+##  LogLik: -108.7258
 ##  Method used: mcmc (10000 steps)
 ##  # of Leafs: 200
 ##  # of Functions 1
 ##  # of Trees: 1
 ## 
 ##          Estimate  Std. Err.
-##  psi0    0.0597    0.0449
-##  psi1    0.0564    0.0396
-##  mu_d0   0.2222    0.1185
-##  mu_d1   0.1395    0.1003
-##  mu_s0   0.1269    0.0456
-##  mu_s1   0.0612    0.0320
-##  Pi      0.4019    0.2639</code></pre>
+##  psi0    0.0558    0.0438
+##  psi1    0.0536    0.0358
+##  mu_d0   0.2201    0.1104
+##  mu_d1   0.1425    0.1057
+##  mu_s0   0.1282    0.0441
+##  mu_s1   0.0620    0.0309
+##  Pi      0.3873    0.2618</code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can compare the predicted values with the observed values:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>

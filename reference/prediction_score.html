@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2-0</span>
       </span>
     </div>
 
@@ -217,7 +217,7 @@ are equal to 1, this is:</p><pre><span class='fu'><a href='https://rdrr.io/r/bas
 <span class='r-in'>  <span class='op'>)</span></span>
 <span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
 <span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>This function should not be used in a context other than the argument `conv_checker` in `MCMC`.</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> No convergence yet (steps count: 2500). Gelman-Rubin's R: 1.4590. Trying with the next bulk.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> No convergence yet (steps count: 2500). Gelman-Rubin's R: 1.2397. Trying with the next bulk.</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No convergence reached after 2500 steps (100 final count of samples).</span>
 <span class='r-in'>                   </span>
 <span class='r-in'><span class='op'>(</span><span class='va'>pr</span> <span class='op'>&lt;-</span> <span class='fu'>prediction_score</span><span class='op'>(</span><span class='va'>ans</span>, loo <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -225,15 +225,15 @@ are equal to 1, this is:</p><pre><span class='fu'><a href='https://rdrr.io/r/bas
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  N obs.      : 99</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  alpha(0, 1) : 0.43, 0.55</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>  Observed    : 0.65 *</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Observed    : 0.64 *</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Random      : 0.50 </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>  P(&lt;t)       : 0.0537</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  P(&lt;t)       : 0.0933</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Values scaled to range between 0 and 1, 1 being best.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> AUC 0.78.</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> MAE 0.35.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> MAE 0.36.</span>
 <span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pr</span><span class='op'>)</span></span>
 <span class='r-plt img'><img src='prediction_score-1.png' alt='' width='700' height='433' /></span>
 </pre>
