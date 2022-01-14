@@ -3,8 +3,8 @@ Title: Statistical Inference and Prediction of Annotations in Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"),
          email="g.vegayon@gmail.com", comment = c(ORCID = "0000-0002-3171-0844"))
 Version: 0.2-1
-Date: 2022-01-01
-Description: aphylo implements a parsimonious evolutionary model to analyze and
+Date: 2022-01-14
+Description: Implements a parsimonious evolutionary model to analyze and
   predict gene-functional annotations in phylogenetic trees as described in Vega
   Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. With a focus on
   computational efficiency, aphylo makes it possible to estimate pooled

@@ -24,7 +24,9 @@ ans0 <- c(
 )[with(atree$tree, c(tip.label, node.label))]
 
 # Computing brute-force and using the pre-order
-ans1 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+# ans1 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+# saveRDS(ans1, "inst/tinytest/test-predict-ans1.rds")
+ans1 <- readRDS("test-predict-ans1.rds")
 ans2 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi, loo = FALSE)
 
 
@@ -62,7 +64,9 @@ expect_equivalent(ans1$posterior, ans2[,1])
 set.seed(122331)
 atree <- raphylo(4, psi = psi, mu_d = mu, mu_s = mu, eta = eta, Pi = Pi)
 
-ans0 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+# ans0 <- predict_brute_force(atree, psi, mu_d = mu, mu_s = mu, Pi)
+# saveRDS(ans0, file = "inst/tinytest/test-predict-ans0.rds")
+ans0 <- readRDS("test-predict-ans0.rds")
 ans1 <- predict_pre_order(atree, psi, mu_d = mu, mu_s = mu, eta, Pi, loo = FALSE)
 
 expect_equivalent(ans0$posterior, ans1[,1])

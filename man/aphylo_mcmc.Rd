@@ -72,15 +72,15 @@ are available post estimation.
 The vector \code{APHYLO_PARAM_DEFAULT} lists the starting values for the parameters
 in the model. The current defaults are:
 \itemize{
-\item \code{psi0}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$psi0}
-\item \code{psi1}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$psi1}
-\item \code{mu_d0}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_d0}
-\item \code{mu_d1}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_d1}
-\item \code{mu_s0}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_s0}
-\item \code{mu_s1}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$mu_s1}
-\item \code{eta0}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$eta0}
-\item \code{eta1}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$eta1}
-\item \code{Pi}: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$Pi}
+\item \code{psi0}: 0.10
+\item \code{psi1}: 0.05
+\item \code{mu_d0}: 0.90
+\item \code{mu_d1}: 0.50
+\item \code{mu_s0}: 0.10
+\item \code{mu_s1}: 0.05
+\item \code{eta0}: 1.00
+\item \code{eta1}: 1.00
+\item \code{Pi}: 0.50
 }
 }
 \examples{
