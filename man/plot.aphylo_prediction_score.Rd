@@ -45,3 +45,12 @@ Visualize predictions
 If \code{include.labels = NULL} and \code{ncol(x$expected) > 40},
 then \code{include.labels=FALSE} by default.
 }
+\examples{
+set.seed(8783)
+atree  <- raphylo(29)
+ans    <- aphylo_mle(atree ~ mu_d + mu_s + Pi)
+pred_s <- prediction_score(ans)
+
+pred_s
+plot(pred_s)
+}

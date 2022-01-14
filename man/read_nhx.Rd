@@ -35,7 +35,7 @@ read_nhx(
 }
 \references{
 "NHX - New Hampshire eXtended [version 2.0]",
-\url{https://sites.google.com/site/cmzmasek/home/software/forester/nhx}
+\url{https://en.wikipedia.org/wiki/Newick_format#New_Hampshire_X_format}
 }
 \seealso{
 Other reading: 

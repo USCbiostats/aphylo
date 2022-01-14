@@ -44,6 +44,15 @@ try_solve <- function(x, ...) {
 #' \item{varcovar}{A matrix of size 5*5. The estimated covariance matrix.}
 #' 
 #' @name aphylo_estimates
+#' @examples 
+#' set.seed(7881)
+#' atree <- raphylo(40, P = 2)
+#' res   <- aphylo_mcmc(atree ~ mu_d + mu_s + Pi)
+#' 
+#' print(res)
+#' coef(res)
+#' vcov(res)
+#' plot(res)
 NULL
 
 new_aphylo_estimates <- function(

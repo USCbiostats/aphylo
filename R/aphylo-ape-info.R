@@ -7,6 +7,17 @@
 #' @name ape-methods
 #' @family information
 #' @importFrom ape as.phylo plot.phylo Nedge Ntip Nnode
+#' @examples 
+#' set.seed(12312)
+#' atree <- raphylo(50, P = 2)
+#' Nnode(atree)
+#' Ntip(atree)
+#' Nedge(atree)
+#' 
+#' multitree <- rmultiAphylo(10, 50, P = 2)
+#' Nnode(multitree)
+#' Ntip(multitree)
+#' Nedge(multitree)
 NULL
 
 #' @method Nedge aphylo

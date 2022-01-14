@@ -12,7 +12,17 @@
 #' @family parameter estimation
 #' @details The parameters `priors`, `check_informative`, and `reduced_pseq`
 #' are silently ignored in this function.
-#' @export
+# #' @export # NOT FOR
+#' @noRd
+#' @examples 
+#' set.seed(123189)
+#' aphylos <- rmultiAphylo(10, 50, P = 2)
+#' 
+#' ans <- aphylo_hier(
+#'   aphylos ~ mu_d + mu_s + Pi,
+#'   params  = c(0.9, .5, .1, .05, .5),
+#'   classes = rep(c(1,2), 5)
+#' )
 aphylo_hier <- function(
   model,
   params,
@@ -22,9 +32,8 @@ aphylo_hier <- function(
   hyper_params = NULL,
   env          = parent.frame(),
   verbose      = TRUE,
-  multicore    = FALSE,
-  nchains      = 1L,
   use_optim    = TRUE,
+  control      = ls(),
   priors       = NULL,
   check_informative = NULL,
   reduced_pseq = NULL
@@ -238,3 +247,4 @@ aphylo_hier <- function(
   # return(ans)
      
 }
+

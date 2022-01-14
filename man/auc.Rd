@@ -44,3 +44,11 @@ A list:
 The AUC values are computed by approximation using the area of the polygons formed
 under the ROC curve.
 }
+\examples{
+set.seed(8381)
+x   <- rdrop_annotations(raphylo(50), .3)
+ans <- aphylo_mcmc(x ~ mu_d + mu_s + Pi)
+ans_auc <- auc(predict(ans, loo = TRUE), x[,1,drop=TRUE])
+print(ans_auc)
+plot(ans_auc)
+}

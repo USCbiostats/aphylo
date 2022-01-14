@@ -23,6 +23,10 @@
 #' @return In the case of `plot.aphylo`, `NULL`.
 #' @family aphylo methods
 #' @export
+#' @examples 
+#' set.seed(7172)
+#' atree <- raphylo(20)
+#' plot(atree)
 plot.aphylo <- function(
   x,
   y              = NULL,

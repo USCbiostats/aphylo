@@ -43,7 +43,7 @@ See \url{https://github.com/USCbiostats/pruner}.
 }
 \examples{
 set.seed(1)
-x  <- raphylo(10) 
+x  <- raphylo(20) 
 pruner <- new_aphylo_pruner(x)
 
 # Computing loglike
@@ -55,4 +55,7 @@ LogLike(
   Pi   = .05,
   eta  = c(.90, .80)
   )
+  
+dist2root(pruner)
+get_postorder(pruner)
 }

@@ -14,7 +14,7 @@
 #' 
 #' @examples
 #' set.seed(1)
-#' x  <- raphylo(10) 
+#' x  <- raphylo(20) 
 #' pruner <- new_aphylo_pruner(x)
 #' 
 #' # Computing loglike
@@ -26,6 +26,9 @@
 #'   Pi   = .05,
 #'   eta  = c(.90, .80)
 #'   )
+#'   
+#' dist2root(pruner)
+#' get_postorder(pruner)
 #' @name new_aphylo_pruner
 NULL
 

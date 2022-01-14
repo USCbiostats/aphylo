@@ -1,3 +1,15 @@
+# Changes in aphylo version 0.3-0
+
+* Preparing for CRAN.
+
+* Added examples to every function.
+
+* Fixed bug in `auc()`: Was still using NAs in the predicted values.
+
+* Fixed bug in `aphylo_formulae()`: Passing subsetted trees, e.g., `atree[[1]]`,
+  now works.
+
+
 # Changes in aphylo version 0.1.99
 
 * First version

@@ -36,3 +36,6 @@ README[.]md
 inst/CODECOV_EXCLUSIONS
 ^docker$
 ^\.github$
+
+# Wont include it for now
+^R/aphylo_hier\.R

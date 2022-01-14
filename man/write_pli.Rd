@@ -23,3 +23,48 @@ write_pli(
 \description{
 Write pli files used by SIFTER
 }
+\examples{
+set.seed(882)
+atree <- raphylo(5)
+write_pli(
+  family_id      = "a family",
+  protein_name   = atree$tree$tip.label,
+  protein_number = 1:Ntip(atree),
+  go_number      = "GO:123123123123"
+)
+# Possible outcome:
+#<?xml version="1.0"?>
+#<Family>
+#  <FamilyID>a family</FamilyID>
+#  <Protein>
+#    <ProteinName>1</ProteinName>
+#    <ProteinNumber>1</ProteinNumber>
+#    <GONumber>[GO:123123123123]</GONumber>
+#    <MOC>[EXP]</MOC>
+#  </Protein>
+#  <Protein>
+#    <ProteinName>2</ProteinName>
+#    <ProteinNumber>2</ProteinNumber>
+#    <GONumber>[GO:123123123123]</GONumber>
+#    <MOC>[EXP]</MOC>
+#  </Protein>
+#  <Protein>
+#    <ProteinName>3</ProteinName>
+#    <ProteinNumber>3</ProteinNumber>
+#    <GONumber>[GO:123123123123]</GONumber>
+#    <MOC>[EXP]</MOC>
+#  </Protein>
+#  <Protein>
+#    <ProteinName>4</ProteinName>
+#    <ProteinNumber>4</ProteinNumber>
+#    <GONumber>[GO:123123123123]</GONumber>
+#    <MOC>[EXP]</MOC>
+#  </Protein>
+#  <Protein>
+#    <ProteinName>5</ProteinName>
+#    <ProteinNumber>5</ProteinNumber>
+#    <GONumber>[GO:123123123123]</GONumber>
+#    <MOC>[EXP]</MOC>
+#  </Protein>
+#</Family>
+}

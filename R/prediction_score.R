@@ -351,6 +351,14 @@ blue <- function(x) {
 #' If `include.labels = NULL` and `ncol(x$expected) > 40`,
 #' then `include.labels=FALSE` by default.
 #' @aliases plot-prediction
+#' @examples 
+#' set.seed(8783)
+#' atree  <- raphylo(29)
+#' ans    <- aphylo_mle(atree ~ mu_d + mu_s + Pi)
+#' pred_s <- prediction_score(ans)
+#' 
+#' pred_s
+#' plot(pred_s)
 plot.aphylo_prediction_score <- function(
   x,
   y              = NULL, 

@@ -10,6 +10,18 @@ Integer with the number of edges, nodes, or tips accordignly.
 The generics \code{\link[ape:summary.phylo]{ape::Nedge()}}, \code{\link[ape:summary.phylo]{ape::Nnode()}}, and \code{\link[ape:summary.phylo]{ape::Ntip()}} can be used
 directly on objects of class \link{aphylo}, \link{aphylo_estimates}, \link{multiAphylo}
 }
+\examples{
+set.seed(12312)
+atree <- raphylo(50, P = 2)
+Nnode(atree)
+Ntip(atree)
+Nedge(atree)
+
+multitree <- rmultiAphylo(10, 50, P = 2)
+Nnode(multitree)
+Ntip(multitree)
+Nedge(multitree)
+}
 \seealso{
 Other information: 
 \code{\link{aphylo-info}}

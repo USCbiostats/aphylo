@@ -100,7 +100,7 @@ APHYLO_PARAM_NAMES <- c(
 #' - `Pi`: \Sexpr[results=text]{as.list(aphylo::APHYLO_PARAM_DEFAULT)$Pi}
 #' 
 APHYLO_PARAM_DEFAULT <- structure(
-  .Data = c(.1, .1, .9, .9, .1, .1, .9, .9, .1),
+  .Data = c(.1, .05, .9, .5, .1, .05, 1.0, 1.0, .5),
   names = APHYLO_PARAM_NAMES
 )
 
@@ -392,10 +392,10 @@ aphylo_formula <- function(fm, params, priors, env = parent.frame()) {
   model_call <- aphylo_call(params, priors)
   
   # Is the LHS an aphylo object?
-  if (!exists(as.character(val[[2]]), envir = env))
-    stop("The object -", as.character(val[[2]]), "- can't be found.", call. = FALSE)
+  LHS <- tryCatch(eval(val[[2]], envir = env), error = function(e) e)
+  if (inherits(LHS, "error"))
+    stop("The object -", deparse(val[[2]]), "- can't be found.", call. = FALSE)
   
-  LHS <- eval(val[[2]], envir = env)
   if (!is.aphylo(LHS) && !is.multiAphylo(LHS) && !inherits(LHS, "aphylo_pruner"))
     stop(
       "The LHS of the equation should be either a list or a single ",

@@ -73,3 +73,13 @@ the post estimation methods/functions that can be used.
 The plot method for the object of class \code{aphylo_estimates} plots
 the original tree with the predicted annotations.
 }
+\examples{
+set.seed(7881)
+atree <- raphylo(40, P = 2)
+res   <- aphylo_mcmc(atree ~ mu_d + mu_s + Pi)
+
+print(res)
+coef(res)
+vcov(res)
+plot(res)
+}

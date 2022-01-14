@@ -18,6 +18,17 @@
 #' with argument `loo = TRUE`.
 #'  
 #' @export
+#' @examples 
+#' # It takes about two minutes to run this example
+#' \dontrun{
+#' 
+#'   set.seed(123)
+#'   atrees <- rmultiAphylo(10, 10, P = 1)
+#' 
+#'   cv_multi  <- aphylo_cv(atrees ~ mu_d + mu_s + Pi)
+#'   cv_single <- aphylo_cv(atrees[[1]] ~ mu_d + mu_s + Pi)
+#'   
+#' }
 aphylo_cv <- function(...) UseMethod("aphylo_cv")
 
 #' @export

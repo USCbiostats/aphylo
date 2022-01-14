@@ -8,6 +8,14 @@
 #' the [aphylo] object. Whenever `i` is specified, then aphylo returns the corresponding
 #' annotations.
 #' @name aphylo-index
+#' @examples 
+#' set.seed(12312)
+#' atree <- raphylo(50, P = 4)
+#' atree[1:10,]
+#' atree[,2:3]
+#' atree[, 2:3, drop = TRUE]
+#' 
+#' 
 NULL
 
 #' @export

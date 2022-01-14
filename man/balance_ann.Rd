@@ -2,7 +2,7 @@
 % Please edit documentation in R/balance.R
 \name{balance_ann}
 \alias{balance_ann}
-\title{Functional banlance of a tree}
+\title{Functional balance of a tree}
 \usage{
 balance_ann(phy)
 }

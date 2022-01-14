@@ -43,3 +43,11 @@ excluded from the analysis.
 
 When \code{highlight = ""}, no highlight is done.
 }
+\examples{
+set.seed(81231)
+atree <- raphylo(100, psi = c(0,0), P = 3)
+ans <- aphylo_mcmc(atree ~ mu_d + mu_s + Pi)
+
+accuracy_sifter(ans)
+
+}

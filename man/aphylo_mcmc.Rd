@@ -54,11 +54,11 @@ The function is a wrapper of \code{\link[fmcmc:MCMC]{fmcmc::MCMC()}}.
 \code{APHYLO_DEFAULT_MCMC_CONTROL} lists the default values for the MCMC
 estimation:
 \itemize{
-\item \code{nsteps}: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nsteps}
-\item \code{burnin}: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
-\item \code{thin} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$thin}
-\item \code{nchains} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nchains}
-\item \code{multicore} : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$multicore}
+\item \code{nsteps}: \code{1e4L}
+\item \code{burnin}: \code{5e3L}
+\item \code{thin} : \code{10L}
+\item \code{nchains} : \code{2L}
+\item \code{multicore} : \code{FALSE}
 \item \code{conv_checker} : \code{fmcmc::convergence_auto(5e3)}
 }
 
@@ -93,7 +93,7 @@ set.seed(1233)
 tree <- sim_tree(200)
 
 # Simulating functions
-dat <- raphylo(
+atree <- raphylo(
   tree = tree,
   psi  = c(.01, .03),
   mu_d = c(.05, .02),
@@ -111,7 +111,6 @@ ans_mcmc <- aphylo_mcmc(
 }
 \seealso{
 Other parameter estimation: 
-\code{\link{aphylo_hier}()},
 \code{\link{aphylo_mle}()}
 }
 \concept{parameter estimation}

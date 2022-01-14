@@ -43,6 +43,11 @@ Plot and print methods for \code{aphylo} objects
 \details{
 The \code{plot.aphylo} function is a wrapper of \link[ape:plot.phylo]{ape::plot.phylo}.
 }
+\examples{
+set.seed(7172)
+atree <- raphylo(20)
+plot(atree)
+}
 \seealso{
 Other aphylo methods: 
 \code{\link{aphylo-class}}

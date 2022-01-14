@@ -19,6 +19,13 @@ using namespace Rcpp;
 //' - `auc` A numeric value. Area Under the Curve.
 //' - `cutoffs` A vector of length `nc` with the cutoffs used.
 //' @export
+//' @examples
+//' set.seed(8381)
+//' x   <- rdrop_annotations(raphylo(50), .3)
+//' ans <- aphylo_mcmc(x ~ mu_d + mu_s + Pi)
+//' ans_auc <- auc(predict(ans, loo = TRUE), x[,1,drop=TRUE])
+//' print(ans_auc)
+//' plot(ans_auc)
 // [[Rcpp::export]]
 List auc(
     NumericVector pred,
@@ -40,18 +47,26 @@ List auc(
   locations.reserve(nobs);
   int n0 = 0, n1 = 0;
   
-  for (unsigned int j = 0; j < nobs; ++j) {
+  for (unsigned int j = 0; j < nobs; ++j)
+  {
     
-    if (!IntegerVector::is_na(labels[j])) {
+    if (NumericVector::is_na(pred[j]))
+      continue;
+    
+    if (!IntegerVector::is_na(labels[j]))
+    {
+      
       if (labels[j] == 0) ++n0;
       else if (labels[j] == 1) ++n1;
       else if (nine_na && labels[j] == 9) continue;
       else 
         stop("Only values 0/1 are supported.");
+      
     } else
       continue;
     
-    locations.push_back((unsigned int) j);
+    locations.push_back(static_cast<unsigned int>(j));
+    
   }
   locations.shrink_to_fit();
 

@@ -35,26 +35,24 @@ Southern California.
 citation(package="aphylo")
 ```
 
-``` 
 
-To cite aphylo in publications use the following paper:
+    To cite aphylo in publications use the following paper:
 
-  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
-  Bayesian parameter estimation for automatic annotation of gene
-  functions using observational data and phylogenetic trees. PLOS
-  Computational Biology 17(2): e1007948.
-  https://doi.org/10.1371/journal.pcbi.1007948
+      Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
+      Bayesian parameter estimation for automatic annotation of gene
+      functions using observational data and phylogenetic trees. PLOS
+      Computational Biology 17(2): e1007948.
+      https://doi.org/10.1371/journal.pcbi.1007948
 
-And the actual R package:
+    And the actual R package:
 
-Vega Yon G (2021). _Statistical Inference of Annotated Phylogenetic
-Trees_. R package version 0.1.99, <URL:
-https://github.com/USCBiostats/aphylo>.
+    Vega Yon G (2022). _Statistical Inference of Annotated Phylogenetic
+    Trees_. R package version 0.2-1, <URL:
+    https://github.com/USCBiostats/aphylo>.
 
-To see these entries in BibTeX format, use 'print(<citation>,
-bibtex=TRUE)', 'toBibtex(.)', or set
-'options(citation.bibtex.max=999)'.
-```
+    To see these entries in BibTeX format, use 'print(<citation>,
+    bibtex=TRUE)', 'toBibtex(.)', or set
+    'options(citation.bibtex.max=999)'.
 
 ## Install
 
@@ -189,7 +187,7 @@ dat
     ## Node labels:
     ##   51, 52, 53, 54, 55, 56, ...
     ## 
-    ## Rooted; includes branch lengths.
+    ## Rooted; no branch lengths.
     ## 
     ##  Tip (leafs) annotations:
     ##   fun0000
@@ -248,15 +246,10 @@ ans2 <- aphylo_mcmc(
 ```
 
     ## Warning: While using multiple chains, a single initial point has been passed via
-    ## `initial`: c(0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled. Ideally you
+    ## `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you
     ## would want to start each chain from different locations.
 
-    ## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
-    ## not be used in a context other than the argument `conv_checker` in `MCMC`.
-
-    ## No convergence yet (steps count: 5500). Trying with the next bulk.
-
-    ## No convergence reached after 5500 steps (500 final count of samples).
+    ## Convergence has been reached with 5500 steps. Gelman-Rubin's R: 1.0434. (500 final count of samples).
 
 ``` r
 ans2
@@ -268,18 +261,18 @@ ans2
     ##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
     ##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 5000, 
     ##     burnin = 500, thin = 10, nchains = 2))
-    ##  LogLik (unnormalized): -20.1965 
+    ##  LogLik (unnormalized): -20.0975 
     ##  Method used: mcmc (5500 steps)
     ##  # of Leafs: 50
     ##  # of Functions 1
     ##  # of Trees: 1
     ## 
     ##          Estimate  Std. Err.
-    ##  mu_d0   0.9145    0.0747
-    ##  mu_d1   0.1758    0.0865
-    ##  mu_s0   0.1024    0.0695
-    ##  mu_s1   0.1103    0.0477
-    ##  Pi      0.5558    0.1447
+    ##  mu_d0   0.9123    0.0727
+    ##  mu_d1   0.1657    0.0779
+    ##  mu_s0   0.1137    0.0743
+    ##  mu_s1   0.0984    0.0431
+    ##  Pi      0.5331    0.1510
 
 ``` r
 plot(
@@ -301,15 +294,15 @@ gelman.diag(ans2$hist)
     ## Potential scale reduction factors:
     ## 
     ##       Point est. Upper C.I.
-    ## mu_d0      1.009       1.05
-    ## mu_d1      1.006       1.03
-    ## mu_s0      1.141       1.50
-    ## mu_s1      1.004       1.03
-    ## Pi         0.999       1.00
+    ## mu_d0      1.014       1.06
+    ## mu_d1      1.032       1.12
+    ## mu_s0      0.999       1.00
+    ## mu_s1      1.003       1.01
+    ## Pi         1.014       1.07
     ## 
     ## Multivariate psrf
     ## 
-    ## 1.08
+    ## 1.04
 
 ``` r
 plot(ans2$hist)
@@ -335,7 +328,7 @@ pred
     ## Values scaled to range between 0 and 1, 1 being best.
     ## 
     ## Significance levels: *** p < .01, ** p < .05, * p < .10
-    ## AUC 0.77.
+    ## AUC 0.78.
     ## MAE 0.29.
 
 ``` r

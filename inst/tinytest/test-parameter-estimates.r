@@ -23,7 +23,7 @@ ans0 <- suppressWarnings({
 # test_that("Methods", {
   
   # Printing
-  expect_silent(print(ans0))
+  expect_silent(suppressWarnings(print(ans0)))
   
   # Plotting
   expect_silent(plot(ans0))

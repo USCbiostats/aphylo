@@ -67,7 +67,6 @@ ans_dbeta
 }
 \seealso{
 Other parameter estimation: 
-\code{\link{APHYLO_DEFAULT_MCMC_CONTROL}},
-\code{\link{aphylo_hier}()}
+\code{\link{APHYLO_DEFAULT_MCMC_CONTROL}}
 }
 \concept{parameter estimation}

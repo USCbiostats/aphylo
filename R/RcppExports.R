@@ -83,6 +83,13 @@ Tree_get_ann <- function(phy) {
 #' - `auc` A numeric value. Area Under the Curve.
 #' - `cutoffs` A vector of length `nc` with the cutoffs used.
 #' @export
+#' @examples
+#' set.seed(8381)
+#' x   <- rdrop_annotations(raphylo(50), .3)
+#' ans <- aphylo_mcmc(x ~ mu_d + mu_s + Pi)
+#' ans_auc <- auc(predict(ans, loo = TRUE), x[,1,drop=TRUE])
+#' print(ans_auc)
+#' plot(ans_auc)
 auc <- function(pred, labels, nc = 200L, nine_na = TRUE) {
     .Call(`_aphylo_auc`, pred, labels, nc, nine_na)
 }

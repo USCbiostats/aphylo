@@ -2,11 +2,11 @@
 #' @rdname aphylo_mcmc
 #' @details `APHYLO_DEFAULT_MCMC_CONTROL` lists the default values for the MCMC
 #' estimation:
-#' - `nsteps`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nsteps}
-#' - `burnin`: \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$burnin}
-#' - `thin` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$thin}
-#' - `nchains` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$nchains}
-#' - `multicore` : \Sexpr{aphylo::APHYLO_DEFAULT_MCMC_CONTROL$multicore}
+#' - `nsteps`: `1e4L`
+#' - `burnin`: `5e3L`
+#' - `thin` : `10L`
+#' - `nchains` : `2L`
+#' - `multicore` : `FALSE`
 #' - `conv_checker` : `fmcmc::convergence_auto(5e3)`
 #' 
 #' For more information about the MCMC estimation process, see [fmcmc::MCMC()].
@@ -44,7 +44,7 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
 #' tree <- sim_tree(200)
 #' 
 #' # Simulating functions
-#' dat <- raphylo(
+#' atree <- raphylo(
 #'   tree = tree,
 #'   psi  = c(.01, .03),
 #'   mu_d = c(.05, .02),

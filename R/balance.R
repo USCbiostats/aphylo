@@ -1,4 +1,4 @@
-#' Functional banlance of a tree
+#' Functional balance of a tree
 #' 
 #' This function computes the distance between .5 and the observed proportion
 #' of ones for each function in a tree.

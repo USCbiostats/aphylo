@@ -2,8 +2,8 @@ Package: aphylo
 Title: Statistical Inference and Prediction of Annotations in Phylogenetic Trees
 Authors@R: person("George", "Vega Yon", role=c("aut","cre"),
          email="g.vegayon@gmail.com", comment = c(ORCID = "0000-0002-3171-0844"))
-Version: 0.2-0
-Date: 2021-11-16
+Version: 0.2-1
+Date: 2022-01-01
 Description: aphylo implements a parsimonious evolutionary model to analyze and
   predict gene-functional annotations in phylogenetic trees as described in Vega
   Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. With a focus on
@@ -19,7 +19,7 @@ Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
 Suggests: covr, knitr, tinytest, AUC, rmarkdown,
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 URL: https://github.com/USCbiostats/aphylo
 BugReports: https://github.com/USCbiostats/aphylo/issues
