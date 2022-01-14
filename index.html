@@ -33,6 +33,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -45,18 +47,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -78,7 +74,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/USCbiostats/aphylo/">
+  <a href="https://github.com/USCbiostats/aphylo/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -97,65 +93,63 @@
   <div class="contents col-md-9">
 
 
-<div id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-" class="anchor"></a>aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="reference/figures/logo.svg" align="right" width="180px">
+<div class="section level1">
+<div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
 </h1></div>
 <p>The <code>aphylo</code> R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, <code>aphylo</code> works smoothly with popular tools for analysis of phylogenetic data such as <code>ape</code> R package, “Analyses of Phylogenetics and Evolution”.</p>
 <p>The package is under MIT License, and is been developed by the Computing and Software Cores of the Biostatistics Division’s NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.</p>
-<div id="citation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h2>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></code></pre></div>
-<pre><code>
-To cite aphylo in publications use the following paper:
-
-  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
-  Bayesian parameter estimation for automatic annotation of gene
-  functions using observational data and phylogenetic trees. PLOS
-  Computational Biology 17(2): e1007948.
-  https://doi.org/10.1371/journal.pcbi.1007948
-
-And the actual R package:
-
-Vega Yon G (2021). _Statistical Inference of Annotated Phylogenetic
-Trees_. R package version 0.1.99, &lt;URL:
-https://github.com/USCBiostats/aphylo&gt;.
-
-To see these entries in BibTeX format, use 'print(&lt;citation&gt;,
-bibtex=TRUE)', 'toBibtex(.)', or set
-'options(citation.bibtex.max=999)'.</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>To cite aphylo <span class="cf">in</span> publications use the following paper<span class="sc">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et <span class="fu">al.</span> (<span class="dv">2021</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  Bayesian parameter estimation <span class="cf">for</span> automatic annotation of gene</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  functions using observational data and phylogenetic trees. PLOS</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  Computational Biology <span class="dv">17</span>(<span class="dv">2</span>)<span class="sc">:</span> e1007948.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  https<span class="sc">:</span><span class="er">//</span>doi.org<span class="sc">/</span><span class="fl">10.1371</span><span class="sc">/</span>journal.pcbi<span class="fl">.1007948</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>And the actual R package<span class="sc">:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>Vega Yon <span class="fu">G</span> (<span class="dv">2022</span>). _Statistical Inference of Annotated Phylogenetic</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Trees_. R package version <span class="fl">0.2</span><span class="dv">-1</span>, <span class="sc">&lt;</span>URL<span class="sc">:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>USCBiostats<span class="sc">/</span>aphylo<span class="sc">&gt;</span>.</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>To see these entries <span class="cf">in</span> BibTeX format, use <span class="st">'print(&lt;citation&gt;,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="st">bibtex=TRUE)'</span>, <span class="st">'toBibtex(.)'</span>, or set</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="st">'options(citation.bibtex.max=999)'</span>.</span></code></pre></div>
 </div>
-<div id="install" class="section level2">
-<h2 class="hasAnchor">
-<a href="#install" class="anchor"></a>Install</h2>
-<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc"><code>fmcmc</code></a>. So first you need to install it:</p>
+<div class="section level2">
+<h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
+</h2>
+<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So first you need to install it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></code></pre></div>
 <p>Then you can install the <code>aphylo</code> package</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="reading-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#reading-data" class="anchor"></a>Reading data</h2>
+<div class="section level2">
+<h2 id="reading-data">Reading data<a class="anchor" aria-label="anchor" href="#reading-data"></a>
+</h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo">aphylo</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo" class="external-link">aphylo</a></span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: ape</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># This datasets are included in the package</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"fakeexperiment"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"faketree"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fakeexperiment"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"faketree"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">fakeexperiment</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fakeexperiment</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">##      LeafId f1 f2</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,]      1  0  0</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,]      2  0  1</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [3,]      3  1  0</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [4,]      4  1  1</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">##      ParentId NodeId</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,]        6      1</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,]        6      2</span></span>
@@ -205,23 +199,23 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Rooted; no branch lengths.</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># We can visualize it</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
 <p><img src="README_files/figure-gfm/Get%20offspring-1.png"><!-- --></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
 <p><img src="README_files/figure-gfm/Get%20offspring-2.png"><!-- --></p>
 </div>
-<div id="simulating-annoated-trees" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simulating-annoated-trees" class="anchor"></a>Simulating annoated trees</h2>
+<div class="section level2">
+<h2 id="simulating-annoated-trees">Simulating annoated trees<a class="anchor" aria-label="anchor" href="#simulating-annoated-trees"></a>
+</h2>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">198</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">198</span><span class="op">)</span>
 <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/raphylo.html">raphylo</a></span><span class="op">(</span>
   <span class="fl">50</span>,
   P    <span class="op">=</span> <span class="fl">1</span>, 
-  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.05</span><span class="op">)</span>,
-  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.3</span><span class="op">)</span>,
-  mu_s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>,
+  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.05</span><span class="op">)</span>,
+  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.3</span><span class="op">)</span>,
+  mu_s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>,
   Pi   <span class="op">=</span> <span class="fl">.4</span>
   <span class="op">)</span>
 
@@ -234,7 +228,7 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Node labels:</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   51, 52, 53, 54, 55, 56, ...</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Rooted; includes branch lengths.</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Rooted; no branch lengths.</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  Tip (leafs) annotations:</span></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   fun0000</span></span>
@@ -259,48 +253,43 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="do">## ...(43 obs. omitted)...</span></span></code></pre></div>
 </div>
-<div id="likelihood" class="section level2">
-<h2 class="hasAnchor">
-<a href="#likelihood" class="anchor"></a>Likelihood</h2>
+<div class="section level2">
+<h2 id="likelihood">Likelihood<a class="anchor" aria-label="anchor" href="#likelihood"></a>
+</h2>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Parameters and data</span>
-<span class="va">psi</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.020</span>,<span class="fl">0.010</span><span class="op">)</span>
-<span class="va">mu_d</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.40</span>,<span class="fl">.10</span><span class="op">)</span>
-<span class="va">mu_s</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.04</span>,<span class="fl">.01</span><span class="op">)</span>
-<span class="va">eta</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span>
+<span class="va">psi</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.020</span>,<span class="fl">0.010</span><span class="op">)</span>
+<span class="va">mu_d</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.40</span>,<span class="fl">.10</span><span class="op">)</span>
+<span class="va">mu_s</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>,<span class="fl">.01</span><span class="op">)</span>
+<span class="va">eta</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span>
 <span class="va">pi_root</span> <span class="op">&lt;-</span> <span class="fl">.05</span>
 
 <span class="co"># Computing likelihood</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="fu"><a href="reference/LogLike.html">LogLike</a></span><span class="op">(</span><span class="va">dat</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, eta <span class="op">=</span> <span class="va">eta</span>, Pi <span class="op">=</span> <span class="va">pi_root</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="reference/LogLike.html">LogLike</a></span><span class="op">(</span><span class="va">dat</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, eta <span class="op">=</span> <span class="va">eta</span>, Pi <span class="op">=</span> <span class="va">pi_root</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## List of 2</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Pr:List of 1</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   ..$ : num [1:99, 1:2] 0.018 0.686 0.686 0.018 0.686 0.686 0.018 0.018 0.018 0.686 ...</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ ll: num -40.4</span></span></code></pre></div>
 </div>
 </div>
-<div id="estimation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#estimation" class="anchor"></a>Estimation</h1>
+<div class="section level1">
+<h1 id="estimation">Estimation<a class="anchor" aria-label="anchor" href="#estimation"></a>
+</h1>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Using L-BFGS-B (MLE) to get an initial guess</span>
 <span class="va">ans0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mle.html">aphylo_mle</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">Pi</span> <span class="op">+</span> <span class="va">eta</span><span class="op">)</span>
 
 
 <span class="co"># MCMC method</span>
-<span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/APHYLO_DEFAULT_MCMC_CONTROL.html">aphylo_mcmc</a></span><span class="op">(</span>
+<span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span>
   <span class="va">dat</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span>,
-  prior   <span class="op">=</span> <span class="fu"><a href="reference/bprior.html">bprior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nsteps<span class="op">=</span><span class="fl">5e3</span>, burnin<span class="op">=</span><span class="fl">500</span>, thin<span class="op">=</span><span class="fl">10</span>, nchains<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  prior   <span class="op">=</span> <span class="fu"><a href="reference/bprior.html">bprior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps<span class="op">=</span><span class="fl">5e3</span>, burnin<span class="op">=</span><span class="fl">500</span>, thin<span class="op">=</span><span class="fl">10</span>, nchains<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: While using multiple chains, a single initial point has been passed via</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## `initial`: c(0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled. Ideally you</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## would want to start each chain from different locations.</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## not be used in a context other than the argument `conv_checker` in `MCMC`.</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="do">## No convergence yet (steps count: 5500). Trying with the next bulk.</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="do">## No convergence reached after 5500 steps (500 final count of samples).</span></span></code></pre></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Convergence has been reached with 5500 steps. Gelman-Rubin's R: 1.0434. (500 final count of samples).</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ans2</span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -309,20 +298,20 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, </span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="do">##     1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 5000, </span></span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="do">##     burnin = 500, thin = 10, nchains = 2))</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  LogLik (unnormalized): -20.1965 </span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  LogLik (unnormalized): -20.0975 </span></span>
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  Method used: mcmc (5500 steps)</span></span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  # of Leafs: 50</span></span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  # of Functions 1</span></span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  # of Trees: 1</span></span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="do">##          Estimate  Std. Err.</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_d0   0.9145    0.0747</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_d1   0.1758    0.0865</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_s0   0.1024    0.0695</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_s1   0.1103    0.0477</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  Pi      0.5558    0.1447</span></span></code></pre></div>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_d0   0.9123    0.0727</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_d1   0.1657    0.0779</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_s0   0.1137    0.0743</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_s1   0.0984    0.0431</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  Pi      0.5331    0.1510</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
   <span class="va">ans2</span>,
   nsample <span class="op">=</span> <span class="fl">200</span>,
   loo     <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -331,27 +320,27 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <p><img src="README_files/figure-gfm/MLE-1.png"><!-- --></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># MCMC Diagnostics with coda</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">coda</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/coda/man/gelman.diag.html">gelman.diag</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">coda</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/coda/man/gelman.diag.html" class="external-link">gelman.diag</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Potential scale reduction factors:</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">##       Point est. Upper C.I.</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_d0      1.009       1.05</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_d1      1.006       1.03</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_s0      1.141       1.50</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_s1      1.004       1.03</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Pi         0.999       1.00</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_d0      1.014       1.06</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_d1      1.032       1.12</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_s0      0.999       1.00</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">## mu_s1      1.003       1.01</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Pi         1.014       1.07</span></span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Multivariate psrf</span></span>
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.08</span></span></code></pre></div>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.04</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
 <p><img src="README_files/figure-gfm/MCMC-1.png"><!-- --><img src="README_files/figure-gfm/MCMC-2.png"><!-- --></p>
 </div>
-<div id="prediction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#prediction" class="anchor"></a>Prediction</h1>
+<div class="section level1">
+<h1 id="prediction">Prediction<a class="anchor" aria-label="anchor" href="#prediction"></a>
+</h1>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans2</span>, loo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">pred</span></code></pre></div>
@@ -366,15 +355,15 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Values scaled to range between 0 and 1, 1 being best.</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC 0.77.</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC 0.78.</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="do">## MAE 0.29.</span></span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></code></pre></div>
 <p><img src="README_files/figure-gfm/Predict-1.png"><!-- --></p>
 </div>
-<div id="misc" class="section level1">
-<h1 class="hasAnchor">
-<a href="#misc" class="anchor"></a>Misc</h1>
+<div class="section level1">
+<h1 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>
+</h1>
 <p>During the development process, we decided to allow the user to choose what ‘tree-reader’ function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions <a href="playground/ape_now_supports_singletons.html">here</a>.</p>
 </div>
 
@@ -382,55 +371,60 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/USCbiostats/aphylo/">https://​github.com/​USCbiostats/​aphylo/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/USCbiostats/aphylo/issues">https://​github.com/​USCbiostats/​aphylo/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="citation">
-<h2>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html">Citing aphylo</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>George Vega Yon <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-3171-0844" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="https://github.com/USCbiostats/aphylo/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/USCbiostats/aphylo/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg"></a></li>
-<li><a href="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml"><img src="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg" alt="R CI"></a></li>
-<li><a href="https://ci.appveyor.com/project/gvegayon/phylogenetic"><img src="https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true" alt="Build status"></a></li>
-<li><a href="https://codecov.io/gh/USCbiostats/aphylo"><img src="https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
-<li><a href="https://image.usc.edu"><img src="https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg" alt="Integrative Methods of Analysis for Genetic Epidemiology"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing aphylo</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>George Vega Yon <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-3171-0844" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg"></a></li>
+<li><a href="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml" class="external-link"><img src="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg" alt="R CI"></a></li>
+<li><a href="https://ci.appveyor.com/project/gvegayon/phylogenetic" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true" alt="Build status"></a></li>
+<li><a href="https://codecov.io/gh/USCbiostats/aphylo" class="external-link"><img src="https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
+<li><a href="https://image.usc.edu" class="external-link"><img src="https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg" alt="Integrative Methods of Analysis for Genetic Epidemiology"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by George Vega Yon.</p>
+  <p></p>
+<p>Developed by George Vega Yon.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -438,6 +432,8 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 
   
 
+
+  
 
   </body>
 </html>

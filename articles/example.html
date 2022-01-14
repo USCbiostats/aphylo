@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -71,7 +67,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/USCbiostats/aphylo/">
+  <a href="https://github.com/USCbiostats/aphylo/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,15 +82,15 @@
 
       
 
-      </header><script src="example_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Simulation and Inference</h1>
-                        <h4 class="author">George G. Vega Yon</h4>
+                        <h4 data-toc-skip class="author">George G. Vega Yon</h4>
             
-            <h4 class="date">August 18, 2021</h4>
+            <h4 data-toc-skip class="date">August 18, 2021</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/USCbiostats/aphylo/blob/master/vignettes/example.Rmd"><code>vignettes/example.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/USCbiostats/aphylo/blob/HEAD/vignettes/example.Rmd" class="external-link"><code>vignettes/example.Rmd</code></a></small>
       <div class="hidden name"><code>example.Rmd</code></div>
 
     </div>
@@ -102,26 +98,26 @@
     
     
 <p>This is a simple example of simulation, inference, and prediction with the <code>aphylo</code> R package.</p>
-<div id="setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo">aphylo</a></span><span class="op">)</span></code></pre></div>
-<pre><code>## Loading required package: ape</code></pre>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo" class="external-link">aphylo</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Loading required package: ape</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Parameter estimates</span>
-<span class="va">psi</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">.025</span><span class="op">)</span>
-<span class="va">mu_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.2</span>, <span class="fl">.1</span><span class="op">)</span>
-<span class="va">mu_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.1</span>, <span class="fl">.05</span><span class="op">)</span>
+<span class="va">psi</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">.025</span><span class="op">)</span>
+<span class="va">mu_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.2</span>, <span class="fl">.1</span><span class="op">)</span>
+<span class="va">mu_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.1</span>, <span class="fl">.05</span><span class="op">)</span>
 <span class="va">Pi</span>   <span class="op">&lt;-</span> <span class="fl">.5</span></code></pre></div>
 </div>
-<div id="simulation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simulation" class="anchor"></a>Simulation</h2>
+<div class="section level2">
+<h2 id="simulation">Simulation<a class="anchor" aria-label="anchor" href="#simulation"></a>
+</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">223</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">223</span><span class="op">)</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/raphylo.html">raphylo</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, Pi <span class="op">=</span> <span class="va">Pi</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/data-sim-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>The simulation function generates an <code>aphylo</code> class object which is simply a wrapper containing:</p>
 <ul>
@@ -132,52 +128,52 @@
 <p>If needed, we can export the data as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Edgelist describing parent-&gt;offspring relations</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tree</span>, file <span class="op">=</span> <span class="st">"tree.tree"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tree</span>, file <span class="op">=</span> <span class="st">"tree.tree"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># Tip annotations</span>
-<span class="va">ann</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">tip.annotation</span>, <span class="va">node.annotation</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">ann</span>, file <span class="op">=</span> <span class="st">"annotations.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">ann</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">tip.annotation</span>, <span class="va">node.annotation</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">ann</span>, file <span class="op">=</span> <span class="st">"annotations.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># Event types</span>
-<span class="va">events</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tip.type</span><span class="op">*</span><span class="cn">NA</span>, <span class="va">node.type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">events</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">events</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">events</span>, file <span class="op">=</span> <span class="st">"events.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="va">events</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">tip.type</span><span class="op">*</span><span class="cn">NA</span>, <span class="va">node.type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">events</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">events</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">events</span>, file <span class="op">=</span> <span class="st">"events.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="inference" class="section level2">
-<h2 class="hasAnchor">
-<a href="#inference" class="anchor"></a>Inference</h2>
+<div class="section level2">
+<h2 id="inference">Inference<a class="anchor" aria-label="anchor" href="#inference"></a>
+</h2>
 <p>To fit the data, we can use MCMC as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ans</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/APHYLO_DEFAULT_MCMC_CONTROL.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning: While using multiple chains, a single initial point has been passed via
-## `initial`: c(0.1, 0.1, 0.9, 0.9, 0.1, 0.1, 0.1). The values will be recycled.
-## Ideally you would want to start each chain from different locations.</code></pre>
-<pre><code>## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should
-## not be used in a context other than the argument `conv_checker` in `MCMC`.</code></pre>
-<pre><code>## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0412. (500 final count of samples).</code></pre>
+<code class="sourceCode R"><span class="va">ans</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning: While using multiple chains, a single initial point has been passed via</span>
+<span class="co">## `initial`: c(0.1, 0.05, 0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled.</span>
+<span class="co">## Ideally you would want to start each chain from different locations.</span></code></pre>
+<pre><code><span class="co">## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should</span>
+<span class="co">## not be used in a context other than the argument `conv_checker` in `MCMC`.</span></code></pre>
+<pre><code><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0392. (500 final count of samples).</span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ans</span></code></pre></div>
-<pre><code>## 
-## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE
-## 
-##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)
-##  LogLik: -108.7258
-##  Method used: mcmc (10000 steps)
-##  # of Leafs: 200
-##  # of Functions 1
-##  # of Trees: 1
-## 
-##          Estimate  Std. Err.
-##  psi0    0.0558    0.0438
-##  psi1    0.0536    0.0358
-##  mu_d0   0.2201    0.1104
-##  mu_d1   0.1425    0.1057
-##  mu_s0   0.1282    0.0441
-##  mu_s1   0.0620    0.0309
-##  Pi      0.3873    0.2618</code></pre>
+<pre><code><span class="co">## </span>
+<span class="co">## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
+<span class="co">## </span>
+<span class="co">##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)</span>
+<span class="co">##  LogLik: -108.7577</span>
+<span class="co">##  Method used: mcmc (10000 steps)</span>
+<span class="co">##  # of Leafs: 200</span>
+<span class="co">##  # of Functions 1</span>
+<span class="co">##  # of Trees: 1</span>
+<span class="co">## </span>
+<span class="co">##          Estimate  Std. Err.</span>
+<span class="co">##  psi0    0.0673    0.0544</span>
+<span class="co">##  psi1    0.0546    0.0384</span>
+<span class="co">##  mu_d0   0.2221    0.1263</span>
+<span class="co">##  mu_d1   0.1273    0.0941</span>
+<span class="co">##  mu_s0   0.1299    0.0420</span>
+<span class="co">##  mu_s1   0.0616    0.0298</span>
+<span class="co">##  Pi      0.3448    0.2577</span></code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can compare the predicted values with the observed values:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/plot-predict-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We can also take a look at the surface of the posterior function</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -187,21 +183,21 @@
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span>
 <span class="va">ps</span>       <span class="co"># Printing</span></code></pre></div>
-<pre><code>## Prediction score (H0: Observed = Random)
-## 
-##  N obs.      : 399
-##  alpha(0, 1) : 0.40, 0.59
-##  Observed    : 0.71 ***
-##  Random      : 0.52 
-##  P(&lt;t)       : 0.0000
-## --------------------------------------------------------------------------------
-## Values scaled to range between 0 and 1, 1 being best.
-## 
-## Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10
-## AUC 0.85.
-## MAE 0.29.</code></pre>
+<pre><code><span class="co">## Prediction score (H0: Observed = Random)</span>
+<span class="co">## </span>
+<span class="co">##  N obs.      : 399</span>
+<span class="co">##  alpha(0, 1) : 0.40, 0.59</span>
+<span class="co">##  Observed    : 0.71 ***</span>
+<span class="co">##  Random      : 0.52 </span>
+<span class="co">##  P(&lt;t)       : 0.0000</span>
+<span class="co">## --------------------------------------------------------------------------------</span>
+<span class="co">## Values scaled to range between 0 and 1, 1 being best.</span>
+<span class="co">## </span>
+<span class="co">## Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10</span>
+<span class="co">## AUC 0.85.</span>
+<span class="co">## MAE 0.29.</span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></code></pre></div>
 <p><img src="example_files/figure-html/predict-score-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
   </div>
@@ -217,11 +213,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by George Vega Yon.</p>
+  <p></p>
+<p>Developed by George Vega Yon.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -229,6 +227,8 @@
 
   
 
+
+  
 
   </body>
 </html>
