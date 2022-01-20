@@ -24,6 +24,9 @@ generate all possible combinations as \code{combn(names(params), 2)}.}
 
 \item{...}{Aditional parameters to be passed to \code{plotfun}.}
 }
+\value{
+NULL (invisible). Generates a plot of the loglikelihood of the model.
+}
 \description{
 Plot Log-Likelihood function of the model
 }

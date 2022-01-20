@@ -38,6 +38,9 @@ This is mostly useful when the number of predictions is small.}
 
 \item{...}{Ignored}
 }
+\value{
+NULL (invisible) Generates a plot of the predictions.
+}
 \description{
 Visualize predictions
 }

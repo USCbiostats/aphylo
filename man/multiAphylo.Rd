@@ -16,6 +16,10 @@ in the case of \code{print.multiAphylo}.}
 
 \item{x}{An object of class \code{multiAphylo}}
 }
+\value{
+A list of class \code{multiAphylo}. Each element corresponds to a single \code{aphylo}
+object.
+}
 \description{
 This is equivalent to what \link[ape:c.phylo]{ape::c.phylo} does.
 }

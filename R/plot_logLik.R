@@ -2,6 +2,8 @@
 #' @param x An object of class [aphylo()]
 #' @inheritParams plot_multivariate
 #' @param ... Aditional parameters to be passed to `plotfun`.
+#' @returns 
+#' NULL (invisible). Generates a plot of the loglikelihood of the model.
 #' @examples 
 #' # Loading data
 #' data(fakeexperiment)
@@ -192,6 +194,10 @@ plot_logLik.aphylo_estimates <- function(x, sets,...) {
 #' generate all possible combinations as `combn(names(params), 2)`.
 #' @param mfrow Passed to [graphics::par].
 #' @export
+#' @returns 
+#' A list of length `length(sets)`, each with the following:
+#' - x,y,z vectors of coordinates. 
+#' - xlab,ylab vectors with the corresponding labels.
 #' 
 #' @examples 
 #' # Example: A model with less parameters

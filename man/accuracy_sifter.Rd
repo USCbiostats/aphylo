@@ -28,6 +28,15 @@ the arguments are passed to \code{\link[=predict.aphylo_estimates]{predict.aphyl
 
 \item{nine_na}{Treat 9 as NA.}
 }
+\value{
+A data frame with \code{Ntip()} rows and four variables. The variables are:
+\itemize{
+\item Gene: Label of the gene
+\item Predicted: The assigned gene function.
+\item Observed: The true set of gene functions.
+\item Accuracy: The measurement of accuracy according to Engelhardt et al. (2011).
+}
+}
 \description{
 Uses SIFTER's 2011 definition of accuracy, where a protein is tagged as
 accurately predicted if the highest ranked prediction matches it.
@@ -45,7 +54,7 @@ When \code{highlight = ""}, no highlight is done.
 }
 \examples{
 set.seed(81231)
-atree <- raphylo(100, psi = c(0,0), P = 3)
+atree <- raphylo(50, psi = c(0,0), P = 3)
 ans <- aphylo_mcmc(atree ~ mu_d + mu_s + Pi)
 
 accuracy_sifter(ans)

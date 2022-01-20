@@ -37,7 +37,7 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
 #' @examples 
 #' # Using the MCMC ------------------------------------------------------------
 #' 
-#' \dontrun{
+#' \donttest{
 #' 
 #' set.seed(1233)
 #' # Simulating a tree

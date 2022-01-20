@@ -8,7 +8,23 @@
 #' @export
 #' @details In the case of `prediction_score`, `...` are passed to
 #' `predict.aphylo_estimates`.
-#' 
+#' @returns 
+#' A list of class `aphylo_prediction_score`:
+#' -  obs       : Observed 1 - MAE.
+#' -  obs_raw   : Unnormalized (raw) scores.
+#' -  random_raw: Unnormalized (raw) scores.
+#' -  worse_raw : Unnormalized (raw) scores.
+#' -  pval      : Computed p-value.
+#' -  worse     : Reference of worse case.
+#' -  predicted : Numeric matrix with observed predictions.
+#' -  expected  : Integer matrix with expected annotations.
+#' -  random    : Random score (null).
+#' -  alpha0    : The passed alpha parameters.
+#' -  alpha1    : The passed alpha parameters.
+#' -  auc       : An object of class `aphylo_auc`.
+#' -  obs.ids   : Indices of the ids.
+#' -  leaf.ids  : IDs of the leafs (if present).
+#' -  tree      : Of class `phylo`.
 #' @examples 
 #' # Example with prediction_score ---------------------------------------------
 #' set.seed(11552)
@@ -350,6 +366,8 @@ blue <- function(x) {
 #' 
 #' If `include.labels = NULL` and `ncol(x$expected) > 40`,
 #' then `include.labels=FALSE` by default.
+#' @returns 
+#' NULL (invisible) Generates a plot of the predictions.
 #' @aliases plot-prediction
 #' @examples 
 #' set.seed(8783)

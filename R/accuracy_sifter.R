@@ -23,10 +23,16 @@
 #' excluded from the analysis.
 #' 
 #' When `highlight = ""`, no highlight is done.
+#' @returns 
+#' A data frame with `Ntip()` rows and four variables. The variables are:
+#' - Gene: Label of the gene
+#' - Predicted: The assigned gene function.
+#' - Observed: The true set of gene functions.
+#' - Accuracy: The measurement of accuracy according to Engelhardt et al. (2011).
 #' 
 #' @examples 
 #' set.seed(81231)
-#' atree <- raphylo(100, psi = c(0,0), P = 3)
+#' atree <- raphylo(50, psi = c(0,0), P = 3)
 #' ans <- aphylo_mcmc(atree ~ mu_d + mu_s + Pi)
 #' 
 #' accuracy_sifter(ans)

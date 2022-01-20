@@ -38,6 +38,26 @@ prediction_score(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
 similar to what a leave-one-out cross-validation scheme would be done
 (see \link{predict.aphylo_estimates}).}
 }
+\value{
+A list of class \code{aphylo_prediction_score}:
+\itemize{
+\item obs       : Observed 1 - MAE.
+\item obs_raw   : Unnormalized (raw) scores.
+\item random_raw: Unnormalized (raw) scores.
+\item worse_raw : Unnormalized (raw) scores.
+\item pval      : Computed p-value.
+\item worse     : Reference of worse case.
+\item predicted : Numeric matrix with observed predictions.
+\item expected  : Integer matrix with expected annotations.
+\item random    : Random score (null).
+\item alpha0    : The passed alpha parameters.
+\item alpha1    : The passed alpha parameters.
+\item auc       : An object of class \code{aphylo_auc}.
+\item obs.ids   : Indices of the ids.
+\item leaf.ids  : IDs of the leafs (if present).
+\item tree      : Of class \code{phylo}.
+}
+}
 \description{
 Calculate prediction score (quality of prediction)
 }

@@ -8,12 +8,21 @@
 #' the [aphylo] object. Whenever `i` is specified, then aphylo returns the corresponding
 #' annotations.
 #' @name aphylo-index
+#' @returns 
+#' - When indexing with `i`: A data frame with the annotations of the
+#'   selected genes.
+#' - When only indexing with `j` (`drop = FALSE`): An `aphylo` object with the selected sets of
+#'   annotations.
+#' - When only indexing with `j` (`drop = TRUE`): A data.frame with the selected
+#'   annotations.
+#' - When indexing on both `i` and `j`: A data.frame with the selected genes and annotations.
 #' @examples 
 #' set.seed(12312)
 #' atree <- raphylo(50, P = 4)
 #' atree[1:10,]
 #' atree[,2:3]
 #' atree[, 2:3, drop = TRUE]
+#' atree[1:10, 2:3]
 #' 
 #' 
 NULL

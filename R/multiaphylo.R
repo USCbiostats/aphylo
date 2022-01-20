@@ -5,6 +5,9 @@
 #' @param ... One or several object of class `aphylo` or `multiAPhylo`. Ignored
 #' in the case of `print.multiAphylo`.
 #' @name multiAphylo
+#' @returns 
+#' A list of class `multiAphylo`. Each element corresponds to a single `aphylo`
+#' object.
 #' @examples 
 #' data(fakeexperiment)
 #' data(faketree)

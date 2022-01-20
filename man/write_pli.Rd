@@ -20,6 +20,9 @@ write_pli(
 
 \item{file}{Character scalar passed to \link{cat}.}
 }
+\value{
+A string with the XML file.
+}
 \description{
 Write pli files used by SIFTER
 }

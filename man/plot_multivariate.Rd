@@ -47,6 +47,13 @@ with the current parameters.}
 
 \item{...}{Further arguments passed to \code{plotfun}.}
 }
+\value{
+A list of length \code{length(sets)}, each with the following:
+\itemize{
+\item x,y,z vectors of coordinates.
+\item xlab,ylab vectors with the corresponding labels.
+}
+}
 \description{
 Multiavariate plot (surface)
 }

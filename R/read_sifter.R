@@ -79,6 +79,8 @@ read_pli <- function(fn, dropNAs = TRUE) {
 #' @param family_id Character scalar. Name of the family
 #' @param file Character scalar passed to [cat].
 #' @export
+#' @returns 
+#' A string with the XML file.
 #' @examples 
 #' set.seed(882)
 #' atree <- raphylo(5)
