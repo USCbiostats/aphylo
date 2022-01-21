@@ -148,10 +148,8 @@
 <pre><code><span class="co">## Warning: While using multiple chains, a single initial point has been passed via</span>
 <span class="co">## `initial`: c(0.1, 0.05, 0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled.</span>
 <span class="co">## Ideally you would want to start each chain from different locations.</span></code></pre>
-<pre><code><span class="co">## Warning in conv_checker(ans[, free_params, drop = FALSE]): This function should</span>
-<span class="co">## not be used in a context other than the argument `conv_checker` in `MCMC`.</span></code></pre>
 <pre><code><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0392. (500 final count of samples).</span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ans</span></code></pre></div>
 <pre><code><span class="co">## </span>
 <span class="co">## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
@@ -172,15 +170,15 @@
 <span class="co">##  mu_s1   0.0616    0.0298</span>
 <span class="co">##  Pi      0.3448    0.2577</span></code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can compare the predicted values with the observed values:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/plot-predict-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We can also take a look at the surface of the posterior function</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></code></pre></div>
 <p><img src="example_files/figure-html/plot-loglike-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>And we can also take a look at the prediction scores</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span>
 <span class="va">ps</span>       <span class="co"># Printing</span></code></pre></div>
 <pre><code><span class="co">## Prediction score (H0: Observed = Random)</span>
@@ -196,7 +194,7 @@
 <span class="co">## Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10</span>
 <span class="co">## AUC 0.85.</span>
 <span class="co">## MAE 0.29.</span></code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></code></pre></div>
 <p><img src="example_files/figure-html/predict-score-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
@@ -214,12 +212,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by George Vega Yon.</p>
+<p>Developed by George Vega Yon, National Cancer Institute (NCI).</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

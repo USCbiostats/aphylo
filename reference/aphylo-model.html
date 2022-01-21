@@ -110,7 +110,7 @@ examples).</p></dd>
 <span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672041c80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae95776c30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -172,15 +172,15 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55866b76dc28&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672245a00&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ae93a47368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae96019d10&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Mislabeling probabilities</span></span>
 <span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672041c80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae95776c30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -242,7 +242,7 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672371f48&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae960cdb48&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Different probabilities for speciation and duplication node</span></span>
@@ -250,7 +250,7 @@ examples).</p></dd>
 <span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + mu_s + psi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672041c80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae95776c30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -312,14 +312,14 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55867248dbb0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae9619b8e8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Mislabeling probabilities and etas(fixed)</span></span>
 <span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="fu">eta</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi + eta(0, 1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672041c80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae95776c30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -381,14 +381,14 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586725b4318&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae96327f48&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Mislabeling probabilities and Pi </span></span>
 <span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi + Pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672041c80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae95776c30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -450,7 +450,7 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x558672aaac10&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ae963de0d0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -463,11 +463,11 @@ examples).</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by George Vega Yon.</p>
+  <p></p><p>Developed by George Vega Yon, National Cancer Institute (NCI).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

@@ -82,6 +82,16 @@ annotations. Otherwise an object of class <code>aphylo</code>.</p></dd>
 <dt>value</dt>
 <dd><p>Integer vector. Replacing values, can be either <code>c(0, 1, 9, NA)</code>.</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <ul><li><p>When indexing with <code>i</code>: A data frame with the annotations of the
+selected genes.</p></li>
+<li><p>When only indexing with <code>j</code> (<code>drop = FALSE</code>): An <code>aphylo</code> object with the selected sets of
+annotations.</p></li>
+<li><p>When only indexing with <code>j</code> (<code>drop = TRUE</code>): A data.frame with the selected
+annotations.</p></li>
+<li><p>When indexing on both <code>i</code> and <code>j</code>: A data.frame with the selected genes and annotations.</p></li>
+</ul></div>
     <div id="details">
     <h2>Details</h2>
     <p>The subsetting method allows selecting one or more annotations from
@@ -240,6 +250,18 @@ annotations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 47       1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 48       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 49       1       1</span>
+<span class="r-in"><span class="va">atree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    fun0001 fun0002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1       1</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -252,11 +274,11 @@ annotations.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by George Vega Yon.</p>
+  <p></p><p>Developed by George Vega Yon, National Cancer Institute (NCI).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

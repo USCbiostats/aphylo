@@ -92,6 +92,13 @@ the arguments are passed to <code><a href="posterior-probabilities.html">predict
 <dt>nine_na</dt>
 <dd><p>Treat 9 as NA.</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A data frame with <code><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip()</a></code> rows and four variables. The variables are:</p><ul><li><p>Gene: Label of the gene</p></li>
+<li><p>Predicted: The assigned gene function.</p></li>
+<li><p>Observed: The true set of gene functions.</p></li>
+<li><p>Accuracy: The measurement of accuracy according to Engelhardt et al. (2011).</p></li>
+</ul></div>
     <div id="details">
     <h2>Details</h2>
     <p>The analysis is done at the protein level. For each protein, the function
@@ -106,103 +113,63 @@ excluded from the analysis.</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">81231</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">100</span>, psi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, P <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">50</span>, psi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, P <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">ans</span> <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>This function should not be used in a context other than the argument `conv_checker` in `MCMC`.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0139. (500 final count of samples).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0134. (500 final count of samples).</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">accuracy_sifter</span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Gene Predicted                Observed Accuracy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      2   fun0000                 fun0000        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      3   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      4   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      5   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      6   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      7   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      9   fun0002         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    10   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    11   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    13   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    14   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    15   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    16   fun0002         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    17   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    18   fun0001         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21    21   fun0001 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    22   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    23   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    24   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25    25   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26    26   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28    28   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29    29   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30    30   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31    31   fun0002                 fun0001        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32    32   fun0001         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33    33   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34    34   fun0001                 fun0002        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35    35   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36    36   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37    37   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38    38   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39    39   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41    41   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42    42   fun0000         fun0001,fun0002        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44    44   fun0001         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45    45   fun0001         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46    46   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47    47   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48    48   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49    49   fun0002         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50    50   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51    51   fun0002         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53    53   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54    54   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55    55   fun0002         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56    56   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57    57   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58    58   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60    60   fun0000                 fun0000        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61    61   fun0002         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62    62   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63    63   fun0001 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64    64   fun0001                 fun0000        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65    65   fun0002         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66    66   fun0000                 fun0000        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67    67   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68    68   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69    69   fun0000 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70    70   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71    71   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72    72   fun0000                 fun0001        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73    73   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75    75   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76    76   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77    77   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78    78   fun0000                 fun0002        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79    79   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80    80   fun0001         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81    81   fun0001                 fun0000        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82    82   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83    83   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84    84   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85    85   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86    86   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87    87   fun0002                 fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89    89   fun0002         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90    90   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91    91   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92    92   fun0001         fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93    93   fun0000 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94    94   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95    95   fun0000         fun0000,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96    96   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97    97   fun0001                 fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98    98   fun0002 fun0000,fun0001,fun0002        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99    99   fun0000         fun0000,fun0001        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100  100   fun0001         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Gene Predicted                Observed Accuracy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1   fun0001 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     3   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     6   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     7   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     8   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     9   fun0002         fun0000,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   10   fun0001         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   11   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   12   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   13   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   14   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   15   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   16   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   17   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   18   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   19   fun0002         fun0000,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   20   fun0001 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   21   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   22   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23   23   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24   24   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   25   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26   26   fun0000         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   27   fun0002 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   28   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29   29   fun0002 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   30   fun0000 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31   31   fun0002 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32   32   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33   33   fun0002         fun0000,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34   34   fun0001                 fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35   35   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36   36   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37   37   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38   38   fun0002         fun0000,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39   39   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40   40   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41   41   fun0001         fun0000,fun0002        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42   42   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43   43   fun0002                 fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44   44   fun0001                 fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45   45   fun0000         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46   46   fun0001         fun0000,fun0001        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47   47   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48   48   fun0002 fun0000,fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49   49   fun0002         fun0001,fun0002        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50   50   fun0002                 fun0002        1</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -214,11 +181,11 @@ excluded from the analysis.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by George Vega Yon.</p>
+  <p></p><p>Developed by George Vega Yon, National Cancer Institute (NCI).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

@@ -109,6 +109,11 @@ with the current parameters.</p></dd>
 <dt>...</dt>
 <dd><p>Further arguments passed to <code>plotfun</code>.</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A list of length <code>length(sets)</code>, each with the following:</p><ul><li><p>x,y,z vectors of coordinates.</p></li>
+<li><p>xlab,ylab vectors with the corresponding labels.</p></li>
+</ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -120,7 +125,6 @@ with the current parameters.</p></dd>
 <span class="r-in">  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps <span class="op">=</span> <span class="fl">1e3</span>, burnin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.1, 0.05, 0.9, 0.5, 0.1, 0.05). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>This function should not be used in a context other than the argument `conv_checker` in `MCMC`.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 1000). Gelman-Rubin's R: 1.5168. Trying with the next bulk.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence reached after 1000 steps (100 final count of samples).</span>
 <span class="r-in"></span>
@@ -143,11 +147,11 @@ with the current parameters.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by George Vega Yon.</p>
+  <p></p><p>Developed by George Vega Yon, National Cancer Institute (NCI).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>
