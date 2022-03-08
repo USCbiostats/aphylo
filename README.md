@@ -11,7 +11,7 @@ Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)]
 Epidemiology](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/aphylo)](https://CRAN.R-project.org/package=aphylo)
-[![status](https://tinyverse.netlify.com/badge/fmcmc)](https://CRAN.R-project.org/package=fmcmc)
+[![status](https://tinyverse.netlify.com/badge/aphylo)](https://CRAN.R-project.org/package=aphylo)
 [![CRAN
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/aphylo)](https://cran.r-project.org/package=aphylo)
 
