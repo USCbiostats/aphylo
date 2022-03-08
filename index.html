@@ -94,37 +94,54 @@
 
 
 <div class="section level1">
-<div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
+<div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees
+<img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
 </h1></div>
-<p>The <code>aphylo</code> R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, <code>aphylo</code> works smoothly with popular tools for analysis of phylogenetic data such as <code>ape</code> R package, “Analyses of Phylogenetics and Evolution”.</p>
-<p>The package is under MIT License, and is been developed by the Computing and Software Cores of the Biostatistics Division’s NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.</p>
+<p>The <code>aphylo</code> R package implements estimation and data
+imputation methods for Functional Annotations in Phylogenetic Trees. The
+core function consists on the computation of the log-likelihood of
+observing a given phylogenetic tree with functional annotation on its
+leafs, and probabilities associated to gain and loss of functionalities,
+including probabilities of experimental misclassification. Furthermore,
+the log-likelihood is computed using peeling algorithms, which required
+developing and implementing efficient algorithms for re-coding and
+preparing phylogenetic tree data so that can be used with the package.
+Finally, <code>aphylo</code> works smoothly with popular tools for
+analysis of phylogenetic data such as <code>ape</code> R package,
+“Analyses of Phylogenetics and Evolution”.</p>
+<p>The package is under MIT License, and is been developed by the
+Computing and Software Cores of the Biostatistics Division’s NIH Project
+Grant (P01) at the Department of Preventive Medicine at the University
+of Southern California.</p>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>To cite aphylo <span class="cf">in</span> publications use the following paper<span class="sc">:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et <span class="fu">al.</span> (<span class="dv">2021</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  Bayesian parameter estimation <span class="cf">for</span> automatic annotation of gene</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  functions using observational data and phylogenetic trees. PLOS</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  Computational Biology <span class="dv">17</span>(<span class="dv">2</span>)<span class="sc">:</span> e1007948.</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  https<span class="sc">:</span><span class="er">//</span>doi.org<span class="sc">/</span><span class="fl">10.1371</span><span class="sc">/</span>journal.pcbi<span class="fl">.1007948</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>And the actual R package<span class="sc">:</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>Vega Yon <span class="fu">G</span> (<span class="dv">2022</span>). _Statistical Inference of Annotated Phylogenetic</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Trees_. R package version <span class="fl">0.2</span><span class="dv">-1</span>, <span class="sc">&lt;</span>URL<span class="sc">:</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>USCBiostats<span class="sc">/</span>aphylo<span class="sc">&gt;</span>.</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>To see these entries <span class="cf">in</span> BibTeX format, use <span class="st">'print(&lt;citation&gt;,</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="st">bibtex=TRUE)'</span>, <span class="st">'toBibtex(.)'</span>, or set</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="st">'options(citation.bibtex.max=999)'</span>.</span></code></pre></div>
+<pre><code>
+To cite aphylo in publications use the following paper:
+
+  Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
+  Bayesian parameter estimation for automatic annotation of gene
+  functions using observational data and phylogenetic trees. PLOS
+  Computational Biology 17(2): e1007948.
+  https://doi.org/10.1371/journal.pcbi.1007948
+
+And the actual R package:
+
+Vega Yon G (2022). _Statistical Inference of Annotated Phylogenetic
+Trees_. R package version 0.2-1, &lt;URL:
+https://github.com/USCBiostats/aphylo&gt;.
+
+To see these entries in BibTeX format, use 'print(&lt;citation&gt;,
+bibtex=TRUE)', 'toBibtex(.)', or set
+'options(citation.bibtex.max=999)'.</code></pre>
 </div>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
-<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So first you need to install it:</p>
+<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So
+first you need to install it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></code></pre></div>
 <p>Then you can install the <code>aphylo</code> package</p>
@@ -347,10 +364,10 @@
 <div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction score (H0: Observed = Random)</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  N obs.      : 99</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  alpha(0, 1) : 0.24, 0.73</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  Observed    : 0.71 </span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  Random      : 0.61 </span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  P(&lt;t)       : 0.1539</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  Observed    : 0.71 ***</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  Random      : NA </span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  P(&lt;t)       : 0.0000</span></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------------------------------------------</span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Values scaled to range between 0 and 1, 1 being best.</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -364,7 +381,10 @@
 <div class="section level1">
 <h1 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>
 </h1>
-<p>During the development process, we decided to allow the user to choose what ‘tree-reader’ function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions <a href="playground/ape_now_supports_singletons.html">here</a>.</p>
+<p>During the development process, we decided to allow the user to
+choose what ‘tree-reader’ function he would use, in particular, between
+using either the rncl R package or ape. For such we created a short
+benchmark that compares both functions <a href="playground/ape_now_supports_singletons.html">here</a>.</p>
 </div>
 
   </div>
@@ -373,6 +393,7 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=aphylo" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/USCbiostats/aphylo/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/USCbiostats/aphylo/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -408,11 +429,13 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg"></a></li>
 <li><a href="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml" class="external-link"><img src="https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg" alt="R CI"></a></li>
 <li><a href="https://ci.appveyor.com/project/gvegayon/phylogenetic" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true" alt="Build status"></a></li>
 <li><a href="https://codecov.io/gh/USCbiostats/aphylo" class="external-link"><img src="https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
 <li><a href="https://image.usc.edu" class="external-link"><img src="https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg" alt="Integrative Methods of Analysis for Genetic Epidemiology"></a></li>
+<li><a href="https://CRAN.R-project.org/package=aphylo" class="external-link"><img src="https://www.r-pkg.org/badges/version/aphylo" alt="CRAN status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=fmcmc" class="external-link"><img src="https://tinyverse.netlify.com/badge/fmcmc" alt="status"></a></li>
+<li><a href="https://cran.r-project.org/package=aphylo" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/aphylo" alt="CRAN downloads"></a></li>
 </ul>
 </div>
 
@@ -427,7 +450,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
