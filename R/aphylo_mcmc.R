@@ -55,7 +55,7 @@ APHYLO_DEFAULT_MCMC_CONTROL <- list(
 #' set.seed(1231)
 #' 
 #' ans_mcmc <- aphylo_mcmc(
-#'   dat ~ mu_d + psi + eta + Pi,
+#'   atree ~ mu_d + psi + eta + Pi,
 #'   control = list(nsteps = 2e5, burnin=1000, thin=200)
 #' )
 #' }

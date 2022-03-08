@@ -86,7 +86,7 @@ in the model. The current defaults are:
 \examples{
 # Using the MCMC ------------------------------------------------------------
 
-\dontrun{
+\donttest{
 
 set.seed(1233)
 # Simulating a tree
@@ -104,7 +104,7 @@ atree <- raphylo(
 set.seed(1231)
 
 ans_mcmc <- aphylo_mcmc(
-  dat ~ mu_d + psi + eta + Pi,
+  atree ~ mu_d + psi + eta + Pi,
   control = list(nsteps = 2e5, burnin=1000, thin=200)
 )
 }

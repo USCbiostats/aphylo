@@ -36,7 +36,7 @@ with argument \code{loo = TRUE}.
 }
 \examples{
 # It takes about two minutes to run this example
-\dontrun{
+\donttest{
 
   set.seed(123)
   atrees <- rmultiAphylo(10, 10, P = 1)

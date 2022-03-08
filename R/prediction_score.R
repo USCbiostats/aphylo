@@ -90,10 +90,11 @@ prediction_score.default <- function(
     W <- W[ids, ids, drop=FALSE]
   
   # obs <- rowSums(x - expected)
-  obs <- NULL
-  for (p in 1:ncol(x))
-    obs <- cbind(obs, ifelse(expected == 1, 1 - x, x))
-  obs <- sum(obs)
+  # obs <- NULL
+  # for (p in 1:ncol(x))
+  #   obs <- cbind(obs, ifelse(expected == 1, 1 - x, x))
+  obs <- sum(abs(x - expected))
+  # obs <- sum(obs)
   # obs <- t(obs) %*% W %*% obs
   
   # Best case
@@ -228,14 +229,14 @@ prediction_score.aphylo_estimates <- function(
   n <- length(ids)
   if (is.null(alpha0) && loo) {
     
-    alpha0 <- max(sum(expected[ids,] == 0) - 1, 0)
-    alpha0 <- alpha0/(n - 1)
+    alpha0 <- max(sum(expected[ids,] == 0) - ncol(expected), 0)
+    alpha0 <- alpha0/((nrow(expected[ids,]) - 1) * ncol(expected))
     
   }
   if (is.null(alpha1) && loo) {
     
-    alpha1 <- max(sum(expected[ids,]) - 1, 0)
-    alpha1 <- alpha1/(n - 1)
+    alpha1 <- max(sum(expected[ids,]) - ncol(expected), 0)
+    alpha1 <- alpha1/((nrow(expected[ids,]) - 1) * ncol(expected))
     
   }
   
