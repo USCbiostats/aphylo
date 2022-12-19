@@ -1,4 +1,16 @@
-Changes in aphylo version 0.3-0
+
+
+CHANGES IN APHYLO VERSION 0.3-1
+
+
+-   Re-instating the package to CRAN.
+
+-   Small changes in C++ formatting and conventions to please CRAN.
+
+
+
+CHANGES IN APHYLO VERSION 0.3-0
+
 
 -   Preparing for CRAN.
 
@@ -9,6 +21,9 @@ Changes in aphylo version 0.3-0
 -   Fixed bug in aphylo_formulae(): Passing subsetted trees, e.g.,
     atree[[1]], now works.
 
-Changes in aphylo version 0.1.99
+
+
+CHANGES IN APHYLO VERSION 0.1.99
+
 
 -   First version

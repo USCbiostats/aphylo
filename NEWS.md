@@ -1,3 +1,10 @@
+# Changes in aphylo version 0.3-1
+
+* Re-instating the package to CRAN.
+
+* Small changes in C++ formatting and conventions to please CRAN.
+
+
 # Changes in aphylo version 0.3-0
 
 * Preparing for CRAN.

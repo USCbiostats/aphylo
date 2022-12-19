@@ -67,8 +67,10 @@ In the case of \code{prediction_score}, \code{...} are passed to
 
 In the case of the method for aphylo estimates, the function takes as
 a reference using alpha equal to the proportion of observed tip annotations that
-are equal to 1, this is:\preformatted{mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
-}
+are equal to 1, this is:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{mean(x$dat$tip.annotation[x$dat$tip.annotation != 9L], na.rm = TRUE)
+}\if{html}{\out{</div>}}
 }
 \examples{
 # Example with prediction_score ---------------------------------------------

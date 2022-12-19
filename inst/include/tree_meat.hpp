@@ -372,7 +372,7 @@ inline uint Tree<Data_Type>::set_postorder(const v_uint & POSTORDER_, bool check
       
     }
     
-    if ((min_idx > max_idx) | (min_idx > TOTAL(this)) | (max_idx > TOTAL(this)))
+    if ((min_idx > max_idx) || (min_idx > TOTAL(this)) || (max_idx > TOTAL(this)))
       return 1u;
   }
   

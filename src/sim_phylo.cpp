@@ -14,6 +14,8 @@ IntegerMatrix sim_fun_on_tree(
     int P = 1
 ) {
   
+  if (P > 9999)
+    stop("This is nuts, simulating a tree with more than 9999 cannot be done.");
   
   // Vessels
   int N = offspring.size(), N_o;
@@ -75,11 +77,19 @@ IntegerMatrix sim_fun_on_tree(
   }
   
   // Creating a nice set of names
-  StringVector fnames(P);
+  StringVector fnames(P, "fun");
   for (int p = 0; p<P ; p++) {
-    char name[15];
-    sprintf(&(name[0]), "fun%04i", (unsigned short) p);
-    fnames[p] = name;
+    
+    size_t pow10 = 4 - ((p <= 10) ? 1 : static_cast<int>(
+      std::ceil(std::log10(p))
+      ));
+
+    // Pasting zeros
+    for (size_t pp = 0; pp < pow10; ++pp)
+      fnames[p] += std::string("0");
+    
+    fnames[p] += std::to_string(p);
+    
   }
   
   ans.attr("dimnames") = List::create(

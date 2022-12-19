@@ -13,7 +13,9 @@ plot_multivariate(
   args = list(),
   plotfun = graphics::image,
   plot = TRUE,
-  postplot = function(params, res) {     points(params, cex = 2, pch = 3, col = "red")
+  postplot = function(params, res) {
+     points(params, cex = 2, pch = 3, col = "red")
+
     },
   mfrow = NULL,
   ...

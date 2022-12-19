@@ -10,8 +10,7 @@ raphylo(
   tree = NULL,
   edge.length = NULL,
   tip.type = NULL,
-  node.type = function(n) sample.int(2, size = n, replace = TRUE, prob = c(0.2, 0.8)) -
-    1,
+  node.type = function(n) sample.int(2, size = n, replace = TRUE, prob = c(0.2, 0.8)) - 1,
   P = 1L,
   psi = c(0.05, 0.05),
   mu_d = c(0.9, 0.5),
