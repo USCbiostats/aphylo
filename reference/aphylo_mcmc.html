@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,18 +63,18 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">APHYLO_DEFAULT_MCMC_CONTROL</span>
-
-<span class="fu">aphylo_mcmc</span><span class="op">(</span>
-  <span class="va">model</span>,
-  <span class="va">params</span>,
-  priors <span class="op">=</span> <span class="fu"><a href="bprior.html">uprior</a></span><span class="op">(</span><span class="op">)</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  check_informative <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_informative"</span>, <span class="cn">FALSE</span><span class="op">)</span>,
-  reduced_pseq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_reduce_pseq"</span>, <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">APHYLO_PARAM_DEFAULT</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">APHYLO_DEFAULT_MCMC_CONTROL</span></span>
+<span></span>
+<span><span class="fu">aphylo_mcmc</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  <span class="va">params</span>,</span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="bprior.html">uprior</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  check_informative <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_informative"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  reduced_pseq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_reduce_pseq"</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">APHYLO_PARAM_DEFAULT</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -86,25 +86,38 @@
     <h2>Arguments</h2>
     <dl><dt>model</dt>
 <dd><p>A model as specified in <a href="aphylo-model.html">aphylo-model</a>.</p></dd>
+
+
 <dt>params</dt>
 <dd><p>A vector of length 7 with initial parameters. In particular
 <code>psi[1]</code>, <code>psi[2]</code>, <code>mu[1]</code>, <code>mu[2]</code>, <code>eta[1]</code>, <code>eta[2]</code> and <code>Pi</code>.</p></dd>
+
+
 <dt>priors</dt>
 <dd><p>A function to be used as prior for the model (see <a href="bprior.html">bprior</a>).</p></dd>
+
+
 <dt>control</dt>
 <dd><p>A list with parameters for the optimization method (see
 details).</p></dd>
+
+
 <dt>check_informative</dt>
 <dd><p>Logical scalar. When <code>TRUE</code> the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).</p></dd>
+
+
 <dt>reduced_pseq</dt>
 <dd><p>Logical. When <code>TRUE</code> it will use a reduced peeling sequence
 in which it drops unannotated leafs. If the model includes <code>eta</code> this is set
 to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a>.</p>
+    
+
+<p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -139,33 +152,72 @@ in the model. The current defaults are:</p><ul><li><p><code>psi0</code>: 0.10</p
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Using the MCMC ------------------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1233</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Simulating a tree</span></span>
-<span class="r-in"><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_tree.html">sim_tree</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Simulating functions</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span></span>
-<span class="r-in">  tree <span class="op">=</span> <span class="va">tree</span>,</span>
-<span class="r-in">  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span><span class="op">)</span>,</span>
-<span class="r-in">  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">.02</span><span class="op">)</span>,</span>
-<span class="r-in">  Pi   <span class="op">=</span> <span class="fl">.5</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Running the MCMC</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ans_mcmc</span> <span class="op">&lt;-</span> <span class="fu">aphylo_mcmc</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span>,</span>
-<span class="r-in">  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps <span class="op">=</span> <span class="fl">2e5</span>, burnin<span class="op">=</span><span class="fl">1000</span>, thin<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Using the MCMC ------------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1233</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Simulating a tree</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_tree.html">sim_tree</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulating functions</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  tree <span class="op">=</span> <span class="va">tree</span>,</span></span>
+<span class="r-in"><span>  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">.02</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  Pi   <span class="op">=</span> <span class="fl">.5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Running the MCMC</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ans_mcmc</span> <span class="op">&lt;-</span> <span class="fu">aphylo_mcmc</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span>,</span></span>
+<span class="r-in"><span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps <span class="op">=</span> <span class="fl">2e5</span>, burnin<span class="op">=</span><span class="fl">1000</span>, thin<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.1, 0.05, 0.9, 0.5, 1, 1, 0.5). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 6000). Gelman-Rubin's R: 2.9557. Trying with the next bulk.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 11000 steps. Gelman-Rubin's R: 1.0960. (50 final count of samples).</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 6000). Gelman-Rubin's R: 15.6534. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 11000). Gelman-Rubin's R: 35.3876. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 16000). Gelman-Rubin's R: 44.6823. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 21000). Gelman-Rubin's R: 45.5207. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 26000). Gelman-Rubin's R: 42.1064. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 31000). Gelman-Rubin's R: 43.9147. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 36000). Gelman-Rubin's R: 43.6296. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 41000). Gelman-Rubin's R: 39.8554. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 46000). Gelman-Rubin's R: 39.8168. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 51000). Gelman-Rubin's R: 40.8008. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 56000). Gelman-Rubin's R: 40.9831. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 61000). Gelman-Rubin's R: 39.6546. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 66000). Gelman-Rubin's R: 39.9588. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 71000). Gelman-Rubin's R: 41.4681. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 76000). Gelman-Rubin's R: 42.2324. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 81000). Gelman-Rubin's R: 42.7171. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 86000). Gelman-Rubin's R: 42.7701. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 91000). Gelman-Rubin's R: 43.7239. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 96000). Gelman-Rubin's R: 44.0830. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 101000). Gelman-Rubin's R: 43.7994. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 106000). Gelman-Rubin's R: 43.2222. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 111000). Gelman-Rubin's R: 44.0337. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 116000). Gelman-Rubin's R: 44.1949. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 121000). Gelman-Rubin's R: 44.8269. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 126000). Gelman-Rubin's R: 44.4841. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 131000). Gelman-Rubin's R: 44.3707. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 136000). Gelman-Rubin's R: 43.7705. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 141000). Gelman-Rubin's R: 44.1808. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 146000). Gelman-Rubin's R: 43.4634. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 151000). Gelman-Rubin's R: 43.3565. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 156000). Gelman-Rubin's R: 43.6057. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 161000). Gelman-Rubin's R: 43.0680. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 166000). Gelman-Rubin's R: 42.8754. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 171000). Gelman-Rubin's R: 43.3233. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 176000). Gelman-Rubin's R: 43.4753. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 181000). Gelman-Rubin's R: 43.2369. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 186000). Gelman-Rubin's R: 43.0555. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 191000). Gelman-Rubin's R: 43.2616. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 196000). Gelman-Rubin's R: 43.2817. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence yet (steps count: 2e+05). Gelman-Rubin's R: 43.4492. Trying with the next bulk.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No convergence reached after 2e+05 steps (995 final count of samples).</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -180,8 +232,7 @@ in the model. The current defaults are:</p><ul><li><p><code>psi0</code>: 0.10</p
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

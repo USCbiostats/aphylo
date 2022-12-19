@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -94,30 +94,15 @@
 
 
 <div class="section level1">
-<div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees
-<img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
+<div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
 </h1></div>
-<p>The <code>aphylo</code> R package implements estimation and data
-imputation methods for Functional Annotations in Phylogenetic Trees. The
-core function consists on the computation of the log-likelihood of
-observing a given phylogenetic tree with functional annotation on its
-leafs, and probabilities associated to gain and loss of functionalities,
-including probabilities of experimental misclassification. Furthermore,
-the log-likelihood is computed using peeling algorithms, which required
-developing and implementing efficient algorithms for re-coding and
-preparing phylogenetic tree data so that can be used with the package.
-Finally, <code>aphylo</code> works smoothly with popular tools for
-analysis of phylogenetic data such as <code>ape</code> R package,
-“Analyses of Phylogenetics and Evolution”.</p>
-<p>The package is under MIT License, and is been developed by the
-Computing and Software Cores of the Biostatistics Division’s NIH Project
-Grant (P01) at the Department of Preventive Medicine at the University
-of Southern California.</p>
+<p>The <code>aphylo</code> R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, <code>aphylo</code> works smoothly with popular tools for analysis of phylogenetic data such as <code>ape</code> R package, “Analyses of Phylogenetics and Evolution”.</p>
+<p>The package is under MIT License, and is been developed by the Computing and Software Cores of the Biostatistics Division’s NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.</p>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>
 To cite aphylo in publications use the following paper:
 
@@ -140,33 +125,32 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
-<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So
-first you need to install it:</p>
+<p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So first you need to install it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></span></code></pre></div>
 <p>Then you can install the <code>aphylo</code> package</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="reading-data">Reading data<a class="anchor" aria-label="anchor" href="#reading-data"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo" class="external-link">aphylo</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/USCbiostats/aphylo" class="external-link">aphylo</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: ape</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># This datasets are included in the package</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fakeexperiment"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"faketree"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fakeexperiment</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># This datasets are included in the package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fakeexperiment"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"faketree"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fakeexperiment</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">##      LeafId f1 f2</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,]      1  0  0</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,]      2  0  1</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [3,]      3  1  0</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [4,]      4  1  1</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">##      ParentId NodeId</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,]        6      1</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,]        6      2</span></span>
@@ -175,12 +159,12 @@ first you need to install it:</p>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [5,]        5      6</span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [6,]        5      7</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">O</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo-class.html">new_aphylo</a></span><span class="op">(</span>
-  tip.annotation <span class="op">=</span> <span class="va">fakeexperiment</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,
-  tree           <span class="op">=</span> <span class="fu"><a href="reference/as.phylo.html">as.phylo</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">O</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">O</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo-class.html">new_aphylo</a></span><span class="op">(</span></span>
+<span>  tip.annotation <span class="op">=</span> <span class="va">fakeexperiment</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,</span>
+<span>  tree           <span class="op">=</span> <span class="fu"><a href="reference/as.phylo.html">as.phylo</a></span><span class="op">(</span><span class="va">faketree</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">O</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Phylogenetic tree with 4 tips and 3 internal nodes.</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -204,7 +188,7 @@ first you need to install it:</p>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  9  9</span></span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 7  9  9</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/as.phylo.html">as.phylo</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/as.phylo.html">as.phylo</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Phylogenetic tree with 4 tips and 3 internal nodes.</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -215,28 +199,28 @@ first you need to install it:</p>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Rooted; no branch lengths.</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># We can visualize it</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># We can visualize it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/Get%20offspring-1.png"><!-- --></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">O</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/Get%20offspring-2.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="simulating-annoated-trees">Simulating annoated trees<a class="anchor" aria-label="anchor" href="#simulating-annoated-trees"></a>
 </h2>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">198</span><span class="op">)</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/raphylo.html">raphylo</a></span><span class="op">(</span>
-  <span class="fl">50</span>,
-  P    <span class="op">=</span> <span class="fl">1</span>, 
-  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.05</span><span class="op">)</span>,
-  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.3</span><span class="op">)</span>,
-  mu_s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>,
-  Pi   <span class="op">=</span> <span class="fl">.4</span>
-  <span class="op">)</span>
-
-<span class="va">dat</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">198</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/raphylo.html">raphylo</a></span><span class="op">(</span></span>
+<span>  <span class="fl">50</span>,</span>
+<span>  P    <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>  psi  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>  mu_d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>  mu_s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  Pi   <span class="op">=</span> <span class="fl">.4</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Phylogenetic tree with 50 tips and 49 internal nodes.</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -274,15 +258,15 @@ first you need to install it:</p>
 <h2 id="likelihood">Likelihood<a class="anchor" aria-label="anchor" href="#likelihood"></a>
 </h2>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Parameters and data</span>
-<span class="va">psi</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.020</span>,<span class="fl">0.010</span><span class="op">)</span>
-<span class="va">mu_d</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.40</span>,<span class="fl">.10</span><span class="op">)</span>
-<span class="va">mu_s</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>,<span class="fl">.01</span><span class="op">)</span>
-<span class="va">eta</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span>
-<span class="va">pi_root</span> <span class="op">&lt;-</span> <span class="fl">.05</span>
-
-<span class="co"># Computing likelihood</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="reference/LogLike.html">LogLike</a></span><span class="op">(</span><span class="va">dat</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, eta <span class="op">=</span> <span class="va">eta</span>, Pi <span class="op">=</span> <span class="va">pi_root</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Parameters and data</span></span>
+<span><span class="va">psi</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.020</span>,<span class="fl">0.010</span><span class="op">)</span></span>
+<span><span class="va">mu_d</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.40</span>,<span class="fl">.10</span><span class="op">)</span></span>
+<span><span class="va">mu_s</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>,<span class="fl">.01</span><span class="op">)</span></span>
+<span><span class="va">eta</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span></span>
+<span><span class="va">pi_root</span> <span class="op">&lt;-</span> <span class="fl">.05</span></span>
+<span></span>
+<span><span class="co"># Computing likelihood</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="reference/LogLike.html">LogLike</a></span><span class="op">(</span><span class="va">dat</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, eta <span class="op">=</span> <span class="va">eta</span>, Pi <span class="op">=</span> <span class="va">pi_root</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## List of 2</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Pr:List of 1</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   ..$ : num [1:99, 1:2] 0.018 0.686 0.686 0.018 0.686 0.686 0.018 0.018 0.018 0.686 ...</span></span>
@@ -293,22 +277,22 @@ first you need to install it:</p>
 <h1 id="estimation">Estimation<a class="anchor" aria-label="anchor" href="#estimation"></a>
 </h1>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Using L-BFGS-B (MLE) to get an initial guess</span>
-<span class="va">ans0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mle.html">aphylo_mle</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">Pi</span> <span class="op">+</span> <span class="va">eta</span><span class="op">)</span>
-
-
-<span class="co"># MCMC method</span>
-<span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span>
-  <span class="va">dat</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span>,
-  prior   <span class="op">=</span> <span class="fu"><a href="reference/bprior.html">bprior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps<span class="op">=</span><span class="fl">5e3</span>, burnin<span class="op">=</span><span class="fl">500</span>, thin<span class="op">=</span><span class="fl">10</span>, nchains<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Using L-BFGS-B (MLE) to get an initial guess</span></span>
+<span><span class="va">ans0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mle.html">aphylo_mle</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">Pi</span> <span class="op">+</span> <span class="va">eta</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># MCMC method</span></span>
+<span><span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span>,</span>
+<span>  prior   <span class="op">=</span> <span class="fu"><a href="reference/bprior.html">bprior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">9</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nsteps<span class="op">=</span><span class="fl">5e3</span>, burnin<span class="op">=</span><span class="fl">500</span>, thin<span class="op">=</span><span class="fl">10</span>, nchains<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: While using multiple chains, a single initial point has been passed via</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## would want to start each chain from different locations.</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Convergence has been reached with 5500 steps. Gelman-Rubin's R: 1.0434. (500 final count of samples).</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ans2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ans2</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
@@ -328,17 +312,17 @@ first you need to install it:</p>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  mu_s1   0.0984    0.0431</span></span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  Pi      0.5331    0.1510</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">ans2</span>,
-  nsample <span class="op">=</span> <span class="fl">200</span>,
-  loo     <span class="op">=</span> <span class="cn">TRUE</span>,
-  ncores  <span class="op">=</span> <span class="fl">2L</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">ans2</span>,</span>
+<span>  nsample <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  loo     <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ncores  <span class="op">=</span> <span class="fl">2L</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/MLE-1.png"><!-- --></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># MCMC Diagnostics with coda</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">coda</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/coda/man/gelman.diag.html" class="external-link">gelman.diag</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># MCMC Diagnostics with coda</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">coda</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/coda/man/gelman.diag.html" class="external-link">gelman.diag</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Potential scale reduction factors:</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">##       Point est. Upper C.I.</span></span>
@@ -352,15 +336,15 @@ first you need to install it:</p>
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.04</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans2</span><span class="op">$</span><span class="va">hist</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/MCMC-1.png"><!-- --><img src="README_files/figure-gfm/MCMC-2.png"><!-- --></p>
 </div>
 <div class="section level1">
 <h1 id="prediction">Prediction<a class="anchor" aria-label="anchor" href="#prediction"></a>
 </h1>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans2</span>, loo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">pred</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans2</span>, loo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">pred</span></span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction score (H0: Observed = Random)</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  N obs.      : 99</span></span>
@@ -375,16 +359,13 @@ first you need to install it:</p>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC 0.78.</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="do">## MAE 0.29.</span></span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/Predict-1.png"><!-- --></p>
 </div>
 <div class="section level1">
 <h1 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>
 </h1>
-<p>During the development process, we decided to allow the user to
-choose what ‘tree-reader’ function he would use, in particular, between
-using either the rncl R package or ape. For such we created a short
-benchmark that compares both functions <a href="playground/ape_now_supports_singletons.html">here</a>.</p>
+<p>During the development process, we decided to allow the user to choose what ‘tree-reader’ function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions <a href="playground/ape_now_supports_singletons.html">here</a>.</p>
 </div>
 
   </div>
@@ -450,8 +431,7 @@ benchmark that compares both functions <a href="playground/ape_now_supports_sing
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

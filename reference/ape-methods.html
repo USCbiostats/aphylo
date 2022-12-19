@@ -18,7 +18,7 @@ directly on objects of class aphylo, aphylo_estimates, multiAphylo"><meta proper
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@ directly on objects of class aphylo, aphylo_estimates, multiAphylo"><meta proper
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,7 +67,9 @@ directly on objects of class <a href="aphylo-class.html">aphylo</a>, <a href="ap
 
     <div id="value">
     <h2>Value</h2>
-    <p>Integer with the number of edges, nodes, or tips accordignly.</p>
+    
+
+<p>Integer with the number of edges, nodes, or tips accordignly.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -77,21 +79,21 @@ directly on objects of class <a href="aphylo-class.html">aphylo</a>, <a href="ap
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12312</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">50</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nnode</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12312</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">50</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nnode</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 49</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 50</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nedge</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nedge</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 98</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">multitree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">rmultiAphylo</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nnode</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">multitree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">rmultiAphylo</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nnode</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 49 49 49 49 49 49 49 49 49 49</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 50 50 50 50 50 50 50 50 50 50</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nedge</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Nedge</a></span><span class="op">(</span><span class="va">multitree</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 98 98 98 98 98 98 98 98 98 98</span>
 </code></pre></div>
     </div>
@@ -107,8 +109,7 @@ directly on objects of class <a href="aphylo-class.html">aphylo</a>, <a href="ap
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

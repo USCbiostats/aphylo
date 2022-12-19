@@ -19,7 +19,7 @@ if a specie has two or more leafs within its clade."><meta property="og:image" c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@ if a specie has two or more leafs within its clade."><meta property="og:image" c
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,19 +67,27 @@ if a specie has two or more leafs within its clade.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">imputate_duplications</span><span class="op">(</span><span class="va">tree</span>, <span class="va">species</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">imputate_duplications</span><span class="op">(</span><span class="va">tree</span>, <span class="va">species</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>tree</dt>
 <dd><p>An object of class <a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">ape::phylo</a>.</p></dd>
+
+
 <dt>species</dt>
 <dd><p>A character vector of length <code>ape::Ntip(tree)</code> (see details).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A logical vector of length <code>ape::Nnode(tree, internal.only = FALSE)</code>with <code>TRUE</code> to indicate that the corresponding node is a duplication event.
+    
+
+<p>A logical vector of length <code>ape::Nnode(tree, internal.only = FALSE)</code></p>
+
+
+<p>with <code>TRUE</code> to indicate that the corresponding node is a duplication event.
 The order matches that in the input tree.</p>
     </div>
     <div id="details">
@@ -92,16 +100,16 @@ same species.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># Data from PANTHER</span></span>
-<span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tree.tree"</span>, package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ptree</span> <span class="op">&lt;-</span> <span class="fu"><a href="panther-tree.html">read_panther</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Extracting the species</span></span>
-<span class="r-in"><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".+[:]|[|].+"</span>, <span class="st">""</span> , <span class="va">ptree</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Imputing duplications</span></span>
-<span class="r-in"><span class="fu">imputate_duplications</span><span class="op">(</span><span class="va">ptree</span><span class="op">$</span><span class="va">tree</span>, species <span class="op">=</span> <span class="va">sp</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Data from PANTHER</span></span></span>
+<span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tree.tree"</span>, package<span class="op">=</span><span class="st">"aphylo"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ptree</span> <span class="op">&lt;-</span> <span class="fu"><a href="panther-tree.html">read_panther</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extracting the species</span></span></span>
+<span class="r-in"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".+[:]|[|].+"</span>, <span class="st">""</span> , <span class="va">ptree</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Imputing duplications</span></span></span>
+<span class="r-in"><span><span class="fu">imputate_duplications</span><span class="op">(</span><span class="va">ptree</span><span class="op">$</span><span class="va">tree</span>, species <span class="op">=</span> <span class="va">sp</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [25] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span>
@@ -137,8 +145,7 @@ same species.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -19,7 +19,7 @@ what the user specifies as model."><meta property="og:image" content="/logo.svg"
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@ what the user specifies as model."><meta property="og:image" content="/logo.svg"
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,17 +67,17 @@ what the user specifies as model.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">eta</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span>
-
-<span class="fu">psi</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span>
-
-<span class="fu">Pi</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span>
-
-<span class="fu">mu_d</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span>
-
-<span class="fu">mu_s</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span>
-
-<span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">fm</span>, <span class="va">params</span>, <span class="va">priors</span>, env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">eta</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">psi</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">Pi</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">mu_d</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">mu_s</span><span class="op">(</span><span class="va">...</span>, <span class="va">env</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">fm</span>, <span class="va">params</span>, <span class="va">priors</span>, env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -85,32 +85,43 @@ what the user specifies as model.</p>
     <dl><dt>...</dt>
 <dd><p>Either 0, 1 or both. Depending on the parameter, the index of the
 model parameter that will be set as fixed.</p></dd>
+
+
 <dt>env</dt>
 <dd><p>Environment (not to be called by the user).</p></dd>
+
+
 <dt>fm</dt>
 <dd><p>A formula. Model of the type <code>&lt;aphylo-object&gt; ~ &lt;parameters&gt;</code> (see
 examples).</p></dd>
+
+
 <dt>params</dt>
 <dd><p>Numeric vector with model parameters.</p></dd>
+
+
 <dt>priors</dt>
 <dd><p>(optional) A function. Prior for the model.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with the following elements:</p><ul><li><p><code>fun</code> A function. The log-likelihood function.</p></li>
+    
+
+<p>A list with the following elements:</p><ul><li><p><code>fun</code> A function. The log-likelihood function.</p></li>
 <li><p><code>fixed</code> Logical vector.</p></li>
 </ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Baseline model</span></span>
-<span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Baseline model</span></span></span>
+<span class="r-in"><span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586ba8e6c88&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561733097ee0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -172,15 +183,15 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x5586baa9b860&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586bab36580&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x56172c5c1950&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561735939bc8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Mislabeling probabilities</span></span>
-<span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mislabeling probabilities</span></span></span>
+<span class="r-in"><span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586ba8e6c88&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561733097ee0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -242,15 +253,15 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586bac25008&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5617333222c0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Different probabilities for speciation and duplication node</span></span>
-<span class="r-in"><span class="co"># (only works if you have both types)</span></span>
-<span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Different probabilities for speciation and duplication node</span></span></span>
+<span class="r-in"><span><span class="co"># (only works if you have both types)</span></span></span>
+<span class="r-in"><span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">psi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + mu_s + psi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586ba8e6c88&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561733097ee0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -312,14 +323,14 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586bad1da58&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561732e2ab00&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Mislabeling probabilities and etas(fixed)</span></span>
-<span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="fu">eta</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mislabeling probabilities and etas(fixed)</span></span></span>
+<span class="r-in"><span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="fu">eta</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi + eta(0, 1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586ba8e6c88&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561733097ee0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -381,14 +392,14 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586badbf158&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56173285ca50&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Mislabeling probabilities and Pi </span></span>
-<span class="r-in"><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mislabeling probabilities and Pi </span></span></span>
+<span class="r-in"><span><span class="fu">aphylo_formula</span><span class="op">(</span><span class="va">x</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x ~ mu_d + psi + Pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586ba8e6c88&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561733097ee0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -450,9 +461,9 @@ examples).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ans$ll</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5586bae6b838&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561731610210&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -467,8 +478,7 @@ examples).</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

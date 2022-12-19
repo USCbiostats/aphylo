@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,46 +63,65 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for aphylo_prediction_score</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  main <span class="op">=</span> <span class="st">"Prediction Accuracy: Observed versus predicted values"</span>,
-  main.colorkey <span class="op">=</span> <span class="st">"Probability of Functional Annotation"</span>,
-  which.fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">expected</span><span class="op">)</span><span class="op">)</span>,
-  include.labels <span class="op">=</span> <span class="cn">NULL</span>,
-  labels.col <span class="op">=</span> <span class="st">"black"</span>,
-  leafs_only <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for aphylo_prediction_score</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"Prediction Accuracy: Observed versus predicted values"</span>,</span>
+<span>  main.colorkey <span class="op">=</span> <span class="st">"Probability of Functional Annotation"</span>,</span>
+<span>  which.fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">expected</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  include.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  labels.col <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  leafs_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code>aphylo_prediction_score</code>.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>Ignored.</p></dd>
+
+
 <dt>main</dt>
 <dd><p>Passed to <code>title</code>.</p></dd>
+
+
 <dt>main.colorkey</dt>
 <dd><p>Character scalar. Title of the colorkey (optional).</p></dd>
+
+
 <dt>which.fun</dt>
 <dd><p>Integer vector. Which function to plot.</p></dd>
+
+
 <dt>include.labels</dt>
 <dd><p>Logical scalar. When <code>TRUE</code>, draws nice labels
 at each slice which by default are specified as the rownames of <code>x$expected</code>.
 This is mostly useful when the number of predictions is small.</p></dd>
+
+
 <dt>labels.col</dt>
 <dd><p>Character scalar. Color of the labels.</p></dd>
+
+
 <dt>leafs_only</dt>
 <dd><p>Logical. When <code>TRUE</code> (default) only plots the leaf nodes.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Ignored</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>NULL (invisible) Generates a plot of the predictions.</p>
+    
+
+<p>NULL (invisible) Generates a plot of the predictions.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -112,12 +131,12 @@ then <code>include.labels=FALSE</code> by default.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">8783</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span>  <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">29</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ans</span>    <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mle.html">aphylo_mle</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pred_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">pred_s</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">8783</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span>  <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">29</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ans</span>    <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mle.html">aphylo_mle</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pred_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pred_s</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Prediction score (H0: Observed = Random)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  N obs.      : 57</span>
@@ -131,7 +150,7 @@ then <code>include.labels=FALSE</code> by default.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Significance levels: *** p &lt; .01, ** p &lt; .05, * p &lt; .10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AUC 0.94.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MAE 0.15.</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred_s</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred_s</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.aphylo_prediction_score-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -147,8 +166,7 @@ then <code>include.labels=FALSE</code> by default.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,41 +63,54 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aphylo_mle</span><span class="op">(</span>
-  <span class="va">model</span>,
-  <span class="va">params</span>,
-  method <span class="op">=</span> <span class="st">"L-BFGS-B"</span>,
-  priors <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="fl">1</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  lower <span class="op">=</span> <span class="fl">1e-05</span>,
-  upper <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="fl">1e-05</span>,
-  check_informative <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_informative"</span>, <span class="cn">FALSE</span><span class="op">)</span>,
-  reduced_pseq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_reduce_pseq"</span>, <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aphylo_mle</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  <span class="va">params</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"L-BFGS-B"</span>,</span>
+<span>  priors <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="fl">1</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  lower <span class="op">=</span> <span class="fl">1e-05</span>,</span>
+<span>  upper <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="fl">1e-05</span>,</span>
+<span>  check_informative <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_informative"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  reduced_pseq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"aphylo_reduce_pseq"</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>model</dt>
 <dd><p>A model as specified in <a href="aphylo-model.html">aphylo-model</a>.</p></dd>
+
+
 <dt>params</dt>
 <dd><p>A vector of length 7 with initial parameters. In particular
 <code>psi[1]</code>, <code>psi[2]</code>, <code>mu[1]</code>, <code>mu[2]</code>, <code>eta[1]</code>, <code>eta[2]</code> and <code>Pi</code>.</p></dd>
+
+
 <dt>method, control, lower, upper</dt>
 <dd><p>Arguments passed to <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code>.</p></dd>
+
+
 <dt>priors</dt>
 <dd><p>A function to be used as prior for the model (see <a href="bprior.html">bprior</a>).</p></dd>
+
+
 <dt>check_informative</dt>
 <dd><p>Logical scalar. When <code>TRUE</code> the algorithm
 stops with an error when the annotations are uninformative (either 0s or 1s).</p></dd>
+
+
 <dt>reduced_pseq</dt>
 <dd><p>Logical. When <code>TRUE</code> it will use a reduced peeling sequence
 in which it drops unannotated leafs. If the model includes <code>eta</code> this is set
 to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a>.</p>
+    
+
+<p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -111,15 +124,15 @@ to <code>FALSE</code>.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># Using simulated data ------------------------------------------------------</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="rdrop_annotations.html">rdrop_annotations</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">.4</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Computing Estimating the parameters </span></span>
-<span class="r-in"><span class="va">ans</span>  <span class="op">&lt;-</span> <span class="fu">aphylo_mle</span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ans</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using simulated data ------------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="rdrop_annotations.html">rdrop_annotations</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">.4</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Computing Estimating the parameters </span></span></span>
+<span class="r-in"><span><span class="va">ans</span>  <span class="op">&lt;-</span> <span class="fu">aphylo_mle</span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ans</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
@@ -141,18 +154,18 @@ to <code>FALSE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  eta1    1.0000    0.1543</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Pi      1.0000    3.2408</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Plotting the path</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plotting the path</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="aphylo_mle-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Computing Estimating the parameters Using Priors for all the parameters</span></span>
-<span class="r-in"><span class="va">mypriors</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">params</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ans_dbeta</span> <span class="op">&lt;-</span> <span class="fu">aphylo_mle</span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span>, priors <span class="op">=</span> <span class="va">mypriors</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ans_dbeta</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Computing Estimating the parameters Using Priors for all the parameters</span></span></span>
+<span class="r-in"><span><span class="va">mypriors</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">params</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ans_dbeta</span> <span class="op">&lt;-</span> <span class="fu">aphylo_mle</span><span class="op">(</span><span class="va">dat</span> <span class="op">~</span> <span class="va">psi</span> <span class="op">+</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">eta</span> <span class="op">+</span> <span class="va">Pi</span>, priors <span class="op">=</span> <span class="va">mypriors</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ans_dbeta</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -187,8 +200,7 @@ to <code>FALSE</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

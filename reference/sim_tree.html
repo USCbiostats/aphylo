@@ -18,7 +18,7 @@ significantly faster than rtree."><meta property="og:image" content="/logo.svg">
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@ significantly faster than rtree."><meta property="og:image" content="/logo.svg">
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -65,19 +65,24 @@ significantly faster than <code>rtree</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">sim_tree</span><span class="op">(</span><span class="va">n</span>, edge.length <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_tree</span><span class="op">(</span><span class="va">n</span>, edge.length <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n</dt>
 <dd><p>Integer scalar. Number of leaf nodes.</p></dd>
+
+
 <dt>edge.length</dt>
 <dd><p>A Function. Used to set the length of the edges.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">ape::phylo</a> with the edgelist as a postorderd,
+    
+
+<p>An object of class <a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">ape::phylo</a> with the edgelist as a postorderd,
 <code>node.label</code> and <code>edge.length</code>.</p>
     </div>
     <div id="details">
@@ -96,28 +101,28 @@ significantly faster than <code>rtree</code>.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># A very simple example ----------------------------------------------------</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1223</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">newtree</span> <span class="op">&lt;-</span> <span class="fu">sim_tree</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newtree</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># A very simple example ----------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1223</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">newtree</span> <span class="op">&lt;-</span> <span class="fu">sim_tree</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newtree</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sim_tree-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># A performance benchmark with ape::rtree ----------------------------------</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://ape-package.ird.fr/" class="external-link">ape</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu">microbenchmark</span><span class="op">(</span></span>
-<span class="r-in">  ape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/rtree.html" class="external-link">rtree</a></span><span class="op">(</span><span class="fl">1e3</span><span class="op">)</span>,</span>
-<span class="r-in">  phy <span class="op">=</span> <span class="fu">sim_tree</span><span class="op">(</span><span class="fl">1e3</span><span class="op">)</span>,</span>
-<span class="r-in"> unit <span class="op">=</span> <span class="st">"relative"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="co"># This is what you would get.</span></span>
-<span class="r-in"><span class="co"># Unit: relative</span></span>
-<span class="r-in"><span class="co">#   expr     min       lq     mean  median       uq      max neval</span></span>
-<span class="r-in"><span class="co">#    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100</span></span>
-<span class="r-in"><span class="co">#    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># A performance benchmark with ape::rtree ----------------------------------</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://ape-package.ird.fr/" class="external-link">ape</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu">microbenchmark</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/rtree.html" class="external-link">rtree</a></span><span class="op">(</span><span class="fl">1e3</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  phy <span class="op">=</span> <span class="fu">sim_tree</span><span class="op">(</span><span class="fl">1e3</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> unit <span class="op">=</span> <span class="st">"relative"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># This is what you would get.</span></span></span>
+<span class="r-in"><span><span class="co"># Unit: relative</span></span></span>
+<span class="r-in"><span><span class="co">#   expr     min       lq     mean  median       uq      max neval</span></span></span>
+<span class="r-in"><span><span class="co">#    ape 14.7598 14.30809 14.30013 16.7217 14.32843 4.754106   100</span></span></span>
+<span class="r-in"><span><span class="co">#    phy  1.0000  1.00000  1.00000  1.0000  1.00000 1.000000   100</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -132,8 +137,7 @@ significantly faster than <code>rtree</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

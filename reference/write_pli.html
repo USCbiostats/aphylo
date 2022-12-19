@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,40 +63,47 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">write_pli</span><span class="op">(</span>
-  <span class="va">family_id</span>,
-  <span class="va">protein_name</span>,
-  <span class="va">protein_number</span>,
-  <span class="va">go_number</span>,
-  moc <span class="op">=</span> <span class="st">"EXP"</span>,
-  file <span class="op">=</span> <span class="st">""</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_pli</span><span class="op">(</span></span>
+<span>  <span class="va">family_id</span>,</span>
+<span>  <span class="va">protein_name</span>,</span>
+<span>  <span class="va">protein_number</span>,</span>
+<span>  <span class="va">go_number</span>,</span>
+<span>  moc <span class="op">=</span> <span class="st">"EXP"</span>,</span>
+<span>  file <span class="op">=</span> <span class="st">""</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>family_id</dt>
 <dd><p>Character scalar. Name of the family</p></dd>
+
+
 <dt>protein_name, protein_number, go_number, moc</dt>
 <dd><p>Vectors of the same length</p></dd>
+
+
 <dt>file</dt>
 <dd><p>Character scalar passed to <a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A string with the XML file.</p>
+    
+
+<p>A string with the XML file.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">882</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">write_pli</span><span class="op">(</span></span>
-<span class="r-in">  family_id      <span class="op">=</span> <span class="st">"a family"</span>,</span>
-<span class="r-in">  protein_name   <span class="op">=</span> <span class="va">atree</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span>,</span>
-<span class="r-in">  protein_number <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span>,</span>
-<span class="r-in">  go_number      <span class="op">=</span> <span class="st">"GO:123123123123"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">882</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">write_pli</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  family_id      <span class="op">=</span> <span class="st">"a family"</span>,</span></span>
+<span class="r-in"><span>  protein_name   <span class="op">=</span> <span class="va">atree</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span>,</span></span>
+<span class="r-in"><span>  protein_number <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  go_number      <span class="op">=</span> <span class="st">"GO:123123123123"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;?xml version="1.0"?&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Family&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;FamilyID&gt;a family&lt;/FamilyID&gt;</span>
@@ -131,41 +138,41 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/Protein&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/Family&gt;</span>
-<span class="r-in"><span class="co"># Possible outcome:</span></span>
-<span class="r-in"><span class="co">#&lt;?xml version="1.0"?&gt;</span></span>
-<span class="r-in"><span class="co">#&lt;Family&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;FamilyID&gt;a family&lt;/FamilyID&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;Protein&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinName&gt;1&lt;/ProteinName&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinNumber&gt;1&lt;/ProteinNumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;/Protein&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;Protein&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinName&gt;2&lt;/ProteinName&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinNumber&gt;2&lt;/ProteinNumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;/Protein&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;Protein&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinName&gt;3&lt;/ProteinName&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinNumber&gt;3&lt;/ProteinNumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;/Protein&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;Protein&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinName&gt;4&lt;/ProteinName&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinNumber&gt;4&lt;/ProteinNumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;/Protein&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;Protein&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinName&gt;5&lt;/ProteinName&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;ProteinNumber&gt;5&lt;/ProteinNumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span>
-<span class="r-in"><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span>
-<span class="r-in"><span class="co">#  &lt;/Protein&gt;</span></span>
-<span class="r-in"><span class="co">#&lt;/Family&gt;</span></span>
+<span class="r-in"><span><span class="co"># Possible outcome:</span></span></span>
+<span class="r-in"><span><span class="co">#&lt;?xml version="1.0"?&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#&lt;Family&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;FamilyID&gt;a family&lt;/FamilyID&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinName&gt;1&lt;/ProteinName&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinNumber&gt;1&lt;/ProteinNumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;/Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinName&gt;2&lt;/ProteinName&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinNumber&gt;2&lt;/ProteinNumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;/Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinName&gt;3&lt;/ProteinName&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinNumber&gt;3&lt;/ProteinNumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;/Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinName&gt;4&lt;/ProteinName&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinNumber&gt;4&lt;/ProteinNumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;/Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinName&gt;5&lt;/ProteinName&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;ProteinNumber&gt;5&lt;/ProteinNumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;GONumber&gt;[GO:123123123123]&lt;/GONumber&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;MOC&gt;[EXP]&lt;/MOC&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  &lt;/Protein&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#&lt;/Family&gt;</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -180,8 +187,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

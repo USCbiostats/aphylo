@@ -20,7 +20,7 @@ the post estimation methods/functions that can be used."><meta property="og:imag
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@ the post estimation methods/functions that can be used."><meta property="og:imag
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -69,77 +69,103 @@ the post estimation methods/functions that can be used.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for aphylo_estimates</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for aphylo_estimates</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for aphylo_estimates</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for aphylo_estimates</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  which.tree <span class="op">=</span> <span class="fl">1L</span>,
-  ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="va">which.tree</span><span class="op">]</span><span class="op">)</span>,
-  loo <span class="op">=</span> <span class="cn">TRUE</span>,
-  nsamples <span class="op">=</span> <span class="fl">1L</span>,
-  ncores <span class="op">=</span> <span class="fl">1L</span>,
-  centiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span><span class="op">)</span>,
-  cl <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for aphylo_estimates</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for aphylo_estimates</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for aphylo_estimates</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for aphylo_estimates</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  which.tree <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/summary.phylo.html" class="external-link">Ntip</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="va">which.tree</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  loo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  nsamples <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  centiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span><span class="op">)</span>,</span>
+<span>  cl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x, object</dt>
 <dd><p>Depending of the method, an object of class <code>aphylo_estimates</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to the corresponding method.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>Ignored.</p></dd>
+
+
 <dt>which.tree</dt>
 <dd><p>Integer scalar. Which tree to plot.</p></dd>
+
+
 <dt>ids, nsamples, ncores, centiles, cl</dt>
 <dd><p>passed to <code><a href="posterior-probabilities.html">predict.aphylo_estimates()</a></code></p></dd>
+
+
 <dt>loo</dt>
 <dd><p>Logical scalar. When <code>loo = TRUE</code>, predictions are preformed
 similar to what a leave-one-out cross-validation scheme would be done
 (see <a href="posterior-probabilities.html">predict.aphylo_estimates</a>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Objects of class <code>aphylo_estimates</code> are a list withh the following elements:</p>
+    
+
+<p>Objects of class <code>aphylo_estimates</code> are a list withh the following elements:</p>
 <dl><dt>par</dt>
 <dd><p>A numeric vector of length 5 with the solution.</p></dd>
+
 <dt>hist</dt>
 <dd><p>A numeric matrix of size <code>counts*5</code> with the solution path
 (length 2 if used <code>optim</code> as the intermediate steps are not available to the
 user). In the case of <code>aphylo_mcmc</code>, <code>hist</code> is an object of class
 <code><a href="https://rdrr.io/pkg/coda/man/mcmc.list.html" class="external-link">coda::mcmc.list()</a></code>.</p></dd>
+
 <dt>ll</dt>
 <dd><p>A numeric scalar with the value of <code>fun(par, dat)</code>. The value of the log likelihood.</p></dd>
+
 <dt>counts</dt>
 <dd><p>Integer scalar number of steps/batch performed.</p></dd>
+
 <dt>convergence</dt>
 <dd><p>Integer scalar. Equal to 0 if <code>optim</code> converged. See <code>optim</code>.</p></dd>
+
 <dt>message</dt>
 <dd><p>Character scalar. See <code>optim</code>.</p></dd>
+
 <dt>fun</dt>
 <dd><p>A function (the objective function).</p></dd>
+
 <dt>priors</dt>
 <dd><p>If specified, the function <code>priors</code> passed to the method.</p></dd>
+
 <dt>dat</dt>
 <dd><p>The data <code>dat</code> provided to the function.</p></dd>
+
 <dt>par0</dt>
 <dd><p>A numeric vector of length 5 with the initial parameters.</p></dd>
+
 <dt>method</dt>
 <dd><p>Character scalar with the name of the method used.</p></dd>
+
 <dt>varcovar</dt>
 <dd><p>A matrix of size 5*5. The estimated covariance matrix.</p></dd>
+
+
 </dl><p>The plot method for <code>aphylo_estimates</code> returns the selected tree
 (<code>which.tree</code>) with predicted annotations, also of class <a href="aphylo-class.html">aphylo</a>.</p>
     </div>
@@ -151,41 +177,41 @@ the original tree with the predicted annotations.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7881</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">40</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">res</span>   <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7881</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">40</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span>   <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0075. (500 final count of samples).</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0113. (500 final count of samples).</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Call: aphylo_mcmc(model = atree ~ mu_d + mu_s + Pi)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  LogLik: -37.9155 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  LogLik: -37.8064 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Method used: mcmc (10000 steps)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Leafs: 40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Functions 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Trees: 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Estimate  Std. Err.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d0   0.8202    0.1781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d1   0.5888    0.1645</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s0   0.1549    0.0741</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s1   0.0542    0.0334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Pi      0.5087    0.2988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d0   0.8301    0.1659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d1   0.5980    0.1568</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s0   0.1528    0.0715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s1   0.0528    0.0289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Pi      0.5081    0.3012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mu_d0      mu_d1      mu_s0      mu_s1         Pi </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.82020912 0.58880665 0.15491117 0.05418807 0.50871702 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mu_d0        mu_d1         mu_s0         mu_s1            Pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d0  0.0317171697  0.011698105 -0.0012386048 -0.0008812029  0.0003113201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d1  0.0116981045  0.027065943  0.0030587708 -0.0013857831 -0.0010045870</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s0 -0.0012386048  0.003058771  0.0054894067 -0.0002787499  0.0015331451</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s1 -0.0008812029 -0.001385783 -0.0002787499  0.0011167964 -0.0001055446</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pi     0.0003113201 -0.001004587  0.0015331451 -0.0001055446  0.0892970058</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.83010554 0.59795454 0.15277178 0.05277311 0.50811059 </span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mu_d0         mu_d1         mu_s0         mu_s1            Pi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d0  0.0275156151  0.0093328072 -0.0024645276 -0.0001701106  0.0005836410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d1  0.0093328072  0.0245869092  0.0026286693 -0.0007765479 -0.0030666673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s0 -0.0024645276  0.0026286693  0.0051186427 -0.0002880911  0.0033794154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s1 -0.0001701106 -0.0007765479 -0.0002880911  0.0008377113 -0.0003115157</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Pi     0.0005836410 -0.0030666673  0.0033794154 -0.0003115157  0.0907507309</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="aphylo_estimates-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -201,8 +227,7 @@ the original tree with the predicted annotations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,42 +63,57 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for aphylo</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  prop <span class="op">=</span> <span class="fl">0.15</span>,
-  node.type.col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>dupl <span class="op">=</span> <span class="st">"black"</span>, other <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span>,
-  node.type.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>dupl <span class="op">=</span> <span class="fl">0</span>, other <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-  rect.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  as_ci <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for aphylo</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  prop <span class="op">=</span> <span class="fl">0.15</span>,</span>
+<span>  node.type.col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>dupl <span class="op">=</span> <span class="st">"black"</span>, other <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span>,</span>
+<span>  node.type.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>dupl <span class="op">=</span> <span class="fl">0</span>, other <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  rect.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  as_ci <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code>aphylo</code>.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>Ignored.</p></dd>
+
+
 <dt>prop</dt>
 <dd><p>Numeric scalar between 0 and 1. Proportion of the device that the
 annotations use in <code>plot.aphylo</code>.</p></dd>
+
+
 <dt>node.type.col, node.type.size</dt>
 <dd><p>Vectors of length 2. In the case of
 <code>node.type.col</code> the color of the duplication and other nodes. <code>node.type.size</code>
 sets the size of circles.</p></dd>
+
+
 <dt>rect.args</dt>
 <dd><p>List of arguments passed to <a href="https://rdrr.io/r/graphics/rect.html" class="external-link">graphics::rect</a>.</p></dd>
+
+
 <dt>as_ci</dt>
 <dd><p>Integer vector. Internal use only.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to <a href="https://rdrr.io/pkg/ape/man/plot.phylo.html" class="external-link">ape::plot.phylo</a>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>In the case of <code>plot.aphylo</code>, <code>NULL</code>.</p>
+    
+
+<p>In the case of <code>plot.aphylo</code>, <code>NULL</code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -112,9 +127,9 @@ sets the size of circles.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7172</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7172</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">atree</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="aphylo-methods-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -130,8 +145,7 @@ sets the size of circles.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

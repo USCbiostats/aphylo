@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,17 +74,26 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <a href="aphylo-class.html">aphylo</a>.</p></dd>
+
+
 <dt>i, j</dt>
 <dd><p>Integer vector. Indices of genes or functions.</p></dd>
+
+
 <dt>drop</dt>
 <dd><p>Logical scalar. When <code>TRUE</code>, the function returns a matrix of
 annotations. Otherwise an object of class <code>aphylo</code>.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>Integer vector. Replacing values, can be either <code>c(0, 1, 9, NA)</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <ul><li><p>When indexing with <code>i</code>: A data frame with the annotations of the
+    
+
+<ul><li><p>When indexing with <code>i</code>: A data frame with the annotations of the
 selected genes.</p></li>
 <li><p>When only indexing with <code>j</code> (<code>drop = FALSE</code>): An <code>aphylo</code> object with the selected sets of
 annotations.</p></li>
@@ -101,9 +110,9 @@ annotations.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12312</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">50</span>, P <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">atree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12312</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">50</span>, P <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">atree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    fun0000 fun0001 fun0002 fun0003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        1       1       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        1       1       1       1</span>
@@ -115,7 +124,7 @@ annotations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        0       0       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9        1       1       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10       0       1       1       1</span>
-<span class="r-in"><span class="va">atree</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">atree</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 50 tips and 49 internal nodes.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -149,7 +158,7 @@ annotations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ...(43 obs. omitted)...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="va">atree</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">atree</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    fun0001 fun0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        1       1</span>
@@ -250,7 +259,7 @@ annotations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 47       1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 48       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 49       1       1</span>
-<span class="r-in"><span class="va">atree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">atree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    fun0001 fun0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        1       1</span>
@@ -262,8 +271,8 @@ annotations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9        1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10       1       1</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -278,8 +287,7 @@ annotations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
