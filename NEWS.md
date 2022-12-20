@@ -4,6 +4,8 @@
 
 * Small changes in C++ formatting and conventions to please CRAN.
 
+* Fixes a bug when using the stationary value of the root node probability.
+
 
 # Changes in aphylo version 0.3-0
 

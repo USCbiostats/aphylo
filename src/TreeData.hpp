@@ -224,7 +224,7 @@ public:
     for (auto iter = types.begin(); iter != types.end(); ++iter) {
       
       if (*iter == 0u) {
-        this->prop_type_d =+ increments;
+        this->prop_type_d += increments;
       } else if (*iter != 1u)
         throw std::invalid_argument("Values in the type of node should be either 0 or 1.");
       
