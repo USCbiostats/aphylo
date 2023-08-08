@@ -159,13 +159,13 @@ as.phylo(O)
 plot(O)
 ```
 
-![](man/figures/Get%20offspring-1.png)
+![](man/figures/get-offspring-1.png)
 
 ``` r
 plot_logLik(O)
 ```
 
-![](man/figures/Get%20offspring-2.png)
+![](man/figures/get-offspring-2.png)
 
 ## Simulating annoated trees
 

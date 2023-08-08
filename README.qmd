@@ -63,7 +63,7 @@ head(fakeexperiment)
 head(faketree)
 ```
 
-```{r Get offspring}
+```{r get-offspring}
 O <- new_aphylo(
   tip.annotation = fakeexperiment[,2:3],
   tree           = as.phylo(faketree)
@@ -77,7 +77,7 @@ plot(O)
 plot_logLik(O)
 ```
 
-## Simulating annoated trees
+## Simulating annotated trees
 
 ```{r}
 set.seed(198)
@@ -151,5 +151,5 @@ plot(pred)
 
 # Misc
 
-During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, particularly between using either the rncl R package or ape. For such, we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).
+During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, particularly between using either the **rncl** R package or ape. For such, we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).
 
