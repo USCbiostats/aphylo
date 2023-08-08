@@ -1,3 +1,8 @@
+# Changes in aphylo version 0.3-2
+
+* Fixes a bug when using the stationary value of the root node probability.
+
+
 # Changes in aphylo version 0.3-1
 
 * Re-instating the package to CRAN.
