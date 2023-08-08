@@ -1,8 +1,8 @@
 ---
-title: 
-output:
-  github_document:
-    html_preview: false
+format: gfm
+knitr: 
+  opts_chunk: 
+    fig.path: "man/figures/"
 ---
 
 <!--[![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)-->

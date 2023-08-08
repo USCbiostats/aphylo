@@ -17,6 +17,7 @@
 .*\.pdf
 # Misc
 README[.]Rmd
+README[.]qmd
 README[.]md
 ^README\_files$
 [.]travis[.]yml
