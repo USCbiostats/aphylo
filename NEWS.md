@@ -1,3 +1,7 @@
+# Changes in aphylo version 0.3-3
+
+* Removing C++ requirement as requested by CRAN.
+
 # Changes in aphylo version 0.3-2
 
 * Fixes a bug when using the stationary value of the root node probability.

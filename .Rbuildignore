@@ -39,3 +39,5 @@ inst/CODECOV_EXCLUSIONS
 
 # Wont include it for now
 ^R/aphylo_hier\.R
+
+.*\.code-workspace

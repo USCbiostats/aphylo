@@ -7,14 +7,14 @@ Authors@R: c(person("George", "Vega Yon", role=c("aut","cre"),
          5P01CA196569-02"),
          person("USC Biostatistics", role = "cph")
          )
-Version: 0.3-2
+Version: 0.3-3
 Description: Implements a parsimonious evolutionary model to analyze and
   predict gene-functional annotations in phylogenetic trees as described in Vega
-  Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. With a focus on
+  Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. Focusing on
   computational efficiency, 'aphylo' makes it possible to estimate pooled
   phylogenetic models, including thousands (hundreds) of annotations (trees) in
   the same run. The package also provides the tools for visualization of
-  annotated phylogenies, calculation of posterior probabilities (prediction,)
+  annotated phylogenies, calculation of posterior probabilities (prediction)
   and goodness-of-fit assessment featured in Vega Yon et al. (2021).
 Depends: R (>= 3.5.0), ape (>= 5.0)
 LazyData: true

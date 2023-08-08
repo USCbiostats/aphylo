@@ -21,9 +21,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists on the computation of the log-likelihood of observing a given phylogenetic tree with functional annotation on its leafs, and probabilities associated to gain and loss of functionalities, including probabilities of experimental misclassification. Furthermore, the log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data so that can be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution".
+The `aphylo` R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists of the log-likelihood computation of observing a given phylogenetic tree with functional annotation on its leaves and the probabilities associated to gain and loss of function, including probabilities of experimental misclassification. The log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data to be used with the package. Finally, `aphylo` works smoothly with popular tools for analysis of phylogenetic data such as `ape` R package, "Analyses of Phylogenetics and Evolution."
 
-The package is under MIT License, and is been developed by the Computing and Software Cores of the Biostatistics Division's NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.
+The package is under MIT License and is developed by the Computing and Software Cores of the Biostatistics Division's NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.
 
 ## Citation
 
@@ -34,7 +34,7 @@ citation(package="aphylo")
 
 ## Install
 
-This package depends on another on-development R package, the [`fmcmc`](https://github.com/USCbiostats/fmcmc). So first you need to install it:
+This package depends on another on-development R package, the [`fmcmc`](https://github.com/USCbiostats/fmcmc). So first, you need to install it:
 
 ```r
 devtools::install_github("USCbiostats/fmcmc")
@@ -151,5 +151,5 @@ plot(pred)
 
 # Misc
 
-During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, in particular, between using either the rncl R package or ape. For such we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).
+During the development process, we decided to allow the user to choose what 'tree-reader' function he would use, particularly between using either the rncl R package or ape. For such, we created a short benchmark that compares both functions [here](playground/ape_now_supports_singletons.md).
 
