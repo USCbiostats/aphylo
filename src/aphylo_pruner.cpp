@@ -8,8 +8,8 @@ using namespace Rcpp;
 
 // Tree constructor ------------------------------------------------------------
 
-// [[Rcpp::export(name = "new_aphylo_pruner.", rng = false)]]
-SEXP new_aphylo_pruner(
+// [[Rcpp::export(rng = false)]]
+SEXP new_aphylo_pruner_cpp(
     const std::vector< std::vector< unsigned int > > & edgelist,
     const std::vector< std::vector< unsigned int > > & A,
     const std::vector< unsigned int >  & types,

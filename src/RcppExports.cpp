@@ -10,16 +10,16 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// new_aphylo_pruner
-SEXP new_aphylo_pruner(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& types, unsigned int nannotated);
-RcppExport SEXP _aphylo_new_aphylo_pruner(SEXP edgelistSEXP, SEXP ASEXP, SEXP typesSEXP, SEXP nannotatedSEXP) {
+// new_aphylo_pruner_cpp
+SEXP new_aphylo_pruner_cpp(const std::vector< std::vector< unsigned int > >& edgelist, const std::vector< std::vector< unsigned int > >& A, const std::vector< unsigned int >& types, unsigned int nannotated);
+RcppExport SEXP _aphylo_new_aphylo_pruner_cpp(SEXP edgelistSEXP, SEXP ASEXP, SEXP typesSEXP, SEXP nannotatedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type edgelist(edgelistSEXP);
     Rcpp::traits::input_parameter< const std::vector< std::vector< unsigned int > >& >::type A(ASEXP);
     Rcpp::traits::input_parameter< const std::vector< unsigned int >& >::type types(typesSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type nannotated(nannotatedSEXP);
-    rcpp_result_gen = Rcpp::wrap(new_aphylo_pruner(edgelist, A, types, nannotated));
+    rcpp_result_gen = Rcpp::wrap(new_aphylo_pruner_cpp(edgelist, A, types, nannotated));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -264,7 +264,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_aphylo_new_aphylo_pruner", (DL_FUNC) &_aphylo_new_aphylo_pruner, 4},
+    {"_aphylo_new_aphylo_pruner_cpp", (DL_FUNC) &_aphylo_new_aphylo_pruner_cpp, 4},
     {"_aphylo_sizeof_pruner", (DL_FUNC) &_aphylo_sizeof_pruner, 1},
     {"_aphylo_LogLike_pruner", (DL_FUNC) &_aphylo_LogLike_pruner, 8},
     {"_aphylo_Tree_get_offspring", (DL_FUNC) &_aphylo_Tree_get_offspring, 1},
