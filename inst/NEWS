@@ -1,16 +1,22 @@
+Changes in aphylo version 0.3-3
 
+-   Removing C++ requirement as requested by CRAN.
 
-CHANGES IN APHYLO VERSION 0.3-1
+Changes in aphylo version 0.3-2
 
+-   Fixes a bug when using the stationary value of the root node
+    probability.
+
+Changes in aphylo version 0.3-1
 
 -   Re-instating the package to CRAN.
 
 -   Small changes in C++ formatting and conventions to please CRAN.
 
+-   Fixes a bug when using the stationary value of the root node
+    probability.
 
-
-CHANGES IN APHYLO VERSION 0.3-0
-
+Changes in aphylo version 0.3-0
 
 -   Preparing for CRAN.
 
@@ -21,9 +27,6 @@ CHANGES IN APHYLO VERSION 0.3-0
 -   Fixed bug in aphylo_formulae(): Passing subsetted trees, e.g.,
     atree[[1]], now works.
 
-
-
-CHANGES IN APHYLO VERSION 0.1.99
-
+Changes in aphylo version 0.1.99
 
 -   First version
