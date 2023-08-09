@@ -181,36 +181,36 @@ the original tree with the predicted annotations.</p>
 <span class="r-in"><span><span class="va">atree</span> <span class="op">&lt;-</span> <span class="fu"><a href="raphylo.html">raphylo</a></span><span class="op">(</span><span class="fl">40</span>, P <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res</span>   <span class="op">&lt;-</span> <span class="fu"><a href="aphylo_mcmc.html">aphylo_mcmc</a></span><span class="op">(</span><span class="va">atree</span> <span class="op">~</span> <span class="va">mu_d</span> <span class="op">+</span> <span class="va">mu_s</span> <span class="op">+</span> <span class="va">Pi</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>While using multiple chains, a single initial point has been passed via `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled. Ideally you would want to start each chain from different locations.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0113. (500 final count of samples).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0060. (500 final count of samples).</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Call: aphylo_mcmc(model = atree ~ mu_d + mu_s + Pi)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  LogLik: -37.8064 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  LogLik: -37.6717 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Method used: mcmc (10000 steps)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Leafs: 40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Functions 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  # of Trees: 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Estimate  Std. Err.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d0   0.8301    0.1659</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d1   0.5980    0.1568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s0   0.1528    0.0715</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s1   0.0528    0.0289</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Pi      0.5081    0.3012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d0   0.8471    0.1353</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_d1   0.6060    0.1497</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s0   0.1447    0.0682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mu_s1   0.0537    0.0321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Pi      0.5161    0.2858</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mu_d0      mu_d1      mu_s0      mu_s1         Pi </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.83010554 0.59795454 0.15277178 0.05277311 0.50811059 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.84708513 0.60600231 0.14468516 0.05365956 0.51614419 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               mu_d0         mu_d1         mu_s0         mu_s1            Pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d0  0.0275156151  0.0093328072 -0.0024645276 -0.0001701106  0.0005836410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d1  0.0093328072  0.0245869092  0.0026286693 -0.0007765479 -0.0030666673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s0 -0.0024645276  0.0026286693  0.0051186427 -0.0002880911  0.0033794154</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s1 -0.0001701106 -0.0007765479 -0.0002880911  0.0008377113 -0.0003115157</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pi     0.0005836410 -0.0030666673  0.0033794154 -0.0003115157  0.0907507309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d0  0.0183125658  0.0043421046 -0.0009275406 -0.0005053590  0.0043249274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_d1  0.0043421046  0.0224098533  0.0031021479 -0.0009848421  0.0045532592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s0 -0.0009275406  0.0031021479  0.0046558219 -0.0002800582  0.0022198039</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu_s1 -0.0005053590 -0.0009848421 -0.0002800582  0.0010292166 -0.0005416073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Pi     0.0043249274  0.0045532592  0.0022198039 -0.0005416073  0.0817006877</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="aphylo_estimates-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
