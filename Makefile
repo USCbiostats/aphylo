@@ -14,8 +14,8 @@ inst/NEWS: NEWS.md
 	Rscript -e "rmarkdown::pandoc_convert('NEWS.md', 'plain', output='inst/NEWS')" && \
 	head -n 80 inst/NEWS
 
-README.md: README.Rmd
-	Rscript -e 'rmarkdown::render("README.Rmd")'
+README.md: README.qmd
+	quarto render README.qmd 
 
 .PHONY: checfull checkv clean
 
@@ -30,7 +30,8 @@ checkv: $(PKGNAME)_$(VERSION).tar.gz
 	R CMD check --as-cran --use-valgrind $(PKGNAME)_$(VERSION).tar.gz
 
 clean:
-	rm -rf $(PKGNAME).Rcheck $(PKGNAME)_$(VERSION).tar.gz
+	rm -rf $(PKGNAME).Rcheck $(PKGNAME)_$(VERSION).tar.gz; \
+		Rscript --vanilla -e 'devtools::clean_dll();devtools::clean_vignettes()'
 
 .PHONY: man docker
 man: R/* 

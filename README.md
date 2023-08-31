@@ -167,7 +167,7 @@ plot_logLik(O)
 
 ![](man/figures/get-offspring-2.png)
 
-## Simulating annoated trees
+## Simulating annotated trees
 
 ``` r
 set.seed(198)
@@ -347,6 +347,6 @@ plot(pred)
 
 During the development process, we decided to allow the user to choose
 what ‘tree-reader’ function he would use, particularly between using
-either the rncl R package or ape. For such, we created a short benchmark
-that compares both functions
+either the **rncl** R package or ape. For such, we created a short
+benchmark that compares both functions
 [here](playground/ape_now_supports_singletons.md).

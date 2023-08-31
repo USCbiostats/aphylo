@@ -42,3 +42,4 @@ inst/CODECOV_EXCLUSIONS
 ^R/aphylo_hier\.R
 
 .*\.code-workspace
+^Meta$
