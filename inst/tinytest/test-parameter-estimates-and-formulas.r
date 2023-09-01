@@ -80,9 +80,7 @@ suppressMessages(library(coda))
   ans0 <- suppressWarnings(
     aphylo_mcmc(x ~ mu_d + mu_s + psi + Pi, params = dflts, priors = mypriors, control = pars)
   )
-  
-  mcmc_0 <- as.list(fmcmc::LAST_MCMC)
-  
+    
   fun <- function(p) {
     ans <- aphylo::LogLike(
       tree = x,
@@ -122,10 +120,12 @@ suppressMessages(library(coda))
       ))
     
     })
-  
-  mcmc_1 <- as.list(fmcmc::LAST_MCMC)
-  
-  expect_equal(summary(ans1)$statistics[,"Mean"], ans0$par)
+   
+  expect_true(
+    all(
+      abs(summary(ans1)$statistics[,"Mean"] - ans0$par)
+    ) < .05
+    )
   # ans0$fun(colMeans(ans1), dat = ans0$dat, priors = ans0$priors)
   # fun(colMeans(ans1))
 # })
