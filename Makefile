@@ -37,5 +37,13 @@ clean:
 man: R/* 
 	Rscript --vanilla -e 'roxygen2::roxygenize()'
 
-docker:
-	docker run -v$(pwd):/pkg/ -w/pkg --rm -i uscbiostats/fmcmc:latest make check
+# For ASAN ---------------------------------------------------------------------
+
+docker-check:
+	docker run --rm -ti -v $(PWD):/mnt -w/mnt uscbiostats/aphylo:clang make docker-check-all
+
+docker-check-all: 
+	RD CMD build --no-build-vignettes . && \
+		_R_CHECK_FORCE_SUGGESTS_=false \
+		RD CMD check --ignore-vignettes aphylo_*.tar.gz
+

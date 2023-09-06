@@ -123,8 +123,8 @@ suppressMessages(library(coda))
    
   expect_true(
     all(
-      abs(summary(ans1)$statistics[,"Mean"] - ans0$par)
-    ) < .05
+      abs(summary(ans1)$statistics[,"Mean"] - ans0$par) < .05
+    ) 
     )
   # ans0$fun(colMeans(ans1), dat = ans0$dat, priors = ans0$priors)
   # fun(colMeans(ans1))
