@@ -152,27 +152,27 @@ and</li>
 <pre><code><span><span class="co">## Warning: While using multiple chains, a single initial point has been passed</span></span>
 <span><span class="co">## via `initial`: c(0.1, 0.05, 0.9, 0.5, 0.1, 0.05, 0.5). The values will be</span></span>
 <span><span class="co">## recycled. Ideally you would want to start each chain from different locations.</span></span></code></pre>
-<pre><code><span><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0506. (500 final count of samples).</span></span></code></pre>
+<pre><code><span><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0392. (500 final count of samples).</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ans</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)</span></span>
-<span><span class="co">##  LogLik: -108.9456</span></span>
+<span><span class="co">##  LogLik: -108.7577</span></span>
 <span><span class="co">##  Method used: mcmc (10000 steps)</span></span>
 <span><span class="co">##  # of Leafs: 200</span></span>
 <span><span class="co">##  # of Functions 1</span></span>
 <span><span class="co">##  # of Trees: 1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##          Estimate  Std. Err.</span></span>
-<span><span class="co">##  psi0    0.0714    0.0561</span></span>
-<span><span class="co">##  psi1    0.0563    0.0376</span></span>
-<span><span class="co">##  mu_d0   0.2250    0.1251</span></span>
-<span><span class="co">##  mu_d1   0.1436    0.1033</span></span>
-<span><span class="co">##  mu_s0   0.1288    0.0438</span></span>
-<span><span class="co">##  mu_s1   0.0633    0.0316</span></span>
-<span><span class="co">##  Pi      0.3178    0.2374</span></span></code></pre>
+<span><span class="co">##  psi0    0.0673    0.0544</span></span>
+<span><span class="co">##  psi1    0.0546    0.0384</span></span>
+<span><span class="co">##  mu_d0   0.2221    0.1263</span></span>
+<span><span class="co">##  mu_d1   0.1273    0.0941</span></span>
+<span><span class="co">##  mu_s0   0.1299    0.0420</span></span>
+<span><span class="co">##  mu_s1   0.0616    0.0298</span></span>
+<span><span class="co">##  Pi      0.3448    0.2577</span></span></code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can
 compare the predicted values with the observed values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
