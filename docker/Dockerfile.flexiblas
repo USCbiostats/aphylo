@@ -6,16 +6,18 @@ RUN dnf install R flexiblas-* -y
 # Clonning tag v3.3.1 from the repo flexiblas
 RUN dnf install R-flexiblas -y
 
+RUN flexiblas default ATLAS
+
 RUN echo 'options(repos=c(CRAN="https://cloud.r-project.org"))' >> ~/.Rprofile
 
 RUN \
-	Rscript -e 'utils::install.packages(c("fmcmc", "MASS", "ape", "coda", "tinytest", "xml2"))'
+	Rscript -e 'utils::install.packages(c("fmcmc", "MASS", "ape", "coda", "tinytest", "xml2"));'
 
-RUN Rscript -e 'utils::install.packages("lattice")'
+RUN Rscript -e 'utils::install.packages("lattice");'
 
-RUN Rscript -e 'utils::install.packages(c("knitr", "rmarkdown"))'
+RUN Rscript -e 'utils::install.packages(c("knitr", "rmarkdown"));'
 
-RUN Rscript -e 'utils::install.packages("AUC")'
+RUN Rscript -e 'utils::install.packages("AUC");'
 
 RUN dnf install R-devtools -y
 

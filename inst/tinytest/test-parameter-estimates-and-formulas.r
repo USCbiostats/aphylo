@@ -1,8 +1,8 @@
 if (Sys.getenv("APHYLO_ATLAS_TEST") == "true") {
   library(flexiblas)
-  idx <- load_backend("ATLAS")
+  idx <- flexiblas_load_backend("ATLAS")
   flexiblas_switch(idx)
-  message("Using flexiblas with backend: ", flexiblas_backend())
+  message("Using flexiblas with backend: ", flexiblas_current_backend())
 }
 
 suppressMessages(library(coda))
@@ -119,7 +119,7 @@ suppressMessages(library(coda))
     do.call(
       fmcmc::MCMC, c(
         list(
-          fun = fun,
+          fun     = fun,
           initial = aphylo:::APHYLO_PARAM_DEFAULT[-c(7:8)],
           kernel  = fmcmc::kernel_am(ub = .9999, lb = 0.001, freq = 1L)
           ),
