@@ -40,10 +40,11 @@ man: R/*
 # For ASAN ---------------------------------------------------------------------
 
 docker-check:
-	docker run --rm -ti -v $(PWD):/mnt -w/mnt uscbiostats/aphylo:clang make docker-check-all
+	docker run --rm -ti -v $(PWD):/mnt -w/mnt uscbiostats/aphylo:flexiblas make docker-check-all
 
 docker-check-all: 
-	RD CMD build --no-build-vignettes . && \
+	R CMD build --no-build-vignettes . && \
 		_R_CHECK_FORCE_SUGGESTS_=false \
-		RD CMD check --ignore-vignettes aphylo_*.tar.gz
+		APHYLO_ATLAS_TEST=true \
+		R CMD check --ignore-vignettes aphylo_*.tar.gz
 

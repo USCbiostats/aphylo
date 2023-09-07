@@ -1,3 +1,10 @@
+if (Sys.getenv("APHYLO_ATLAS_TEST") == "true") {
+  library(flexiblas)
+  idx <- load_backend("ATLAS")
+  flexiblas_switch(idx)
+  message("Using flexiblas with backend: ", flexiblas_backend())
+}
+
 suppressMessages(library(coda))
 
 # test_that("x ~ mu", {

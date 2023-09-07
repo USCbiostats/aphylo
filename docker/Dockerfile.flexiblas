@@ -17,4 +17,6 @@ RUN Rscript -e 'utils::install.packages(c("knitr", "rmarkdown"))'
 
 RUN Rscript -e 'utils::install.packages("AUC")'
 
+RUN dnf install R-devtools -y
+
 CMD ["bash"]
