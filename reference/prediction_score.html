@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-4</span>
       </span>
     </div>
 
@@ -65,9 +65,6 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prediction_score</span><span class="op">(</span><span class="va">x</span>, <span class="va">expected</span>, alpha0 <span class="op">=</span> <span class="cn">NULL</span>, alpha1 <span class="op">=</span> <span class="cn">NULL</span>, W <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for default</span></span>
-<span><span class="fu">prediction_score</span><span class="op">(</span><span class="va">x</span>, <span class="va">expected</span>, alpha0 <span class="op">=</span> <span class="cn">NULL</span>, alpha1 <span class="op">=</span> <span class="cn">NULL</span>, W <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for aphylo_estimates</span></span>
 <span><span class="fu">prediction_score</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -86,11 +83,13 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a> or a numeric matrix.</p></dd>
+<dd><p>An object of class <a href="aphylo_estimates.html">aphylo_estimates</a> or other numeric vector-like
+object (see details).</p></dd>
 
 
 <dt>expected</dt>
-<dd><p>Integer vector of length \(n\). Expected values (either 0 or 1).</p></dd>
+<dd><p>Numeric vector-like object length \(n\) (see details).
+Expected values (either 0 or 1).</p></dd>
 
 
 <dt>alpha0, alpha1</dt>
@@ -134,7 +133,10 @@ similar to what a leave-one-out cross-validation scheme would be done
     <div id="details">
     <h2>Details</h2>
     <p>In the case of <code>prediction_score</code>, <code>...</code> are passed to
-<code>predict.aphylo_estimates</code>.</p>
+<code>predict.aphylo_estimates</code>.
+The function will accept <code>x</code> as a numeric vector, list of vectors, or matrix.
+Otherwise, it will try to coerce it to a matrix. If it fails, it will throw
+an error.</p>
 <p>In the case of the method for aphylo estimates, the function takes as
 a reference using alpha equal to the proportion of observed tip annotations that
 are equal to 1, this is:</p>
@@ -165,10 +167,10 @@ are equal to 1, this is:</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Prediction score (H0: Observed = Random)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  N obs.      : 99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Observed    : 0.65 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Random      : NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  P(&lt;t)       : 0.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  alpha(0, 1) : 0.44, 0.56</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Observed    : 0.65 **</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Random      : 0.51 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  P(&lt;t)       : 0.0395</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Values scaled to range between 0 and 1, 1 being best.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
