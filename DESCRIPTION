@@ -7,7 +7,7 @@ Authors@R: c(person("George", "Vega Yon", role=c("aut","cre"),
          5P01CA196569-02"),
          person("USC Biostatistics", role = "cph")
          )
-Version: 0.3-3
+Version: 0.3-4
 Description: Implements a parsimonious evolutionary model to analyze and
   predict gene-functional annotations in phylogenetic trees as described in Vega
   Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. Focusing on

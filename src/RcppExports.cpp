@@ -158,13 +158,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // auc
-List auc(NumericVector pred, IntegerVector labels, int nc, bool nine_na);
+List auc(const NumericVector& pred, const IntegerVector& labels, int nc, bool nine_na);
 RcppExport SEXP _aphylo_auc(SEXP predSEXP, SEXP labelsSEXP, SEXP ncSEXP, SEXP nine_naSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type pred(predSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type labels(labelsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type pred(predSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type labels(labelsSEXP);
     Rcpp::traits::input_parameter< int >::type nc(ncSEXP);
     Rcpp::traits::input_parameter< bool >::type nine_na(nine_naSEXP);
     rcpp_result_gen = Rcpp::wrap(auc(pred, labels, nc, nine_na));

@@ -1,13 +1,18 @@
 #' Calculate prediction score (quality of prediction)
 #' 
-#' @param x An object of class [aphylo_estimates] or a numeric matrix.
-#' @param expected Integer vector of length \eqn{n}. Expected values (either 0 or 1).
+#' @param x An object of class [aphylo_estimates] or other numeric vector-like
+#' object (see details).
+#' @param expected Numeric vector-like object length \eqn{n} (see details).
+#' Expected values (either 0 or 1).
 #' @param alpha0,alpha1 Probability of observing a zero an a one, respectively.
 #' @param W A square matrix. Must have as many rows as genes in `expected`.
 #' @param ... Further arguments passed to [predict.aphylo_estimates]
 #' @export
 #' @details In the case of `prediction_score`, `...` are passed to
 #' `predict.aphylo_estimates`.
+#' The function will accept `x` as a numeric vector, list of vectors, or matrix.
+#' Otherwise, it will try to coerce it to a matrix. If it fails, it will throw
+#' an error.
 #' @returns 
 #' A list of class `aphylo_prediction_score`:
 #' -  obs       : Observed 1 - MAE.
@@ -53,7 +58,66 @@ prediction_score <- function(
   ) UseMethod("prediction_score")
 
 #' @export
-#' @rdname prediction_score
+prediction_score.matrix <- function(
+  x,
+  expected,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W = NULL,
+  ...
+) {
+
+  # Both x and expected should be numeric
+  if (!is.numeric(x) || !is.numeric(expected))
+    stop("`x` and `expected` must be numeric.", call.=FALSE)
+
+  # Checking that it has a single column
+  if (ncol(x) != 1L || ncol(expected) != 1L)
+    stop("`x` and `y` must have a single column.", call.=FALSE)
+
+  # Checking dimensions
+  if (any(dim(x) != dim(expected)))
+    stop("`x` and `expected` differ in length. These must match.", call.=FALSE)
+
+  # Vectorizing
+  x        <- as.vector(x)
+  expected <- as.vector(expected)
+
+  # Passing to default method
+  prediction_score_backend(
+    x        = matrix(x, ncol = 1),
+    expected = matrix(expected, ncol = 1),
+    alpha0   = alpha0,
+    alpha1   = alpha1,
+    W        = W,
+    ...
+  )  
+  
+}
+
+#' @export
+prediction_score.list <- function(
+  x,
+  expected,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W = NULL,
+  ...
+) {
+
+  # Passing to default method
+  prediction_score.matrix(
+    x        = do.call(rbind, x),
+    expected = do.call(rbind, expected),
+    alpha0   = alpha0,
+    alpha1   = alpha1,
+    W        = W,
+    ...
+  )  
+  
+}
+
+#' @export
 prediction_score.default <- function(
   x,
   expected,
@@ -62,7 +126,33 @@ prediction_score.default <- function(
   W      = NULL,
   ...
   ) {
-  
+
+  x        <- tryCatch(as.matrix(x), error = function(e) e)
+  expected <- tryCatch(as.matrix(expected), error = function(e) e)
+
+  if (inherits(x, "error") || inherits(expected, "error"))
+    stop("If not list or matrix, `x` and `expected` must be numeric.", call.=FALSE)
+
+  prediction_score.matrix(
+    x        = x,
+    expected = expected,
+    alpha0   = alpha0,
+    alpha1   = alpha1,
+    W        = W,
+    ...
+  )
+
+}
+
+prediction_score_backend <- function(
+  x,
+  expected,
+  alpha0 = NULL,
+  alpha1 = NULL,
+  W      = NULL,
+  ...
+  ) {
+
   # Checking dimensions
   if (length(x) != length(expected))
     stop("`x` and `expected` differ in length. These must match.", call.=FALSE)
@@ -81,7 +171,7 @@ prediction_score.default <- function(
   # score.
   if (!length(alpha0))
     alpha0 <- 1 - mean(expected)
-  if (is.null(alpha1))
+  if (!length(alpha1))
     alpha1 <- 1 - alpha0
   
   if (is.null(W))
@@ -227,20 +317,20 @@ prediction_score.aphylo_estimates <- function(
   # Adjusting alphas according to loo logic. To make the benchmark fair, we need
   # to exclude one annotation from each type for the loo
   n <- length(ids)
-  if (is.null(alpha0) && loo) {
+  if (!length(alpha0) && loo) {
     
     alpha0 <- max(sum(expected[ids,] == 0) - ncol(expected), 0)
     alpha0 <- alpha0/((nrow(expected[ids,]) - 1) * ncol(expected))
     
   }
-  if (is.null(alpha1) && loo) {
+  if (!length(alpha1) && loo) {
     
     alpha1 <- max(sum(expected[ids,]) - ncol(expected), 0)
     alpha1 <- alpha1/((nrow(expected[ids,]) - 1) * ncol(expected))
     
   }
   
-  ans <- prediction_score(
+  ans <- prediction_score_backend(
     x        = pred[ids,,drop=FALSE],
     expected = expected[ids,,drop = FALSE],
     alpha0   = alpha0,

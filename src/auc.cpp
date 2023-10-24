@@ -28,8 +28,8 @@ using namespace Rcpp;
 //' plot(ans_auc)
 // [[Rcpp::export]]
 List auc(
-    NumericVector pred,
-    IntegerVector labels,
+    const NumericVector & pred,
+    const IntegerVector & labels,
     int nc = 200,
     bool nine_na = true
 ) {

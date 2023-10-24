@@ -2,14 +2,11 @@
 % Please edit documentation in R/prediction_score.R
 \name{prediction_score}
 \alias{prediction_score}
-\alias{prediction_score.default}
 \alias{prediction_score.aphylo_estimates}
 \alias{print.aphylo_prediction_score}
 \title{Calculate prediction score (quality of prediction)}
 \usage{
 prediction_score(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
-
-\method{prediction_score}{default}(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
 
 \method{prediction_score}{aphylo_estimates}(
   x,
@@ -24,9 +21,11 @@ prediction_score(x, expected, alpha0 = NULL, alpha1 = NULL, W = NULL, ...)
 \method{print}{aphylo_prediction_score}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \link{aphylo_estimates} or a numeric matrix.}
+\item{x}{An object of class \link{aphylo_estimates} or other numeric vector-like
+object (see details).}
 
-\item{expected}{Integer vector of length \eqn{n}. Expected values (either 0 or 1).}
+\item{expected}{Numeric vector-like object length \eqn{n} (see details).
+Expected values (either 0 or 1).}
 
 \item{alpha0, alpha1}{Probability of observing a zero an a one, respectively.}
 
@@ -64,6 +63,9 @@ Calculate prediction score (quality of prediction)
 \details{
 In the case of \code{prediction_score}, \code{...} are passed to
 \code{predict.aphylo_estimates}.
+The function will accept \code{x} as a numeric vector, list of vectors, or matrix.
+Otherwise, it will try to coerce it to a matrix. If it fails, it will throw
+an error.
 
 In the case of the method for aphylo estimates, the function takes as
 a reference using alpha equal to the proportion of observed tip annotations that
