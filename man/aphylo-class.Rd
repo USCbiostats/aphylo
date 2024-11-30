@@ -25,7 +25,7 @@ new_aphylo(tree, tip.annotation, ...)
 
 \item{...}{Further argmuents passed to the method.}
 
-\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.type, node.type}{Integer vectors with values 0 or 1. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:

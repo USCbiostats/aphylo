@@ -1,3 +1,8 @@
+# Changes in aphylo version 0.3-4
+
+* Fixing documentation (CRAN request).
+
+
 # Changes in aphylo version 0.3-3
 
 * Removing C++ requirement as requested by CRAN.

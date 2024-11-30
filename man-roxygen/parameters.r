@@ -9,5 +9,5 @@
 #' <%=ifelse(exists(".offspring"),   "@param offspring List of length \\eqn{n}. Offspring of each node (see \\code{\\link{new_aphylo}}).", "") %>
 #' <%=ifelse(exists(".S"),           "@param S Integer matrix of size \\eqn{2^P\\times P}{2^P * P}. See \\code{\\link{states}}.", "") %>
 #' <%=ifelse(exists(".tree"),       "@param tree An object of class [phylo][ape::read.tree]", "") %>
-#' <%=ifelse(exists(".types"),       "@param tip.type,node.type Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in [LogLike].", "") %>
+#' <%=ifelse(exists(".types"),       "@param tip.type,node.type Integer vectors with values 0 or 1. 0 denotes duplication node and 1 speciation node. This is used in [LogLike].", "") %>
 NULL
