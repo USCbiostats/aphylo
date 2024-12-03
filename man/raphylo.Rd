@@ -53,8 +53,6 @@ An object of class \link{aphylo}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees
-
-\code{}
 }
 \details{
 The \code{rmultiAphylo} function is a wrapper around \code{raphylo}.

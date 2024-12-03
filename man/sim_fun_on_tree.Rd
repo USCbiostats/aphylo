@@ -46,8 +46,6 @@ indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 }
 \description{
 Simulate functions on a ginven tree
-
-\code{}
 }
 \details{
 Using the model described in the vignette
