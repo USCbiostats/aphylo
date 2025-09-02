@@ -21,7 +21,7 @@ sim_fun_on_tree(
 \arguments{
 \item{tree}{An object of class \link[ape:read.tree]{phylo}}
 
-\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.type, node.type}{Integer vectors with values 0 or 1. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 
 \item{psi}{Numeric vector of length 2. Misclasification probabilities. (see \code{\link{LogLike}}).}
 
@@ -46,8 +46,6 @@ indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 }
 \description{
 Simulate functions on a ginven tree
-
-\code{}
 }
 \details{
 Using the model described in the vignette

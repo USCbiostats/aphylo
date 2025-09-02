@@ -30,7 +30,7 @@ rmultiAphylo(R, ...)
 
 \item{edge.length}{Passed to \link{sim_tree}.}
 
-\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.type, node.type}{Integer vectors with values 0 or 1. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 
 \item{P}{Integer scalar. Number of functions to generate.}
 
@@ -53,8 +53,6 @@ An object of class \link{aphylo}
 }
 \description{
 Simulation of Annotated Phylogenetic Trees
-
-\code{}
 }
 \details{
 The \code{rmultiAphylo} function is a wrapper around \code{raphylo}.

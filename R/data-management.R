@@ -19,8 +19,8 @@
 #' \item{pseq}{Integer vector. The pruning sequence (postorder).}
 #' \item{reduced_pseq}{Integer vector. The reduced version of `pseq`.}
 #' \item{Ntips.annotated}{Integer. Number of tips with annotations.}
-#' \item{tip.type}{Binary of length [Ntip()]. 0 means duplication and 1 speciation.}
-#' \item{tip.type}{Binary of length [Nnode()]. 0 means duplication and 1 speciation.}
+#' \item{tip.type}{Binary of length [ape::Ntip()]. 0 means duplication and 1 speciation.}
+#' \item{tip.type}{Binary of length [ape::Nnode()]. 0 means duplication and 1 speciation.}
 #' 
 #' @examples 
 #' # A simple example ----------------------------------------------------------

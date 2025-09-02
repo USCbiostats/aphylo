@@ -7,3 +7,21 @@
 \description{
 Statistical Inference in Annotated Phylogenetic Trees
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/USCbiostats/aphylo}
+  \item Report bugs at \url{https://github.com/USCbiostats/aphylo/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: George Vega Yon \email{g.vegayon@gmail.com} (\href{https://orcid.org/0000-0002-3171-0844}{ORCID})
+
+Other contributors:
+\itemize{
+  \item National Cancer Institute (NCI) (Grant Number 5P01CA196569-02) [funder]
+  \item USC Biostatistics [copyright holder]
+}
+
+}

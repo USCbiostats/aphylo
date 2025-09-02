@@ -16,10 +16,12 @@ An object of class \link[ape:read.tree]{ape::phylo} with the edgelist as a posto
 \code{node.label} and \code{edge.length}.
 }
 \description{
-An alternative to \link[ape:rtree]{ape::rtree}. This function was written in C++ and is
-significantly faster than \code{rtree}.
+Random tree generation
 }
 \details{
+An alternative to \link[ape:rtree]{ape::rtree}. This function was written in C++ and is
+significantly faster than \code{rtree}.
+
 The algorithm was implemented as follows
 
 \enumerate{

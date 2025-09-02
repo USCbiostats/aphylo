@@ -16,11 +16,8 @@ An object of class \link{aphylo} with modified labels.
 }
 \description{
 Switch labels acoording to mislabeling probabilities
-
-\code{}
 }
 \examples{
-
 set.seed(131)
 x <- raphylo(5, P=2, psi=c(0,0))
 x$tip.annotation

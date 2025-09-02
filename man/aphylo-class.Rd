@@ -25,7 +25,7 @@ new_aphylo(tree, tip.annotation, ...)
 
 \item{...}{Further argmuents passed to the method.}
 
-\item{tip.type, node.type}{Integer vectors with values {0,1}. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
+\item{tip.type, node.type}{Integer vectors with values 0 or 1. 0 denotes duplication node and 1 speciation node. This is used in \link{LogLike}.}
 }
 \value{
 A list of class \code{aphylo} with the following elements:
@@ -37,8 +37,8 @@ annotations.}
 \item{pseq}{Integer vector. The pruning sequence (postorder).}
 \item{reduced_pseq}{Integer vector. The reduced version of \code{pseq}.}
 \item{Ntips.annotated}{Integer. Number of tips with annotations.}
-\item{tip.type}{Binary of length \code{\link[=Ntip]{Ntip()}}. 0 means duplication and 1 speciation.}
-\item{tip.type}{Binary of length \code{\link[=Nnode]{Nnode()}}. 0 means duplication and 1 speciation.}
+\item{tip.type}{Binary of length \code{\link[ape:summary.phylo]{ape::Ntip()}}. 0 means duplication and 1 speciation.}
+\item{tip.type}{Binary of length \code{\link[ape:summary.phylo]{ape::Nnode()}}. 0 means duplication and 1 speciation.}
 }
 \description{
 The \code{aphylo} class tree holds both the tree structure represented as a

@@ -48,3 +48,7 @@ docker-check-all:
 		APHYLO_ATLAS_TEST=true \
 		R CMD check --ignore-vignettes aphylo_*.tar.gz
 
+docker-interactive:
+	podman run --mount type=bind,source=$(PWD),target=/mnt -w /mnt -it \
+		rocker/geospatial:4.4.0 bash
+

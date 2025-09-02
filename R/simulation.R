@@ -1,8 +1,7 @@
 #' Random tree generation
-#' 
+#' @details
 #' An alternative to [ape::rtree]. This function was written in C++ and is 
 #' significantly faster than `rtree`. 
-#' 
 #' @param n Integer scalar. Number of leaf nodes.
 #' @param edge.length A Function. Used to set the length of the edges.
 #' 
@@ -60,8 +59,7 @@ sim_tree <- function(n, edge.length = stats::runif) {
   
 }
 
-#' Simulate functions on a ginven tree
-#' 
+#' @title Simulate functions on a ginven tree
 #' @param tree An object of class [phylo][ape::read.tree]
 #' @template parameters
 #' @templateVar .psi 1
@@ -243,7 +241,6 @@ sim_fun_on_tree <- function(
 }
 
 #' Simulation of Annotated Phylogenetic Trees
-#' 
 #' @param n Integer scalar. Number of leafs. If not specified, then 
 #' @param tree An object of class [phylo][ape::read.tree].
 #' @param P Integer scalar. Number of functions to generate.
@@ -370,11 +367,9 @@ rmultiAphylo <- function(R, ...) {
 #' 
 #' @param atree An object of class [aphylo].
 #' @template parameters
-#' @templateVar .psi
-#' 
+#' @templateVar .psi 1
 #' @return An object of class [aphylo] with modified labels.
 #' @examples 
-#' 
 #' set.seed(131)
 #' x <- raphylo(5, P=2, psi=c(0,0))
 #' x$tip.annotation
