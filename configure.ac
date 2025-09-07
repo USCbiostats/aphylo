@@ -29,7 +29,7 @@ openmp_flag=''
 ## Check for broken systems produced by a corporation based in Cupertino
 AC_MSG_CHECKING([for macOS])
 RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
-if test x"${RSysinfoName}" == x"Darwin"; then
+if test x"${RSysinfoName}" = x"Darwin"; then
    AC_MSG_RESULT([found])
    AC_MSG_WARN([OpenMP unavailable and turned off.])
    arma_openmp='-DARMA_DONT_USE_OPENMP'
@@ -40,7 +40,7 @@ else
    ## if R has -fopenmp we should be good
    allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
    hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-   if test x"${hasOpenMP}" == x""; then
+   if test x"${hasOpenMP}" = x""; then
       AC_MSG_RESULT([missing])
       arma_openmp='-DARMA_DONT_USE_OPENMP'
    else   
