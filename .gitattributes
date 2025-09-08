@@ -1,0 +1,59 @@
+# Ensure that text files always use LF line endings, even on Windows
+* text=auto eol=lf
+
+# Shell scripts must use LF endings
+*.sh text eol=lf
+configure text eol=lf
+cleanup text eol=lf
+configure.ac text eol=lf
+configure.in text eol=lf
+
+# R files
+*.R text eol=lf
+*.r text eol=lf
+*.Rmd text eol=lf
+*.rmd text eol=lf
+*.Rnw text eol=lf
+*.rnw text eol=lf
+
+# Documentation and configuration files
+*.md text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+Makefile text eol=lf
+DESCRIPTION text eol=lf
+NAMESPACE text eol=lf
+LICENSE text eol=lf
+NEWS text eol=lf
+NEWS.md text eol=lf
+ChangeLog text eol=lf
+README text eol=lf
+README.md text eol=lf
+
+# C/C++ source files
+*.c text eol=lf
+*.cpp text eol=lf
+*.cc text eol=lf
+*.cxx text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.hxx text eol=lf
+
+# Binary files (ensure they are not treated as text)
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.pdf binary
+*.so binary
+*.dll binary
+*.exe binary
+*.o binary
+*.a binary
+*.lib binary
+*.rda binary
+*.rds binary
+*.RData binary
