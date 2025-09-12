@@ -51,7 +51,7 @@ citation(package="aphylo")
     And the actual R package:
 
       Vega Yon G (2022). _Statistical Inference of Annotated Phylogenetic
-      Trees_. R package version 0.3-2,
+      Trees_. R package version 0.4.0,
       <https://github.com/USCBiostats/aphylo>.
 
     To see these entries in BibTeX format, use 'print(<citation>,
