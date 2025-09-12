@@ -1,4 +1,4 @@
-# Changes in aphylo version 0.4.0
+# Changes in aphylo version 0.3-5
 
 * Fixed bashisms in configure.ac for CRAN compliance (addresses shell 
   compatibility issues that prevented package acceptance).
