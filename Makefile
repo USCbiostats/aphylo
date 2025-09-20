@@ -2,9 +2,10 @@ VERSION:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "
 PKGNAME:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "", x[grepl("^Package", x)]))')
 
 install: 
-	$(MAKE) clean && \
-		R CMD build . && \
-		R CMD INSTALL $(PKGNAME)_$(VERSION).tar.gz
+	R CMD INSTALL aphylo_*.tar.gz
+
+build:
+	R CMD build .
 		
 
 $(PKGNAME)_$(VERSION).tar.gz: R/*.R inst/NEWS README.md
@@ -33,9 +34,12 @@ clean:
 	rm -rf $(PKGNAME).Rcheck $(PKGNAME)_$(VERSION).tar.gz; \
 		Rscript --vanilla -e 'devtools::clean_dll();devtools::clean_vignettes()'
 
-.PHONY: man docker
-man: R/* 
-	Rscript --vanilla -e 'roxygen2::roxygenize()'
+.PHONY: man docs
+
+man:
+	Rscript --vanilla -e 'devtools::document()'
+
+docs: man
 
 # For ASAN ---------------------------------------------------------------------
 

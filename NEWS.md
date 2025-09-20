@@ -1,3 +1,11 @@
+# Changes in aphylo version 0.3-5
+
+* Fixed bashisms in configure.ac for CRAN compliance (addresses shell 
+  compatibility issues that prevented package acceptance).
+
+* Updated package to meet CRAN requirements and re-enable submission.
+
+
 # Changes in aphylo version 0.3-4
 
 * Fixing documentation (CRAN request).

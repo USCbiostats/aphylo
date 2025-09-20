@@ -7,7 +7,7 @@ Authors@R: c(person("George", "Vega Yon", role=c("aut","cre"),
          5P01CA196569-02"),
          person("USC Biostatistics", role = "cph")
          )
-Version: 0.3-4
+Version: 0.3-5
 Description: Implements a parsimonious evolutionary model to analyze and
   predict gene-functional annotations in phylogenetic trees as described in Vega
   Yon et al. (2021) <doi:10.1371/journal.pcbi.1007948>. Focusing on
@@ -23,7 +23,7 @@ Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
 Suggests: covr, knitr, tinytest, AUC, rmarkdown,
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8
 URL: https://github.com/USCbiostats/aphylo
 BugReports: https://github.com/USCbiostats/aphylo/issues

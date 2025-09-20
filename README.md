@@ -1,19 +1,18 @@
 
+
 <!--[![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)-->
 
 [![R
 CI](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg)](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true.png)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
 [![Coverage
 Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 [![Integrative Methods of Analysis for Genetic
 Epidemiology](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/aphylo.png)](https://CRAN.R-project.org/package=aphylo)
-[![status](https://tinyverse.netlify.com/badge/aphylo.png)](https://CRAN.R-project.org/package=aphylo)
+status](https://www.r-pkg.org/badges/version/aphylo)](https://CRAN.R-project.org/package=aphylo)
+[![status](https://tinyverse.netlify.com/badge/aphylo)](https://CRAN.R-project.org/package=aphylo)
 [![CRAN
-downloads](http://cranlogs.r-pkg.org/badges/grand-total/aphylo.png)](https://cran.r-project.org/package=aphylo)
+downloads](http://cranlogs.r-pkg.org/badges/grand-total/aphylo)](https://cran.r-project.org/package=aphylo)
 
 # aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
 
@@ -40,7 +39,7 @@ California.
 citation(package="aphylo")
 ```
 
-    To cite aphylo in publications use the following paper:
+    When using aphylo, please cite the following paper:
 
       Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, et al. (2021)
       Bayesian parameter estimation for automatic annotation of gene
@@ -50,8 +49,8 @@ citation(package="aphylo")
 
     And the actual R package:
 
-      Vega Yon G (2022). _Statistical Inference of Annotated Phylogenetic
-      Trees_. R package version 0.3-2,
+      Vega Yon G (????). _Statistical Inference of Annotated Phylogenetic
+      Trees_. R package version 0.3-5,
       <https://github.com/USCBiostats/aphylo>.
 
     To see these entries in BibTeX format, use 'print(<citation>,
@@ -125,7 +124,7 @@ O
     Node labels:
       5, 6, 7
 
-    Rooted; no branch lengths.
+    Rooted; no branch length.
 
      Tip (leafs) annotations:
       f1 f2
@@ -152,7 +151,7 @@ as.phylo(O)
     Node labels:
       5, 6, 7
 
-    Rooted; no branch lengths.
+    Rooted; no branch length.
 
 ``` r
 # We can visualize it
@@ -191,7 +190,7 @@ dat
     Node labels:
       51, 52, 53, 54, 55, 56, ...
 
-    Rooted; no branch lengths.
+    Rooted; no branch length.
 
      Tip (leafs) annotations:
       fun0000
@@ -253,7 +252,7 @@ ans2 <- aphylo_mcmc(
     via `initial`: c(0.9, 0.5, 0.1, 0.05, 0.5). The values will be recycled.
     Ideally you would want to start each chain from different locations.
 
-    Convergence has been reached with 5500 steps. Gelman-Rubin's R: 1.0314. (500 final count of samples).
+    Convergence has been reached with 5500 steps. Gelman-Rubin's R: 1.0097. (500 final count of samples).
 
 ``` r
 ans2
@@ -265,18 +264,18 @@ ans2
      Call: aphylo_mcmc(model = dat ~ mu_d + mu_s + Pi, priors = bprior(c(9, 
         1, 1, 1, 5), c(1, 9, 9, 9, 5)), control = list(nsteps = 5000, 
         burnin = 500, thin = 10, nchains = 2))
-     LogLik (unnormalized): -20.0599 
+     LogLik (unnormalized): -20.1333 
      Method used: mcmc (5500 steps)
      # of Leafs: 50
      # of Functions 1
      # of Trees: 1
 
              Estimate  Std. Err.
-     mu_d0   0.9093    0.0827
-     mu_d1   0.1608    0.0767
-     mu_s0   0.1015    0.0669
-     mu_s1   0.1022    0.0443
-     Pi      0.5318    0.1443
+     mu_d0   0.9107    0.0797
+     mu_d1   0.1648    0.0800
+     mu_s0   0.1157    0.0735
+     mu_s1   0.1001    0.0442
+     Pi      0.5329    0.1450
 
 ``` r
 plot(
@@ -298,15 +297,15 @@ gelman.diag(ans2$hist)
     Potential scale reduction factors:
 
           Point est. Upper C.I.
-    mu_d0       1.00       1.02
-    mu_d1       1.02       1.11
-    mu_s0       1.00       1.01
-    mu_s1       1.01       1.06
-    Pi          1.01       1.02
+    mu_d0       1.01       1.05
+    mu_d1       1.00       1.00
+    mu_s0       1.00       1.02
+    mu_s1       1.01       1.02
+    Pi          1.00       1.00
 
     Multivariate psrf
 
-    1.03
+    1.01
 
 ``` r
 plot(ans2$hist)
@@ -326,10 +325,10 @@ pred
     Prediction score (H0: Observed = Random)
 
      N obs.      : 99
-
-     Observed    : 0.71 ***
-     Random      : NA 
-     P(<t)       : 0.0000
+     alpha(0, 1) : 0.26, 0.74
+     Observed    : 0.71 
+     Random      : 0.62 
+     P(<t)       : 0.1121
     --------------------------------------------------------------------------------
     Values scaled to range between 0 and 1, 1 being best.
 
