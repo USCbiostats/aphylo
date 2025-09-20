@@ -2,9 +2,10 @@ VERSION:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "
 PKGNAME:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "", x[grepl("^Package", x)]))')
 
 install: 
-	$(MAKE) clean && \
-		R CMD build . && \
-		R CMD INSTALL $(PKGNAME)_$(VERSION).tar.gz
+	R CMD INSTALL aphylo_*.tar.gz
+
+build:
+	R CMD build .
 		
 
 $(PKGNAME)_$(VERSION).tar.gz: R/*.R inst/NEWS README.md
