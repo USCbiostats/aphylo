@@ -23,7 +23,7 @@ Imports: Rcpp (>= 0.12.1), Matrix, methods, coda, fmcmc,
 Suggests: covr, knitr, tinytest, AUC, rmarkdown,
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8
 URL: https://github.com/USCbiostats/aphylo
 BugReports: https://github.com/USCbiostats/aphylo/issues

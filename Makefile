@@ -33,9 +33,12 @@ clean:
 	rm -rf $(PKGNAME).Rcheck $(PKGNAME)_$(VERSION).tar.gz; \
 		Rscript --vanilla -e 'devtools::clean_dll();devtools::clean_vignettes()'
 
-.PHONY: man docker
-man: R/* 
-	Rscript --vanilla -e 'roxygen2::roxygenize()'
+.PHONY: man docs
+
+man:
+	Rscript --vanilla -e 'devtools::document()'
+
+docs: man
 
 # For ASAN ---------------------------------------------------------------------
 
