@@ -4,8 +4,6 @@
 
 [![R
 CI](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml/badge.svg)](https://github.com/USCbiostats/aphylo/actions/workflows/ci.yml)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/1xpgpv10yifojyab?svg=true.png)](https://ci.appveyor.com/project/gvegayon/phylogenetic)
 [![Coverage
 Status](https://codecov.io/gh/USCbiostats/aphylo/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/aphylo)
 [![Integrative Methods of Analysis for Genetic
