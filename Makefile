@@ -2,7 +2,7 @@ VERSION:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "
 PKGNAME:=$(shell Rscript -e 'x<-readLines("DESCRIPTION");cat(gsub(".+[:]\\s*", "", x[grepl("^Package", x)]))')
 
 install: 
-	R CMD INSTALL aphylo_*.tar.gz
+	Rscript --vanilla -e 'devtools::install()'
 
 build:
 	R CMD build .
