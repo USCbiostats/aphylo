@@ -112,7 +112,7 @@ with the <code>aphylo</code> R package.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">223</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/raphylo.html">raphylo</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, Pi <span class="op">=</span> <span class="va">Pi</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/data-sim-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/data-sim-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
 <p>The simulation function generates an <code>aphylo</code> class object
 which is simply a wrapper containing:</p>
 <ul>
@@ -144,36 +144,36 @@ and</li>
 <pre><code><span><span class="co">## Warning: While using multiple chains, a single initial point has been passed</span></span>
 <span><span class="co">## via `initial`: c(0.1, 0.05, 0.9, 0.5, 0.1, 0.05, 0.5). The values will be</span></span>
 <span><span class="co">## recycled. Ideally you would want to start each chain from different locations.</span></span></code></pre>
-<pre><code><span><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0251. (500 final count of samples).</span></span></code></pre>
+<pre><code><span><span class="co">## Convergence has been reached with 10000 steps. Gelman-Rubin's R: 1.0436. (500 final count of samples).</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ans</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## ESTIMATION OF ANNOTATED PHYLOGENETIC TREE</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Call: aphylo_mcmc(model = x ~ psi + mu_d + mu_s + Pi)</span></span>
-<span><span class="co">##  LogLik: -108.8457</span></span>
+<span><span class="co">##  LogLik: -109.0075</span></span>
 <span><span class="co">##  Method used: mcmc (10000 steps)</span></span>
 <span><span class="co">##  # of Leafs: 200</span></span>
 <span><span class="co">##  # of Functions 1</span></span>
 <span><span class="co">##  # of Trees: 1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##          Estimate  Std. Err.</span></span>
-<span><span class="co">##  psi0    0.0664    0.0517</span></span>
-<span><span class="co">##  psi1    0.0593    0.0368</span></span>
-<span><span class="co">##  mu_d0   0.2254    0.1273</span></span>
-<span><span class="co">##  mu_d1   0.1326    0.0985</span></span>
-<span><span class="co">##  mu_s0   0.1300    0.0447</span></span>
-<span><span class="co">##  mu_s1   0.0594    0.0310</span></span>
-<span><span class="co">##  Pi      0.3547    0.2484</span></span></code></pre>
+<span><span class="co">##  psi0    0.0744    0.0606</span></span>
+<span><span class="co">##  psi1    0.0569    0.0395</span></span>
+<span><span class="co">##  mu_d0   0.2225    0.1283</span></span>
+<span><span class="co">##  mu_d1   0.1377    0.1007</span></span>
+<span><span class="co">##  mu_s0   0.1312    0.0445</span></span>
+<span><span class="co">##  mu_s1   0.0621    0.0318</span></span>
+<span><span class="co">##  Pi      0.3481    0.2563</span></span></code></pre>
 <p>For goodness-of-fit analysis, we have a couple of tools. We can
 compare the predicted values with the observed values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/plot-predict-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/plot-predict-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
 <p>We can also take a look at the surface of the posterior function</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/plot-loglike-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/plot-loglike-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
 <p>And we can also take a look at the prediction scores</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span>
@@ -193,7 +193,7 @@ compare the predicted values with the observed values:</p>
 <span><span class="co">## MAE 0.29.</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></span></code></pre></div>
-<p><img src="example_files/figure-html/predict-score-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/predict-score-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
 </div>
   </div>
 
@@ -212,7 +212,7 @@ compare the predicted values with the observed values:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
