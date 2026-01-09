@@ -48,9 +48,6 @@ indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 Simulate functions on a ginven tree
 }
 \details{
-Using the model described in the vignette
-\href{../doc/peeling_phylo.html}{peeling_phylo.html}
-
 The optiona \code{informative} was created such that when needed the
 function can be forced to simualte annotations while making sure (or at
 least trying \code{maxtries} times) that the leafs have both 0s and 9s. From what
