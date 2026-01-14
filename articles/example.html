@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">aphylo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3-6</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@ Yon</h4>
             
             <h4 data-toc-skip class="date">August 18, 2021</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/USCbiostats/aphylo/blob/v0.3-5/vignettes/example.Rmd" class="external-link"><code>vignettes/example.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/USCbiostats/aphylo/blob/master/vignettes/example.Rmd" class="external-link"><code>vignettes/example.Rmd</code></a></small>
       <div class="hidden name"><code>example.Rmd</code></div>
 
     </div>
@@ -112,7 +112,7 @@ with the <code>aphylo</code> R package.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">223</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/raphylo.html">raphylo</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span>, psi <span class="op">=</span> <span class="va">psi</span>, mu_d <span class="op">=</span> <span class="va">mu_d</span>, mu_s <span class="op">=</span> <span class="va">mu_s</span>, Pi <span class="op">=</span> <span class="va">Pi</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/data-sim-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/data-sim-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <p>The simulation function generates an <code>aphylo</code> class object
 which is simply a wrapper containing:</p>
 <ul>
@@ -169,11 +169,11 @@ and</li>
 compare the predicted values with the observed values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/plot-predict-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/plot-predict-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <p>We can also take a look at the surface of the posterior function</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_logLik.html">plot_logLik</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="example_files/figure-html/plot-loglike-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/plot-loglike-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <p>And we can also take a look at the prediction scores</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prediction_score.html">prediction_score</a></span><span class="op">(</span><span class="va">ans</span><span class="op">)</span></span>
@@ -193,7 +193,7 @@ compare the predicted values with the observed values:</p>
 <span><span class="co">## MAE 0.29.</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="co"># and plotting</span></span></code></pre></div>
-<p><img src="example_files/figure-html/predict-score-1.png" class="r-plt" width="576" style="display: block; margin: auto;"></p>
+<p><img src="example_files/figure-html/predict-score-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 </div>
   </div>
 
