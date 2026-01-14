@@ -69,11 +69,6 @@ sim_tree <- function(n, edge.length = stats::runif) {
 #' @templateVar .types 1
 #' @param P Integer scalar. Number of functions to simulate.
 #' 
-#' @details
-#' 
-#' Using the model described in the vignette
-#' \href{../doc/peeling_phylo.html}{peeling_phylo.html}
-#' 
 #' @return An matrix of size \code{length(offspring)*P} with values 9, 0 and 1
 #' indicating \code{"no information"}, \code{"no function"} and \code{"function"}.
 #' 

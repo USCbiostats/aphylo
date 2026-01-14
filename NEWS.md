@@ -1,3 +1,8 @@
+# Changes in aphylo version 0.3-6
+
+* Small patch in documentation.
+
+
 # Changes in aphylo version 0.3-5
 
 * Fixed bashisms in configure.ac for CRAN compliance (addresses shell 
