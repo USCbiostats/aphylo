@@ -83,6 +83,12 @@
 <div class="section level1">
 <div class="page-header"><h1 id="aphylo-statistical-inference-of-annotated-phylogenetic-trees-">aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="reference/figures/logo.svg" align="right" width="180px"><a class="anchor" aria-label="anchor" href="#aphylo-statistical-inference-of-annotated-phylogenetic-trees-"></a>
 </h1></div>
+<!-- how-to-cite -->
+<blockquote>
+<p>[!NOTE] <strong>How to cite aphylo.</strong> If you use <strong>aphylo</strong> in published work, please cite it:</p>
+<p>Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, Marjoram P (2021). Bayesian parameter estimation for automatic annotation of gene functions using observational data and phylogenetic trees. <em>PLOS Computational Biology</em> 17(2): e1007948. <a href="doi:%5B10.1371/journal.pcbi.1007948" class="uri">doi:[10.1371/journal.pcbi.1007948</a>](<a href="https://doi.org/10.1371/journal.pcbi.1007948" class="external-link uri">https://doi.org/10.1371/journal.pcbi.1007948</a>)</p>
+<p>Run <code>citation("aphylo")</code> in R for the BibTeX entry. <!-- how-to-cite --></p>
+</blockquote>
 <p>The <code>aphylo</code> R package implements estimation and data imputation methods for Functional Annotations in Phylogenetic Trees. The core function consists of the log-likelihood computation of observing a given phylogenetic tree with functional annotation on its leaves and the probabilities associated to gain and loss of function, including probabilities of experimental misclassification. The log-likelihood is computed using peeling algorithms, which required developing and implementing efficient algorithms for re-coding and preparing phylogenetic tree data to be used with the package. Finally, <code>aphylo</code> works smoothly with popular tools for analysis of phylogenetic data such as <code>ape</code> R package, “Analyses of Phylogenetics and Evolution.”</p>
 <p>The package is under MIT License and is developed by the Computing and Software Cores of the Biostatistics Division’s NIH Project Grant (P01) at the Department of Preventive Medicine at the University of Southern California.</p>
 <div class="section level2">
@@ -113,10 +119,10 @@
 </h2>
 <p>This package depends on another on-development R package, the <a href="https://github.com/USCbiostats/fmcmc" class="external-link"><code>fmcmc</code></a>. So first, you need to install it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"USCbiostats/fmcmc"</span><span class="op">)</span></span></code></pre></div>
 <p>Then you can install the <code>aphylo</code> package</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"USCbiostats/aphylo"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="reading-data">Reading data<a class="anchor" aria-label="anchor" href="#reading-data"></a>
@@ -413,7 +419,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>
