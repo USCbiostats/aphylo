@@ -25,3 +25,7 @@ Other contributors:
 }
 
 }
+\section{How to cite}{
+  If you use \pkg{aphylo} in published work, please cite it. Run
+  \code{citation("aphylo")} in R for the full entry.
+}
