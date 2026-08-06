@@ -74,6 +74,9 @@ release_questions <- function() {
 #' 
 #' @name aphylo-package
 #' 
+#' @section How to cite:
+#' If you use \pkg{aphylo} in published work, please cite it. Run
+#' \code{citation("aphylo")} in R for the full entry.
 "_PACKAGE"
 
 .onLoad <- function(libname, pkgname) {

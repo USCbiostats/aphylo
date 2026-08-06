@@ -10,6 +10,16 @@
 
 # aphylo: Statistical Inference of Annotated Phylogenetic Trees <img src="man/figures/logo.svg" align="right" width="180px"/>
 
+
+<!-- how-to-cite -->
+> [!NOTE]
+> **How to cite aphylo.** If you use **aphylo** in published work, please cite it:
+>
+> Vega Yon GG, Thomas DC, Morrison J, Mi H, Thomas PD, Marjoram P (2021). Bayesian parameter estimation for automatic annotation of gene functions using observational data and phylogenetic trees. *PLOS Computational Biology* 17(2): e1007948. doi:[10.1371/journal.pcbi.1007948](https://doi.org/10.1371/journal.pcbi.1007948)
+>
+> Run `citation("aphylo")` in R for the BibTeX entry.
+<!-- how-to-cite -->
+
 The `aphylo` R package implements estimation and data imputation methods
 for Functional Annotations in Phylogenetic Trees. The core function
 consists of the log-likelihood computation of observing a given
