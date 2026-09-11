@@ -44,3 +44,4 @@ inst/CODECOV_EXCLUSIONS
 .*\.code-workspace
 ^Meta$
 ^.devcontainer$
+^CITATION\.cff$
